@@ -1,0 +1,224 @@
+{
+  "flow": "store-locator",
+  "last_updated": "2026-10-12T19:30:00Z",
+  "version": 3,
+  "description": "Store Locator del header: el boton selector de forma de entrega (icono + texto + chevron) y el drawer que abre, con sus dos mecanicas — Despacho a domicilio y Retiro en tienda. Es el objeto de la HU B2C-70. El comportamiento del header que lo contiene vive en [[header-sticky]] y [[header-storefront]]; aqui solo el componente. Desde B2C-26 cubre también el drawer por dentro: buscador de Google, formulario manual, direcciones guardadas, pantalla de error y permisos de ubicación (POM tests/pages/MetodoEntregaModal.ts).",
+  "source": {
+    "suite": "B2C-70",
+    "hu": "B2C-70",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-70 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C70-D-001"
+    ],
+    "nota_de_la_corrida": "De los 3 TC de la planilla solo D-001 se pudo ejecutar. D-002 y D-003 quedaron Bloqueado: los dos necesitan dejar una forma de entrega aplicada y ninguno declara con que direccion, y ademas la unica via que no necesitaria data externa —elegir una tienda de la lista del propio drawer— esta rota en DEV.",
+    "last_sync": "2026-09-11T23:25:00Z"
+  },
+  "navigation": {
+    "entry_url": "/  (el boton vive en el header de toda pagina habilitada, ver [[header-storefront]])",
+    "modals": [
+      "drawer del Store Locator (role=dialog, 500x868 en Desktop 1440x900)"
+    ]
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "EL BOTON del Store Locator en el header. No tiene data-testid ni aria-label: el asidero es su texto, que cambia con el estado — 'Elige una forma de entrega' sin seleccion, y la direccion o tienda cuando hay una. OJO: hay un boton por form-factor en el DOM, hay que filtrar por visible",
+        "selector": "header button con /elige una forma de entrega|despacho|retiro en tienda/i, filtrado por visible=true",
+        "type": "texto"
+      },
+      {
+        "description": "COMPOSICION DEL BOTON sin seleccion (Desktop 1440x900, caja 241x48): un icono de metodo de 24x24 a la izquierda, el texto en 12px, y el chevron de 20x20 al extremo derecho (dx 221). El chevron es el 'icono V' del TC",
+        "selector": "svg dentro del boton; el chevron es el de mas a la derecha",
+        "type": "geometria"
+      },
+      {
+        "description": "EL CHEVRON se reconoce por su path de tres puntos: 'M5 7.5L10 12.5L15 7.5'. Comprobar la forma (el punto del medio mas abajo que los extremos) es mas robusto que comparar el literal del path, que cambia si rediseñan el icono",
+        "selector": "svg[viewBox='0 0 20 20'] > path con d de 3 puntos en V",
+        "type": "geometria"
+      },
+      {
+        "description": "El drawer. Comparte role=dialog con el modal de categorias y con el modal de cobertura, asi que el rol solo no alcanza: filtrar por su encabezado",
+        "selector": "[role=dialog] filtrado por /elige tu m[ée]todo de entrega/i",
+        "type": "css"
+      },
+      {
+        "description": "Modal de cobertura que aparece al confirmar: es OTRO role=dialog, de 448x408, con el texto 'Aun no llegamos a esta direccion' y los botones 'Continuar con esta direccion' y 'Cambiar metodo de entrega'",
+        "selector": "[role=dialog] filtrado por /a[uú]n no llegamos a esta direcci[oó]n/i",
+        "type": "css"
+      },
+      {
+        "description": "Lista de tiendas de la pestaña Retiro en tienda: 50 tiendas renderizadas, cada una un <button> con su <input type=radio> dentro y el nombre + direccion. Al pie, 'Confirmar tienda'",
+        "selector": "[role=dialog] input[type=radio]  ·  button con /confirmar tienda/i",
+        "type": "css"
+      },
+      {
+        "description": "BOTON DEL STORE LOCATOR CON DIRECCION APLICADA (logueado): muestra la calle, \"Desde: <dia hora>\" y el costo. No contiene \"despacho\": por eso HeaderFull.storeLocator acepta tambien /desde:/",
+        "selector": "header button filtrado por /elige una forma de entrega|despacho|retiro en tienda|desde:/i, visible",
+        "type": "texto"
+      },
+      {
+        "description": "Buscador \"Calle, direccion o lugar\": su nombre accesible es el placeholder \"Ej: Av. Manquehue norte 457, Las condes\"",
+        "selector": "[drawer] getByRole(textbox).first()",
+        "type": "rol"
+      },
+      {
+        "description": "Sugerencias de Google: options de un listbox bajo el buscador; cada una con dos p (principal y secundaria=comuna)",
+        "selector": "[drawer] getByRole(listbox) > getByRole(option)",
+        "type": "rol"
+      },
+      {
+        "description": "Pie del drawer (contentinfo) con \"¿No aparece tu direccion?\" + boton \"Agregar\". VISIBLE SIEMPRE, incluso antes de escribir",
+        "selector": "[drawer] getByRole(contentinfo)",
+        "type": "rol"
+      },
+      {
+        "description": "Formulario \"Direccion manual\": Region y Comuna son <select> nativos (combobox); Comuna disabled hasta elegir Region. Calle = textbox \"Calle\", Numeracion = textbox \"Ej. 2160\" con label \"Numeracion(opcional)\". Boton \"Continuar con detalles de la direccion\" (plural; la planilla dice \"detalle\")",
+        "selector": "[drawer] getByRole(combobox).nth(0|1) · textbox Calle · textbox Ej. 2160",
+        "type": "rol"
+      },
+      {
+        "description": "Pantalla de error del drawer: \"Ups, algo salio mal\" / \"No logramos cargar la informacion de los metodos de entrega. Intenta otra vez.\" / \"Error: <uuid>\" / botones Reintentar y Volver al inicio",
+        "selector": "[drawer] getByText(/ups, algo sali[oó] mal/i)",
+        "type": "texto"
+      },
+      {
+        "description": "Modal de permisos de ubicacion: OTRO role=dialog montado sobre el drawer, texto \"Unimarc no tiene acceso a tu localizacion\", botones Cerrar y Cancelar",
+        "selector": "[role=dialog] filtrado por /no tiene acceso a tu localizaci[oó]n/i",
+        "type": "css"
+      },
+      {
+        "description": "Toast de GPS: \"No pudimos obtener tu ubicacion actual. Intentalo nuevamente.\" (fuera del drawer)",
+        "selector": "page.getByText(/no pudimos obtener tu ubicaci[oó]n actual/i)",
+        "type": "texto"
+      },
+      {
+        "description": "B2C-99 (confirmacion con PIN): dos pantallas, ambas role=dialog: 'Agregar nueva direccion' (mapa + PIN + 'Continuar con detalles de la direccion', a la que llega Google) y 'Detalles de la direccion' (a la que llegan GPS y formulario manual; boton 'Agregar direccion')",
+        "selector": "[role=dialog] filtrado por /agregar nueva direcci|detalles de la direcci/i",
+        "type": "css"
+      },
+      {
+        "description": "Centro del mapa de B2C-99 = posicion del PIN: enlace 'Abre esta zona en Google Maps' con maps?ll=<lat>,<lng>",
+        "selector": "[role=dialog] a[href*='maps.google.com/maps?ll=']",
+        "type": "css"
+      },
+      {
+        "description": "Tarjeta de direccion guardada: div con dos botones hijos (la direccion con 2 <p>: etiqueta y linea; y 'Opciones de la direccion' = menu ⋮). Eliminar: menu > 'Eliminar direccion' > dialog '¿Quieres eliminar tu direccion?' con Aceptar / No gracias",
+        "selector": "div:has(> button p) filtrado por la etiqueta",
+        "type": "css"
+      },
+      {
+        "description": "Modal OTP 'Autenticacion requerida' (6 textbox 'Digito N de 6', boton 'Close')",
+        "selector": "[role=dialog] filtrado por /autenticaci[oó]n requerida/i",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "url": "/mobify/proxy/api/customer/shopper-customers/v1/organizations/{org}/customers/{id}?siteId=Unimarc",
+        "purpose": "se pide al abrir el drawer logueado; trae las direcciones guardadas. Con 500 el drawer muestra la pantalla de error"
+      },
+      {
+        "method": "GET (JSONP)",
+        "url": "https://maps.googleapis.com/maps/api/place/js/AutocompletionService.GetPredictionsJson?...&9saddress...",
+        "purpose": "autocompletado de Google Places via SDK de Maps; componentRestrictions country=cl y types=[address]. No se dispara con menos de 3 caracteres"
+      },
+      {
+        "method": "GET",
+        "url": "/mobify/proxy/api/custom/smu-delivery/v1/organizations/{org}/locations · address-catalog · default-delivery",
+        "purpose": "catalogos de regiones/comunas y la entrega por defecto de la sesion"
+      },
+      {
+        "method": "POST",
+        "url": "/mobify/proxy/api/custom/smu-delivery/v1/organizations/{org}/apply",
+        "purpose": "aplica una direccion guardada como activa; con 500 aparece el toast 'Lo sentimos, no pudimos cambiar tu direccion. Intentalo nuevamente.'"
+      },
+      {
+        "method": "DELETE",
+        "url": "/mobify/proxy/api/customer/shopper-customers/v1/organizations/{org}/customers/{id}/addresses/{nombre}",
+        "purpose": "elimina una direccion guardada; con 500 aparece el toast 'Lo sentimos, no pudimos eliminar tu direccion...' que no se cierra solo"
+      },
+      {
+        "method": "GET",
+        "url": "/mobify/proxy/api/customer/shopper-customers/v1/organizations/{org}/customers/{id}/orders",
+        "purpose": "historial de compras; shipments[0].shippingAddress da la direccion de cada compra"
+      }
+    ],
+    "intercepts_useful": [
+      "page.route(/\\/shopper-customers\\/v1\\/organizations\\/[^/]+\\/customers\\/[^/?]+\\?/) → 500 SOLO despues del login (el login tambien pide el cliente)",
+      "geolocalizacion no disponible: grantPermissions([geolocation]) + addInitScript que reemplaza navigator.geolocation.getCurrentPosition por un error code 2"
+    ]
+  },
+  "observations": [
+    "EL ICONO DE LA IZQUIERDA ES UN PAR ANIMADO QUE ROTA: dentro del slot de 36 px conviven DOS svg de 24x24 que se desplazan horizontalmente (medidos en dos lecturas consecutivas del mismo estado: dx 6 y 42 en la primera, dx -30 y 6 en la segunda). No es un icono estatico, asi que una asercion sobre la posicion exacta de 'el icono' es inestable; lo estable es que siempre hay al menos un icono que empieza a la izquierda del texto. Para las capturas, capturarEvidencia ya pasa animations:'disabled' y las congela.",
+    "EL TEXTO SIN SELECCION ES EXACTAMENTE 'Elige una forma de entrega', sin tildes, igual que en la planilla — aqui no hay trampa de acentos. El encabezado del drawer si la lleva: 'Elige tu método de entrega'.",
+    "COMO INVITADO NO HAY DIRECCIONES GUARDADAS: la pestaña Despacho a domicilio muestra 'Aun no tienes direcciones guardadas' y obliga a escribir en 'Calle, direccion o lugar' para que el autocompletado de Google Places ofrezca sugerencias. Es decir, dejar una forma de entrega aplicada exige aportar una direccion concreta, que es data que la planilla de B2C-70 no declara en ninguna fila.",
+    "DEFECTO OBSERVADO — RETIRO EN TIENDA NO APLICA LA SELECCION, Y AHORA SE SABE POR QUE: con una tienda marcada (radio checked, 'Confirmar tienda' habilitado y no disabled), el clic en 'Confirmar tienda' NO cierra el drawer ni cambia el header —sigue diciendo 'Elige una forma de entrega'—, y lo que se monta es un segundo role=dialog de 448x408 con el mensaje 'Aun no llegamos a esta direccion. Revisa que este correcta, prueba con otra dentro de nuestra zona de cobertura o cambia tu metodo de entrega a una de nuestras tienda Unimarc'. Es un mensaje de cobertura de DESPACHO respondiendo a una confirmacion de RETIRO EN TIENDA, sobre una tienda que el propio drawer ofrece en su lista. Reproducido el 2026-09-11 con 'Unimarc Santa María Arica'. Amplia lo que [[header-sticky]] habia anotado el 2026-09-10 desde B2C-24, donde se vio el sintoma pero no el modal. NO GENERO BUG: ningun TC de B2C-70 cubre la mecanica de retiro en tienda —D-002 pide 'metodo de entrega con direccion'— y un Bloqueado no abre defectos. Conviene que el equipo agregue un TC para esa mecanica.",
+    "CONSECUENCIA PARA LA CERTIFICACION DEL COMPONENTE: el estado 'con metodo de entrega activo' no es alcanzable sin aportar una direccion no declarada, porque la unica via que se resuelve dentro de la propia UI (elegir una tienda de la lista) esta rota. Por eso D-002 y D-003 quedaron Bloqueado y no Rechazado: el impedimento esta en la precondicion, no en lo que el caso venia a verificar.",
+    "EL DRAWER ES position:fixed, asi que offsetParent es null y filtrar por offsetParent!==null lo da por invisible. Para detectarlo desde el DOM hay que medir getBoundingClientRect().width; desde Playwright, visible=true funciona bien.",
+    "GOOGLE FILTRA POR types=[address] (B2C-26, 2026-09-28): el buscador nunca devuelve resultados de tipo comuna/region. Con \"Providencia\" solo salen calles (route) llamadas Providencia en otras comunas; sin el filtro Google SI devuelve \"Providencia | locality\". Por eso el criterio \"resultado sin calle reconocida (comuna o region)\" de B2C-26 no se puede alcanzar desde la UI.",
+    "TRAS EL LOGIN EL HEADER TARDA EN MOSTRAR LA DIRECCION: se pinta primero \"Elige una forma de entrega\" y segundos despues la direccion activa. Leerlo de inmediato da un falso \"sin direccion\". HeaderFull.esperarDireccionEnStoreLocator() espera el \"Desde:\".",
+    "CUENTA {COMPRADOR_USER} (2026-09-28): una sola direccion guardada (\"Casa\", Calle Uno 23, La Florida, Metropolitana), que es a la vez la activa; y la muestra con el menu \"Opciones de la direccion\" (unica opcion: Eliminar direccion). Pedidos: 2, ambos \"Por confirmar\", ninguno completado.",
+    "SIN PERMISO DE UBICACION, Playwright no muestra el prompt nativo: el navegador automatizado niega al instante y el sitio abre el modal \"Unimarc no tiene acceso a tu localizacion\". El caso \"deniega en el prompt\" no es reproducible; el \"sin conceder\" si.",
+    "CATALOGO DE REGIONES: 16, rotuladas sin \"Region\" (\"Metropolitana\", \"Bio Bio\", \"Magallanes y de la Antartica Chilena\"). La RM lista 39 comunas.",
+    "PARA PROVOCAR LA PANTALLA DE ERROR hay que esperar a que los datos del cliente queden viejos (~60 s): recien logueado el drawer usa lo que ya tiene y no vuelve a pedir el cliente; recargar tampoco sirve (el servidor lo vuelve a servir). Con la ruta cortada + 70 s de espera, abrir el drawer desde el HOME da \"Ups, algo salio mal\". Ver MetodoEntregaModal.forzarErrorCargaDirecciones().",
+    "DESDE UNA PLP LA PANTALLA DE ERROR NO APARECE con el mismo corte (antes o despues de navegar): el drawer sigue mostrando las direcciones que tenia. TC-B2C26-M-011 quedo Bloqueado por eso (2026-09-28).",
+    "DEFECTO B2C-845: tras la pantalla de error, restablecida la carga, UN toque en \"Reintentar\" hace la consulta (200) pero el drawer se queda en \"Ups, algo salio mal\"; en la exploracion hizo falta un segundo toque. 4/4.",
+    "DEFECTO B2C-844: el autocompletado usa types=[address]; nunca hay resultados de tipo comuna/region, asi que el CA4 de B2C-26 (resultado sin calle reconocida) es inalcanzable.",
+    "B2C-846 (a definir con el PO): el Carro usa el Header Simplificado de B2C-25 (solo logo) y no muestra la direccion activa; B2C-26 CA26 la pide en el Carro.",
+    "EN LA PLP N1 MOBILE los nombres de producto son enlaces <a href=\"...html\"> con \"Marca | Nombre\", no button.chakra-text: PLPCategoriaN1Page.abrirPrimerProducto() usa el enlace. En Mobile el buscador del header abre su propio panel (BuscadorModal.abrir()).",
+    "2026-10-09 CUENTA {COMPRADOR_USER}: tres direcciones guardadas — 'Casa' (Calle Uno 23, La Florida, activa), 'Otra Casa' (Camino La Fuente, Las Condes, sin numero) y 'Sin cobertura' (Mechique, Los Lagos). Compras 00000428 y 00000328 'Confirmada', ambas en Calle Uno 23, La Florida.",
+    "ELEGIR UNA DIRECCION GUARDADA CON COBERTURA PIDE OTP ('Autenticacion requerida', codigo al correo de la cuenta) despues de que /apply responde OK. Contradice el CA15 de B2C-26 (sin PIN ni OTP). 'Sin cobertura' no pide OTP: deriva a 'Aun no llegamos a esta direccion' (B2C-123).",
+    "LA DIRECCION ACTIVA TAMBIEN MUESTRA EL MENU ⋮ en la lista de guardadas (CA16 dice que no).",
+    "INVITADO: el nombre por defecto de la direccion es calle+numero truncado a 20 caracteres con '…' (B2C-99 CA13). El header y el bloque 'Direccion de despacho' del modal muestran solo ese nombre ('Camino La Fuente 15…'): sin comuna ni region.",
+    "AGREGAR UNA DIRECCION ESTANDO LOGUEADO PIDE OTP (B2C-99 CA3) => no se puede recrear una direccion borrada sin acceso al correo de la cuenta. Por eso M-028 queda Bloqueado (decision del usuario 2026-10-09).",
+    "INVITADO CON DIRECCION QUE INICIA SESION: aparece el OTP 'Autenticacion requerida' (B2C-124 CA3 -> B2C-125) y el header pasa a la direccion del perfil mientras tanto.",
+    "GPS concedido: el boton muestra 'Buscando tu ubicacion…' y salta directo a 'Detalles de la direccion' con el mapa centrado en las coordenadas del navegador.",
+    "Formulario manual: spinner en el boton 'Continuar con detalles' y luego 'Detalles de la direccion' con 'Camino La Fuente 1589 / Las Condes, Metropolitana'; PIN geocodificado en -33.401133,-70.523047 (el mismo que da la sugerencia de Google).",
+    "Google caido (maps.googleapis.com bloqueado): sin sugerencias ni error; el pie '¿No aparece tu direccion? Agregar' sigue disponible. No existe el literal 'Agregar direccion manualmente'.",
+    "El Carro (/cart) sigue con el header simplificado tambien para invitado (B2C-846 DESCARTADO).",
+    "B2C-70 SP2 (2026-10-12): en Mobile 390x844 (WebKit) el Store Locator va en una franja arriba del header (ícono tienda + \"Elige una forma de entrega\" + V); HeaderFull.storeLocator/composicionDelStoreLocator sirven igual que en Desktop. El botón \"Ingresa aquí\" existe también en Mobile (texto oculto tras el ícono). SIN_DIRECCION_USER (10.101.010-4) inicia sesión por RUT y queda sin método de entrega (\"Hola, QA\"). {DIRECCION_DESPACHO_001}=\"Casa\" es una etiqueta de dirección guardada, no sirve para invitado. D-001/M-001/M-002 Aprobado.",
+    "B2C-123 (2026-10-12, tarde): el modal 'Ingresa aquí' cambió a SOLO 'Correo electrónico' + Google/Apple (sin paso RUT/contraseña). Con un RUT el botón 'Ingresar' queda deshabilitado: las cuentas por RUT del Excel de data (11.223.344-K, 10.101.010-4, …) ya no inician sesión; LoginModal.iniciarSesion (campo /rut/) dejará de funcionar. Se necesitan cuentas con correo y acceso al OTP.",
+    "B2C-138 (2026-10-12): drawer 'Elige tu método de entrega' invitado sin direcciones — Desktop: drawer a la IZQUIERDA (~500px), X 'Cerrar', clic fuera (overlay a la derecha) lo cierra. Mobile 390x844: chakra-slide a pantalla completa, sin gesto de arrastre ni zona fuera: solo cierra con X (bug B2C-1184). Tab activa: aria-pressed=true, ícono rgb(218,41,28); inactiva gris rgb(106,106,106). Retiro en tienda → 'Selecciona tu tienda Unimarc' + 'Buscar tienda' + lista de tiendas. Abrir el drawer como invitado no dispara requests: no se puede forzar 'Ups, algo salió mal'; offline el sitio muestra 'navegando sin conexión' y el drawer no abre. 'Activar mi ubicación actual' sin permiso → 'Buscando tu ubicación…' y toast 'No pudimos obtener tu ubicación actual'. POM: MetodoEntregaModal (estiloTab, cerrarConX, clicFuera, swipeAbajo).",
+    "B2C-123 re-ejecución (2026-10-12): {DIRECCION_SIN_COBERTURA}='Mechique, Los Lagos' NO da sugerencias de Google (tampoco 'Mechique'); el buscador sí sugiere con calle+número. Retiro en tienda: el buscador filtra por ubicación ('Los Lagos'), no por nombre de tienda ('Unimarc Los Lagos II' → 'Parece que hoy no encontramos esa tienda'). Confirmar 'Unimarc Los Lagos II' abre 'Aún no llegamos a esta dirección' con el mensaje '…nuestras tienda Unimarc' (bug B2C-1185, falta la s).",
+    "B2C-123 2a re-ejecución (2026-10-12 tarde): {DIRECCION_SIN_COBERTURA}='T-551, Futrono' sí sugiere ('T-551 · Futrono'); flujo: sugerencia → B2C-99 'Continuar con detalles de la dirección' → 'Agregar dirección' → modal 'Aún no llegamos' (no hay botón 'Confirmar dirección'). 'Continuar con esta dirección': chakra-spinner + skeleton, header 'T-551' + '⚠ Despacho sin cobertura', persiste en PLP. 'Cambiar método de entrega' vuelve al drawer. Con esa dirección, 'Agregar' en PDP da toast role=status 'Cambia tu dirección de despacho para poder comprar.' con X, carro 0 (bug B2C-1186: el CA pide 'No tenemos cobertura…'). Invitado SIN dirección: 'Agregar' en PDP abre el drawer (no agrega). Helpers en tests/B2C-123.spec.ts: confirmarSinCobertura / continuarSinCobertura.",
+    "B2C-70 M-003/M-004 (2026-10-12 tarde, Mobile WebKit): con dirección aplicada el botón muestra solo la CALLE ('Calle Uno 23', sin comuna) + 'Desde: <día hora>' + chip [data-testid=header-delivery-chip] ('$2.990' despacho / 'Gratis' retiro). Los dos íconos (moto path 'M20.25 9…', edificio 'M21.75 16.5…') están siempre; el activo es rgb(218,41,28) y el otro rgb(189,189,189). Retiro 'Unimarc Las Condes' (Av. Las Condes 14791, Lo Barnechea) sí se aplica como invitado (buscar 'Las Condes'); al confirmar se abre el login de invitado ('¡Hola, ingresa aquí!', botón 'Cerrar'). DIRECCION_DESPACHO_001 ahora = 'Calle Uno 23, La Florida'.",
+    "2026-10-14 (B2C-123): {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} pasó a vhchirinos+nocobertura, que no está registrada en DEV (el login abre 'Crear cuenta').",
+    "2026-10-14 (B2C-123): vhchirinos+comprador tiene guardada 'T-551, Futrono' (precondición de D/M-002). Al elegirla desde las guardadas aparece 'Aún no llegamos' ANTES del OTP; el OTP se pide al continuar.",
+    "2026-10-14 (B2C-123): desde Mis Envíos (ícono ▾), una dirección sin cobertura → Continuar → 'Algunos productos podrían agotarse' → OTP → redirige al Home con 'Despacho sin cobertura'."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/HeaderFull.ts · tests/pages/StoreLocator.ts · tests/pages/MetodoEntregaModal.ts",
+    "class": "HeaderFull.storeLocator / StoreLocator"
+  },
+  "history": [
+    {
+      "at": "2026-09-11T23:25:00Z",
+      "version": 1,
+      "note": "antes de sumar lo explorado para B2C-26 (modal por dentro)"
+    },
+    {
+      "at": "2026-10-09T18:30:00Z",
+      "version": 2,
+      "note": "antes de sumar la exploracion de B2C-26 con data declarada (2026-10-09)"
+    }
+  ],
+  "sources_extra": [
+    {
+      "suite": "B2C-26",
+      "hu": "B2C-26",
+      "tc_file": "Casos de Prueba/Para Ejecutar/B2C-26 Test Cases.xlsx",
+      "last_sync": "2026-09-28T16:34:55Z"
+    }
+  ],
+  "last_run": {
+    "suite": "B2C-26",
+    "fecha": "2026-10-09",
+    "resultado": "35 pendientes: 16 Aprobado, 10 Rechazado (bugs B2C-1156..1160; D-003->B2C-844 y D-015->B2C-846 descartados), 3 Bloqueado, 6 Bloqueado Data"
+  }
+}

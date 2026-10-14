@@ -1,0 +1,122 @@
+{
+  "flow": "home-carrusel-circular",
+  "last_updated": "2026-09-17T00:00:00Z",
+  "version": 7,
+  "description": "Layout Carrusel + imagen circular (Round Category Tile) del Home/Landing: título centrado, slider horizontal de imágenes circulares que enlazan a categorías, con controles Anterior/Siguiente. Es el objeto de la HU B2C-72.",
+  "source": {
+    "suite": "B2C-72",
+    "tc_file": "Casos de Prueba/Ejecutados/B2C-72 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C72-D-001",
+      "TC-B2C72-D-002",
+      "TC-B2C72-D-003",
+      "TC-B2C72-M-001",
+      "TC-B2C72-M-002",
+      "TC-B2C72-M-003"
+    ],
+    "last_sync": "2026-09-15T17:40:00Z",
+    "suites_relacionadas": [
+      {
+        "suite": "B2C-191",
+        "tc_file": "Casos de Prueba/Ejecutados/B2C-191 Test Cases.xlsx",
+        "test_cases": [
+          "TC-B2C191-D-001",
+          "TC-B2C191-D-002",
+          "TC-B2C191-M-001"
+        ],
+        "last_sync": "2026-09-17T00:00:00Z",
+        "que_cubre": "la misma instancia del Home (tb-categorias-hp) vista como 'Popular Categories Layout': disposicion horizontal en Desktop, grilla 3x2 en Mobile y redireccion del banner"
+      }
+    ]
+  },
+  "navigation": {
+    "entry_url": "/",
+    "instancia_en_dev": "En este ambiente el componente está configurado en el Home con el título 'Categorías destacadas'. Es el segundo de los 8 componentes del Home (ver [[home-page-designer]]). No hay Landing disponible en DEV.",
+    "destinos": "Cada tile enlaza a /category/<slug> con un <a> normal, así que la redirección es navegación de página, no SPA interceptada.",
+    "modals": [
+      "consentimiento de cookies"
+    ]
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "El componente entero. No hay clase semántica ni data-attribute: se llega por su encabezado visible y se sube al <section> que lo contiene. Las clases (css-slg32q, css-1qxg135…) son hashes de Emotion y cambian en cada build — no sirven como ancla.",
+        "selector": "main section que contiene el h2/h3 'Categorías destacadas'",
+        "type": "texto+dom"
+      },
+      {
+        "description": "Título del componente. Va centrado (text-align: center) en los dos form-factors.",
+        "selector": "h1/h2/h3 visible dentro de la sección",
+        "type": "rol"
+      },
+      {
+        "description": "El carril que scrollea. Es el único descendiente de la sección con scrollWidth > clientWidth y overflow-x: auto; el deslizamiento lo da el scroll nativo, no un transform.",
+        "selector": "descendiente con overflow-x: auto y scrollWidth > clientWidth",
+        "type": "estilo"
+      },
+      {
+        "description": "Controles de deslizamiento. Llevan aria-label 'Anterior' y 'Siguiente', sin texto visible, y están presentes también en Mobile.",
+        "selector": "button[aria-label='Anterior'] / button[aria-label='Siguiente'] dentro de la sección",
+        "type": "css"
+      },
+      {
+        "description": "Cada tile: un <a> a /category/<slug> que envuelve la imagen y su caption.",
+        "selector": "a[href^='/category/'] dentro de la sección",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": []
+  },
+  "observations": [
+    "LA CIRCULARIDAD NO ESTÁ EN EL <img>: la imagen tiene border-radius 0px y quien la recorta es su envoltorio .chakra-aspect-ratio, con border-radius 9999px y overflow hidden. Una aserción sobre el radio del <img> concluye que el tile es cuadrado cuando en pantalla es un círculo.",
+    "TAMAÑO POR FORM-FACTOR: en Desktop 1440x900 la imagen mide exactamente 150x150 px, pero en Mobile 390x844 mide 109x109. El componente no conserva los 150 px al bajar de ancho.",
+    "LOS 150 px Y LAS 3 IMÁGENES POR SLIDE NO CABEN JUNTOS EN MOBILE: 3 x 150 = 450 px sobre un viewport de 390. El resultado esperado de TC-B2C72-M-001 pide las dos cosas a la vez, así que tal como está redactado no puede cumplirse en ningún ambiente; o el tamaño es otro en Mobile, o el número de imágenes por slide lo es.",
+    "IMÁGENES POR SLIDE: 6 caben enteras dentro del ancho del carril en Desktop 1440 y 3 en Mobile 390, de un total de 7 tiles configurados. Se cuentan midiendo cuáles quedan dentro del rectángulo del carril, no por un atributo: el carril es un scroller nativo y el resto queda desbordado a la derecha.",
+    "EL DESLIZAMIENTO ES SCROLL NATIVO: 'Siguiente' lleva el scrollLeft de 0 a 217 (el máximo, scrollWidth 1497 sobre clientWidth 1280 en Desktop) y 'Anterior' lo devuelve a 0. En Mobile el carril va de 358 visibles sobre 857 de ancho total.",
+    "WEBKIT PROHÍBE `new Touch()` SI EL CONTEXTO NO TIENE TOUCH: el constructor lanza 'Illegal constructor', así que un gesto táctil sintético no se puede fabricar desde la página. El preset del project mobile es devices['Desktop Safari'], que no trae hasTouch; el TC de swipe necesita declararlo con test.use({ hasTouch: true }) en su describe. Eso es una capacidad que exige el caso, no un cambio de viewport ni de motor.",
+    "EL NOMBRE VISIBLE NO ES EL DE LA CATEGORÍA DESTINO: el tile 'Orgánico' apunta a /category/frutas-y-verduras y 'Comida en casa' a /category/congelados. Es el 'Custom display name' que describe CA4, así que la redirección no se puede verificar comparando el texto del tile con el slug de la URL: hay que leer el href del propio tile y comprobar que se llegó ahí.",
+    "AMBIENTE DEV: hay 7 tiles configurados, suficientes para que el carril desborde en los dos form-factors y los controles tengan efecto.",
+    "PARA CERTIFICAR EL DESLIZAMIENTO SIN GESTO estan los controles Anterior/Siguiente, que existen tambien en Mobile y si son accionables desde Playwright. Sustituir el gesto por un scroll programatico NO sirve como veredicto: certificaria que el carril scrollea, que no es lo que el caso afirma.",
+    "CORRIDA 2026-09-14 (B2C-72): 4 Aprobado, 1 Rechazado, 1 Bloqueado y 4 Fuera de alcance (los BM) sobre 10 TC. El rechazo es el tamano de los tiles en Mobile (109x109 frente a los 150x150 que pide el TC), reportado en B2C-780 junto con la nota de que el esperado del caso no es satisfacible tal como esta redactado.",
+    "LA PLANILLA DE B2C-72 TRAE DOS FILAS QUE NO SON CASOS: '% Aprobacion' y '% Pendiente' en las filas 23 y 24 de la columna CP-ID, con el resto de columnas vacio y la tabla de TC terminando en la fila 11. Son rotulos del dashboard que se colaron en la hoja. No se les escribe estado —marcarlas Bloqueado sumaria dos bloqueos falsos al recuento de la HU— y el tally las cuenta aparte como '(vacio)'.",
+    "COMO SE DESPLAZA EL CARRIL, Y CON QUE SE PRUEBA: es un scroller nativo (overflow-x: auto), asi que el desplazamiento lo resuelve el compositor del navegador a partir de INPUT REAL. Los eventos tactiles fabricados desde la pagina no lo mueven —ni con hasTouch: true ni pasando por la API heredada createTouch/initTouchEvent que WebKit exige: se despachan sin error y dejan el scrollLeft en 0—. Lo que si lo mueve es page.mouse.wheel(deltaX, 0) situado encima: verificado en Mobile 390x844, scrollLeft 0 -> 249 de un maximo de 499, con los tiles visibles pasando de 'Organico, Comida en casa, Panaderia' a 'Panaderia, Pasteleria, Celebraciones'. No es un dedo: un gesto tactil como tal solo se certifica en un dispositivo real.",
+    "TC-B2C72-M-002 SE REEJECUTO el 2026-09-14 y quedo Aprobado. En la corrida original habia quedado Bloqueado por considerarlo no automatizable, conclusion sacada sin haber probado la rueda horizontal. Leccion para el flujo: antes de dar por no automatizable un desplazamiento, agotar las dos vias de input real —arrastre de puntero para carruseles con JS (tipo Swiper) y rueda horizontal para scrollers nativos— y no solo los eventos sinteticos.",
+    "RE-EJECUCION 2026-09-15 (B2C-72, planilla ya archivada en Ejecutados): 5 Aprobado, 1 Rechazado y 4 Fuera de alcance sobre los 10 TC. Resultado identico al de la corrida del 2026-09-14, incluido TC-B2C72-M-002, que se mantiene Aprobado con la rueda horizontal. Los selectores del componente no cambiaron: titulo \"Categorias destacadas\" centrado, 7 tiles <a href=\"/category/...\">, envoltorio de aspect-ratio con border-radius 9999px, botones aria-label Anterior/Siguiente, carril 1497/1280 en Desktop y 857/358 en Mobile. El unico rechazo sigue siendo el tamano en Mobile (109x109 frente a 150x150).",
+    "EL DEFECTO DE B2C-780 SIGUE ABIERTO al 2026-09-15 y se reprodujo identico, asi que la re-ejecucion NO abrio un bug nuevo: se comento la reproduccion en el existente. Regla que conviene recordar para este componente: mientras B2C-780 este vivo, TC-B2C72-M-001 va a volver a salir Rechazado en cada corrida y lo correcto es comentar, no duplicar.",
+    "RE-EJECUCION 2026-09-17 (planilla desde Ejecutados, a peticion del usuario): 6 Aprobado y 4 Fuera de alcance sobre 10 TC. Es la primera corrida de esta suite sin ningun Rechazado.",
+    "CAMBIO EN LA PLANILLA, y es lo que explica el vuelco: el resultado esperado de TC-B2C72-M-001 YA NO PIDE 150x150 px. Hoy dice 'titulo centrado sobre el slider; imagenes circulares con hasta 3 imagenes visibles por slide en Mobile', sin mencionar el tamano. Su par TC-B2C72-D-001 si sigue pidiendo 150x150 para Desktop. El test() de M-001 se actualizo para asertar lo que la fila pide hoy; el tamano se sigue midiendo pero solo se registra como constancia.",
+    "EL BUG B2C-780 FIGURA DESCARTADO (resolution 'Listo', estado DESCARTADO), no corregido: el producto sigue renderizando 109x109 en Mobile, identico a las corridas anteriores. La lectura coherente es que el equipo resolvio la contradiccion arreglando el TC en vez del componente — 3 tiles de 150 px no caben en 390 px de viewport—, y por eso descarto el defecto.",
+    "PRODUCTO SIN CAMBIOS AL 2026-09-17: Desktop 150x150 con 6 por slide y carril 1497/1280; Mobile 109x109 con 3 por slide y carril 857/358; 7 tiles, titulo centrado en ambos, circularidad por el envoltorio (9999px) y controles Anterior/Siguiente presentes en los dos form-factors.",
+    "LA HU B2C-72 QUEDO EN TESTEADO QA OK el 2026-09-17. El tally pedia ese estado pero la historia estaba en TESTEADO (QA) CON ERROR, fuera de los estados desde los que el contrato permite mover, asi que la corrida no la movio por su cuenta: se consulto al usuario y la transicion 'testeado ok' (id 12) se aplico con su visto bueno.",
+    "DOS HU CERTIFICAN ESTE MISMO COMPONENTE Y LO DESCRIBEN DISTINTO. B2C-72 lo llama 'Layout Carrusel + imagen circular' y pide un slider con hasta 3 imagenes por slide en Mobile; B2C-191 lo llama 'Popular Categories Layout' y su CA2 pide una grilla fija de 3x2, ademas de 150x150 px. La instancia es la misma en los dos casos: tb-categorias-hp, 'Categorias destacadas', 7 tiles. En Desktop las dos lecturas se cumplen a la vez; en Mobile son incompatibles y el producto implementa la de B2C-72. Reportado en B2C-821, enlazado a las dos HU.",
+    "EL HOME EXPONE IDs SEMANTICOS POR COMPONENTE (ver [[home-page-designer]]): el componente es main div.component#tb-categorias-hp y cada tile es tb-cat-<n>-hp. Es un ancla mas barata que subir desde el titulo visible, aunque el POM sigue anclado al titulo porque ese si es el criterio que nombra la HU.",
+    "CORRIDA 2026-09-17 (B2C-191): 2 Aprobado, 1 Rechazado, 4 Bloqueado y 4 Fuera de alcance sobre 11 TC. Desktop cumple: titulo centrado, 7 banners circulares en una sola fila a 150x150 px, y el clic lleva a la categoria configurada. Mobile queda en una fila de 7 dentro de un carril deslizable (857 sobre 358 px) a 109x109.",
+    "TRES TC DE B2C-191 LLEGAN CON EL ESPERADO EN BLANCO: D-004, D-005 y D-006 dicen 'Pendiente de definir' y la propia planilla explica por que -la HU no tiene CA de desborde de tiles, ni de publicacion sin tiles, ni de fallback de imagen, a diferencia de sus hermanas B2C-77/78/79/80/81/83-. Van a Bloqueado sin explorar: sin esperado no hay con que comparar."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/CarruselCircular.ts",
+    "class": "CarruselCircular",
+    "relacionados": [
+      "tests/pages/HomePage.ts (la página que lo contiene; ver flujo home-page-designer)"
+    ]
+  },
+  "history": [
+    {
+      "fecha": "2026-09-14",
+      "que_cambio": "la conclusion sobre el gesto tactil del carrusel",
+      "antes": "EL GESTO TACTIL NO ES SIMULABLE SOBRE ESTE COMPONENTE, y la cadena de intentos conviene no repetirla: (1) con el preset del project mobile (Desktop Safari) `new Touch()` lanza 'Illegal constructor'; (2) con hasTouch: true sigue prohibido —WebKit EXPONE la interfaz Touch pero no deja construirla, asi que un `typeof Touch !== 'undefined'` da verde y revienta igual—; (3) por la API heredada (document.createTouch + createTouchList + initTouchEvent) los eventos SI se despachan sin error... y el scrollLeft se queda en 0. La causa de fondo es que el desplazamiento es scroll NATIVO: lo mueve el compositor del navegador a partir de input real, no un touchmove despachado desde el DOM. TC-B2C72-M-002 quedo Bloqueado por eso, no por un defecto: en un telefono real el dedo arrastra el carril sin que la pagina intervenga.",
+      "motivo": "se afirmo que el gesto no era automatizable habiendo probado solo eventos tactiles fabricados desde el DOM; la rueda horizontal, que va por input real, si desplaza el carril."
+    },
+    {
+      "version": 5,
+      "changed_at": "2026-09-17T00:00:00Z",
+      "change": "Hasta esta fecha el knowledge daba por vigente que TC-B2C72-M-001 exigia 150x150 px en Mobile y que por eso quedaba Rechazado (bug B2C-780). La planilla ya no lo pide."
+    }
+  ]
+}

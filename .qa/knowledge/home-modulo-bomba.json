@@ -1,0 +1,71 @@
+{
+  "flow": "home-modulo-bomba",
+  "last_updated": "2026-10-07T21:00:00Z",
+  "version": 4,
+  "description": "Módulo Bomba del Home/Landing, en sus variantes T5 (logo lateral sobre color de fondo) y T6 (imagen de fondo inmersiva), con bomba badge de cuenta regresiva y carrusel de productos. Es el objeto de la HU B2C-78. YA ESTÁ CONFIGURADO EN DEV desde el 2026-09-14 (antes no lo estaba).",
+  "source": {
+    "suite": "B2C-78",
+    "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-78 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C78-D-001",
+      "TC-B2C78-M-001",
+      "TC-B2C78-M-003",
+      "TC-B2C78-D-005",
+      "TC-B2C78-D-006",
+      "TC-B2C78-D-012",
+      "TC-B2C78-D-013",
+      "TC-B2C78-D-015"
+    ],
+    "last_sync": "2026-10-07T21:00:00Z"
+  },
+  "navigation": {
+    "entry_url": "/",
+    "instancia_en_dev": "`hp-bomba-hw` en el Home, entre 'Los más vendidos' y 'Categorías destacadas'. Trae logo de 900x110, cuenta regresiva viva ('89 días : 07 horas : …') y carrusel de productos con botón Agregar. Sin imagen de fondo, es decir la variante con logo (T5), no la inmersiva (T6).",
+    "modals": []
+  },
+  "selectors": {
+    "preferred": [],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": []
+  },
+  "observations": [
+    "EXPLORACIÓN 2026-10-07 (corrida B2C-78): `hp-bomba-hw` (typeId ux_assets.bombaModule, name 'Modulo Bomba') config: presentation t5_logo (NO hay T6 en DEV), carouselControls false (sin flechas, solo .swiper-scrollbar), autoplay 3000 ms pauseOnMouseEnter false, populationMode collection, category frutas-y-verduras (la PLP tiene solo 6 productos → el carrusel muestra 6, no se puede probar el tope 12), maxProducts 12, endDate 12/12/2026 23:59:59, expiredMessage 'Finalizado', seeAllLabel '' (no hay enlace Ver todos), logoCtaUrl /Search-Show?cgid=frutas-y-verduras (el <a> sale como /category/frutas-y-verduras), img del logo alt='Logo' (alt no configurado). Desktop 1440: comp 1425x628, fondo #f9f9f9, logo [80,24,885,110] alineado con logo del Header (x=80), cuenta regresiva [1005,34,340,90] '66 días : 11 horas : …', 5 slides visibles de 6. Mobile 390 (webkit): logo [16,12,82,70], cuenta [114,12,260,70], 2 visibles. Tarjetas: enlaces a /<slug>/<sku>.html + 'Agregar'. Decisiones: D-001 Aprobado con nota (controles desactivados por config), D-003 Bloqueado (paso 2 clica controles inexistentes; autoplay 3 s sí verificable) — elegido por el usuario. Plan propio: D-002/M-002 (T6), D-004 (sin Ver todos), D-007..D-011, D-014, D-016, D-017 (ambas filas 25 y 29) → Bloqueado por configuración de Page Designer; D-012 forzando error de la imagen del logo con page.route en contexto nuevo (como B2C-77 M-013); D-015 Aprobado usando alt no configurado; BM-005..007 filas 26-28 → Fuera de alcance. D-004 tiene en Estado el texto 'No he tocado dicho estado, los pongo como' (no es un estado válido): tratarlo como pendiente.",
+    "RESULTADO 2026-10-07: 7 Aprobado (D-001, M-001, M-003, D-005, D-006, D-013, D-015), D-012 Rechazado con bug B2C-1143 (logo caído muestra el ícono de imagen rota del navegador y el alt 'Logo', sin estado 'Imagen no disponible'), 12 Bloqueado por configuración de Page Designer. Para forzar el error del logo: leer config().logoImage.url en un contexto aparte y hacer page.route sobre el archivo antes de abrir el Home (caché vacía). M-003: con 6 tarjetas y 2 visibles el autoplay suele dejar el carrusel al final (activeIndex 4); deslizar hacia atrás si swiper.isEnd. La planilla trae filas 25-28 duplicadas (D-017, BM-005..007, iguales a las filas 29-32): qa_excel write solo escribe la última fila de cada CP-ID, así que esas 4 quedan Pendiente.",
+    "EL COMPONENTE YA EXISTE: al explorar el Home para B2C-83 el 2026-09-14 apareció `hp-bomba-hw` con todos los rasgos que lo definen —logo, cuenta regresiva y carrusel de productos—, así que la causa por la que se bloquearon los 20 TC web de B2C-78 ('componente no configurado en DEV') YA NO SE SOSTIENE y la suite conviene volver a correrla. Lo que falta por confirmar al re-explorar es si además está la variante inmersiva T6: esta instancia no tiene imagen de fondo. Se encuentra de una sola pasada con `document.getElementById('hp-bomba-hw')`, sin barrer el Home: ver los anclas de Page Designer en [[home-page-designer]].",
+    "EL MÓDULO BOMBA NO EXISTE EN ESTE AMBIENTE, y eso bloquea la suite B2C-78 entera por el lado web. Lo que sí hay en el Home son los 8 componentes de siempre (ver [[home-page-designer]]): Los más vendidos, Categorías destacadas, Cada día una ocasión, Frescura y calidad, Prende la parrilla, Chocolates Milka, Nuestras marcas y Especial Bebidas. Ninguno es el Módulo Bomba.",
+    "CÓMO SE COMPROBÓ, para que la próxima corrida no repita el barrido: sobre el Home completo —recorrido hasta el final para que carguen los componentes diferidos— no aparece ningún contador (ni patrón hh:mm:ss, ni 'días/horas' juntos), la palabra 'bomba' no figura en el texto de `main`, y no hay ningún elemento de más de 600x200 px con `background-image`, que es la forma que tendría la variante T6. Verificado en Desktop 1440x900 (chromium) y en Mobile 390x844 (webkit): los dos form-factors muestran los mismos 8 componentes.",
+    "TAMPOCO HAY LANDING: /ofertas responde 'This page isn't working — Not found'. Coincide con lo que ya registraba [[header-storefront]] ('Landing no disponible en DEV'), así que la otra ubicación que los TC admiten tampoco existe.",
+    "CUIDADO CON CONFUNDIR 'Chocolates Milka' CON EL MÓDULO BOMBA: es un módulo de descuento porcentual —enlace con badge '40% dcto', título, bajada 'Endulza tu día' y carrusel Swiper de productos— sin logo, sin contador y sin imagen de fondo. 'Especial Bebidas' es del mismo tipo, con un banner. Ninguno tiene los elementos que definen la variante T5 (logo arriba a la izquierda + bomba badge arriba a la derecha) ni la T6 (imagen de fondo ocupando el componente).",
+    "QUÉ HARÍA FALTA PARA CERTIFICAR LA SUITE: que alguien configure y publique el Módulo Bomba en el Home de DEV, en sus dos variantes (T5 y T6), con el bomba badge con fecha fin futura y el carrusel en modo Colección. Sin eso ninguno de los 20 TC web es observable — ni siquiera los de estructura, porque no hay componente que medir.",
+    "2026-10-09: hp-bomba-hw sigue en modo Coleccion (frutas-y-verduras, max 12, carouselAutoPlay true, endDate 12/12/2026). frutas-y-verduras ahora tiene 21 productos y el carrusel muestra 12 -> D-017 Aprobado. Modo OOB sin tiles sigue sin publicarse (D-016 Bloqueado)."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/ModuloBomba.ts",
+    "class": "ModuloBomba",
+    "nota": "Ancla por typeId ux_assets.bombaModule (config() lee el JSON de Page Designer del HTML y da el id de la instancia); geometria(), cuentaRegresiva(), slidesVisibles(), estadoDelCarrusel(), detenerAutoplay(), arrastrar(haciaAtras), tarjeta(i), estadoDelLogo()."
+  },
+  "history": [
+    {
+      "fecha": "2026-09-14",
+      "version_anterior": 1,
+      "que_cambio": "Se retira la afirmación 'NINGUNA. El componente no está instanciado ni en el Home ni en ninguna landing alcanzable'. El Módulo Bomba está publicado en el Home como `hp-bomba-hw`.",
+      "por_que": "El barrido de v1 buscó contadores por patrón de texto y elementos con background-image, y se hizo antes de que alguien publicara el componente. La exploración de B2C-83, ya con los anclas de Page Designer, lo encontró de inmediato."
+    },
+    {
+      "fecha": "2026-10-07",
+      "version_anterior": 3,
+      "que_cambio": "Primera corrida web real de B2C-78 sobre hp-bomba-hw; POM ModuloBomba creado.",
+      "por_que": "El componente ya existe en DEV (solo T5)."
+    }
+  ],
+  "last_run": {
+    "suite": "B2C-78",
+    "fecha": "2026-10-09",
+    "resultado": "2 pendientes: D-017 Aprobado, D-016 Bloqueado"
+  }
+}

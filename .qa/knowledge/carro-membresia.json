@@ -1,0 +1,17 @@
+{
+ "flow": "carro-membresia",
+ "version": 1,
+ "last_updated": "2026-10-12T16:00:00Z",
+ "description": "Contratar/renovar membresía desde el carro (B2C-42): banner de oferta (B2C-37 CA13) con CTA 'Lo quiero' (Nuevo) / 'Renovar' (Expirado) que abre el modal 'Pagar membresia' / 'Renovar membresia'. Sin spec: el banner no existe en DEV al 2026-10-12.",
+ "source": {"suite": "B2C-42", "hu": "B2C-42", "tc_file": "Casos de Prueba/Ejecutados/SP2/Unimarc/B2C-42 Test Cases.xlsx", "last_sync": "2026-10-12T16:00:00Z"},
+ "navigation": {"entry_url": "/cart", "mi_membresia": "/account/membresia (sin membresía: 'Socio Diamante' + botón 'Contratar'; sidebar 'Contrata tu membresía Desde $14.990')", "related": ["carro-sugeridos", "carro-no-disponibles"]},
+ "selectors": {"preferred": [{"description": "Cantidad en carro: botones 'Sumar <nombre>' / 'Restar <nombre>'; link 'Eliminar' por ítem; CTA 'Continuar con la entrega' (o 'Mínimo de compra $20.000' disabled)", "selector": "getByRole(button,{name:/^Sumar /})", "type": "getByRole"}], "fallback": [], "deprecated": []},
+ "network": {"endpoints": [], "intercepts_useful": []},
+ "observations": [
+  "2026-10-12: con 21 x {SKU_PRECIO_MIEMBRO}=000000000000662457-UN ($2.897 socio / $3.890 normal → ahorro $20.853 > {UMBRAL_AHORRO_MEMBRESIA} 20000) el carro NO muestra banner de membresía para 11.223.344-K (Nuevo) ni 10.203.040-0 (Expirado), en 1440x900 ni 390x844; tampoco muestra precio socio en el ítem. HU: banner = B2C-37 CA13; tarea WEB B2C-409 'En curso'. Decisión QA: Bloqueado (sin bug).",
+  "Desde el storefront no se distingue Nuevo de Expirado: ambas cuentas muestran 'Contratar' en Mi membresía.",
+  "Los carros de ambas cuentas se vaciaron al terminar la exploración."
+ ],
+ "page_objects": {"exists": false},
+ "history": []
+}

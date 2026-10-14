@@ -1,0 +1,94 @@
+{
+  "flow": "checkout-datos-entrega",
+  "updated": "2026-10-14",
+  "suites": [
+    "B2C-148",
+    "B2C-189"
+  ],
+  "entry_url": "/cart -> 'Continuar con la entrega' -> (modal '¡Que no se te olviden!' -> 'Continuar') -> /checkout/entrega",
+  "auth": {
+    "type": "correo + OTP (ver login-solo-correo)",
+    "storage_state": ".qa/auth/b148-user.json (reutilizable entre chromium y webkit)",
+    "notes": "Cambiar de método (despacho <-> retiro, o a otra dirección guardada) con sesión pide 'Algunos productos podrían agotarse' -> 'Sí, continuar' y luego OTP 'Autenticación requerida' (válido 5 min)."
+  },
+  "page_objects": [
+    "tests/pages/DatosEntregaPage.ts",
+    "tests/pages/CarroPage.ts (continuarConLaEntrega)"
+  ],
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Título",
+        "selector": "getByRole('heading', {name: 'Datos de entrega'})",
+        "type": "getByRole"
+      },
+      {
+        "description": "Resumen: 'Enviaremos tu compra a:' / 'Retira tu compra en:' + 'Fecha de entrega:' / 'Fecha de retiro:' y su p hermano",
+        "selector": "main p filter + following-sibling::p[1]",
+        "type": "css/xpath"
+      },
+      {
+        "description": "Días: botones con aria-pressed bajo '¿Cuándo quieres recibir|retirar tu compra?'",
+        "selector": "p(pregunta)/following-sibling::*[1] getByRole(button)",
+        "type": "xpath+role"
+      },
+      {
+        "description": "Horarios: botones con aria-pressed bajo '¿Cuál es tu horario de preferencia?' (texto '09:00 - 12:00 hrs' + costo '$2.990' en despacho)",
+        "selector": "p(pregunta)/following-sibling::*[1] getByRole(button)",
+        "type": "xpath+role"
+      },
+      {
+        "description": "Loader al guardar ventana",
+        "selector": ".chakra-spinner (texto 'Loading...')",
+        "type": "css"
+      },
+      {
+        "description": "Toast",
+        "selector": "getByRole('status') hasText 'La fecha de despacho|retiro ha sido actualizada correctamente.' + button 'Close'",
+        "type": "getByRole"
+      },
+      {
+        "description": "CTA",
+        "selector": "getByRole('button', {name: 'Ir a pagar'})",
+        "type": "getByRole"
+      },
+      {
+        "description": "Ícono ▾ de la tarjeta rosada (dirección o tienda): button aria-label 'Cambiar'. Abre el drawer 'Elige tu método de entrega' sobre /checkout/entrega, en la pestaña del método activo",
+        "selector": "getByTestId('sf-entrega-change-location')",
+        "type": "getByTestId"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": [
+    {
+      "method": "POST?",
+      "url": "/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/window?siteId=Unimarc",
+      "when": "al elegir otro horario (candidato a {VENTANA_API_ENDPOINT})"
+    },
+    {
+      "url": "/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/schedule?siteId=Unimarc",
+      "when": "carga de días/horarios"
+    }
+  ],
+  "waits": {
+    "cambio_de_fecha": "sin loader; horarios se refrescan al instante con uno aria-pressed",
+    "cambio_de_horario": "spinner ~1 s, skeletons, toast a ~5 s del clic, toast visible ~4,4 s"
+  },
+  "observations": [
+    "Subtotal en despacho = subtotal del carro + costo de la ventana ($2.990 en todas las ventanas al 2026-10-13); en retiro no hay línea Despacho.",
+    "Tras volver a la dirección guardada, el Store Locator del header muestra la etiqueta ('Casa') en vez de la calle.",
+    "Cuenta {USER_AUTH_001} (alias vhchirinos+comprador) tiene direcciones guardadas Casa (Calle Uno 23, La Florida), Otra Casa, Camino La Fuente 1589 y 'Sin cobertura'.",
+    "Retiro: al elegir otro horario NO hay loader (.chakra-spinner ni skeleton); los botones de horario solo pasan a disabled un instante y el toast sale a ~1,8 s. En despacho sí hay spinner. Bugs B2C-1200 (Desktop) y B2C-1201 (Mobile), 2026-10-13.",
+    "Vigilar loader y toast en paralelo: una espera del loader en serie (8 s) deja pasar el toast de retiro (~4 s). Esperar networkidle antes de clicar el horario: con /schedule en vuelo el render tardío pisa la selección.",
+    "Subtotal en /checkout/entrega: el monto comparte contenedor con el p \"Subtotal\" pero no es su hermano directo (hay un nodo en medio): buscar el p /^\\$[\\d.]+$/ dentro del padre.",
+    "Modal de método de entrega, Retiro en tienda: el buscador no encuentra \"Unimarc Las Condes\" (nombre completo); buscar \"Las Condes\" y clicar el texto exacto.",
+    "Mobile 390x844: el saludo de sesión no se ve como texto; está en el nombre accesible del botón avatar (\"Hola, <nombre>\") -> HeaderFull.saludo.",
+    "B2C-189 (2026-10-14): cambiar a una dirección nueva desde el ícono ▾ (sugerencia → Continuar con detalles → Agregar dirección → 'Algunos productos podrían agotarse' → OTP) cierra el drawer, hay spinner, el header pasa a la nueva dirección pero la tarjeta de Mis Envíos sigue mostrando la anterior, incluso recargando.",
+    "{DIRECCION_OTRA_TIENDA} = 'A. Las Conder 14791, Lo Barnechea' (typo): Google sugiere 'Avenida Las Condes 14791 … Lo Barnechea' y la guarda como 'Avenida Las Condes 14791, Las Condes'.",
+    "{DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) en DEV no tiene cobertura: 'Aún no llegamos a esta dirección' → Continuar → OTP → redirige al Home con 'Despacho sin cobertura'. No sirve para 'Sin horarios disponibles' (STL-041).",
+    "Mobile 390x844: el drawer ocupa la pantalla completa; el ícono ▾ queda en (334,155) 24x24."
+  ],
+  "history": []
+}

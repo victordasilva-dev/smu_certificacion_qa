@@ -1,0 +1,75 @@
+{
+  "flow": "home-collage-banners",
+  "last_updated": "2026-09-14T22:10:00Z",
+  "version": 1,
+  "description": "Collage de Banners del Home/Landing: bloque ESTÁTICO (no slider) de banners clickables, con variantes T1 (banner único a ancho completo), T2 (2 lado a lado), T4 (1 grande + 2 medianos) y T5 (4 banners). Es el objeto de la HU B2C-83. En DEV hay dos instancias: una T1 y una T6, variante que esta HU no cubre.",
+  "source": {
+    "suite": "B2C-83",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-83 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C83-D-001",
+      "TC-B2C83-D-005",
+      "TC-B2C83-D-009",
+      "TC-B2C83-M-001"
+    ],
+    "last_sync": "2026-09-14T22:10:00Z"
+  },
+  "navigation": {
+    "entry_url": "/",
+    "instancia_en_dev": "Dos instancias del mismo componente. (1) `hp-strip-t1-hw`, data-variant=T1, sin título ni texto ni 'Mostrar todo', un banner 'Abarrotes y despensa' → /search?q=despensa, de 1440x250 en x=0 (Desktop) y 358x130 en x=16 (Mobile). (2) `hp-collage-hw`, data-variant=T6, título 'Prende la parrilla', texto 'Disfruta de un rico Asaito', 'Mostrar todo' → /search?q=parrilla, y CINCO banners en mosaico de 3 columnas. T2, T4 y T5 NO están configuradas.",
+    "modals": []
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "EL HALLAZGO QUE VALE MÁS DE ESTA CORRIDA: cada componente de Page Designer se renderiza dentro de un `div.component` con un **id estable y semántico** (`hp-collage-hw`, `hp-strip-t1-hw`, `hp-bomba-hw`, `hp-tabs-hw`, `tb-categorias-hp`…). Es un ancla infinitamente mejor que los hashes de Emotion y que buscar por el texto del encabezado, y sirve para TODAS las suites del Home, no solo para esta.",
+        "selector": "main div.component[id]",
+        "type": "css"
+      },
+      {
+        "description": "Y LA VARIANTE SE LEE DEL DOM, no se deduce del parecido: el componente expone `data-variant` en un div interior. En DEV devuelve T1 (hp-strip-t1-hw), T6 (hp-collage-hw) y wide (hp-membresia-hw). Es el dato duro que decide qué TC de variante es observable y cuál no.",
+        "selector": "div.component [data-variant]",
+        "type": "css"
+      },
+      {
+        "description": "Las dos instancias comparten la clase de Emotion del div que lleva el data-variant (css-jzasv5), lo que confirma que T1 y T6 son el MISMO componente React con distinta variante, y no dos componentes parecidos.",
+        "selector": "[data-variant].css-jzasv5",
+        "type": "css"
+      },
+      {
+        "description": "Cada banner del collage es a su vez un `div.component` con id propio, numerado: hp-strip-t1-b1; hp-collage-hw-b1 … b5. Dentro va un <a> con la imagen; el href es el destino configurado.",
+        "selector": "div.component[id^='hp-collage-hw-b'] a",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": [
+      "page.route sobre el nombre de archivo de la imagen de un banner, abortándola, produce el error de carga que pide D-009. Cortar por identificador de archivo y no por URL exacta —el <img> lleva srcset con varios anchos— y pedir revalidación de caché antes de recargar (ver [[home-tabs-carrusel]] y [[home-slider-banners-titulo]])."
+    ]
+  },
+  "observations": [
+    "LA TRAMPA DEL PARECIDO, RESUELTA ESTA VEZ CON UN DATO DURO Y NO CON UN JUICIO. 'Prende la parrilla' parecía la variante T5 —collage estático, 5 banners, título, texto y 'Mostrar todo'— y la propia HU invitaba a creerlo: su tabla resumen dice 'Cinco baners → T5'. Pero el componente declara `data-variant=\"T6\"`, una variante que esta HU no cubre. Sin ese atributo habría salido un Rechazado contra D-004 ('4 banners de 300x420') por una diferencia de configuración, es decir un bug inventado. La lección general: antes de dar por buena una atribución de variante, BUSCAR EL MARCADOR EN EL DOM; este front los publica.",
+    "MEDIDAS OBSERVADAS EN DEV, variante T1 (`hp-strip-t1-hw`). Desktop 1440x900: el componente y su banner miden 1440x250 y arrancan en x=0, sin padding lateral, que es exactamente lo que fija CA3. Mobile 390x844: banner de 358x130 en x=16, es decir con los 16 px de padding lateral que el caso pide. Los dos coinciden con la HU al pixel.",
+    "MEDIDAS DE LA INSTANCIA T6 (`hp-collage-hw`), útiles aunque quede fuera de esta HU. Desktop: mosaico de 3 columnas —banner principal 411x823 en x=80; segunda columna en x=515 con 411x320 y 411x479; tercera en x=949 con 411x479 y 411x320—, ocupando de 80 a 1360, o sea alineado al padding del Header. Mobile: mosaico de 2 columnas con los 5 banners a 173 px de ancho (x=16 y x=201) y alturas 393/200/394/287/287.",
+    "EL COLLAGE ES ESTÁTICO DE VERDAD, y conviene dejarlo medido: ninguna de las dos instancias tiene `.swiper`, ni un solo `button`, ni paginación ni slide-bar. Es lo que lo separa del carrusel de banners de [[home-carrusel-banners]], que comparte apariencia pero monta Swiper con controles.",
+    "T2, T4 Y T5 NO ESTÁN CONFIGURADAS, y eso bloquea 14 de los 18 TC web: los 6 de presentación de esas variantes (D-002/M-002, D-003/M-003, D-004/M-004) más los que exigen un estado que solo Page Designer produce (D-006 banner requerido faltante, D-007 T2 con un solo banner, D-008 variante inválida, D-012 T4 sin principal, D-013 atributo opcional sin definir, D-014 banner con target=_blank). D-010 y D-011 caen también, pero por un motivo que es fácil pasar por alto: sus precondiciones nombran explícitamente T2, T4 o T5, y aunque el fondo a ancho completo y el carácter estático sí se pueden observar sobre T1, hacerlo sería certificar otra cosa que la que pide el caso.",
+    "D-010 TIENE ADEMÁS UN SEGUNDO IMPEDIMENTO: pide el componente con un color de fondo distinto de blanco para poder ver que el fondo llega de borde a borde, y las dos instancias lo tienen transparente (`rgba(0,0,0,0)`). Sin color no hay nada que mirar, por mucho que la caja mida 1440.",
+    "OJO CON MEDIR `cargada` SIN HABER HECHO SCROLL: las imágenes del collage son lazy y, medidas desde el Home recién cargado, los banners b2..b5 daban `complete && naturalWidth>0` en false sin estar rotas. Hay que llevar el componente al viewport y esperar antes de leer el estado de carga, o se reporta un falso positivo de imagen caída.",
+    "EL MÓDULO BOMBA YA EXISTE EN DEV, y esto invalida lo que dejó escrito [[home-modulo-bomba]] el 2026-09-14: el componente `hp-bomba-hw` está publicado en el Home, con su logo de 900x110, su cuenta regresiva viva ('89 días : 07 horas : …') y su carrusel de productos con botón Agregar, y sin imagen de fondo, o sea la variante con logo. La suite B2C-83 no lo toca, pero B2C-78 se cerró con sus 20 TC web en Bloqueado por 'componente no configurado' y esa causa ya no se sostiene: conviene volver a correrla.",
+    "CORRIDA 2026-09-14 (B2C-83): 4 ejecutables (D-001, M-001, D-005, D-009), 14 Bloqueado y 6 Fuera de alcance sobre 24 TC."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/CollageBanners.ts",
+    "class": "CollageBanners",
+    "relacionados": [
+      "tests/pages/HomePage.ts (la página que lo contiene; ver [[home-page-designer]])",
+      "tests/pages/CarruselBanners.ts (el carrusel de banners, que se le parece pero monta Swiper; ver [[home-carrusel-banners]])"
+    ]
+  },
+  "history": []
+}

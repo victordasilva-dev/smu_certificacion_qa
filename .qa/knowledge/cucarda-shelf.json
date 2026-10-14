@@ -1,0 +1,68 @@
+{
+ "flow": "cucarda-shelf",
+ "last_updated": "2026-09-21T17:15:00Z",
+ "version": 1,
+ "description": "Cucarda (label promocional) de la shelf de producto: su render, posicion, estilo y las reglas de configuracion que la alimentan desde Business Manager (atributos Label_* / c_cucarda*) mas los JOB1/JOB2 que los propagan al catalogo.",
+ "source": {
+  "suite": "B2C-65",
+  "hu": "B2C-65",
+  "tc_file": "Casos de Prueba/Para Ejecutar/B2C-65 Test Cases.xlsx",
+  "test_cases": ["TC-65-D-002", "TC-65-D-005", "TC-65-M-005"],
+  "last_sync": "2026-09-21T17:15:00Z"
+ },
+ "navigation": {
+  "entry_url": "/category/carnes_vacuno ({PLP_URL}) y /search?q=carne ({SRP_URL})",
+  "donde_hay_cucarda_hoy": "SOLO en el SRP: /search?q=carne devuelve 7 shelves con cucarda y /search?q=pollo unas 12. Todas son productos de la promocion 'Semana del pollo'. La PLP declarada ({PLP_URL} = /category/carnes_vacuno) NO tiene ninguna, ni el Home (44 shelves recorridos, 0 cucardas).",
+  "mismo_componente_en": "PLP, SRP, carruseles del Home, Colecciones y shelf simplificada del modal de buscador"
+ },
+ "selectors": {
+  "preferred": [
+   {
+    "description": "LA CUCARDA. Es un unico <div> con position:absolute dentro del recuadro de la imagen del shelf, sin data-testid ni atributo semantico: la clase (css-9q7wso) es de chakra y cambia con cada build. El ancla estable es la combinacion posicion absoluta + texto + recuadro contenido en el de la imagen, que es lo que implementa ShelfProducto.cucardasDetalladas()",
+    "selector": "shelf > div[position:absolute] con texto, cuyo rect cae dentro del rect de la <img>",
+    "type": "geometria"
+   },
+   {
+    "description": "Shelf del producto (heredado de [[shelf-producto]]): se ancla en el boton de favoritos y se sube dos niveles",
+    "selector": "main div:has(> div > button[aria-label='Guardar en favoritos'])",
+    "type": "css"
+   },
+   {
+    "description": "Identificar un shelf por SKU: el src de la imagen lleva el SKU (.../large/<SKU>-01.jpg). Es la unica via, porque el shelf no expone el productId en el DOM",
+    "selector": "shelf.locator('img[src*=\"<SKU>\"]')",
+    "type": "playwright"
+   }
+  ],
+  "fallback": [],
+  "deprecated": []
+ },
+ "network": {
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": ".../shopper-search/.../product-search",
+    "trigger": "navegacion SPA a PLP/SRP. NO expone los atributos de cucarda: hay que leerla del DOM renderizado"
+   }
+  ],
+  "intercepts_useful": []
+ },
+ "observations": [
+  "ESTILO OBSERVADO DE LA CUCARDA (Desktop 1280x900, SRP q=carne, identico en las 7 que aparecen): texto '🍗 Semana del pollo' (19 caracteres, con emoji de icono embebido en el texto), color de texto rgb(27,94,32) = #1B5E20, fondo rgb(212,245,221) = #D4F5DD, font-size 12px, font-weight 500, border-radius 4px, max-width 180px, overflow hidden. Recuadro de 135x22 px en dx=8, dy=3 respecto de la imagen de 192x192: esquina superior izquierda.",
+  "LA CUCARDA Y FAVORITOS NO SE SOLAPAN: la cucarda ocupa x 8..143 y el boton de favoritos x 152..184 dentro de la misma imagen de 192 px. Verificado por interseccion de recuadros en las 7 shelves con cucarda.",
+  "EL ICONO NO ES UN NODO APARTE: 'Label_Icono' llega como emoji dentro del propio texto de la cucarda ('🍗 Semana del pollo'), no como <svg> ni <img> propio. Un TC que busque el icono como elemento separado no lo va a encontrar.",
+  "LA CUCARDA USA text-overflow: clip, NO ellipsis. Es el mismo patron que ya se documento para el nombre del producto en [[shelf-producto]] (defecto B2C-767/768/769): con overflow hidden y clip, un texto que no quepa se corta al borde sin puntos suspensivos. Los TC de truncado con '...' (TC-65-D-009 a 20 caracteres y TC-65-M-009 a 15) apuntan justo a esto, pero NO se pudieron ejecutar porque el SKU que declaran no tiene cucarda configurada. El unico texto observable, de 19 caracteres, no alcanza a desbordar el max-width de 180 px en Desktop. Es una sospecha fundada, no un veredicto: hace falta un producto con Label_Texto largo para cerrarlo.",
+  "CONFIGURACION AUSENTE EN EL AMBIENTE DECLARADO: la categoria de {PLP_URL} llega con c_cucardaActivo=false en el SSR, y ningun producto de esa PLP trae atributos de cucarda. Los SKU que la planilla declara como 'con cucarda' ({SKU_CYBER} = 000000000000028616-KGV, {SKU_CUCARDA} = 000000000000662457-UN, {SKU_CUCARDA_LARGA} = 000000000000666285-UN) estan los tres presentes en la PLP y los tres SIN cucarda. Por eso 21 de los 24 TC web de B2C-65 quedaron Bloqueado: la precondicion no se cumple y la solucion es de configuracion en BM + JOB, no de codigo.",
+  "EL UNICO ATRIBUTO DE CUCARDA QUE VIAJA AL FRONT ES c_cucardaActivo, Y SOLO EN CATEGORIAS: buscando en el HTML del SSR no aparece ningun Label_Activo / Label_Texto / Label_ColorTexto / Label_ColorFondo / Label_Icono / Label_ColorBorder, ni a nivel de producto ni de categoria. El nombre de los atributos en la HU es el de BM; lo que el storefront consume es otra cosa. Conviene confirmarlo con el equipo antes de escribir asserts sobre nombres de atributos.",
+  "CONTRADICCION EN EL EXCEL DE DATA: {SKU_CUCARDA} y {SKU_PRECIO_MIEMBRO} apuntan al MISMO SKU (000000000000662457-UN), declarado como 'SKU con cucarda' en TC-65-D-003/M-003 y como 'SKU sin cucarda' en TC-65-D-005/M-005. En el ambiente el producto no tiene cucarda, asi que la lectura correcta es la de D-005/M-005 y la de D-003/M-003 esta mal. Hay que corregir el Excel de data.",
+  "PRODUCTO SIN CUCARDA NO RESERVA ESPACIO: verificado en {SKU_PRECIO_MIEMBRO} en los dos viewports. La <img> y su contenedor miden exactamente lo mismo (192x192 en Desktop, 153x153 en Mobile) con desplazamiento 0,0, no hay ningun nodo vacio con recuadro visible dentro del area de la imagen, y el unico elemento absoluto que queda es el boton de favoritos. Es la asercion de CA5.",
+  "MISMO COMPONENTE EN DESKTOP Y MOBILE: cambia el tamano de la imagen (192 px frente a 153 px) y con el la posicion del boton de favoritos (dx 152 frente a 113), no la estructura ni las clases. El par D/M de cada TC comparte Page Object.",
+  "TC-65-D-003 / M-003 PIDEN UNA PAGINA DE COLECCIONES QUE SU FILA NO DECLARA: el paso 3 exige navegar a 'una pagina de Colecciones que contenga el producto' y la columna Test data solo trae {BASE_URL} y {SKU_CUCARDA}. Aunque el SKU tuviera cucarda, el caso seguiria sin ser ejecutable hasta que la planilla declare la URL de la coleccion."
+ ],
+ "page_objects": {
+  "exists": true,
+  "path": "tests/pages/ShelfProducto.ts",
+  "class": "ShelfProducto",
+  "nota": "Se extendio el POM de [[shelf-producto]] con cucardasDetalladas(), imagenLlenaElContenedor() y porSku(); no se creo una clase nueva porque la cucarda es un slot del mismo shelf."
+ },
+ "history": []
+}

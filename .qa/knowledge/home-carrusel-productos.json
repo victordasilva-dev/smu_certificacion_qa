@@ -1,0 +1,48 @@
+{
+ "flow": "home-carrusel-productos",
+ "last_updated": "2026-09-30T14:30:00Z",
+ "version": 1,
+ "description": "Carrusel de productos del Home/Landing (HU B2C-75), variantes T1 (banner promo + slider de productos), T2 (título simple) y T3 (título destacado). Un único componente de Page Designer.",
+ "source": {
+  "suite": "B2C-75",
+  "tc_file": "Casos de Prueba/Ejecutados/B2C-75 Test Cases.xlsx",
+  "test_cases": ["TC-B2C75-D-001", "TC-B2C75-D-002", "TC-B2C75-D-004", "TC-B2C75-D-005", "TC-B2C75-D-006", "TC-B2C75-D-007", "TC-B2C75-D-008", "TC-B2C75-D-012", "TC-B2C75-M-001", "TC-B2C75-M-003", "TC-B2C75-M-004"],
+  "last_sync": "2026-09-30T14:30:00Z"
+ },
+ "navigation": {
+  "entry_url": "/",
+  "instancias_en_dev": {
+   "T1": ["hp-pc-frescura (Frescura y calidad, banner img con enlace /category/frutas-y-verduras_frutas, tag OFERTA)", "hp-pc-milka (Chocolates Milka, banner sin <img> visible)", "hp-pc-not (Especial Bebidas, dentro de hp-container-b-hw)"],
+   "T2": [],
+   "T3": ["hp-pc-masvendidos (Los más vendidos, Mostrar todo -> /category/carnes)"]
+  },
+  "modals": ["consentimiento de cookies"]
+ },
+ "selectors": {
+  "preferred": [
+   {"description": "Raíz de cada instancia: div.component con id de Page Designer", "selector": "div.component#hp-pc-<nombre>", "type": "css"},
+   {"description": "Carrusel (Swiper) visible de la instancia", "selector": ".swiper >> visible=true", "type": "css"},
+   {"description": "Banner T1: enlace con imagen fuera del Swiper", "selector": "a[href]:has(img):not(.swiper *) >> visible=true", "type": "css"},
+   {"description": "Mostrar todo", "selector": "getByRole('link', { name: /mostrar todo/i })", "type": "role"},
+   {"description": "Controles", "selector": "getByRole('button', { name: 'Siguiente' | 'Anterior' })", "type": "role"},
+   {"description": "Shelf por SKU", "selector": ".swiper-slide:has(a[href*='<SKU>'])", "type": "css"}
+  ],
+  "fallback": [],
+  "deprecated": []
+ },
+ "waits": {
+  "animations": ["Swiper con autoplay delay 3000 ms, disableOnInteraction=false: medir con el carril quieto (transform estable) y detener el autoplay (swiper.autoplay.stop()) antes de hacer clic en una shelf."]
+ },
+ "network": {"endpoints": [], "intercepts_useful": []},
+ "page_objects": {"exists": true, "path": "tests/pages/CarruselProductos.ts", "class": "CarruselProductos"},
+ "observations": [
+  "EL COMPONENTE NO PUBLICA data-variant (a diferencia del collage de B2C-83): la variante se atribuye por disposición. T1 = banner lateral 480x553 en x=80 + Swiper de 761 px a la derecha (2 items + parcial); en Mobile banner 358x150 arriba. T3 = título centrado, 5 items (4 + 1 al 87%), Mostrar todo al borde derecho.",
+  "NO HAY T2 NI T1 CON TÍTULO CENTRADO en DEV al 2026-09-30: bloquea D-003, M-002 y D-013 de B2C-75.",
+  "Geometría Desktop 1440: componente x=0 ancho 1425 (viewport sin scrollbar); contenido de x=80 a x=1345, igual que el Header (logo x=80, minicarrito derecha 1345).",
+  "Items visibles se cuentan con fracción visible >= 50% de la shelf: Desktop T1 = 3 (2 completos + parcial), T3 = 5; Mobile = 2 (175 + 167/175).",
+  "Como invitado, 'Agregar' en una shelf del Home suma al carro SIN pedir dirección (contador 0 -> 1) al 2026-09-30.",
+  "0 imágenes rotas en los carruseles y banners del Home; el SKU sin stock del Excel de data (029403-KG) no está en ningún carrusel y ninguna shelf muestra 'Pronto disponible'.",
+  "El swipe en Mobile (webkit) se simula con mouse down/move/up: el Swiper tiene simulateTouch."
+ ],
+ "history": []
+}

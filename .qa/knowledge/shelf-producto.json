@@ -1,0 +1,157 @@
+{
+  "flow": "shelf-producto",
+  "last_updated": "2026-10-07T21:30:00Z",
+  "version": 2,
+  "description": "Shelf (tarjeta) de producto de la PLP y del SRP: cucarda, galeria de imagenes, favoritos, bloque de precios, marca+nombre, label de formato, 'Combina la promo' y 'Agregar' / 'Ver similares'.",
+  "source": {
+    "suite": "B2C-59",
+    "hu": "B2C-59",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-59 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C59-D-002",
+      "TC-B2C59-D-003",
+      "TC-B2C59-D-005",
+      "TC-B2C59-D-006",
+      "TC-B2C59-D-008",
+      "TC-B2C59-D-009",
+      "TC-B2C59-D-010",
+      "TC-B2C59-D-011",
+      "TC-B2C59-D-012",
+      "TC-B2C59-D-015",
+      "TC-B2C59-D-016",
+      "TC-B2C59-D-019",
+      "TC-B2C59-D-021",
+      "TC-B2C59-D-022",
+      "TC-B2C59-M-002",
+      "TC-B2C59-M-003",
+      "TC-B2C59-M-005",
+      "TC-B2C59-M-006",
+      "TC-B2C59-M-008",
+      "TC-B2C59-M-009",
+      "TC-B2C59-M-010",
+      "TC-B2C59-M-011",
+      "TC-B2C59-M-012",
+      "TC-B2C59-M-015",
+      "TC-B2C59-M-016",
+      "TC-B2C59-M-019",
+      "TC-B2C59-M-021"
+    ],
+    "last_sync": "2026-09-11T17:40:00Z"
+  },
+  "navigation": {
+    "entry_url": "/category/<slug>  (la suite declara {PLP_URL} = /category/carnes_vacuno)",
+    "entrada_spa": "Home -> boton 'Categorias' del header -> entrada N1 'Carnes' -> pildora 'Vacuno'. Hace falta cuando el TC necesita interceptar la API: por URL directa la PLP viene por SSR y no hay peticion cliente.",
+    "mismo_componente_en": "PLP N1 (dentro de cada carrusel N2), PLP N2/N3, SRP y carruseles de la PDP"
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "EL SHELF. No tiene data-testid ni clase semantica: se ancla en el boton de favoritos, que es el unico elemento propio e inequivoco de cada tarjeta, y se sube dos niveles (el boton es nieto del shelf). Resuelve exactamente una vez por producto (9 en la PLP declarada), tanto en Desktop 1280x900 (208 px de ancho) como en Mobile 390x844 (169 px)",
+        "selector": "main div:has(> div > button[aria-label='Guardar en favoritos'])",
+        "type": "css"
+      },
+      {
+        "description": "Boton de favoritos del shelf (esquina superior derecha de la imagen)",
+        "selector": "shelf.locator('button[aria-label=\"Guardar en favoritos\"]')",
+        "type": "playwright"
+      },
+      {
+        "description": "Imagen del producto. Cuando no hay imagen (o falla su carga) NO hay <img>: se renderiza un placeholder con role=img y aria-label='Imagen no disponible'",
+        "selector": "shelf.locator('img')  /  shelf.locator('[role=img][aria-label=\"Imagen no disponible\"]')",
+        "type": "playwright"
+      },
+      {
+        "description": "Nombre del producto: un <button> con el texto 'Marca | Nombre'. La marca va en un <span> propio con fontWeight 500 frente al 400 del resto, y el separador ' | ' es texto literal. NO es un <a> y no hay href a /product/",
+        "selector": "shelf.locator('button').filter({ hasText: ' | ' })",
+        "type": "playwright"
+      },
+      {
+        "description": "Cucarda: hoja de texto corta dentro del area de la imagen, arriba a la izquierda (fontWeight 500). En la PLP declarada el unico valor observado es 'Nuevo'. No hay atributo ni data-* que la identifique: se reconoce por posicion dentro del recuadro de la imagen",
+        "selector": "hojas de texto del shelf cuyo recuadro cae dentro del de la imagen",
+        "type": "geometria"
+      },
+      {
+        "description": "Label de formato (gramaje): hoja de texto con cantidad + unidad, debajo del nombre",
+        "selector": "texto /^[0-9.,]+\\s*(kg|g|gr|lt|ml|un|cc)\\.?$/i",
+        "type": "texto"
+      },
+      {
+        "description": "Boton 'Combina la promo': el texto es un <p> pero su padre es el button (igual que en la PDP). Se renderiza entre el nombre y 'Agregar'",
+        "selector": "shelf.locator('button:has-text(\"Combina la promo\")')",
+        "type": "css"
+      },
+      {
+        "description": "Boton Agregar, y el stepper en que se convierte tras agregar ('En carro' + 'N un.')",
+        "selector": "shelf.getByRole('button', { name: /^agregar$/i })  /  texto /en carro/i",
+        "type": "playwright"
+      },
+      {
+        "description": "Contador del mini carrito del header: el aria-label lleva el numero, por eso sirve de asercion del add-to-cart",
+        "selector": "header button[aria-label^='Mi carrito']  (aria-label = 'Mi carrito, numero de articulos: N')",
+        "type": "css"
+      },
+      {
+        "description": "Breadcrumb de la PDP a la que lleva el shelf (ojo: en la PDP el aria-label va en minuscula, al reves que en la PLP)",
+        "selector": "[data-testid='sf-crumb-item']",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": ".../shopper-search/.../product-search?refine=cgid%3D<categoria>&refine=htype%3Dproduct",
+        "trigger": "navegacion SPA a la PLP. Cada hit trae productId, price, priceMax, image, imageGroups, tieredPrices y productPromotions (solo en los productos con promocion)"
+      },
+      {
+        "method": "GET",
+        "path": "https://bmkg-dev.my.commercecloud.salesforce.com/dw/image/... (y /on/demandware.static/...)",
+        "trigger": "cada imagen de shelf; es el patron a interceptar para forzar el fallback de imagen"
+      }
+    ],
+    "intercepts_useful": [
+      "404 en '**/dw/image/**' y en '**/demandware.static/**' -> el shelf reemplaza la <img> por el placeholder role=img 'Imagen no disponible' y el resto de la tarjeta (precio, nombre, formato, CTA) sigue normal, sin mensajes de error (CA8)",
+      "Cuerpo no decodificable con content-type de imagen -> mismo fallback que el 404",
+      "Reescritura del product-search quitando 'image' e 'imageGroups' de cada hit (requiere entrada SPA) -> simula 'producto sin imagen configurada en catalogo' y produce el mismo placeholder"
+    ]
+  },
+  "observations": [
+    "CORRIDA 2026-10-07 (B2C-59 SP1, D-004/M-004): YA HAY FIXTURE DE PATROCINADO. {SKU_SPONSOR} = 000000000000028597-KGV (Choclillo vacuno Nacional 1.3 Kg) esta en /category/carnes_vacuno, su PDP trae c_isSponsor = true en el estado SSR y muestra \"Patrocinado\", pero su SHELF en la PLP no muestra el texto (Desktop 1280 y Mobile 390) -> Rechazado, bug B2C-1142. El atributo se llama c_isSponsor (no isSponsored) y no viene en product-search, solo en la PDP. En Mobile el nombre del shelf es un enlace, en Desktop un boton: para medir posiciones usar a, button con \" | \".",
+    "LA CUCARDA 'Nuevo' DE LA PLP DECLARADA YA NO ESTA (verificado el 2026-09-21 para B2C-65, en chromium y en webkit): la PLP sigue teniendo los mismos 9 shelves, pero ninguno muestra cucarda, y la categoria llega con c_cucardaActivo=false en el SSR. Si un TC de otra suite necesita un producto con cucarda, hoy hay que buscarlo en el buscador (/search?q=carne devuelve 7 y /search?q=pollo unos 12, todos de 'Semana del pollo'), no en esta PLP. El detalle del componente esta en [[cucarda-shelf]].",
+    "INVENTARIO DE LA PLP DECLARADA ({PLP_URL} = /category/carnes_vacuno, 9 shelves, identico en Desktop y Mobile): hay producto sin promo (4), con promo NxPrecio + 'Combina la promo' (3), con cucarda 'Nuevo' (1, sin promo), con label de formato (8) y sin label de formato (1, que es justo uno de los de promo). NO hay: ningun producto con 'Patrocinado', ninguno sin stock ('Pronto disponible' / 'Ver similares'), ninguno con mecanica 'Completa la promo', ninguno con dos o mas imagenes, ninguno con cucarda Y promo a la vez, y ninguno cuyo 'Marca | Nombre' baje de 50 caracteres. NOTA (2026-09-21): la parte de la cucarda 'Nuevo' ya no es cierta; ver la observacion siguiente.",
+    "LA API NO EXPONE label NI isSponsored: los hits de product-search solo traen productId, precios, imagenes, tieredPrices y productPromotions. Por eso 'label=null' e 'isSponsored=false' solo se pueden leer como la ausencia de la cucarda y del texto 'Patrocinado' en el shelf, y el escenario isSponsored=true no tiene fixture posible en este ambiente.",
+    "TODOS LOS PRODUCTOS DE LA PLP DECLARADA TIENEN UNA SOLA IMAGEN (imageGroups con 1 imagen, y la PDP muestra un unico thumb). El sufijo '-01.jpg' sugiere que el catalogo admite mas, pero en DEV no hay ninguno con N>=2: los TC de rotacion al hover (Desktop) y de scroll horizontal de galeria (Mobile) no son verificables aqui. Al hacer hover sobre el shelf la imagen no cambia y no se renderizan flechas ni dots, que es justo lo que pide el caso N=1.",
+    "EL NOMBRE NO SE TRUNCA CON PUNTOS SUSPENSIVOS: el boton del nombre usa line-clamp 2 con overflow hidden y text-overflow CLIP, de modo que el texto se corta visualmente al final de la segunda linea sin '...' y el DOM conserva el nombre completo (se observaron nombres de 70, 71 y 78 caracteres en Desktop, donde la HU pide truncar a 60 con puntos suspensivos). Es la asercion de CA11 y es lo que decide TC-B2C59-D-015 / M-015.",
+    "FAVORITOS COMO INVITADO ABRE EL MODAL DE LOGIN: el clic en el corazon no cambia aria-pressed (sigue en false) ni el icono; lo que ocurre es que se monta el modal 'Iniciar sesion o registrarse'. El TC admite Guest o Registrado pero su esperado habla de feedback en el icono, asi que el caso no se puede cerrar sin que la fila declare la cuenta (el flujo completo de favoritos es B2C-32).",
+    "AGREGAR FUNCIONA COMO INVITADO: el shelf cambia a 'En carro' + stepper '1 un.' y el aria-label del mini carrito del header pasa de 'numero de articulos: 0' a '1'. No aparece toast ni modal.",
+    "ORDEN VERTICAL DE LOS SLOTS (verificado en los dos viewports): imagen con la cucarda encima a la izquierda y favoritos encima a la derecha -> bloque de precios -> marca+nombre -> label de formato -> 'Combina la promo' -> 'Agregar'. Medido en Mobile: imagen 893, precio 1142, nombre 1172, combina 1258, agregar 1306.",
+    "EL SHELF NO TIENE data-testid: el ancla estable es el boton de favoritos y el shelf es su abuelo. Un locator por clase (css-1ti2b8v) cambia con cada build de chakra.",
+    "MISMO COMPONENTE Y MISMOS LOCATORS EN DESKTOP Y MOBILE: cambian el ancho (208 vs 169 px) y el numero de columnas de la grilla, no la estructura. Por eso el par D/M de cada TC comparte Page Object y solo difiere en el viewport y en lo que espera cada fila.",
+    "EL BLOQUE DE PRECIOS DEL SHELF ES EL MISMO QUE EL DE LA PDP: sus reglas y selectores viven en [[pdp-bloque-de-precios]] (explorado para B2C-51) y no se duplican aqui.",
+    "WEBKIT NO ENTREGA LAS PETICIONES DE IMAGEN A page.route: verificado con un route('**/*') que no intercepto ni una (interceptadas=0) mientras page.on('request') si las veia, y la imagen cargo con naturalWidth real. Ademas el front construye el src de la imagen por su cuenta (patron .../large/<SKU>-01.jpg?sw=224&q=70) y no usa el image.link que devuelve la API, asi que reescribir ese campo tampoco cambia nada. Consecuencia: el fallback de imagen solo se puede forzar en Mobile quitando la imagen entera del hit (eso si funciona); los escenarios de URL invalida y archivo corrupto quedan fuera del alcance de la automatizacion en webkit (TC-B2C59-M-012 Bloqueado).",
+    "LOS BOTONES DEL SHELF TARDAN EN HIDRATARSE: el listado llega por SSR y un clic en 'Agregar' disparado antes de que React tome el control no hace nada y no da error — el carrito sigue en 0 y el shelf sigue ofreciendo 'Agregar'. Hay que esperar a que la red se calme (networkidle) antes de interactuar, y conviene reintentar el clic.",
+    "DEFECTO CONFIRMADO (CA11): el shelf no trunca el nombre con puntos suspensivos ni respeta el limite de caracteres. Usa line-clamp 2 con text-overflow 'clip', de modo que el nombre completo queda en el DOM y se corta visualmente al final de la segunda linea. Reportado en B2C-767 (Desktop, limite 60), B2C-768 (Mobile, limite 40) y B2C-769 (nombre de 51 caracteres que respeta el limite y tampoco se muestra completo: necesita 72 px y el shelf deja 48 px).",
+    "EL HUECO ENTRE EL NOMBRE Y 'Agregar' NO SIRVE PARA MEDIR 'no queda espacio vacio': las tarjetas de la grilla tienen altura uniforme y el CTA queda anclado abajo, asi que ese tramo es MAS grande en el shelf sin promocion (183 px) que en el que si trae el boton (119 px). Lo que si distingue un slot ausente de un slot reservado es buscar elementos vacios con recuadro visible en esa banda (ShelfProducto.placeholdersVaciosBajoElNombre).",
+    "ACTUALIZACION 2026-09-28 (B2C-40): la PLP {PLP_URL} (carnes_vacuno) YA TIENE un producto sin stock: 'Brasil Paraguay | Tapapecho vacuno al vacio 2.2 Kg', 'Pronto disponible' + 'Ver similares'. {SKU_PRODS_SIMILARES} (628239) y {SKU_SIN_SIMILARES} (675191) tienen stock: sus PDP muestran 'Agregar'.",
+    "STEPPER 'En carro' (B2C-89, 2026-09-30): con qty=1 los botones son aria-label 'Quitar del carro' (basurero) + 'Aumentar cantidad'; con qty>1, 'Disminuir cantidad' + 'Aumentar cantidad'. La cantidad se lee del texto 'En carro N un.'. ShelfProducto expone quitarDelCarro/disminuir/aumentar, cantidadEnCarro(), esperarCantidad() y sacarDelCarro().",
+    "CARTLIMIT: {SKU_CAR_LIMIT} 000000000000626717-UN (Chuleta centro Super Cerdo 550 g) tope 5 un.; el '+' queda disabled (atributo disabled) y aparece 'Agregaste la cantidad máxima de este producto'. La HU B2C-89 (CA5) pide 'Usted ha agregado la cantidad máxima de productos': bugs B2C-870 (Desktop) / B2C-871 (Mobile).",
+    "SIN METODO DE ENTREGA 'Agregar' AGREGA DIRECTO (2026-09-30): como invitado con 'Elige una forma de entrega', 'Agregar' suma al carro y NO abre el Store Locator (CA3 de B2C-89): bugs B2C-868 / B2C-869. El 2026-09-28 si abria el Store Locator: cambio de comportamiento en el ambiente.",
+    "EL STOCK ES POR TIENDA: con la cuenta {COMPRADOR_USER} (direccion La Florida) {SKU_UNITARIO} 400254005-UN y {SKU_STOCK_LIMITADO} 638426003-UN estan en 'Pronto disponible'; como invitado (sin tienda) 400254005 si ofrece 'Agregar'. Verificar el stock con la cuenta del TC antes de ejecutar.",
+    "EL BUSCADOR FALLA CON CONSULTAS LARGAS: /search?q=<nombre completo del producto> devuelve 'Tuvimos un problema al cargar los productos · Error: SRP-012' (una palabra suelta sí responde). La PDP por SKU se abre con /product/<SKU> y su breadcrumb da la categoría: ListadoDelSku.abrirPlp()."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/ShelfProducto.ts",
+    "class": "ShelfProducto"
+  },
+  "history": [
+    {
+      "fecha": "2026-09-21",
+      "suite": "B2C-65",
+      "cambio": "La PLP declarada dejo de tener el unico producto con cucarda ('Nuevo') que se observo el 2026-09-11. Valor anterior: 1 shelf con cucarda de 9. Valor actual: 0 de 9, con c_cucardaActivo=false en la categoria."
+    }
+  ]
+}

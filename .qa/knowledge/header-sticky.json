@@ -1,0 +1,144 @@
+{
+  "flow": "header-sticky",
+  "last_updated": "2026-09-10T16:20:00Z",
+  "version": 2,
+  "source": {
+    "suite": "B2C-24",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-24 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C24-D-001",
+      "TC-B2C24-D-002",
+      "TC-B2C24-D-003",
+      "TC-B2C24-D-004",
+      "TC-B2C24-D-005",
+      "TC-B2C24-D-006"
+    ],
+    "last_sync": "2026-09-10T15:40:00Z"
+  },
+  "navigation": {
+    "entry_url": "/",
+    "redirects": [
+      {
+        "from": "/checkout",
+        "to": "/login",
+        "condition": "usuario Guest"
+      }
+    ],
+    "modals": [
+      "drawer del Store Locator",
+      "modal de categorias (ver [[modal-categorias]])"
+    ],
+    "iframes": []
+  },
+  "comportamiento": {
+    "resumen": "El header es UN SOLO elemento <header> que cambia de altura al hacer scroll; el sticky NO es un segundo nodo que se monte. Esta en position:fixed desde el primer paint, tambien en el tope de la pagina.",
+    "umbral": "El sticky se activa cuando scrollY SUPERA la altura del header full: verificado sondeando desde el tope, a 132 sigue full y a 133 esta contraido, con el header full en 132px. La altura del header full NO es constante (132px con el Store Locator sin elegir, 140px con una direccion seleccionada), asi que el umbral se mide en la corrida y nunca se hardcodea. Importante: cada sonda debe partir del tope, porque el componente atiende al movimiento de scroll y un salto de 1px no lo dispara.",
+    "alturas_desktop_1440": {
+      "full_sin_direccion": 132,
+      "full_con_direccion": 140,
+      "sticky": 76
+    },
+    "alturas_mobile_390": {
+      "full_con_direccion": 184,
+      "sticky": 68
+    },
+    "scroll_up": "Cualquier desplazamiento hacia arriba despliega el header completo, sin necesidad de llegar al tope: verificado bajando a 1500 y subiendo a 1300. Al volver a bajar se contrae otra vez.",
+    "store_locator_sin_re_render": "Verificado marcando el nodo del boton del Store Locator con una propiedad JS antes del ciclo: tras scroll-down y scroll-up la marca sigue en el elemento, de modo que es el MISMO nodo y conserva la direccion seleccionada."
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "El header (unico en el DOM; el sticky es este mismo elemento contraido)",
+        "selector": "page.locator('header')",
+        "type": "css"
+      },
+      {
+        "description": "Filas del header: hijos directos. En sticky solo una conserva altura.",
+        "selector": "header > div",
+        "type": "css"
+      },
+      {
+        "description": "Boton del Store Locator. Su texto cambia con el estado: 'Elige una forma de entrega' sin seleccion, y la direccion + plazo + costo cuando hay una elegida.",
+        "selector": "header button:has-text('Elige una forma de entrega') / header button:has-text('<direccion>')  — filtrar por visible",
+        "type": "css"
+      },
+      {
+        "description": "Drawer del Store Locator (role=dialog, .chakra-slide, 500x868 en Desktop)",
+        "selector": "[role=dialog] .chakra-slide  — o [role=dialog] filtrado por hasText 'Elige tu método de entrega'",
+        "type": "css"
+      },
+      {
+        "description": "Mini carrito: el aria-label lleva el contador y el texto del boton lleva el badge",
+        "selector": "header button[aria-label^=\"Mi carrito\"]",
+        "type": "css"
+      },
+      {
+        "description": "Header Simplificado del flujo de compra (ver [[footer-simplificado]])",
+        "selector": "page.getByRole('banner')  — 60px, position:static, sin botones ni enlaces",
+        "type": "role"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "store_locator": {
+    "apertura": "Clic en el boton de forma de entrega del header (filtrar por visible: hay uno por form-factor en el DOM).",
+    "flujo_despacho_a_domicilio": [
+      "Pestana 'Despacho a domicilio' (viene seleccionada por defecto)",
+      "Escribir en el campo 'Calle, direccion o lugar' -> aparecen sugerencias de Google Places",
+      "Clic en una sugerencia -> pantalla 'Agregar nueva direccion' con mapa",
+      "Boton 'Continuar con detalles de la direccion' -> pantalla 'Detalles de la direccion'",
+      "Boton 'Agregar direccion' -> el drawer se cierra y el header muestra la direccion, el plazo y el costo de despacho"
+    ],
+    "flujo_retiro_en_tienda": "Pestana 'Retiro en tienda' -> lista de 50 de 315 tiendas, cada una un <button> con un radio dentro -> boton 'Confirmar tienda' al pie. Ver observations: no aplica la seleccion en DEV."
+  },
+  "auth": {
+    "roles": [
+      "guest"
+    ],
+    "storage_state_paths": {},
+    "observacion": "Todo lo verificable de esta suite se hizo como Guest. El SSO de DEV no autentica con las credenciales RUT del Excel de data (verificado el 2026-09-10 con la cuenta de comprador y la de comprador con membresia; ver [[pdp-carruseles-recomendacion]]). CORREGIDO: el login si funciona, por el modal de 'Ingresa aqui' del Header Full. Ver [[header-simplificado]]."
+  },
+  "waits": {
+    "ajax_calls": [
+      "POST /mobify/proxy/api/custom/smu-delivery/v1/.../apply — aplica la forma de entrega elegida",
+      "GET /mobify/proxy/api/custom/smu-delivery/v1/.../stores — lista de tiendas para retiro"
+    ],
+    "loading_indicators": [],
+    "debounce": [
+      "El autocompletado de direcciones consulta Google Places tras escribir"
+    ],
+    "animations": [
+      "TRAMPA DE MEDICION: la contraccion del header es animada. Si se mide apenas cambia el scroll, las filas que se estan ocultando todavia reportan caja con ancho y alto, y se las cuenta como visibles. Hay que dejar asentar la animacion (~1s) antes de medir alturas o visibilidad."
+    ]
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": []
+  },
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/HeaderFull.ts (extendido) + tests/pages/StoreLocator.ts",
+    "class": "HeaderFull, StoreLocator",
+    "nota": "Reutiliza el POM del header de B2C-17 (ver [[header-storefront]]), al que se le agregan los metodos de scroll y geometria del sticky."
+  },
+  "observations": [
+    "COMO SE OCULTAN LAS FILAS, Y POR QUE IMPORTA: en Desktop la fila que se oculta pasa a display:none, pero en Mobile queda con altura 0 y display:block. En Mobile, por tanto, sus botones internos SIGUEN reportando caja con ancho y alto por desbordamiento, y un toBeVisible() de Playwright los da por visibles aunque el usuario no los vea. El criterio que funciona en los dos form-factors es geometrico: el elemento esta oculto si su caja cae fuera del rectangulo del header.",
+    "El header esta en position:fixed SIEMPRE, tambien en scrollY=0. 'Se mantiene fijo' no distingue el sticky del full: lo que los distingue es la altura y cuantas filas conservan alto.",
+    "POSIBLE DEFECTO AJENO A ESTA SUITE: en 'Retiro en tienda' la seleccion no se aplica. Con un radio de tienda marcado y el boton 'Confirmar tienda' habilitado, el clic no cierra el drawer ni actualiza el header, ni siquiera invocando .click() directo sobre el nodo. Se reprodujo tres veces. 'Despacho a domicilio' si funciona de punta a punta. Ningun TC de B2C-24 valida ese flujo, asi que no genera veredicto aqui, pero conviene que lo mire quien certifique el Store Locator.",
+    "La altura del header full depende del estado del Store Locator: 132px sin direccion elegida y 140px con una. Cualquier asercion sobre el umbral del sticky debe medir la altura en la corrida.",
+    "El Carro (/cart) sirve el Header Simplificado: 60px, position:static, sin botones ni enlaces. Con el carro vacio la pagina no genera scroll (docH = alto del viewport), asi que la prueba solida del 'no hay sticky' es position:static y la altura constante, no que el header no se haya movido.",
+    "/checkout redirige a /login cuando el usuario es Guest, de modo que Checkout - Pago y Confirmacion no son alcanzables sin sesion.",
+    "DISCREPANCIA EN LA PLANILLA: el TC-B2C24-D-001 se titula 'En Mobile, hacer scroll hacia abajo contrae el Header...' y su descripcion desarrolla el CA1 (Mobile), pero su CP-ID es -D- y sus precondiciones declaran 'Viewport: Desktop 1440x900'. Ejecutado en Desktop seria indistinguible del TC-B2C24-D-002. El comportamiento en Mobile 390x844 se exploro igualmente: header full 184px con 3 filas, sticky 68px con 1 fila, y scroll-up restituye las 3.",
+    "APRENDIDO EN LA CORRIDA: el componente reacciona al MOVIMIENTO de scroll, no solo a la posicion. Encadenando sondas de un pixel (scrollTo 132 y luego 133) el header no se contrae y la medicion reporta un umbral falso; volviendo al tope antes de cada sonda, el umbral sale limpio y repetible en scrollY > altura del header full. Por eso HeaderFull.altoConScrollEn() vuelve arriba antes de medir.",
+    "APRENDIDO EN LA CORRIDA: en Desktop, con el header en sticky, el boton del Store Locator deja de existir para un locator filtrado por visibilidad (la fila pasa a display:none). Un boundingBox() sobre el se queda esperando hasta agotar el timeout del caso: hay que comprobar count() antes, y tratar la ausencia como 'esta oculto'.",
+    "CORRECCION (2026-09-10, durante B2C-25): la causa del bloqueo por 'no se puede iniciar sesion' es INCORRECTA. El login funciona por el MODAL de 'Ingresa aqui' del Header Full con el RUT de la data; la pantalla /login que se probo es el formulario de Salesforce y pide correo. Ver [[header-simplificado]]. Los cuatro TC bloqueados de B2C-24 (D-001, D-002, D-005 y D-006) son re-ejecutables con sesion."
+  ],
+  "history": [
+    {
+      "version": 1,
+      "changed_at": "2026-09-10T16:20:00Z",
+      "change": "Se precisa el umbral del sticky tras la corrida y se documentan las dos trampas de medicion (salto de 1px, y el locator visible que desaparece en sticky)."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "qa-automation-suite",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test": "playwright test",
+    "test:desktop": "playwright test --project=desktop",
+    "test:mobile": "playwright test --project=mobile",
+    "test:android": "mobilewright test",
+    "test:ios": "mobilewright test -c mobilewright.ios.config.ts",
+    "app:doctor": "mobilewright doctor",
+    "app:devices": "mobilewright devices",
+    "app:explorar": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON tests-app/support/explorar.ts",
+    "install:browsers": "playwright install",
+    "explore:browsers": "npx -y @playwright/cli@0.1.19 install-browser",
+    "postinstall": "playwright install"
+  },
+  "devDependencies": {
+    "@mobilewright/driver-mobilenext": "0.0.60",
+    "@mobilewright/test": "0.0.60",
+    "@playwright/test": "1.63.0",
+    "@types/node": "^26.1.1",
+    "mobilewright": "0.0.60",
+    "typescript": "^7.0.2"
+  }
+}

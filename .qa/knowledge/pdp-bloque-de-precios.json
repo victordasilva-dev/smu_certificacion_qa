@@ -1,0 +1,108 @@
+{
+  "flow": "pdp-bloque-de-precios",
+  "last_updated": "2026-10-07T21:00:00Z",
+  "version": 2,
+  "description": "Bloque de precios de la PDP y de la tarjeta de producto: precio lista, precio de oferta con 'Antes' tachado y badge de %, precio de socio (rombo), precios compuestos NxM / NxPrecio, PPUM por precio, y el boton 'Combina la promo' con su drawer.",
+  "source": {
+    "suite": "B2C-51",
+    "hu": "B2C-51",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-51 Test Cases.xlsx",
+    "test_cases": [],
+    "nota_de_la_corrida": "Los 7 TC de B2C-51 quedaron Bloqueado: cada uno se ejecuta sobre un producto en un estado promocional concreto y su columna Test data solo declara {BASE_URL}. Esta exploracion documenta el componente para cuando la planilla declare los SKU.",
+    "last_sync": "2026-09-11T17:20:00Z"
+  },
+  "navigation": {
+    "entry_url": "/product/<SKU>",
+    "tambien_en": "la tarjeta de producto de la PLP y de los carruseles renderiza el mismo juego de precios"
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Bloque principal de la PDP. OJO: envuelve tambien los tabs y el carrusel, asi que contar precios sobre el contenedor suma los de las tarjetas recomendadas. Hay que excluir [role=tablist] y [role=tabpanel] antes de contar (ver [[pdp-detalle-producto]])",
+        "selector": "[data-testid='unimarc-product-core']",
+        "type": "css"
+      },
+      {
+        "description": "Los precios no tienen data-testid ni clase semantica: se distinguen por TAMANO DE FUENTE. El precio principal va en 24px / fw600; los precios secundarios (socio, compuesto, 'Antes') en 18px / fw500; el PPUM y el 'Antes' en 14px / fw400 gris rgb(106,106,106)",
+        "selector": "p/div con /^[$][0-9.]+$/ dentro del core, clasificados por fontSize",
+        "type": "estilo"
+      },
+      {
+        "description": "PPUM: acompana a cada precio, entre parentesis y con la unidad",
+        "selector": "p con /^\\([$][0-9.]+ x (kg|lt|un)\\)$/",
+        "type": "texto"
+      },
+      {
+        "description": "Precio lista tachado de una oferta: el texto lleva el prefijo 'Antes:' y textDecorationLine incluye line-through",
+        "selector": "texto /^Antes:\\s*[$][0-9.]+$/ con getComputedStyle(...).textDecorationLine = 'line-through'",
+        "type": "estilo"
+      },
+      {
+        "description": "Badge de descuento: solo el porcentaje, sin la palabra 'dcto' (en el ambiente se vio '10%')",
+        "selector": "elemento hoja con texto /^-?[0-9]{1,2}%$/",
+        "type": "texto"
+      },
+      {
+        "description": "Marca del precio de socio: el ROMBO como emoji de texto, no un <img> ni un svg. Acompana al precio de membresia, que se pinta en verde petroleo rgb(8,59,61)",
+        "selector": "span con texto '\\ud83d\\udc8e' (rombo) hermano del precio de socio",
+        "type": "texto"
+      },
+      {
+        "description": "Precio compuesto NxPrecio: 'Lleva <N> por $<X>'. Hay dos cuando el producto tambien tiene precio de socio (el general y el de socio, este con el rombo)",
+        "selector": "texto /^Lleva\\s+[0-9]+\\s+por\\s+[$][0-9.]+$/",
+        "type": "texto"
+      },
+      {
+        "description": "Precio compuesto NxM: '<N> por <M> a $<X>'",
+        "selector": "texto /^[0-9]+\\s+por\\s+[0-9]+\\s+a\\s+[$][0-9.]+$/",
+        "type": "texto"
+      },
+      {
+        "description": "Mecanica 'Combina la promo': el texto es un <p> pero SU PADRE ES EL BUTTON. Un locator que espere un boton con ese nombre accesible puede no resolver; conviene tomar el texto y subir al button con closest('button')",
+        "selector": "[data-testid='unimarc-product-core'] button:has-text('Combina la promo')  (el emoji de gafas acompana al texto)",
+        "type": "css"
+      },
+      {
+        "description": "Drawer de 'Combina la promo': se abre al hacer clic en el boton y muestra el contador de progreso y las variantes combinables",
+        "selector": "[role=dialog]:visible filtrado por /combina la promo/i  (trae '0 / 3 productos' y una tarjeta por SKU combinable)",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/product/shopper-products/v1/organizations/f_ecom_bmkg_dev/products/<SKU>",
+        "trigger": "navegacion SPA a la PDP; en navegacion directa por URL el producto viene por SSR y no hay llamada cliente (ver [[pdp-detalle-producto]])"
+      }
+    ],
+    "intercepts_useful": []
+  },
+  "observations": [
+    "CORRIDA MOBILE 2026-10-07 (B2C-51 SP1, webkit 390x844): M-003/M-004 Rechazado -> bug B2C-1141. Medido: el compuesto (\"3 por 2 a $4.900\", \"Lleva 2 por $12.490\") va primero con su PPUM, en 18px/500; el unitario de abajo (\"$2.450 c/u\", \"$7.690\") en 24px/600; el de socio (tras 💎) \"Lleva N por $X\" en 18px/500 color rgb(8,59,61). PDPPage.bloqueDePrecios() devuelve cada precio/PPUM con fontSize/peso y marca el de socio. {SKU_PROM_NxM} 641229002 (Lay's Stax) esta sin stock en DEV: \"Pronto disponible\" + \"Ver similares\", sin \"Agregar\" ni \"Combina la promo\".",
+    "ESTADOS PROMOCIONALES QUE EXISTEN EN EL AMBIENTE DEV (barrido de 22 categorias N2, y recuento fino sobre 5 de ellas con 69 productos): sin promocion (mayoria), precio de oferta con 'Antes:' tachado y badge de % (ej. Chuleta centro de cerdo congelado 750 g, '10%' con Antes: $6.990 y $6.291), precio de socio con rombo, NxPrecio ('Lleva 2 por $10.866'), NxM ('3 por 2 a $4.900') y 'Combina la promo'.",
+    "ESTADOS QUE NO EXISTEN EN DEV: ningun producto muestra badge de Unipay ni de Banco Estado (0 de 69 en las categorias mas promocionales), por lo que tampoco existe el caso de los tres precios especiales coincidiendo; y no se encontro ningun producto con la mecanica 'Completa la promo': los 31 productos con promocion NxM/NxPrecio revisados llevan TODOS el boton 'Combina la promo'. Esto deja sin fixture a los TC de B2C-51 que piden esos escenarios (D-004, D-005, D-006, D-007).",
+    "DEFECTO OBSERVADO EN EXPLORACION (CA3/CA4): el producto 000000000000640999-UN ('Papas fritas Lay's stax cheddar lata 134 g') renderiza su promocion NxM como '3 por 2 a $NaN' y, en el lugar del precio principal, solo 'c/u' sin importe ni PPUM. Se ve igual en la tarjeta de la PLP, en la PDP y dentro del drawer de 'Combina la promo', mientras las otras dos variantes del mismo combo muestran '3 por 2 a $4.900' correctamente. NO se reporto como Rechazado ni se abrio bug: el TC que lo cubre (TC-B2C51-D-003) quedo Bloqueado porque su fila no declara con que SKU se ejecuta, y el veredicto cambiaria segun el producto que se eligiera. Ese SKU es justo el que el Excel de data tiene cargado como {SKU_PROM_NxM}.",
+    "EL PRECIO PRINCIPAL NO ES EL COMPUESTO: en los productos con NxPrecio/NxM observados, el precio unitario ('$7.690', '$2.450 c/u') se pinta en 24px/fw600 y los compuestos ('Lleva 2 por $12.490', '3 por 2 a $4.900') en 18px/fw500, es decir la jerarquia visual destaca el unitario. La HU pide el compuesto como principal destacado. Queda como observacion a verificar cuando los TC declaren su SKU: es la misma familia de aserciones de CA3/CA4 y CA6.",
+    "NO HAY TACHADO EN EL PRECIO DE SOCIO: cuando el producto solo tiene precio de membresia, el precio lista se muestra como principal sin line-through y el de socio debajo con el rombo (ej. $3.890 y rombo $2.897 en 000000000000662457-UN). El tachado solo aparece con el prefijo 'Antes:' de una oferta.",
+    "CADA PRECIO ARRASTRA SU PROPIO PPUM: un producto con NxPrecio + socio muestra tres PPUM distintos, uno por precio. Contar '($... x kg)' sirve para saber cuantos precios hay renderizados.",
+    "EL BOTON 'Combina la promo' ABRE UN DRAWER con el contador de progreso ('0 / 3 productos') y una tarjeta por variante combinable, cada una con su precio compuesto y su 'Agregar'. Una variante aparecio como 'Pronto disponible' en vez de 'Agregar'.",
+    "LOS TC DE ESTA SUITE NO SE PUEDEN CERTIFICAR SIN DECLARAR SKU. Cada CA se define sobre un producto en un estado promocional concreto y las 7 filas declaran solo {BASE_URL}. El Excel de data ya tiene los candidatos cargados ({SKU_VALID_001}, {SKU_PROM_NxM}, {SKU_PROM_NxPRECIO}, {SKU_PRECIO_MIEMBRO}, {SKU_STOCK_LIMITADO}), asi que el arreglo es declararlos en la columna Test data de cada fila. Mismo criterio que se aplico en B2C-31 (ver [[pdp-detalle-producto]]), donde los TC que pedian productos con una propiedad no declarada quedaron Bloqueado.",
+    "CORRIDA 2026-10-09 (SKU declarados): 652899 sin promo -> solo '$990' 24px, sin PPUM. 178089 oferta: badge '23%' bg rgb(255,229,114), '$1.200' 24px + PPUM, 💎 '$1.200', y '$1.550' tachado 12px AL FINAL y SIN 'Antes' -> bug B2C-1162 (M-002, M-009). 664214001 NxM+socio: compuesto 18px < '$2.550 c/u' 24px y 💎 en 2.º lugar -> comentado en B2C-1141 (M-010). 666200 'Combina la promo' abre drawer '0 / 2 productos' (PDPPage.combinaLaPromo / drawerCombinaLaPromo). El bloque es igual logueado (membresia) que como invitado. PDPPage.marcasDeOferta() da tachados, badge y 'Antes'."
+  ],
+  "page_objects": {
+    "exists": false,
+    "path": "tests/pages/PDPPage.ts",
+    "class": "PDPPage",
+    "nota": "El bloque de precios todavia no esta modelado: no se genero spec porque los 7 TC quedaron Bloqueado antes de la Fase 6. Los selectores de arriba son el material para modelarlo cuando la planilla declare los SKU."
+  },
+  "history": [],
+  "last_run": {
+    "suite": "B2C-51",
+    "fecha": "2026-10-09",
+    "resultado": "18 pendientes: 3 Aprobado, 3 Rechazado (B2C-1162, B2C-1141), 12 Bloqueado Data"
+  }
+}

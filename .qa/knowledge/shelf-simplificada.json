@@ -1,0 +1,73 @@
+{
+  "flow": "shelf-simplificada",
+  "last_updated": "2026-10-07T23:00:00Z",
+  "version": 2,
+  "description": "Shelf simplificada de producto: la misma tarjeta de [[shelf-producto]] servida dentro del modal de buscador y de los modales de promocion, sin los accionables 'Combina la promo' ni 'Ver similares'. Es el objeto de la HU B2C-64.",
+  "source": {
+    "suite": "B2C-64",
+    "tc_file": "Casos de Prueba/Ejecutados/CPs B2C-64.xlsx",
+    "test_cases": [
+      "TC-64-D-001",
+      "TC-64-M-001"
+    ],
+    "last_sync": "2026-09-17T00:00:00Z",
+    "hu": "B2C-64 - Shelf simplificada (Modal)",
+    "nota": "De los 34 TC de la planilla solo estos dos se pudieron ejecutar; los otros 32 quedaron Bloqueado por data no declarada."
+  },
+  "navigation": {
+    "entry_url": "/",
+    "donde_vive": "dentro del panel de resultados del buscador (ver [[buscador-modal]]) y, segun la HU, tambien en los modales 'Combina la promo' y 'Completa la promo'",
+    "modals": [
+      "panel del buscador (Desktop)",
+      "overlay a pantalla completa del buscador (Mobile)"
+    ],
+    "iframes": []
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "La shelf simplificada. Mismo ancla que la completa: el boton de favoritos, lo unico inequivoco de cada tarjeta. Se busca DENTRO del contenedor del buscador, no en main",
+        "selector": "contenedorDelBuscador.locator('div:has(> div > button[aria-label=\"Guardar en favoritos\"])')",
+        "type": "css"
+      },
+      {
+        "description": "Nombre del producto: un <button> cuyo texto es 'Marca | Nombre'",
+        "selector": "shelf.locator('button').filter({ hasText: ' | ' })",
+        "type": "css+filter"
+      },
+      {
+        "description": "Boton Agregar de la shelf",
+        "selector": "shelf.getByRole('button', { name: /^agregar$/i })",
+        "type": "getByRole"
+      },
+      {
+        "description": "Precio: hoja de texto que empieza por $. No hay rol ni data-testid; es el mismo criterio de [[shelf-producto]]",
+        "selector": "hojas de texto de la shelf con /^\\$/",
+        "type": "texto"
+      },
+      {
+        "description": "Label de formato (gramaje): hoja de texto con cantidad + unidad",
+        "selector": "/^[0-9.,]+\\s*(kg|g|gr|lt|l|ml|un|cc)\\.?$/i",
+        "type": "texto"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/ShelfSimplificada.ts",
+    "class": "ShelfSimplificada / ShelfSimplificadaItem",
+    "nota": "No reutiliza ShelfProducto porque aquel se ancla en main y estas shelves viven dentro del modal. Recibe el BuscadorModal para resolver el contenedor por form-factor."
+  },
+  "observations": [
+    "CORRIDA 2026-10-07 (B2C-64 SP1, D-002/D-003): HAY FIXTURE DE CUCARDA. {SKU_MULTI_IMAGEN} = 028616-KGV (Tapapecho vacuno Nacional al vacio 1.8 Kg, 3 imagenes) aparece en el modal del buscador con \"Tapapecho vacuno Nacional\" y muestra la cucarda \"Cyber\" arriba a la izquierda de la imagen (x+8, y+3 sobre una imagen de 184 px en Desktop 1280), sin tapar favoritos (arriba a la derecha), texto #000000 = c_cucardaTextColor, aunque c_cucardaActivo = false. Tambien trae 20%, precio socio y \"Antes: $10.390\". D-002 Aprobado; D-003 (varias imagenes) Bloqueado Data: la fila no declara SKU (los tokens de D-002 y D-003 parecen cruzados). ShelfSimplificada.porSku(sku) y ShelfSimplificadaItem.cucarda(texto) agregados.",
+    "ESTRUCTURA VERIFICADA EN LOS DOS FORM-FACTORS (Desktop 1280x900 y Mobile 390x844): imagen con el boton de favoritos encima -> bloque de precios -> marca + nombre -> label de formato -> boton 'Agregar'. Ni 'Combina la promo' ni 'Ver similares' aparecen, que es justo lo que la distingue de la shelf completa de [[shelf-producto]].",
+    "EL CONTENEDOR DEPENDE DEL FORM-FACTOR, igual que en [[buscador-modal]]: en Desktop el panel cuelga del header y en Mobile el buscador se monta en un portal a pantalla completa. Un locator anclado a 'header' no encuentra ninguna shelf en Mobile.",
+    "EL SKU DECLARADO COMO PATROCINADO NO ESTA MARCADO COMO TAL EN DEV. {SKU_PATROCINADO} (000000000000642688-UN, 'Galleta Oreo clasica vainilla 108 g') no muestra el tag 'Patrocinado' en la shelf simplificada del buscador, ni en la shelf completa del SRP, ni en su PDP. Por eso TC-64-D-004 quedo Bloqueado y no Rechazado: la precondicion no se cumple y la ausencia del tag no prueba nada sobre el componente. Coincide con lo que ya anotaba [[shelf-producto]]: la API no expone isSponsored, solo se puede leer en la UI.",
+    "LA PLANILLA DE B2C-64 NO DECLARA LOS PRODUCTOS. De 34 filas, 33 declaran solo {BASE_URL} y una ademas {PLP_URL}; las unicas que nombran un producto son D-004 ({SKU_PATROCINADO}) y M-016 ({SKU_SIN_STOCK}), y M-016 esta bloqueada igual por no declarar la cuenta. Los casos piden productos con cucarda, con varias imagenes, con promo NxM, NxPrecio, sin stock o con PPUM, y el Excel de data ya tiene tokens para casi todos ({SKU_PROM_NxM}, {SKU_PROM_NxPRECIO}, {SKU_SIN_STOCK}, {SKU_PESABLE}): lo que falta es que las filas los referencien.",
+    "ASIMETRIA ENTRE PARES: D-004 declara {SKU_PATROCINADO} y su par M-004 no declara nada. Conviene revisarlo al completar la planilla, porque el par Desktop/Mobile deberia correrse con la misma data.",
+    "NINGUNA FILA DECLARA UN TERMINO DE BUSQUEDA. Para los dos casos de estructura eso no discrimina -la shelf es la misma para cualquier producto con resultados- y se asirtio sobre el primer producto devuelto por 'leche', sin elegirlo. Para los demas el termino si decidiria que producto aparece, y por eso no se resolvieron con una eleccion."
+  ],
+  "history": []
+}

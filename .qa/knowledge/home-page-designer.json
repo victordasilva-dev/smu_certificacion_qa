@@ -1,0 +1,138 @@
+{
+  "flow": "home-page-designer",
+  "last_updated": "2026-10-07T15:30:00Z",
+  "version": 4,
+  "source": {
+    "suite": "B2C-29",
+    "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-29 WEB Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C29-D-001",
+      "TC-B2C29-D-002",
+      "TC-B2C29-D-003",
+      "TC-B2C29-D-004",
+      "TC-B2C29-D-005",
+      "TC-B2C29-D-006",
+      "TC-B2C29-D-007",
+      "TC-B2C29-D-008",
+      "TC-B2C29-D-009",
+      "TC-B2C29-D-010",
+      "TC-B2C29-D-011",
+      "TC-B2C29-D-012",
+      "TC-B2C29-M-001"
+    ],
+    "last_sync": "2026-10-07T15:30:00Z"
+  },
+  "navigation": {
+    "entry_url": "/",
+    "coleccion_my_usuals": "/account/my-usuals — 'Mis productos frecuentes'. Existe y funciona; sin sesion o sin frecuentes muestra 'Todavia no tienes productos frecuentes'.",
+    "redirects": [],
+    "modals": [
+      "modal de login del header (ver [[header-simplificado]])",
+      "consentimiento de cookies"
+    ],
+    "iframes": []
+  },
+  "componentes_del_home": {
+    "cantidad": 8,
+    "titulos": [
+      "Los más vendidos",
+      "Categorías destacadas",
+      "Cada día, una ocasión",
+      "Frescura y calidad",
+      "Prende la parrilla",
+      "Chocolates Milka",
+      "Nuestras marcas",
+      "Especial Bebidas"
+    ],
+    "identicos_en_los_dos_form_factors": true,
+    "alto_documento": {
+      "desktop_1440": 7360,
+      "mobile_390": 7066
+    },
+    "imagenes": {
+      "total": 65,
+      "rotas": 0
+    },
+    "nota": "La lista es la misma como invitado y con sesion iniciada, y la misma en Desktop y en Mobile. Cada carrusel de productos cierra con un CTA 'Mostrar todo' que lleva a una categoria o a una busqueda."
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Los componentes del Home. No hay contenedores con clase semantica: main tiene un unico hijo y todo cuelga de el, asi que los componentes se cuentan por sus encabezados VISIBLES.",
+        "selector": "main :is(h1,h2,h3) filtrado por altura > 0",
+        "type": "css"
+      },
+      {
+        "description": "CTA de cada carrusel de productos del Home",
+        "selector": "main a:has-text('Mostrar todo')",
+        "type": "css"
+      },
+      {
+        "description": "Carrusel My Usuals en el Home: componente de Page Designer de tipo smu.myUsualsCarousel (titulo de config \"Tus productos mas comprados\"). Su id es un hash (8173ed521e9723ebacd9c457f3 al 2026-10-07); se resuelve por typeId leyendo la config embebida en el HTML (HomePage.componentePorTipo).",
+        "selector": "main div.component[id=<id resuelto por typeId smu.myUsualsCarousel>]",
+        "type": "css+config"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "cuentas": {
+    "con_productos_frecuentes": "La cuenta de comprador del Excel de data tiene 2 productos frecuentes registrados, verificados en /account/my-usuals.",
+    "sin_productos_frecuentes": "La cuenta de comprador con membresia no tiene ninguno: /account/my-usuals muestra 'Todavia no tienes productos frecuentes'.",
+    "nota": "La planilla de data no etiqueta ninguna cuenta como 'con productos frecuentes' ni como 'sin ellos', y las filas de los TC de My Usuals no declaran token de usuario. Hasta que se declaren, esos casos no se pueden ejecutar: elegir una cuenta cualquiera convierte el veredicto en una suposicion. Ojo tambien con que {COMPRADOR_USER} y {COMPRADOR_SIN_MEMBRESIA_USER} traen HOY el mismo RUT, asi que no son dos cuentas distintas.",
+    "nota_2026_10_07": "La planilla SP1 ya declara las cuentas: {COMPRADOR_USER} y {COMPRADOR_FRECUENTES_USER} = 11.223.344-K (3 frecuentes), {COMPRADOR_SIN_FRECUENTES_USER} = {COMPRADOR_SEGMENTO_USER} = 10.101.010-4 (0 frecuentes), {COMPRADOR_FUERA_SEGMENTO_USER} = 10.203.040-0."
+  },
+  "waits": {
+    "ajax_calls": [],
+    "loading_indicators": [],
+    "debounce": [],
+    "animations": [
+      "El Home carga sus componentes de forma diferida: hay que recorrerlo hasta el final y volver antes de contar encabezados o imagenes, o se cuentan solo los del primer viewport."
+    ]
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": []
+  },
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/HomePage.ts",
+    "class": "HomePage",
+    "nota": "Modela el Home como pagina de componentes: los cuenta por encabezado visible y expone el carrusel My Usuals y su CTA."
+  },
+  "observations": [
+    "CORRIDA 2026-10-07 (planilla SP1): 4 Aprobado (M-001, M-002, M-013, M-014), 5 Rechazado (D-009, D-012, M-010, M-011, M-012 -> bug B2C-1136) y 9 Bloqueado Data.",
+    "MY USUALS, DEFECTO CONFIRMADO: el componente smu.myUsualsCarousel esta publicado en el Home pero renderiza vacio (0 px) incluso para 11.223.344-K, que tiene 3 frecuentes en /account/my-usuals y c_myUsuals poblado en el perfil (shopper-customers .../customers/{id}). Bug B2C-1136 (relacionado a B2C-29 y B2C-55). Para invitado y sin frecuentes queda en 0 px: no deja hueco.",
+    "LA CONFIG DE PAGE DESIGNER VIAJA EN EL HTML: cada componente con id, typeId, visible y a veces name (\"Modulo Bomba\" = hp-bomba-hw). Los nombres \"Componente_Error\" y \"Contrata_Membresia\" del Excel de data NO aparecen ahi para ningun usuario; el bloque \"Contrata la membresia\" (hp-membresia-hw, smu.featuredBlock) lo ven invitado, segmento y fuera de segmento. Por eso M-005, M-008 y M-009 quedaron Bloqueado Data (decision del usuario).",
+    "PADDING/FONDOS MOBILE 390 (M-002): 15 componentes, contenido a >= 12 px del borde; los fondos de color de componente (hp-bomba-hw, hp-tabs-hw, hp-membresia-hw) van 0..390. Las tarjetas grises del acordeon de terminos (inset 16 px) no son fondo de componente: se filtra por fondo que cubra >= 70% del alto (HomePage.bordesDeComponentes).",
+    "LOGIN EN EXPLORACION CON playwright-cli: usar refs del snapshot (button \"Ingresa aqui\", textbox \"Ingresa tu rut\", \"Continuar\", textbox \"Ingresa una contrasena\", \"Ingresar\"); los selectores CSS con >> visible=true fallaron en silencio.",
+    "LA PAGINA DE PRODUCTOS FRECUENTES TIENE AHORA SU PROPIO FLUJO: [[cuenta-productos-frecuentes]], escrito al certificar B2C-85. Ahi esta el comportamiento sin sesion (redirige al Home y abre el drawer de login), los selectores de la pagina y el detalle de por que su suite quedo bloqueada por data. Lo que sigue aqui es solo lo del CARRUSEL en el Home, que es otra cosa y lo implementa la HU B2C-55.",
+    "PAGE DESIGNER DA DOS ANCLAS ESTABLES QUE VALEN PARA TODAS LAS SUITES DEL HOME, y haberlas ignorado costo cuatro corridas de rodeos. (1) Cada componente se renderiza dentro de un `div.component` con un ID SEMANTICO: hp-pc-masvendidos, hp-bomba-hw, tb-categorias-hp, tb-banner-t4-hp, hp-pc-frescura, hp-collage-hw, hp-strip-t1-hw, hp-tabs-hw, hp-pc-not, hp-membresia-hw, y los banners hijos numerados (hp-collage-hw-b1..b5). (2) Algunos componentes publican su variante en `data-variant`. Es incomparablemente mejor que los hashes de Emotion y que buscar por el texto del encabezado, que fue lo que se hizo en [[home-carrusel-circular]], [[home-tabs-carrusel]], [[home-carrusel-banners]] y [[home-slider-banners-titulo]].",
+    "ESO CORRIGE LA OBSERVACION ANTERIOR de este mismo archivo, que decia que 'no hay contenedores con clase o data-attribute que delimiten cada componente del Home' y obligaba a contar por encabezados visibles. Si los hay: `main div.component[id]` los delimita uno a uno, y de paso resuelve el problema de los encabezados duplicados con altura 0.",
+    "COMO ZANJAR UNA ATRIBUCION DE VARIANTE SIN DISCUTIR: `[...document.querySelectorAll('[data-variant]')]` devuelve, por cada instancia, la variante declarada y el id del componente que la contiene. En DEV al 2026-09-14 da T1 (hp-strip-t1-hw), T6 (hp-collage-hw) y wide (hp-membresia-hw). Es lo que evito abrir un bug falso en B2C-83 contra un componente que parecia T5 y declara T6.",
+    "MY USUALS, SIN VEREDICTO POSIBLE: los TC de My Usuals (D-009, D-010, D-012) exigen una cuenta con un estado concreto de productos frecuentes, y su columna Test data solo declara {BASE_URL}: ni la fila ni el Excel de data identifican que cuenta usar. Probando por cuenta propia se vio que la cuenta de RUT 11.223.344-K tiene 2 productos frecuentes en /account/my-usuals y aun asi su Home no muestra el carrusel, pero eso NO alcanza para afirmar un defecto: sin saber cual es la cuenta del caso, la ausencia del carrusel puede ser el comportamiento correcto para esa cuenta. Los tres casos quedaron Bloqueado por data. Ademas, el carrusel lo implementa la HU B2C-55, que sigue en EN DEVELOPMENT (QA).",
+    "La funcionalidad de productos frecuentes SI existe en el ambiente: /account/my-usuals responde con el titulo 'Mis productos frecuentes' y lista los productos del usuario. Lo que falta es el carrusel en el Home.",
+    "El Home es identico para invitado y para usuario logueado: mismos 8 componentes, mismo orden. No se observo ningun componente segmentado que aparezca o desaparezca segun la cuenta.",
+    "Las 65 imagenes del Home cargan sin ninguna rota, de modo que no hay en el ambiente un componente con error de carga sobre el que verificar el CA5 (TC-B2C29-D-004); habria que provocar uno desde Page Designer.",
+    "No hay contenedores con clase o data-attribute que delimiten cada componente del Home: main tiene un unico hijo y todo el contenido cuelga de el. Contar componentes obliga a ir por los encabezados visibles, y hay encabezados duplicados en el DOM (la variante del form-factor contrario queda con altura 0), asi que el filtro por altura no es opcional.",
+    "DISCREPANCIA EN LA PLANILLA (TC-B2C29-D-003): la descripcion dice que los cambios publicados 'requieren refrescar el navegador' y el resultado esperado dice justo lo contrario, 'sin necesidad de refrescar manualmente'. La fila se contradice y hay que aclararla antes de poder certificarla.",
+    "LECCION DE LA CORRIDA: correr otra suite borra test-results/, y con el la carpeta de evidencias de la corrida anterior. El Word se genera antes de lanzar cualquier otra suite, o hay que volver a ejecutar para regenerar las capturas.",
+    "CORRIDA 2026-10-09: D-010 Aprobado (10.101.010-4 sin frecuentes). D-004/M-005 siguen Bloqueado Data: 'Componente_Error' no esta en la config del Home. M-008: {COMPONENTE_SEGMENTADO} paso a 'Bienvenida_Diamante' y tampoco aparece en la config, ni como invitado ni con 10.101.010-4 (header 'Ver mi suscripcion'). D-005/D-006/M-006/M-007: fechas 2026-09-01 (pasada) y 2026-12-12 (futura)."
+  ],
+  "history": [
+    {
+      "date": "2026-10-07",
+      "field": "selectors.preferred[carrusel My Usuals]",
+      "previous": {
+        "description": "Carrusel de productos frecuentes (My Usuals) en el Home. NO se renderiza en este ambiente: ver observations.",
+        "selector": "main :is(h2,h3) con texto /usual|frecuent|habitual/i",
+        "type": "css"
+      }
+    }
+  ],
+  "last_run": {
+    "suite": "B2C-29",
+    "fecha": "2026-10-09",
+    "resultado": "8 pendientes: 1 Aprobado (D-010), 7 Bloqueado Data"
+  }
+}

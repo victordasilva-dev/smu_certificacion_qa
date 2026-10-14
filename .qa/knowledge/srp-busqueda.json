@@ -1,0 +1,191 @@
+{
+  "flow": "srp-busqueda",
+  "last_updated": "2026-10-01T18:00:00Z",
+  "version": 2,
+  "description": "Search Results Page (SRP) del storefront: acceso desde el buscador, titulo con el termino, contador, chips de categoria, grilla de shelves, barra de filtros y orden, estados de carga (skeleton), sin resultados (SRP-014) y error (SRP-012). Es el objeto de la HU B2C-18.",
+  "source": {
+    "suite": "B2C-18",
+    "hu": "B2C-18",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-18 WEB Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C18-D-001 .. TC-B2C18-D-028",
+      "TC-B2C18-M-001 .. TC-B2C18-M-026"
+    ],
+    "last_sync": "2026-09-24T17:00:00Z",
+    "suites_relacionadas": [
+      {
+        "suite": "B2C-100",
+        "que_cubre": "el modal del buscador que da entrada a la SRP (flujo buscador-modal)"
+      },
+      {
+        "suite": "B2C-59",
+        "que_cubre": "la estructura del shelf de producto (flujo shelf-producto)"
+      },
+      {
+        "suite": "B2C-71",
+        "que_cubre": "el panel de filtros (flujo plp-panel-filtros)"
+      },
+      {
+        "suite": "B2C-87",
+        "que_cubre": "el ordenamiento del listado (flujo plp-ordenamiento)"
+      },
+      {
+        "suite": "B2C-101",
+        "que_cubre": "tolerancia del buscador: typos, fragmentos y busqueda semantica (Einstein Search)"
+      },
+      {
+        "suite": "B2C-104",
+        "que_cubre": "URL de la SRP: formato /search?q=, enlace directo y banner con destino SRP"
+      },
+      {
+        "suite": "B2C-105",
+        "que_cubre": "sinónimos de búsqueda bidireccionales y unidireccionales (Einstein Search)"
+      }
+    ]
+  },
+  "navigation": {
+    "entry_url": "/search?q=<termino>",
+    "entrada_desde_el_buscador": "Home -> clic en el input '¿Qué estás buscando?' -> escribir el termino -> Enter. El Enter y el boton 'Ver todos' del modal llevan los dos a /search?q=<termino>.",
+    "pdp_desde_la_srp": "cada shelf envuelve un <a href='/<slug>/<SKU>.html'> — la SRP SI expone anchors a la PDP, a diferencia de la PLP de categoria, donde el nombre es un <button> sin href",
+    "plp_desde_el_chip": "el chip de categoria es un <a href='/category/<slug>'>; el slug del N1 va con guiones (lacteos-huevos-y-refrigerados), no con guiones bajos",
+    "modals": [
+      "modal del buscador (Desktop) / overlay a pantalla completa (Mobile)",
+      "panel de filtros ('Selecciona tus filtros')",
+      "dropdown de orden (chakra-popover)",
+      "modal de metodo de entrega ('Elige tu método de entrega')"
+    ]
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Titulo de la SRP con el termino buscado, entre comillas tipograficas. El termino se rinde tal cual se busco (minuscula en el h1), pero el modal de sugerencias lo capitaliza ('Resultado para “Leche”'): un locator con el literal exacto acierta en uno y falla en el otro.",
+        "selector": "main h1 con /resultado para/i",
+        "type": "texto"
+      },
+      {
+        "description": "Contador de resultados. La UI escribe '9 productos' en singular y plural por igual (dice '1 productos').",
+        "selector": "main con /(\\d+)\\s+productos/i",
+        "type": "texto"
+      },
+      {
+        "description": "Chip de categoria sugerida. Ademas del chip hay un boton 'Todo' que no navega. Con q=leche solo hay un chip real.",
+        "selector": "main a[href^='/category/']",
+        "type": "css"
+      },
+      {
+        "description": "EL SHELF de producto — el mismo del flujo shelf-producto: se ancla en el boton de favoritos y se sube dos niveles.",
+        "selector": "main div:has(> div > button[aria-label='Guardar en favoritos'])",
+        "type": "css"
+      },
+      {
+        "description": "Boton que abre el panel de filtros. Es la condicion de 'SRP lista' compartida por los dos form-factors: el trigger de orden NO sirve porque en Mobile esta en display:none.",
+        "selector": "button[aria-label='Abrir filtros']",
+        "type": "css"
+      },
+      {
+        "description": "Trigger del dropdown de orden. El aria-label lleva el criterio vigente ('Ordenar: Recomendado'); no existe una etiqueta visible 'Ordenar por' como la nombran los TC.",
+        "selector": "button[aria-label^='Ordenar:']",
+        "type": "css"
+      },
+      {
+        "description": "Contador del mini carrito en el header: el numero viaja DENTRO del aria-label, no en un badge con texto propio.",
+        "selector": "header button[aria-label^='Mi carrito, número de artículos:']",
+        "type": "css"
+      },
+      {
+        "description": "Panel de filtros. Se filtra por su contenido: la pagina tiene otro [role=dialog] de 286x2 px (el popover vacio del header) que un getByRole('dialog') pelado toma primero.",
+        "selector": "[role=dialog] filtrado por hasText 'Selecciona tus filtros'",
+        "type": "css+filter"
+      },
+      {
+        "description": "Skeleton de carga: nodos .chakra-skeleton que el storefront monta mientras resuelve la busqueda y retira al renderizar la grilla.",
+        "selector": ".chakra-skeleton",
+        "type": "css"
+      },
+      {
+        "description": "Pantalla sin resultados: imagen con alt 'Sin resultados' (srp-no-results.png), el texto, 'Error: SRP-014' y el boton 'Ver categorías' (BUTTON, no anchor).",
+        "selector": "main img[alt='Sin resultados'] + texto /error:?\\s*SRP-014/i + button /ver categor/i",
+        "type": "texto"
+      },
+      {
+        "description": "Estado de error del listado: 'Tuvimos un problema al cargar los productos', 'Error: SRP-012' y los botones 'Reintentar' e 'Ir al Inicio'.",
+        "selector": "texto /tuvimos un problema al cargar los productos/i + /error:?\\s*SRP-012/i",
+        "type": "texto"
+      },
+      {
+        "description": "Producto sin disponibilidad: el shelf sustituye el boton 'Agregar' por 'Ver similares' y rinde una etiqueta de estado. La etiqueta observada es 'Pronto disponible', NO 'No disponible'.",
+        "selector": "shelf con button /ver similares/i",
+        "type": "css+texto"
+      },
+      {
+        "description": "Boton del modal de sugerencias que lleva a la SRP completa. La UI lo escribe 'Ver todos'; los TC lo llaman 'Ver todos los productos'.",
+        "selector": "button con /ver todos/i",
+        "type": "texto"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/search/shopper-search/v1/organizations/f_ecom_bmkg_dev/product-search?q=<termino>&...",
+        "trigger": "carga de la SRP y cada cambio de orden o filtro; el orden viaja en el query param sort"
+      }
+    ],
+    "intercepts_useful": [
+      {
+        "pattern": "**/shopper-search/**/product-search**",
+        "para": "500 -> reproduce el estado de error SRP-012; delay -> mantiene el skeleton a la vista el tiempo suficiente para capturarlo"
+      }
+    ]
+  },
+  "observations": [
+    "EL TERMINO DECLARADO {SEARCH_TERM_001}='leche' DEVUELVE 9 PRODUCTOS EN DEV, NO MAS DE 50. Eso deja sin precondicion alcanzable a todos los TC de carga inicial y paginacion de la planilla (D-009, D-010, D-026, M-008, M-009), que piden explicitamente un termino con mas de 50 resultados. El Excel de data si tiene un listado de 70 productos —{SRP_URL} con q=carne, que usa la suite B2C-87— pero ninguna fila de B2C-18 lo declara, asi que no es data disponible para estos casos.",
+    "SIN MAS DE 50 RESULTADOS NO SE RENDERIZA NINGUN COMPONENTE DE PAGINACION en la SRP de Desktop: no hay numeros de pagina ni flecha (›) debajo del listado con 9 productos.",
+    "LA SRP DE 'leche' NO TRAE NINGUN CONTENT ASSET: las unicas imagenes de main son las 9 de los productos. No hay Grid Banners 4x1, ni banner circular bajo el titulo, ni componente de monetizacion (Sponsor Products / Banner / Carrusel). Eso hace verificables los casos en negativo (D-025, D-028, M-024, M-026: 'sin asset configurado no se renderiza ni queda espacio vacio') y deja sin precondicion los casos en positivo (D-016, D-024, D-027, M-015, M-023, M-025).",
+    "TAMPOCO HAY BANNER CONFIGURADO PARA {SEARCH_BANNER_STRICT_001}='aceite': la SRP de 'aceite' trae 2 productos y ninguna imagen ajena a ellos. Los tres casos de matchmode (D-018 strict, D-019 similar, D-020 sin coincidencia) quedan sin objeto: no hay banner que aparezca ni que dejar de aparecer, y el caso de 'sin coincidencia' tampoco declara un termino que no coincida.",
+    "CONFIGURAR UN METODO DE ENTREGA EXIGE DATA QUE LA PLANILLA NO DECLARA: el modal 'Elige tu método de entrega' pide escribir una direccion en 'Calle, dirección o lugar' para el despacho, o elegir una tienda de una lista nacional larga (Arica, Iquique, Calama…) para el retiro. Ninguna fila de B2C-18 declara direccion ni tienda, y el Excel de data no tiene ningun token de direccion ni de tienda. Afecta a D-012, D-013, D-014, D-015 y sus pares Mobile.",
+    "LA ETIQUETA DEL PRODUCTO SIN STOCK ES 'Pronto disponible', NO 'No disponible'. Verificado sobre el SKU declarado {SKU_SIN_STOCK}=000000000000029403-KG ('Tapapecho vacuno al vacío 2.2 Kg'), y tambien sobre un producto de la SRP de 'aceite'. El boton 'Agregar' desaparece y 'Ver similares' aparece, que es lo otro que piden D-014 y M-013. NO se trato como defecto porque la etiqueta puede depender del metodo de entrega activo, que es precisamente la precondicion que la fila no permite montar: con la disponibilidad general del catalogo el front puede estar diciendo 'pronto disponible' y con una tienda sin stock 'no disponible'. Distinguirlo exige que la planilla declare la direccion o la tienda.",
+    "EL ENTER DEL BUSCADOR Y EL BOTON 'Ver todos' LLEVAN LOS DOS A /search?q=<termino> — verificado en Desktop y en Mobile. La UI escribe 'Ver todos' y los TC 'Ver todos los productos': el locator va tolerante.",
+    "EN MOBILE EL INPUT DEL BUSCADOR NO RECIBE type() DESPUES DEL CLIC: al abrirse el overlay el input se remonta dentro del .chakra-portal y las pulsaciones se pierden. Con fill() sobre el textbox el valor entra y las sugerencias se resuelven. Es la misma mudanza de nodo que ya registraba el flujo buscador-modal.",
+    "EL TRIGGER DE ORDEN ESTA EN display:none EN MOBILE 390x844 (rect 0x0), mientras 'Abrir filtros' si esta visible (42x36 px, solo icono). En Mobile las opciones de orden viven dentro del panel de filtros, en la seccion 'Ordena tus productos'. Es la misma diferencia que registro B2C-87, cuyos TC Mobile solo recorren el camino del modal. Por eso M-003 se certifica contando el acceso al orden desde el panel y se deja la desviacion en la Observacion: pedir un dropdown visible en Mobile seria pedir otro diseño, no arreglar un defecto.",
+    "AGREGAR AL CARRO DESDE LA SRP NO NAVEGA NI LANZA TOAST: el contador del header pasa a 'Mi carrito, número de artículos: 1', el shelf cambia a 'En carro / 1 un.' y la URL sigue siendo la de la SRP. La confirmacion visual que piden D-006 y M-006 es ese cambio en el shelf, no un toast — no se observo ninguno.",
+    "EL SKELETON EXISTE Y SE RETIRA: durante la navegacion SPA a la SRP se montan 61 nodos .chakra-skeleton distintos y al terminar la carga quedan 0, con los 9 shelves renderizados. Se captura manteniendo el product-search en espera con un delay en la ruta.",
+    "'Ver categorías' DE LA PANTALLA SIN RESULTADOS NAVEGA A / — verificado; es un BUTTON, no un anchor.",
+    "EL ORDEN FUNCIONA DESDE EL DROPDOWN EN DESKTOP: con 'Precio más bajo' la URL pasa a sort=price-asc y la secuencia de precios va de 590 a 17.850 (antes 13.990, 7.290, 7.290…). Las seis opciones son las mismas que registro B2C-87, con 'Mejor descuento' como sexta no declarada.",
+    "CORRIDA 2026-09-24 (B2C-18): 27 de 54 TC ejecutables con la data que declaran; los otros 27 quedaron Bloqueado antes de generar su test(), repartidos entre la precondicion de mas de 50 resultados, los content assets no configurados, el metodo de entrega sin data declarada y los dos casos cuyos pasos se operan en Business Manager.",
+    "EN LA SRP EL NOMBRE DEL PRODUCTO ES UN <a>, NO EL <button> DE LA PLP: cada shelf envuelve dos anchors al mismo destino /<slug>/<SKU>.html —el de la imagen, sin texto, y el del nombre—. `ShelfProducto.nombre` (que busca un button con ' | ') no resuelve aqui y deja el caso esperando un elemento inexistente. Se distingue por el texto y NO por ' | ': hay productos sin marca ('Saborizante para leche Milo Activ-Go tarro 700 g') cuyo nombre no lleva el separador. Vive en SRPPage.enlaceDelProducto().",
+    "LA PDP MONTA DOS <main>: un locator('main') pelado muere por strict mode antes de mirar nada, y el fallo se lee como si la PDP no trajera el producto.",
+    "LA GRILLA LLEGA POR SSR Y LOS BOTONES 'Agregar' EXISTEN ANTES DE HIDRATAR: pasan todas las comprobaciones de accionabilidad de Playwright y un clic en esa ventana no hace nada, con el carro quedandose en 0. No es un defecto del alta: repetido sobre una sesion ya asentada, el contador pasa a 1 y el shelf a 'En carro'. Se resuelve esperando a networkidle antes de pulsar (SRPPage.esperarInteractiva()).",
+    "PARA FORZAR EL ERROR DE LA SRP HAY QUE ENTRAR POR NAVEGACION SPA, NO POR URL: entrando directo a /search?q=<termino> el storefront la sirve renderizada en el servidor y no hay ninguna peticion de cliente a product-search que interceptar, asi que la pagina llega con sus productos y el estado de error nunca aparece. Desde el Home, buscando en el modal, la interceptacion si actua. Vale igual para el skeleton.",
+    "EL BOTON DE METODO DE ENTREGA NO DECLARA aria-label EN MOBILE: en Desktop el header trae button[aria-label='Elige una forma de entrega'], y en Mobile el nombre accesible sale del <p> que lleva dentro. Un selector por atributo encuentra un form-factor y da por ausente un control que esta a la vista; el locator va por rol.",
+    "CORRIDA 2026-09-24 (B2C-18): 27 Aprobado y 27 Bloqueado sobre 54 TC, sin ningun Rechazado. La HU quedo en TESTEADO QA BLOQUEADO y no se abrio ningun bug: todo lo que se pudo ejecutar con la data declarada se comporto como pide su criterio. Los 27 bloqueos son de precondicion y no de producto, repartidos en cuatro causas: el termino declarado devuelve 9 resultados y los casos piden mas de 50 (5 TC), no hay content assets configurados en DEV (12 TC), el metodo de entrega exige una direccion o una tienda que ninguna fila declara (8 TC) y dos casos se operan dentro de Business Manager.",
+    "B2C-101 (2026-10-01): LA CORRECCION TIPOGRAFICA ACTUA PARA 'lechhe' y 'tomatee' (mismos resultados que 'leche'/'tomate') y para 'arroz integrl', pero NO para 'yogurth': cae en SRP-014 aunque 'yogurt' trae 11 yoghurts.",
+    "B2C-101: EN DEV NO HAY 'pan de molde' NI 'arroz integral' EN CATALOGO, y ningun producto se llama exactamente 'Leche Entera' (2 resultados, ambos con palabras extra). 'arroz' solo trae 2 productos.",
+    "B2C-101: LA BUSQUEDA SEMANTICA NO RESUELVE CONCEPTOS: 'pastel de choclo' devuelve solo 'Galleta mini Dos en Uno chocolate' (bug B2C-880) y 'asado' (72) abre con carbonada plato listo, carnes molidas, papilla y curcuma, con los cortes de parrilla desde la posicion 8 (bug B2C-881). 'desayuno' trae 9, con un enjuague bucal en la 3.",
+    "B2C-101: SRPPage.nombresDeProductos() devuelve los nombres de la grilla en orden, descartando el rotulo 'Imagen no disponible' del anchor de imagen sin foto.",
+    "B2C-104 (2026-10-01): EL BUSCADOR CODIFICA LOS ESPACIOS CON '+': 'pan de molde' -> /search?q=pan+de+molde. La URL de la SRP abierta en una pestaña nueva carga igual (SSR) sin pasar por el Home.",
+    "B2C-104: EL HOME DE DEV TIENE BANNERS DE PAGE DESIGNER CON DESTINO SRP: 'Parrilla — banner principal' (/search?q=parrilla), Guarniciones, Tabla y picoteo, Abarrotes y despensa. Ninguno apunta a /search?q=ofertas (solo un 'Mostrar todo' de texto). HomePage.bannerHaciaLaSRP(termino) los localiza.",
+    "B2C-105 (2026-10-01): EL CATALOGO DE DEV NO TIENE PRODUCTOS DE LOS TERMINOS DE SINONIMO DECLARADOS: 'confort', 'Papel higiénico', 'papel' y 'Lavaloza' -> Sin resultados (SRP-014); 'Quix' -> 1 resultado ajeno (cerveza Quilmes, tolerancia tipográfica); 'lava loza' -> 21 productos que matchean por 'lata'. Los 10 TC quedaron Bloqueado Data: sin productos de ningún lado del sinónimo no hay ampliación verificable.",
+    "2026-10-09 (B2C-105 sinonimos): 'confort' y 'Papel higienico' traen los mismos 2 productos 'Papel higienico Confort ...' (cada uno contiene ambos terminos, no se distingue sinonimo de literal); 'papel' trae 3 (+ toalla Nova); 'Quix' -> solo Pack Cerveza Quilmes; 'Lavaloza' -> SRP-014. Los 10 TC quedaron Bloqueado Data (decision del usuario para los bidireccionales)."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/SRPPage.ts",
+    "class": "SRPPage",
+    "relacionados": [
+      "tests/pages/ListadoProductos.ts (la barra del listado, la secuencia y el estado de error; ver plp-ordenamiento)",
+      "tests/pages/BuscadorModal.ts (el modal que da entrada a la SRP; ver buscador-modal)",
+      "tests/pages/PanelFiltros.ts (el panel que abre el boton de filtros; ver plp-panel-filtros)",
+      "tests/pages/ShelfProducto.ts (la tarjeta de producto; ver shelf-producto)"
+    ]
+  },
+  "history": [],
+  "last_run": {
+    "suite": "B2C-105 WEB",
+    "fecha": "2026-10-09",
+    "resultado": "10 pendientes: 10 Bloqueado Data"
+  }
+}

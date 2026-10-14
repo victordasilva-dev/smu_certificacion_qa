@@ -1,0 +1,46 @@
+{
+  "flow": "app-modal-categorias",
+  "description": "App nativa Unimarc: modal de categorías que abre el tab 'Categorías' de la TabBar (HU B2C-21).",
+  "last_updated": "2026-10-06T23:00:00Z",
+  "version": 1,
+  "source": {
+    "suite": "B2C-21",
+    "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-21 APP Test Cases.xlsx",
+    "test_cases": ["TC-B2C21-APP-001", "TC-B2C21-APP-002", "TC-B2C21-APP-003", "TC-B2C21-APP-004", "TC-B2C21-APP-005"],
+    "last_sync": "2026-10-06T23:00:00Z"
+  },
+  "app": {
+    "android_package": "com.smuapp.unimarc",
+    "launchable_activity": "com.smuapp.MainActivity",
+    "build_certificado": "unimarc-v1.0.7.apk (versionName 1.0, versionCode 1; sha256 6ee08555...)",
+    "nota_build": "versionName/versionCode no cambian entre builds: distinguirlos por el sha256 del base.apk instalado (adb shell pm path + sha256sum)."
+  },
+  "platforms_explored": {
+    "android": {"device": "Medium_Phone_API_36.1 (emulador, Android 16, sdk_gphone64_x86_64)", "driver": "mobilecli local"}
+  },
+  "selectors": {
+    "preferred": [
+      {"description": "Tabs de la TabBar", "selector": "getByTestId('tab-<Nombre>') — tab-Home, tab-Categorías (con tilde), tab-Buscar, tab-Mis productos, tab-Mi cuenta", "type": "getByTestId"},
+      {"description": "Selector de forma de entrega del Home (confirma estar en el Home)", "selector": "getByTestId('delivery-open')", "type": "getByTestId"},
+      {"description": "Icono '<' del modal", "selector": "getByRole('button', { name: 'Volver' })", "type": "getByRole"},
+      {"description": "Buscador del modal", "selector": "getByRole('button', { name: 'Buscar productos' })", "type": "getByRole"},
+      {"description": "Chip 'Todas' del carrusel N1 (ready del modal)", "selector": "getByText('Todas')", "type": "getByText"},
+      {"description": "Pantalla del tab Buscar", "selector": "getByRole('button', { name: 'Cancelar' })", "type": "getByRole"}
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "page_objects": {
+    "TabBar": "tests-app/pages/TabBar.ts",
+    "CategoriasModal": "tests-app/pages/CategoriasModal.ts"
+  },
+  "observations": [
+    "El modal muestra: Volver ('<'), buscador '¿Qué estás buscando?', chips 'Todas' + N1 (Carnes, Frutas y Verduras, Lácteos, Huevos y Re..., ...) y una sección por N1 con su carrusel de N2 (Carnes → Cerdo, Cordero y otros, Pavo, Pollo). Cada N1 aparece dos veces: chip y título de sección.",
+    "'<' cierra el modal y vuelve al Home. Tocar otro tab (Buscar) con el modal abierto lo cierra y navega a ese tab.",
+    "NO existe header con icono sandwich en ninguna pantalla de v1.0.7 (Home, modal, Buscar, Mis productos, Mi cuenta). Bug B2C-830 está DESCARTADO; TC-B2C21-APP-002 queda Rechazado citándolo.",
+    "Exploración: 'mobilecli io tap @ref' puede tocar otro elemento si la ref es de un volcado viejo (tocó un banner y abrió la PLP de Carnes). Volcar justo antes del tap o tocar el centro del rect.",
+    "El emulador local estaba al 97% de /data: 'adb install -r' falla con INSTALL_FAILED_INSUFFICIENT_STORAGE; hay que desinstalar el build anterior antes de instalar el nuevo.",
+    "La corrida se hace con ANDROID_PACKAGE=com.smuapp.unimarc por entorno: las filas solo declaran {APP_BUILD} (= v1.0.7) y el Excel de data no tiene {ANDROID_PACKAGE}. No se pasa ANDROID_APP_BUILD para que el config no reinstale (falta espacio)."
+  ],
+  "history": []
+}

@@ -1,0 +1,99 @@
+{
+  "flow": "combina-la-promo",
+  "last_updated": "2026-09-17T00:00:00Z",
+  "version": 1,
+  "description": "Modal 'Combina la promo': drawer lateral derecho en Desktop y bottom sheet a ancho completo en Mobile, con header, barra de progreso por unidades, contador N/M y grid de variantes combinables. Es el objeto de la HU B2C-74; su punto de entrada es el boton de la shelf ([[shelf-producto]]) y tambien se alcanza desde la PDP (CA19 de [[pdp-detalle-producto]]).",
+
+  "source": {
+    "suite": "B2C-74",
+    "tc_file": "Casos de Prueba/Ejecutados/CPs B2C-74.xlsx",
+    "test_cases": ["TC-74-D-001", "TC-74-D-004", "TC-74-D-017", "TC-74-D-018",
+                   "TC-74-M-001", "TC-74-M-004", "TC-74-M-017", "TC-74-M-018"],
+    "last_sync": "2026-09-17T00:00:00Z",
+    "nota": "De los 47 TC de la planilla solo estos 8 se pudieron ejecutar."
+  },
+
+  "navigation": {
+    "entry_url": "/category/carnes_vacuno ({PLP_URL})",
+    "apertura": "boton 'Combina la promo' dentro de la shelf de un producto con promocion combinable",
+    "modals": ["drawer lateral derecho (Desktop)", "bottom sheet (Mobile)"],
+    "iframes": []
+  },
+
+  "selectors": {
+    "preferred": [
+      {
+        "description": "El modal. Comparte role=dialog con el de login y el del mini carro, asi que se filtra por su propio encabezado y se toma el ultimo visible (el que esta encima)",
+        "selector": "[role=dialog] filtrado por hasText /combina la promo/i, .last()",
+        "type": "css+filter"
+      },
+      {
+        "description": "Boton X de cierre. Su nombre accesible es 'Close', no 'Cerrar'",
+        "selector": "modal.getByRole('button', { name: /close|cerrar/i })",
+        "type": "getByRole"
+      },
+      {
+        "description": "Contador de progreso 'N / M productos'",
+        "selector": "modal.getByText(/\\d+\\s*\\/\\s*\\d+\\s*productos/i)",
+        "type": "getByText"
+      },
+      {
+        "description": "Segmentos de la barra de progreso: un contenedor cuyos hijos son todos div vacios, uno por unidad que pide la promo. No tiene rol ni data-testid; se llega a el subiendo desde el contador",
+        "selector": "desde el contador, el primer hermano con >=2 hijos vacios",
+        "type": "estructura"
+      },
+      {
+        "description": "Variantes combinables del grid: mismo ancla que la shelf, el boton de favoritos",
+        "selector": "modal.locator('div:has(> div > button[aria-label=\"Guardar en favoritos\"])')",
+        "type": "css"
+      },
+      {
+        "description": "Overlay del modal",
+        "selector": ".chakra-modal__overlay",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/search/shopper-search/v1/organizations/<org>/product-search?refine=pmid%3D<promocion>",
+        "trigger": "apertura del modal",
+        "nota": "Es el unico servicio que se consulta al abrir. Devuelve el grupo COMPLETO de productos de la promocion; el modal solo pinta uno."
+      }
+    ],
+    "intercepts_useful": [
+      "Mockear ese endpoint con un 500 es lo que permite verificar la pantalla de error con 'Reintentar' (TC-74-D-018 / M-018) sin depender de que el ambiente falle.",
+      "Comparar sus hits contra las tarjetas que el modal renderiza es lo que separa 'la promo tiene una sola variante' de 'el modal pierde variantes'. Es lo que fundamenta el rechazo de TC-74-D-004."
+    ]
+  },
+
+  "waits": {
+    "loading_indicators": [
+      "Skeleton del modal: el dialogo queda SIN tarjetas y con elementos animados durante ~160 ms. No usa la clase chakra-skeleton, asi que se detecta con un muestreador in-page instalado ANTES de abrir el modal."
+    ],
+    "animations": ["Entrada del drawer/bottom sheet: transicion de Chakra"]
+  },
+
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/CombinaLaPromoModal.ts",
+    "class": "CombinaLaPromoModal"
+  },
+
+  "observations": [
+    "DEFECTO PRINCIPAL: EL MODAL MUESTRA UNA SOLA VARIANTE. Abierto desde 000000000000666200-UN, cuya promo nxp-2x12490 agrupa dos productos (666200 y 666285, ambos con stock y ambos en la misma PLP), el grid pinta unicamente el producto de origen. El endpoint product-search?refine=pmid=nxp-2x12490 responde total:2 con los dos SKU, de modo que el dato llega y no se usa. Reportado en B2C-822 (Desktop) y B2C-823 (Mobile).",
+    "ESE DEFECTO BLOQUEA 20 CASOS MAS de la suite: llenar la barra alternando variantes, el orden de las que no tienen stock, el scroll interno del drawer y el uso recurrente de la promo necesitan todos una segunda tarjeta en el grid.",
+    "INVENTARIO DE PROMOS COMBINABLES EN {PLP_URL} (carnes_vacuno): tres shelves con el boton. 000000000000666200-UN y 000000000000666285-UN comparten nxp-2x12490 ('Lleva 2 por $12.490', M=2); 000000000000690123-UN lleva nxp-3x11001 ('Lleva 3 por $11.001', M=3) y es el unico de su grupo en esa categoria. No hay ninguna promo que combine M=3 con dos o mas variantes, que es lo que suponen varias precondiciones de la planilla.",
+    "GEOMETRIA POR FORM-FACTOR: Desktop 1280x900 -> drawer lateral derecho de 400 px de ancho, anclado al borde derecho. Mobile 390x844 -> bottom sheet a ancho completo anclado abajo, que DESBORDA el viewport unos pixeles en WebKit (llego a 861 sobre 844). Comprobar 'pegado abajo' por igualdad, aunque sea con tolerancia de 16 px, convierte ese redondeo en un fallo del producto: la comprobacion correcta es que su borde inferior ALCANCE el del viewport. Es la misma trampa que ya documenta [[plp-panel-filtros]] para el drawer de filtros.",
+    "EL OVERLAY es el mismo velo oscuro plano de los demas modales del sitio, rgba(52, 55, 70, 0.5), y el scroll del fondo si queda bloqueado mientras el modal esta abierto.",
+    "LA PANTALLA DE ERROR DEL MODAL SI EXISTE, a diferencia de la de la PDP ([[pdp-detalle-producto]], B2C-761): mockeando el endpoint con un 500, el modal muestra su mensaje de error y el boton 'Reintentar'.",
+    "LA PLANILLA NO DECLARA CUENTAS: 19 de los 47 TC se corren con sesion iniciada y su columna Test data solo trae {BASE_URL} y {PLP_URL}. Dos filas (D-021 y M-022) si declaran {SKU_CAR_LIMIT}, pero quedan bloqueadas igual por la cuenta."
+  ],
+
+  "history": []
+}

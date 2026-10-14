@@ -1,0 +1,16 @@
+node_modules/
+test-results/
+playwright-report/
+mobilewright-report/
+.playwright-cli/
+.env
+.qa/auth/
+.qa/evidence/
+.qa/run/
+.qa/explore/
+tests/data.json
+__pycache__/
+*.apk
+*.ipa
+.qa/tmp/
+.qa/otp/

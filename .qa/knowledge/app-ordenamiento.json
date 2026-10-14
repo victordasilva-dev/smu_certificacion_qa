@@ -1,0 +1,38 @@
+{
+  "flow": "app-ordenamiento",
+  "description": "App nativa Unimarc: modal 'Selecciona tus filtros' con 'Ordena tus productos' en PLP y SRP (HU B2C-87).",
+  "last_updated": "2026-10-07T02:30:00Z",
+  "version": 1,
+  "source": {
+    "suite": "B2C-87",
+    "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-87 APP Test Cases.xlsx",
+    "test_cases": ["TC-B2C87-APP-002", "TC-B2C87-APP-003", "TC-B2C87-APP-004", "TC-B2C87-APP-006", "TC-B2C87-APP-007", "TC-B2C87-APP-009", "TC-B2C87-APP-010", "TC-B2C87-APP-011", "TC-B2C87-APP-013", "TC-B2C87-APP-014", "TC-B2C87-APP-020", "TC-B2C87-APP-021", "TC-B2C87-APP-022"],
+    "last_sync": "2026-10-07T02:30:00Z"
+  },
+  "app": { "ref": "app-modal-categorias.json#app" },
+  "web_ref": "plp-ordenamiento.json (mismo criterio en el storefront)",
+  "platforms_explored": { "android": { "device": "Medium_Phone_API_36.1 (emulador, Android 16)", "driver": "mobilecli local" } },
+  "selectors": {
+    "preferred": [
+      { "description": "Botón de filtros y orden (PLP y SRP)", "selector": "getByRole('button', { name: 'Abrir filtros y ordenamiento' })", "type": "getByRole" },
+      { "description": "Opciones de orden (RadioButton por label)", "selector": "getByRole('radio', { name: '<criterio>' })", "type": "getByRole" },
+      { "description": "Confirmar", "selector": "getByRole('button', { name: /^Mostrar \d+ productos?$/ })", "type": "getByRole" },
+      { "description": "X del modal", "selector": "getByRole('button', { name: 'Cerrar y limpiar filtros' })", "type": "getByRole" },
+      { "description": "Fondo del modal (tocar fuera)", "selector": "getByRole('button', { name: 'Cerrar filtros' })", "type": "getByRole" },
+      { "description": "Tarjetas de producto", "selector": "identifier product-<sku> (label: '10%, $6.291, (..), Antes: $6.990, Marca | Nombre, 750 g')", "type": "viewTree" },
+      { "description": "Encabezado SRP", "selector": "getByTestId('product-results-ready-<término>')", "type": "getByTestId" }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "page_objects": { "OrdenFiltrosModal": "tests-app/pages/OrdenFiltrosModal.ts", "ListadoScreen.leerProductos": "tests-app/pages/ListadoScreen.ts", "BuscarScreen.buscar": "tests-app/pages/BuscarScreen.ts", "CategoriasModal.tapN2": "tests-app/pages/CategoriasModal.ts" },
+  "observations": [
+    "Orden de opciones en v1.0.7: Recomendado, Pensados para ti, Precio más bajo, Precio más alto, Mejor descuento, Más vendido (carrusel horizontal; las 2 últimas al deslizar). B2C-87 pide Recomendado, Más vendido, Precio más bajo, Precio más alto, Pensados para ti, Mejor descuento.",
+    "La opción marcada no se ve en el árbol (isChecked false con mobilecli): se lee el borde negro en la franja superior de la captura de la opción (~0,22 oscuro vs 0).",
+    "Swipe sobre la primera opción da 'negative coordinates': deslizar desde la opción más alejada del borde.",
+    "PLP N2 desde Categorías: tocar el tile de la N2 (p. ej. 'Cerdo') dentro de su sección N1. {CATEGORY_N2_URL}=carnes_cerdo → 'Cerdo'.",
+    "pm clear deja la app en el Home sin onboarding (sirve para 'app recién instalada').",
+    "SRP: tab Buscar → product-search.fill(término) → pressButton('ENTER'); 'leche' da 9 productos."
+  ],
+  "history": []
+}

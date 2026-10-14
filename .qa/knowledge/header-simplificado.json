@@ -1,0 +1,116 @@
+{
+  "flow": "header-simplificado",
+  "last_updated": "2026-09-10T17:10:00Z",
+  "version": 1,
+
+  "source": {
+    "suite": "B2C-25",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-25 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C25-D-001", "TC-B2C25-D-002", "TC-B2C25-D-003", "TC-B2C25-D-004",
+      "TC-B2C25-M-001"
+    ],
+    "last_sync": "2026-09-10T17:10:00Z"
+  },
+
+  "navigation": {
+    "entry_url": "/cart",
+    "paginas_del_flujo": {
+      "Carro": "/cart — accesible como Guest",
+      "SSO / Login": "/login — accesible como Guest; con sesion iniciada redirige a /account",
+      "Registro": "/registration — accesible como Guest; con sesion iniciada redirige a /account",
+      "Cambio de contrasena": "/reset-password — accesible siempre, tambien con sesion",
+      "Checkout - Mis Envios": "NO ALCANZABLE: el carro exige un minimo de compra de $20.000 para habilitar 'Ir a pagar'",
+      "Checkout - Pago": "NO ALCANZABLE: depende de superar el checkout anterior",
+      "Confirmacion": "NO ALCANZABLE: exige una compra pagada, y la planilla de data no declara ningun medio de pago de prueba",
+      "Login con OTP": "NO ES UNA PAGINA: 'Clave de acceso por correo' es una opcion dentro del modal de login que se abre sobre la pagina actual, la cual conserva su Header Full"
+    },
+    "redirects": [
+      { "from": "/login", "to": "/account", "condition": "con sesion iniciada" },
+      { "from": "/registration", "to": "/account", "condition": "con sesion iniciada" },
+      { "from": "/checkout", "to": "/login", "condition": "usuario Guest" }
+    ],
+    "modals": ["modal de login del Header Full", "modal del mini carro"],
+    "iframes": []
+  },
+
+  "estructura_observada": {
+    "comun_a_los_dos_form_factors": {
+      "alto_px": 60,
+      "position": "static",
+      "botones": 0,
+      "enlaces": 0,
+      "imgs": 0,
+      "svg": 1,
+      "texto": "",
+      "contenido": "un unico logo, centrado horizontalmente"
+    },
+    "desktop_1440x900": { "logo_box": "x=666, y=16, 108x28 (centrado en 1440)" },
+    "mobile_390x844": { "logo_box": "x=141, y=16, 108x28 (centrado en 390)" },
+    "nota": "El logo mide lo mismo en los dos form-factors; lo unico que cambia es el centrado, que es el 'ajuste de spacing' del CA1."
+  },
+
+  "selectors": {
+    "preferred": [
+      {
+        "description": "El Header Simplificado",
+        "selector": "page.getByRole('banner')  — o page.locator('header')",
+        "type": "role"
+      },
+      {
+        "description": "El logo. Es un SVG con role=img y aria-label, NO un <img>: un getByRole('img') si lo encuentra, pero un locator('img') no.",
+        "selector": "header svg[role=\"img\"][aria-label=\"Unimarc\"]",
+        "type": "css"
+      },
+      {
+        "description": "Contenedor del logo: un div con aria-label='Unimarc' y sin role. No es <a> ni <button>.",
+        "selector": "header div[aria-label=\"Unimarc\"]",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+
+  "auth": {
+    "roles": ["guest", "comprador"],
+    "storage_state_paths": {},
+    "como_iniciar_sesion": [
+      "El login del storefront es un MODAL, no la pantalla /login.",
+      "Se abre con el boton 'Ingresa aqui' del Header Full.",
+      "Paso 1: campo 'Ingresa tu rut' + boton 'Continuar'.",
+      "Paso 2: campo 'Contrasena' + boton 'Ingresar'.",
+      "Al autenticar, el Header Full pasa a mostrar las iniciales y el saludo ('Hola, <nombre>'), la direccion de despacho guardada y 'Ver mi suscripcion'."
+    ]
+  },
+
+  "waits": {
+    "ajax_calls": [],
+    "loading_indicators": [],
+    "debounce": [],
+    "animations": [
+      "El Header Simplificado no declara animacion de entrada propia: se monta ya en su estado final."
+    ]
+  },
+
+  "network": { "endpoints": [], "intercepts_useful": [] },
+
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/HeaderSimplificado.ts + tests/pages/PaginaDelFlujo.ts",
+    "class": "HeaderSimplificado, PaginaDelFlujo",
+    "nota": "HeaderSimplificado ya existia de B2C-20 (ver [[footer-simplificado]]); B2C-25 le agrega el logo por SVG, la interactividad y la geometria."
+  },
+
+  "observations": [
+    "CORRECCION IMPORTANTE SOBRE EL LOGIN: el SSO del storefront SI autentica con las credenciales RUT del Excel de data. Lo que falla es la pantalla /login (el formulario de Salesforce, que pide 'Correo electronico'); el login real del sitio es el MODAL que abre 'Ingresa aqui' en el Header Full, y ahi el RUT de la cuenta de comprador entra sin problema. Verificado el 2026-09-10: tras ingresar, el header muestra 'Hola, Karl'. Esto invalida la causa del bloqueo que se reporto en [[pdp-carruseles-recomendacion]] y en [[header-sticky]], donde se dio por imposible iniciar sesion.",
+    "El logo es un SVG con role='img' y aria-label='Unimarc'. Un locator por etiqueta 'img' no lo encuentra; getByRole('img', {name:/unimarc/i}) si. Ademas hay DOS nodos con aria-label='Unimarc' —el svg y su div contenedor—, pero solo el svg tiene role, asi que getByRole no resuelve a dos.",
+    "El logo NO es interactivo: no esta dentro de <a> ni de <button>, su contenedor tiene cursor 'auto' y el clic no cambia la URL. Es la diferencia intencional con el Header Full, donde el logo si lleva al Home.",
+    "El Header Simplificado esta en position:static, a diferencia del Header Full que esta en position:fixed. Esa es la prueba solida de que no participa del sticky: un header static no puede quedar fijo ni contraerse, y no depende de que la pagina tenga scroll suficiente.",
+    "El Carro no genera scroll ni con un producto dentro (docH = alto del viewport). Para verificar el 'no sticky' con scroll real hay que usar /login o /registration como Guest, que si desbordan el viewport. El propio TC lo autoriza: 'o cualquier pagina del flujo de compra/sso con contenido scrolleable'.",
+    "No hay una ruta de navegacion SPA del Header Full al Header Simplificado que un Guest pueda recorrer: 'Ingresa aqui' abre un modal sin navegar, el mini carrito abre el modal del mini carro, y ese modal solo ofrece 'Ir a comprar' con el carro vacio o 'Ir a pagar' (deshabilitado bajo el minimo de compra) con producto. La navegacion a las paginas del flujo se hace por URL.",
+    "El carro exige un minimo de compra de $20.000 para habilitar 'Ir a pagar', de modo que Checkout - Mis Envios y Checkout - Pago no se alcanzan con un carro de prueba pequeno; Confirmacion ademas requiere una compra pagada y la data no declara medio de pago de prueba."
+  ],
+
+  "history": []
+}

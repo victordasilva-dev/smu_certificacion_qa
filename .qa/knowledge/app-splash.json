@@ -1,0 +1,52 @@
+{
+  "flow": "app-splash",
+  "description": "App nativa Unimarc: Splash en cold start y reanudación desde segundo plano (HU B2C-67).",
+  "last_updated": "2026-10-07T01:30:00Z",
+  "version": 1,
+  "source": {
+    "suite": "B2C-67",
+    "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-67 APP Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C67-APP-001",
+      "TC-B2C67-APP-006",
+      "TC-B2C67-APP-002"
+    ],
+    "last_sync": "2026-10-07T00:30:00Z"
+  },
+  "app": {
+    "ref": "app-modal-categorias.json#app"
+  },
+  "platforms_explored": {
+    "android": {
+      "device": "Medium_Phone_API_36.1 (emulador, Android 16)",
+      "driver": "mobilecli local"
+    }
+  },
+  "selectors": {
+    "preferred": [],
+    "fallback": [],
+    "deprecated": []
+  },
+  "page_objects": {
+    "SplashScreen": "tests-app/pages/SplashScreen.ts",
+    "analizarSplash": "tests-app/support/pixeles.ts"
+  },
+  "observations": [
+    "El Splash no está en el árbol: el Home ya está montado debajo con NavBar/TapBar. Se detecta por píxeles rojizos al centro (R − max(G,B) > 50) y se verifica a sangre por las 4 franjas de borde (claro < 0,3; Home ≈ 0,9).",
+    "screen.screenshot() tras launchApp tarda ~1-3 s: hay que reintentar el cold start hasta caer en el Splash.",
+    "pressButton('HOME') + launchApp (sin terminate) reanuda en la misma pantalla (Categorías) sin Splash ni loader.",
+    "Cold start medido (screencap en el dispositivo, ~5 cps): splash nativo blanco con logo ~0,4-1,1 s, cuadro blanco, y carrusel fotográfico con fade: pomelo, manzana, tomate, cereal; cada imagen ~0,4-1,0 s (no 1,8 s, bug B2C-1128); Home con skeleton a los ~4-5 s y contenido ~1,5 s después.",
+    "Medición: tests-app/support/grabacionAndroid.ts guarda solo dos franjas por cuadro con dd (el emulador tiene ~190 MB libres y un screencap entero pesa 10 MB). screencap desde el host da 1 cps; screenrecord --output-format=frames se cuelga.",
+    "IMPORTANTE: tras correr mobilewright con APP_ANIMACIONES vacío, el emulador quedó con animator/transition/window scale = 0 (sin fades). Para TC de animaciones correr con APP_ANIMACIONES=on y verificar escala 1."
+  ],
+  "history": [
+    {
+      "date": "2026-10-07",
+      "field": "observations",
+      "old": [
+        "Cold start: cuadro blanco breve, luego fotografía de marca a sangre (verduras, pomelos...) con logo Unimarc al centro, entrando con fundido; ~3 s; 1-2 imágenes por arranque.",
+        "Fade cada 1,8 s y loader > 1,8 s no son medibles con screenshot (latencia 1-3 s); harían falta screenrecord o simulación de red."
+      ]
+    }
+  ]
+}

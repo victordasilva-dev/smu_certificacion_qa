@@ -1,0 +1,334 @@
+{
+  "flow": "plp-panel-filtros",
+  "last_updated": "2026-10-07T18:00:00Z",
+  "version": 8,
+  "description": "Panel de filtros de la PLP/SRP/Colección: header, carrusel de orden, secciones colapsables por tipo de filtro, zona de filtros aplicados con chips, botón inferior de aplicar, estado sin resultados. Es el objeto de la HU B2C-71.",
+  "source": {
+    "suite": "B2C-71",
+    "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-71 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C71-D-001",
+      "TC-B2C71-D-002",
+      "TC-B2C71-D-003",
+      "TC-B2C71-D-004",
+      "TC-B2C71-D-005",
+      "TC-B2C71-D-006",
+      "TC-B2C71-D-008",
+      "TC-B2C71-D-010",
+      "TC-B2C71-D-011",
+      "TC-B2C71-D-012",
+      "TC-B2C71-D-013",
+      "TC-B2C71-D-014",
+      "TC-B2C71-D-015",
+      "TC-B2C71-D-016",
+      "TC-B2C71-D-017",
+      "TC-B2C71-D-018",
+      "TC-B2C71-D-019",
+      "TC-B2C71-D-021",
+      "TC-B2C71-D-022",
+      "TC-B2C71-M-001",
+      "TC-B2C71-M-002",
+      "TC-B2C71-M-003",
+      "TC-B2C71-M-004",
+      "TC-B2C71-M-006",
+      "TC-B2C71-M-008",
+      "TC-B2C71-M-009",
+      "TC-B2C71-M-010",
+      "TC-B2C71-M-011",
+      "TC-B2C71-M-012",
+      "TC-B2C71-M-013",
+      "TC-B2C71-M-015",
+      "TC-B2C71-M-016",
+      "TC-B2C71-M-017",
+      "TC-B2C71-M-019",
+      "TC-B2C71-M-020",
+      "TC-B2C71-M-021"
+    ],
+    "last_sync": "2026-10-07T18:00:00Z",
+    "suites_relacionadas": [
+      {
+        "suite": "B2C-95",
+        "tc_file": "Casos de Prueba/Para Ejecutar/B2C-95 Test Cases.xlsx",
+        "test_cases": [
+          "TC-B2C95-D-001",
+          "TC-B2C95-D-002",
+          "TC-B2C95-D-003",
+          "TC-B2C95-D-004",
+          "TC-B2C95-D-005",
+          "TC-B2C95-D-006"
+        ],
+        "last_sync": "2026-09-16T22:30:00Z",
+        "que_cubre": "el filtro Ofertas del panel (toggle, conteo, combinacion AND con Marca)"
+      },
+      {
+        "suite": "B2C-96",
+        "tc_file": "Casos de Prueba/Para Ejecutar/B2C-96 Test Cases.xlsx",
+        "test_cases": [
+          "TC-B2C96-D-001",
+          "TC-B2C96-D-002",
+          "TC-B2C96-D-003",
+          "TC-B2C96-D-004",
+          "TC-B2C96-D-005",
+          "TC-B2C96-D-006"
+        ],
+        "last_sync": "2026-09-16T23:45:00Z",
+        "que_cubre": "la seccion 'Estilos de alimentacion' del panel (pildoras Ok to Shop, seleccion, badge, logica OR)"
+      },
+      {
+        "suite": "B2C-97",
+        "tc_file": "Casos de Prueba/Para Ejecutar/B2C-97 Test Cases.xlsx",
+        "test_cases": [
+          "TC-B2C97-D-001",
+          "TC-B2C97-D-002",
+          "TC-B2C97-D-003",
+          "TC-B2C97-D-004",
+          "TC-B2C97-D-005",
+          "TC-B2C97-D-006",
+          "TC-B2C97-D-007"
+        ],
+        "last_sync": "2026-09-17T15:10:00Z",
+        "que_cubre": "el filtro Precio del panel (campos min/max, slider de doble control, validacion min>max, link Borrar y aplicacion del rango)"
+      },
+      {
+        "suite": "B2C-98",
+        "tc_file": "Casos de Prueba/Para Ejecutar/B2C-98 Test Cases.xlsx",
+        "test_cases": [
+          "TC-B2C98-D-001",
+          "TC-B2C98-D-002",
+          "TC-B2C98-D-003",
+          "TC-B2C98-D-004",
+          "TC-B2C98-D-005",
+          "TC-B2C98-D-006",
+          "TC-B2C98-D-007",
+          "TC-B2C98-D-008",
+          "TC-B2C98-D-009",
+          "TC-B2C98-D-010",
+          "TC-B2C98-D-011",
+          "TC-B2C98-D-012",
+          "TC-B2C98-D-013",
+          "TC-B2C98-D-014"
+        ],
+        "last_sync": "2026-09-17T16:20:00Z",
+        "que_cubre": "los filtros Marca, Tipo de envase y Formato (buscador interno, Ver todas, checkboxes, logica OR/AND) y la omision del chip de Precio"
+      }
+    ]
+  },
+  "navigation": {
+    "entry_url": "/category/<slug>",
+    "apertura": "button[aria-label='Abrir filtros'] en la cabecera de la PLP (etiqueta visible: 'Filtros')",
+    "url_al_filtrar": "cada selección reescribe la URL al instante, sin esperar a 'Mostrar productos': ?refine=brand%3DNacional, ?refine=c_estiloAlimentacion%3DlibreLactosa, ?refine=price%3D(min..max). El orden se suma como &sort=price-asc.",
+    "modals": [
+      "panel de filtros (chakra-slide chakra-modal__content)",
+      "dropdown de orden",
+      "popover oculto del header"
+    ]
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "El panel de filtros. NO basta role=dialog: la página tiene además el dropdown de orden Y un chakra-popover__content vacío del header que también son role=dialog. Un querySelector('[role=dialog]') pelado resuelve al popover vacío y todo lo que cuelgue de él sale vacío sin dar error.",
+        "selector": "[role=dialog] filtrado por hasText /selecciona tus filtros/i",
+        "type": "css+texto"
+      },
+      {
+        "description": "Header del panel: el título va en un <header> (role=banner) y el botón de cierre tiene el accessible name 'Close', en inglés, no 'Cerrar'.",
+        "selector": "header con 'Selecciona tus filtros' + button[name='Close']",
+        "type": "rol"
+      },
+      {
+        "description": "Cuerpo con scroll interno independiente del panel",
+        "selector": ".chakra-modal__body (overflow-y: auto)",
+        "type": "css"
+      },
+      {
+        "description": "Footer con el botón de aplicar. Es un <footer> (role=contentinfo), hijo flex del diálogo en columna: queda al fondo sin position:fixed.",
+        "selector": "footer > button (texto 'Mostrar productos' / 'Mostrar productos (N)')",
+        "type": "css"
+      },
+      {
+        "description": "Encabezado de cada sección de filtro colapsable. Expone aria-expanded true/false — es la forma fiable de leer el estado, y no hay aria-controls.",
+        "selector": "button[aria-expanded] dentro del panel",
+        "type": "css"
+      },
+      {
+        "description": "Flecha de la sección: un SVG con el MISMO path (M6 9l6 6 6-6) siempre; la dirección la da el transform CSS. Colapsada matrix(1,0,0,1,0,0); expandida matrix(-1,0,0,-1,0,0) (rotate 180deg). Un selector por el atributo 'd' no distingue los dos estados.",
+        "selector": "getComputedStyle(svg).transform del svg del encabezado",
+        "type": "estilo"
+      },
+      {
+        "description": "Badge numérico de seleccionados: un <div> con el número dentro del propio botón de la sección; el accessible name pasa a ser 'Marca 1'.",
+        "selector": "el último nodo de texto del button[aria-expanded]",
+        "type": "texto"
+      },
+      {
+        "description": "Zona de filtros aplicados. OJO: la UI escribe 'Filtros Aplicados' con A mayúscula; los TC la escriben 'Filtros aplicados'.",
+        "selector": "texto /filtros aplicados/i dentro del panel",
+        "type": "texto"
+      },
+      {
+        "description": "Chip de filtro aplicado: un único <button> que contiene <span>nombre</span> + el SVG de la X (viewBox '0 0 256 256'). La X no es un botón aparte: todo el chip es el control de borrado.",
+        "selector": "button con svg[viewBox='0 0 256 256'] dentro de la zona de filtros aplicados",
+        "type": "css"
+      },
+      {
+        "description": "Link 'Limpiar' a la derecha del título de filtros aplicados. Es un <button>, no un <a>.",
+        "selector": "button con texto 'Limpiar' dentro del panel",
+        "type": "texto"
+      },
+      {
+        "description": "Overlay del modal, siempre presente mientras el panel está abierto",
+        "selector": ".chakra-modal__overlay (background rgba(52, 55, 70, 0.5), backdrop-filter: none)",
+        "type": "css"
+      },
+      {
+        "description": "Estado sin resultados de la grilla. La UI usa el carácter '…' (U+2026), no tres puntos, y 'más' con tilde.",
+        "selector": "texto 'Ups… No hay productos con estos filtros' + 'Error: PLP-013' + button 'Limpiar filtros'",
+        "type": "texto"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/search/shopper-search/v1/.../product-search?refine=cgid%3D<categoria>&refine=<filtro>",
+        "trigger": "cada selección/deselección de filtro dentro del panel (recálculo progresivo)"
+      }
+    ],
+    "intercepts_useful": []
+  },
+  "observations": [
+    "EL BOTÓN NO LLEVA CONTEO HASTA QUE SE TOCA UN FILTRO. Recién abierto el panel dice 'Mostrar productos' a secas; en cuanto se selecciona (o se deselecciona) algo pasa a 'Mostrar productos (N)'. Tras 'Limpiar' vuelve a quedarse sin número. CA1 y CA12 piden que muestre el conteo también en esos momentos.",
+    "EL FORMATO DEL CONTEO ES 'Mostrar productos (N)', no 'Mostrar N productos' como lo escriben los TC y la HU. El número es correcto; solo cambia la forma de escribirlo.",
+    "ANIMACIÓN DE CARGA: durante el recálculo el botón se queda SIN TEXTO y su contenido pasa a ser un <div> con tres <div> hijos vacíos (los tres puntos, animados por CSS). Por eso una aserción sobre el texto '...' no encuentra nada: hay que contar los divs hijos o esperar a que el innerText quede vacío. Dura ~800 ms.",
+    "EL BOTÓN X DEL HEADER CIERRA EL PANEL Y CONSERVA LOS FILTROS, y desde el 2026-09-14 eso es también lo que pide el caso: la URL mantiene su `refine=`, el listado sigue con el conteo filtrado y al reabrir el panel el filtro sigue seleccionado. Antes el TC-B2C71-D-016 pedía que la X limpiara como 'Limpiar' y por eso quedó Rechazado, abriendo el bug B2C-778; la fila del Excel se corrigió y el bug quedó descartado. El front nunca cambió: cambió el criterio. Conviene no volver a leer este comportamiento como defecto.",
+    "NO HAY OVERLAY SOBRE EL LISTADO AL APLICAR: tras pulsar 'Mostrar productos' no aparece ningún elemento posicionado y semitransparente sobre la grilla mientras carga. CA16 lo pide (overlay blanco difuminado). Defecto observado (TC-B2C71-D-018).",
+    "EL OVERLAY DEL PANEL NO ESTÁ DIFUMINADO: es un velo oscuro plano (rgba(52,55,70,.5)) con backdrop-filter: none. Oscurece el fondo —que es lo que pide CA6— pero no lo desenfoca.",
+    "CONTEO 0: el botón queda 'Mostrar productos (0)' con disabled=true y cursor not-allowed, y el panel no se cierra. Eso hace que CA18 (estado vacío tras pulsar el botón) no sea alcanzable por esa vía: el camino que sí funciona es cerrar el panel con la X, que además conserva los filtros.",
+    "LOS TIPOS DE FILTRO NO TIENEN TODOS LA MISMA FORMA: 'Ofertas 🤩' es un role=switch (no colapsable, coherente con la HU); 'Marca' despliega role=checkbox; 'Estilos de alimentación' despliega una <ul> de <button>. Un POM que asuma checkbox para todo no encuentra los estilos.",
+    "LA DISPONIBILIDAD DE TIPOS SE RECALCULA: al filtrar por Marca=Nacional desaparecen del panel 'Ofertas' y 'Estilos de alimentación'; al filtrar por 'Libre de lactosa' desaparece 'Ofertas' y Marca se reduce a la única marca compatible. Dentro del mismo tipo, en cambio, se siguen listando todos sus valores (OR).",
+    "AMBIENTE DEV, categoría carnes_vacuno ({PLP_URL}): 9 productos y solo 4 de los 7 tipos de filtro que declara la HU (Ofertas, Estilos de alimentación, Marca, Precio). No aparecen Sellos de advertencia, Tipo de envase ni Formato, y no hay paginación. Por eso TC-B2C71-D-007 (orden de los 7 tipos) y TC-B2C71-D-020 (persistencia al paginar) no son verificables con la data que declaran.",
+    "GEOMETRÍA POR FORM-FACTOR, con la misma clase CSS en los dos: Desktop 1440x900 → panel lateral izquierdo x=16, ancho 500, de arriba abajo (top 16, bottom 884). Mobile 390x844 → drawer inferior x=0, ancho 390 (todo el viewport), pegado abajo (bottom = 844) y sin llegar arriba (top 193). El form-factor se distingue midiendo, no por clase.",
+    "SCROLL INTERNO: con todas las secciones expandidas, .chakra-modal__body llega a scrollHeight 1034 sobre clientHeight 735. El footer no se mueve al hacer scroll porque no está dentro del scroller, no porque tenga position:fixed.",
+    "LA FLECHA DE LA SECCION SE ANIMA (transition: transform 0.15s) y el giro arranca DESPUES de que aria-expanded cambia. Leer su orientacion en cuanto el atributo se actualiza devuelve la matriz a medio camino y la seccion recien abierta se reporta como 'apunta hacia abajo'. Hay que esperar a que la transicion termine y sacar el angulo de la matriz (atan2), no comparar el texto del transform con 'matrix(-1'.",
+    "EL BADGE NO SE PUEDE LEER CON textContent: el titulo y el numero son dos nodos hermanos sin separador, asi que textContent los pega ('Marca' + '2' = 'Marca2') y cualquier expresion que busque el digito al final de la cadena falla en silencio. innerText si inserta el salto. Lo fiable es leer el <p> del titulo y el <div> del numero por separado.",
+    "EL BADGE SOBREVIVE AL COLAPSO: con dos valores seleccionados, el encabezado colapsado sigue mostrando 'Marca 2'.",
+    "LOS VALORES DE UNA SECCION CUELGAN DEL HERMANO SIGUIENTE del button[aria-expanded], no de un ancestro comun localizable con filter({has}) —dentro de un 'has' el locator interior se resuelve contra el candidato y no contra la raiz del panel, y no casa con nada—.",
+    "PRECIO NO TIENE VALORES EN FORMA DE OPCION: es un rango con dos campos de texto (Precio minimo / Precio maximo) y un slider doble. Un recuento de valores que solo mire checkbox y li>button concluye que Precio se muestra sin valores disponibles.",
+    "EL CAMPO DE PRECIO SOLO CONFIRMA VALORES DENTRO DEL RANGO VIGENTE: escribir un minimo por encima del maximo deja el numero escrito y no filtra nada (ni cambia la URL ni el conteo). La via fiable a un resultado de cero productos es fijar el minimo EN el maximo del rango: el extremo superior no entra en el filtro y la combinacion queda vacia, usando solo datos de la propia categoria.",
+    "EL DRAWER DE MOBILE DESBORDA EL VIEWPORT unos pixeles en WebKit (bottom 854 sobre 844 de alto). Comprobar 'pegado abajo' con una igualdad exacta convierte ese redondeo en un fallo del producto; la comprobacion correcta es que el borde inferior alcance o pase el del viewport.",
+    "CORRIDA 2026-09-14 (B2C-71): 17 Aprobado, 4 Rechazado, 2 Bloqueado sobre 23 TC. Los rechazos quedaron reportados: el boton sin conteo al abrir en B2C-776, sin conteo tras Limpiar en B2C-777, la X que no limpia los filtros en B2C-778 y la ausencia de overlay al aplicar en B2C-779.",
+    "BLOQUEADOS POR CONTEXTO EN DEV: el orden de los siete tipos de filtro (TC-B2C71-D-007) y la persistencia al paginar (TC-B2C71-D-020) no son verificables con {PLP_URL} = carnes_vacuno, que expone cuatro tipos y 9 productos sin paginacion. Ambos esperan que la planilla declare una categoria adecuada como token.",
+    "RE-EJECUCIÓN 2026-09-14 de TC-B2C71-D-016: Aprobado. La planilla queda en 18 Aprobado, 3 Rechazado y 2 Bloqueado sobre 23 TC; la HU sigue en TESTEADO (QA) CON ERROR por los tres rechazos que continúan vivos (B2C-776 el conteo al abrir, B2C-777 el conteo tras Limpiar y B2C-779 el overlay al aplicar).",
+    "CÓMO COMPROBAR QUE UN FILTRO 'SE MANTIENE' SIN DEPENDER DE UNA SOLA SEÑAL: se verifican tres cosas independientes —la URL conserva `refine=`, el contador del listado sigue en el número filtrado y no en el total de la categoría, y al reabrir el panel la zona de filtros aplicados sigue visible—. Con una sola de las tres, un cambio de implementación (por ejemplo pasar el estado del filtro a memoria en vez de a la URL) daría un falso Rechazado.",
+    "FILTRO OFERTAS (B2C-95), ESTRUCTURA EXACTA: es un <button role=switch aria-checked> que NO es colapsable y va PRIMERO dentro de 'Aplica tus filtros'. Dentro lleva dos <p> hermanos: el nombre 'Ofertas 🤩' (la UI suma el emoji; los TC escriben solo 'Ofertas') y, debajo, el conteo 'N productos'. El toggle es el ultimo <div> del boton, a la derecha. Formato tarjeta: borde 1px solid rgb(235,235,235) y border-radius 16px, sin sombra.",
+    "EL CONTEO DE LA TARJETA DE OFERTAS ES EL DE PRODUCTOS EN OFERTA DEL CONTEXTO, no el de la categoria: en carnes_vacuno dice '3 productos' sobre 9 productos totales. Se lee del segundo <p> del switch; el innerText del boton pega nombre y conteo con saltos de linea.",
+    "EL TOGGLE DE OFERTAS SE LEE POR aria-checked, y visualmente por dos senales independientes: la pista cambia de rgb(255,255,255) a rgb(106,106,106) y la perilla se desplaza a la derecha (~25px). Con una sola de las dos, un cambio de paleta daria un falso Rechazado.",
+    "ACTIVAR OFERTAS ESCRIBE refine=c_isOnSale%3Dtrue EN LA URL al instante, sin esperar a 'Mostrar productos', igual que el resto de los filtros. Al desactivarlo el parametro desaparece y los demas refine se conservan.",
+    "AMBIENTE DEV, carnes_vacuno ({PLP_URL}): 9 productos, 3 en oferta, 4 marcas (Brasil Paraguay, Daily Beef, Fundo Rio Alegre, Nacional). Con Ofertas ON la seccion Marca se reduce a las dos marcas con oferta (Daily Beef, Fundo Rio Alegre). Combinaciones utiles para los TC de logica AND y de recalculo: Fundo Rio Alegre solo = 4, Fundo Rio Alegre + Ofertas = 2; Daily Beef + Ofertas = 1.",
+    "COMO SE RECONOCE UN PRODUCTO EN OFERTA EN LA GRILLA: su tarjeta muestra un bloque de promocion —'Lleva N por $X' y/o el sello 'Combina la promo'— junto al icono 💎. No hay precio tachado (<s>/<del>), asi que una asercion sobre line-through no encuentra nada y concluye que ningun producto esta en oferta.",
+    "DESACTIVAR OFERTAS CON OTRO FILTRO ACTIVO RECALCULA SOBRE EL RESTO: con Marca=Fundo Rio Alegre el boton pasa de 'Mostrar productos (2)' a 'Mostrar productos (4)', el chip de Ofertas desaparece de la zona de filtros aplicados y el de Marca se mantiene. Elegir una marca con un solo producto (Daily Beef) deja el conteo en (1) antes y despues y hace el caso indistinguible de un filtro que no recalcula.",
+    "CA5 NO ES VERIFICABLE CON LA DATA DECLARADA EN B2C-95: el unico contexto que la planilla declara es {PLP_URL} = carnes_vacuno, que SI tiene productos en oferta. Para observar la ausencia del filtro Ofertas hace falta una PLP/SRP/Coleccion sin productos en oferta declarada como token. Mismo patron que TC-B2C71-D-007 y TC-B2C71-D-020.",
+    "CORRIDA 2026-09-16 (B2C-95): 5 Aprobado y 1 Bloqueado sobre 6 TC. El filtro Ofertas cumple CA1, CA2, CA3, CA4 y CA6 sin desviaciones; el unico bloqueo es CA5 por falta de un contexto sin ofertas declarado. La HU quedo en TESTEADO QA BLOQUEADO.",
+    "LA TARJETA DE OFERTAS NO SINGULARIZA EL CONTEO: con un solo producto en oferta rotula '1 productos'. Es una desviacion menor de copy que ningun TC de B2C-95 verifica; quedo anotada en la observacion de TC-B2C95-D-006 y no se abrio bug.",
+    "ESTILOS DE ALIMENTACION (B2C-96), ESTRUCTURA: seccion colapsable normal (button[aria-expanded] + <p> con el nombre), cuyo contenedor hermano monta una <ul> de <li> con UN <button aria-pressed> cada uno. La pildora lleva un <img> de https://static.okto.shop/img/certifications/<slug>_v1.svg y la etiqueta como texto suelto; no hay role=checkbox por ningun lado.",
+    "EL ESTADO DE UNA PILDORA SE LEE DE aria-pressed, no del estilo. Visualmente, seleccionada = borde y texto rgb(218,41,28) sobre fondo rgb(253,244,244); sin seleccionar = borde rgb(221,221,221), texto rgb(70,70,70), fondo rgb(253,253,253). El radio es 30px en ambos estados.",
+    "EL ICONO NO CAMBIA DE ARCHIVO AL SELECCIONAR: el <img> conserva su src y se recolorea con un filter CSS (brightness(0) saturate(1) invert(...) ...). Comparar el src para ver 'el icono en rojo' no detecta nada; la senal es que getComputedStyle(img).filter deja de ser 'none'.",
+    "ORDEN DE LAS PILDORAS EN carnes_vacuno: Apto para APLV, Libre de huevo, Libre de lactosa, Libre de mani, Libre de mariscos, Libre de nueces, Libre de sulfitos. Es alfabetico, pero hay que compararlo con localeCompare('es') porque 'mani' lleva tilde y un sort binario la manda al final.",
+    "LA SELECCION MULTIPLE DE ESTILOS VIAJA EN UN SOLO refine CON PIPES: refine=c_estiloAlimentacion=libreMani|libreLactosa (el pipe es el OR de SFCC). El badge de la seccion cuenta las pildoras activas y cada una suma su propio chip en 'Filtros Aplicados'.",
+    "DENTRO DE ESTILOS SE SIGUEN OFRECIENDO LAS 7 PILDORAS con una ya seleccionada: el recalculo no poda los valores del mismo tipo (OR), a diferencia de lo que pasa entre tipos distintos.",
+    "CA4 (LOGICA OR) NO ES VERIFICABLE EN carnes_vacuno: los 7 estilos devuelven 2 productos CADA UNO y seleccionando los 7 a la vez el boton sigue diciendo 'Mostrar productos (2)'. Es decir, los mismos 2 productos llevan los 7 atributos y cualquier subconjunto da el mismo resultado, asi que OR y AND son indistinguibles. Una asercion de union ahi pasa igual con una implementacion AND: es verde sin haber probado nada. Hace falta una categoria cuyos productos tengan atributos DISTINTOS, declarada como token.",
+    "LA TARJETA DEL SHELF NO MUESTRA LOS ATRIBUTOS DE OK TO SHOP: solo imagen, precios y nombre. No hay forma de comprobar producto a producto que cumple uno de los estilos seleccionados desde el listado; lo unico observable es el conteo.",
+    "PRODUCTOS CON ATRIBUTOS EN carnes_vacuno (2026-09-16): 000000000000652051-UN (Fundo Rio Alegre) y 000000000000666200-UN. Sobre 9 productos de la categoria, solo esos dos traen estilos de alimentacion.",
+    "CORRIDA 2026-09-16 (B2C-96): 3 Aprobado, 1 Rechazado y 2 Bloqueado sobre 6 TC. CA1, CA2 y CA3a se cumplen; el rechazo es CA3b y los bloqueos son CA4 (OR indistinguible con la data declarada) y CA5 (no hay contexto sin atributos declarado). La HU quedo en TESTEADO (QA) CON ERROR.",
+    "EL BOTON PIERDE EL CONTEO AL DESELECCIONAR EL ULTIMO FILTRO ACTIVO, no solo tras 'Limpiar': con una sola pildora de estilos puesta y quitada, el boton pasa de 'Mostrar productos (2)' a 'Mostrar productos' sin numero y ahi se queda (comprobado 6,5 s despues). Es el mismo defecto de B2C-777 por otra via —el conteo solo se renderiza mientras hay al menos un filtro activo— y se comento ahi en vez de abrir un duplicado (TC-B2C96-D-004).",
+    "LA DESELECCION SI REVIERTE TODO LO DEMAS: la pildora recupera su borde gris, su color de texto y su icono sin recolorear, el chip desaparece de 'Filtros Aplicados', el badge del dropdown se va y la URL suelta el refine. Lo unico que no vuelve es el numero del boton.",
+    "FILTRO PRECIO (B2C-97), ESTRUCTURA EXACTA: seccion colapsable normal (button[aria-expanded] con <p>Precio</p> + la flecha de path M6 9l6 6 6-6). Al expandirse, el hermano siguiente monta dos campos y un slider. Cada campo es un <input inputmode=numeric> con aria-label 'Precio minimo' / 'Precio maximo' (con tilde) y un right-element '$'; el rotulo VISIBLE, en cambio, son dos <p>: 'Minimo' y '(en CLP)'. Los TC lo escriben 'Precio minimo (CLP)': el nombre accesible coincide, el texto a la vista no. El valor va formateado con punto de miles ('3.890'), asi que leerlo como numero exige quitar todo lo que no sea digito.",
+    "EL SLIDER DE PRECIO ES UN CHAKRA RANGE SLIDER con DOS thumbs independientes (role=slider, tabindex=0) sobre un track comun. Cada thumb expone aria-valuemin / aria-valuemax / aria-valuenow, y esa es la forma fiable de leer su posicion: no hay input[type=range] ni value que consultar. El contenedor tiene id 'slider-root-:rN:' y los thumbs 'slider-thumb-:rN:-0' (minimo) y '-1' (maximo); el sufijo :rN: lo genera React y cambia entre montajes, asi que no se puede anclar en el.",
+    "AMBIENTE DEV, carnes_vacuno ({PLP_URL}): el rango que ofrece el componente es 3.890 - 11.990 y coincide EXACTAMENTE con el minimo y el maximo de los precios de venta de los 9 productos de la categoria (3890, 3890, 3990, 7690, 7690, 9990, 10390, 11190, 11990). Es lo que permite certificar CA2 comparando el rango del componente contra la grilla en vez de contra numeros escritos a mano.",
+    "COMO ARRASTRAR UN CONTROL DEL SLIDER DE FORMA DETERMINISTA: un dragTo del thumb sobre el CONTENEDOR del slider lo deja en el punto medio exacto del rango (3890..11990 -> 7940), porque el centro del contenedor es el 50% del track. Es la unica forma de mover el control a un valor intermedio reproducible sin calcular pixeles; arrastrarlo sobre el otro thumb lo lleva al extremo.",
+    "EL FILTRO DE PRECIO SI RECALCULA Y SI ESCRIBE LA URL, igual que el resto: cada cambio de rango deja refine=price%3D%28min..max%29 al instante, el boton pasa a 'Mostrar productos (N)' y el chip aparece en 'Filtros Aplicados' con el formato '$8.000 - $11.990'. Vale tanto por el slider como por los campos.",
+    "EL EXTREMO SUPERIOR DEL RANGO NO ENTRA EN EL FILTRO: con refine=price=(8000..11990) el producto que cuesta exactamente 11.990 queda fuera y el listado devuelve 3 de los 4 productos que estan en ese intervalo si se lee cerrado. Es semantica del backend, no algo que los TC declaren, asi que una asercion sobre el filtro de precio debe comprobar que NINGUN producto mostrado cae fuera del rango, nunca que esten todos los que caen dentro: esa segunda lectura convierte el borde abierto en un falso Rechazado.",
+    "VALIDACION min>max (CA5): escribir en 'Precio minimo' un valor por encima del maximo y confirmar muestra un <p> en rojo (rgb(218,41,28)) con el texto 'El minimo no puede superar al maximo.' dentro de la seccion de Precio, y el filtro NO se aplica: no hay chip, no hay refine en la URL y el boton se queda sin conteo. Los inputs no marcan aria-invalid ni aria-describedby, asi que el mensaje se localiza por su texto. El campo conserva el numero escrito (15.000) mientras el thumb del minimo se queda pegado al maximo.",
+    "PULSAR 'Mostrar productos' CON EL RANGO INVALIDO CIERRA EL PANEL SIN APLICAR NADA: la URL se queda sin refine y el encabezado sigue con el total de la categoria. El boton no se deshabilita. CA5 pide que el filtro no se aplique —y no se aplica—, asi que no es un defecto del caso, pero conviene no leer el cierre del panel como que se aplico algo.",
+    "EL LINK 'Borrar' DE LA SECCION DE PRECIO SOLO EXISTE MIENTRAS HAY UN RANGO DISTINTO DEL ORIGINAL: con el rango intacto no esta en el DOM. Es un <button class='chakra-text'> con texto 'Borrar', subrayado (text-decoration: underline) y color rgb(106,106,106), ultimo hijo de la seccion. Buscarlo antes de tocar el precio lleva a concluir que la UI no ofrece CA6 cuando si lo hace.",
+    "AL PULSAR 'Borrar' EL PANEL COLAPSA TODAS SUS SECCIONES, incluida Precio, ademas de quitar el filtro: desaparecen el chip y la zona 'Filtros Aplicados', la URL suelta el refine y el boton vuelve a quedarse sin conteo. Para comprobar que los campos volvieron al rango original (3.890 / 11.990) y el slider a sus extremos hay que volver a expandir la seccion; leerlos inmediatamente despues del clic devuelve vacio porque el contenido esta desmontado.",
+    "LA SECCION DE PRECIO LLEVA BADGE '1' cuando hay un rango aplicado, igual que Marca o Estilos, aunque el filtro sea un solo rango y no una lista de valores seleccionados.",
+    "CUIDADO AL EXPLORAR: interactuar con el panel antes de que la PLP termine de hidratar deja el componente en un estado en el que el estado de React si cambia (chips, campos, thumbs) pero NI la URL NI el conteo del boton se actualizan nunca mas. Visto el 2026-09-17: llevo a concluir que el filtro de precio no recalculaba, y el control —activar Ofertas en el mismo navegador, que tampoco recalculo— fue lo que delato que el roto era el ambiente de la exploracion y no el producto. En sesion limpia (aceptar cookies, esperar el listado y recien ahi abrir el panel) todo recalcula. Ante un 'no recalcula', repetir en sesion limpia antes de escribir nada.",
+    "CORRIDA 2026-09-17 (B2C-97): 7 Aprobado sobre 7 TC. CA1 a CA7 del filtro Precio se cumplen sin defectos; las unicas desviaciones anotadas son de rotulo ('Minimo (en CLP)' en vez de 'Precio minimo (CLP)') y el cierre del panel al intentar aplicar un rango invalido.",
+    "FILTRO MARCA (B2C-98), ESTRUCTURA EXACTA: seccion colapsable normal cuyo contenedor hermano monta, en este orden, (1) un chakra-input__group con un <input type=text placeholder='Buscar marca...'> y un icono de lupa a la izquierda, (2) un stack de <button role=checkbox aria-checked> con el nombre en un <p>, y (3) un <button> con <p>Ver todas</p>. El input NO tiene aria-label ni name: se localiza por su placeholder.",
+    "EL BUSCADOR DE MARCAS SOLO SE RENDERIZA CUANDO HAY MAS DE 5 MARCAS. Con el contexto reducido a 4 marcas (por ejemplo tras activar Ofertas) el input desaparece del DOM, igual que el link 'Ver todas'. Un TC que busque el campo en un contexto pobre concluye que la UI no lo ofrece.",
+    "OJO CON EL LOCATOR DE CHIPS: el boton 'Ver todas' lleva TAMBIEN un svg con viewBox='0 0 256 256' (el icono +), asi que el locator historico de chips —button:has(svg[viewBox='0 0 256 256'])— pasa a matchear 'Ver todas' en cuanto el panel expone una seccion con mas de 5 valores. Lo que distingue al chip es que el nombre va en un <span> hijo directo del boton; 'Ver todas' lo lleva en un <p> dentro de un <div>. El locator corregido exige ese span. En las suites anteriores (B2C-71/95/96) no mordio porque ninguna expandio una seccion con 'Ver todas'.",
+    "EL CHIP DE FILTRO APLICADO ES <button class='chakra-button'><span>Nombre</span><svg 16px viewBox='0 0 256 256' (path de X)></button>, dentro del contenedor que sigue al bloque 'Filtros Aplicados' + 'Limpiar'.",
+    "EL BUSCADOR INTERNO DE MARCAS FILTRA EN CLIENTE, SIN TOCAR LA URL NI EL CONTEO: escribir 'su' sobre 11 marcas deja Super Cerdo y Super Pollo, y no dispara product-search. Al vaciar el campo se muestran TODAS las marcas disponibles (las 11), no las 5 iniciales con 'Ver todas': el listado se queda expandido. CA3 pide 'todas las marcas disponibles', asi que eso lo cumple.",
+    "UNA MARCA YA SELECCIONADA SE MANTIENE VISIBLE AUNQUE NO COINCIDA CON LA BUSQUEDA: con Ariztia marcada, buscar 'su' devuelve Ariztia + Super Cerdo + Super Pollo. Es CA3 y funciona.",
+    "'Ver todas' EXPANDE EL LISTADO COMPLETO Y EL PROPIO LINK SE CONVIERTE EN 'Mostrar menos' (con un icono de guion en vez del +), que vuelve a plegar la seccion a sus 5 primeros valores. No desaparece: un locator que busque /ver todas/i deja de encontrarlo y eso se lee como que el control se fue, cuando lo que cambio es su rotulo. De 5 marcas se pasa a las 11 del contexto, en orden alfabetico.",
+    "LA SELECCION MULTIPLE DE MARCAS VIAJA EN UN SOLO refine CON PIPES: refine=brand=Ariztia|Brasil Paraguay. El badge de la seccion cuenta las marcas activas, cada una suma su chip y el conteo del boton es la UNION (Ariztia 8 + Brasil Paraguay 1 = 9). Aqui el OR SI es distinguible del AND —un producto tiene una sola marca, asi que un AND daria 0—, a diferencia de lo que pasaba con los estilos de alimentacion en B2C-96.",
+    "SRP 'carne' ({SRP_URL}) EN DEV, INVENTARIO 2026-09-17: 70 productos (69 de Carnes, 1 de Frutas y Verduras) y 11 marcas — Ariztia(8), Brasil Paraguay(1), Canto Del Gallo(1), Cook And Fun(3), Daily Beef(1), Fundo Rio Alegre(6), Nacional(3), Sadia(2), Simunovic(2), Super Cerdo(12), Super Pollo(22). Rango de precio 1.790-43.990. Con Ofertas activo quedan 5 productos y solo 4 marcas (Ariztia, Daily Beef, Fundo Rio Alegre, Super Cerdo): es la via para montar el caso de 'marca sin productos disponibles' usando solo el contexto declarado.",
+    "TIPO DE ENVASE Y FORMATO NO EXISTEN COMO DATO EN ESTE CONTEXTO, Y ESO NO ES UN DEFECTO DEL FRONT. La respuesta de product-search para q=carne SI trae los refinements c_tipoEnvase ('Tipo de envase') y c_formato ('Formato'), pero con la lista de valores VACIA. Como CA2/CA4 piden que solo se muestren atributos con al menos un producto disponible, no renderizarlos es correcto. La comprobacion que lo decide es leer los refinements del backend, no mirar el panel: sin ella, la ausencia de los dos dropdowns se lee como un fallo de la UI y se abre un bug por algo que funciona.",
+    "COMO LEER LOS REFINEMENTS DEL BACKEND CUANDO LA PAGINA ES SSR: la SRP se sirve renderizada, asi que un goto no deja ningun XHR de product-search que inspeccionar. La unica via es provocar una busqueda desde el panel —activar y desactivar Ofertas— y quedarse con la SEGUNDA respuesta, que vuelve a ser la del contexto sin filtrar. Con playwright-cli: run-code + page.waitForResponse sobre 'product-search'.",
+    "EL CHIP DE PRECIO SI SE MUESTRA CON EL REFINEMENT ACTIVO EN LA URL, y la consideracion general de B2C-98 pide omitirlo expresamente. Navegando a {SRP_URL}&refine=price=(5000..20000) sin tocar el panel, 'Filtros Aplicados' rotula el chip '$5.000 - $20.000' y la seccion Precio queda con badge 1. Defecto observado en TC-B2C98-D-014.",
+    "EL NOMBRE DEL PRODUCTO EN EL SHELF LLEVA LA MARCA DELANTE, SEPARADA POR UN PIPE LITERAL: el boton del nombre rinde 'Ariztia | Trutro ala de pollo Ariztia sabor sureña 750 g', y ese ' | ' esta en el DOM —textContent e innerText devuelven lo mismo—, no es un salto de linea maquetado. La marca se lee partiendo por el pipe. Partir por '\n' devuelve la cadena entera y la comparacion contra la marca falla siempre, con un diff que se lee como si el listado trajera productos de otra marca: paso el 2026-09-17 en TC-B2C98-D-003 y D-011 y costo dos corridas. Ojo al explorar: un script que haga replace(/\n+/g,' | ') sobre el texto de la tarjeta produce exactamente el mismo aspecto y esconde cual es el separador real.",
+    "CORRIDA 2026-09-17 (B2C-98): 9 Aprobado, 1 Rechazado y 4 Bloqueado sobre 14 TC. El filtro Marca cumple CA2, CA3, CA5, CA6, CA7 y CA8 sin desviaciones; el rechazo es el chip de Precio (TC-B2C98-D-014) y los cuatro bloqueos son los TC que necesitan Tipo de envase y Formato, que el contexto declarado no tiene poblados.",
+    "Mobile (webkit 390x844): el panel entra como drawer desde abajo; medir la posición del botón inferior recién ~1.5 s después de abrirlo (durante la animación el botón se desplaza ~60 px).",
+    "Mobile: el botón inferior dice \"Mostrar N productos\" (Desktop: \"Mostrar productos (N)\"); con 0 resultados \"Mostrar 0 productos\" deshabilitado.",
+    "Mobile: no hay dropdown \"Ordenar por\" en la PLP; el orden se elige en \"Ordena tus productos\" del panel (PanelFiltros.elegirOrden + aplicar).",
+    "Mobile: el botón de categorías del header es el ícono sándwich (HeaderFull.iconoSandwich); categoriasDesktop no se ve.",
+    "Mobile: los nombres de producto de la grilla son enlaces a .html, no botones; PLPCategoriaPage.tarjetas cubre ambos.",
+    "Nueva sección \"Sellos de advertencia\" en el panel (2026-10-07), ver plp-filtro-sellos-advertencia.",
+    "La PLP carnes_vacuno muestra ahora 10 productos en DEV.",
+    "2026-10-09: carnes_vacuno ({PLP_URL}) YA EXPONE LOS 7 TIPOS en orden Ofertas > Estilos > Sellos > Marca > Precio > Tipo de envase > Formato (valores 7/5/4/2/1/1); tiene 10 productos y sigue sin paginacion. OJO: TC-B2C71-D-006 (Aprobado antes) se apoyaba en que esa categoria NO tenia todos los tipos; su precondicion ya no se cumple con esa URL."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/PanelFiltros.ts",
+    "class": "PanelFiltros",
+    "relacionados": [
+      "tests/pages/PLPCategoriaPage.ts (la PLP que lo abre; ver flujo plp-categoria)"
+    ]
+  },
+  "history": [
+    {
+      "fecha": "2026-09-17",
+      "version_anterior": 6,
+      "que_cambio": "Se documenta el filtro Marca como objeto propio (buscador interno, 'Ver todas', checkboxes, refine con pipes), el inventario de la SRP 'carne', la lectura de refinements del backend en una pagina SSR, la ausencia de datos de Tipo de envase/Formato y la colision del locator de chips con el boton 'Ver todas'.",
+      "por_que": "La HU B2C-98 certifica los filtros Marca, Tipo de envase y Formato; B2C-71 solo mencionaba Marca como el tipo que despliega role=checkbox."
+    },
+    {
+      "fecha": "2026-09-17",
+      "version_anterior": 5,
+      "que_cambio": "Se documenta el filtro Precio como objeto propio: estructura de los dos campos y del range slider de doble thumb, rango real de carnes_vacuno, forma determinista de arrastrar un control, mensaje de validacion min>max, aparicion condicional del link 'Borrar' y el colapso que provoca, y el borde superior abierto del refine de precio.",
+      "por_que": "La HU B2C-97 certifica ese filtro; B2C-71 solo lo mencionaba como el tipo cuyos valores no son opciones seleccionables."
+    },
+    {
+      "fecha": "2026-09-16",
+      "version_anterior": 4,
+      "que_cambio": "Se documenta la seccion 'Estilos de alimentacion' como objeto propio: forma de las pildoras (aria-pressed, icono Ok to Shop recoloreado por filter), orden alfabetico con locale es, refine con pipes y el limite de la data para certificar la logica OR.",
+      "por_que": "La HU B2C-96 certifica ese filtro; B2C-71 solo lo mencionaba como el tipo que despliega una lista de <button> en vez de checkboxes."
+    },
+    {
+      "fecha": "2026-09-16",
+      "version_anterior": 3,
+      "que_cambio": "Se documenta el filtro Ofertas como objeto propio (estructura del switch, conteo de la tarjeta, senales visuales del toggle, refine c_isOnSale) y el inventario de marcas/conteos de carnes_vacuno que usan los TC de B2C-95.",
+      "por_que": "La HU B2C-95 certifica ese filtro; B2C-71 solo lo mencionaba de pasada como el unico tipo con forma de switch."
+    },
+    {
+      "fecha": "2026-09-14",
+      "version_anterior": 2,
+      "que_cambio": "Se retira la afirmación de que la X del header es un defecto por no limpiar los filtros. Conservarlos es el comportamiento correcto según la fila corregida.",
+      "por_que": "El criterio del caso se invirtió y el bug B2C-778 quedó descartado. El comportamiento del front no cambió entre las dos corridas."
+    },
+    {
+      "date": "2026-10-07",
+      "suite": "B2C-71",
+      "change": "Corrida Mobile de los 16 TC pendientes (todos Aprobado, sin bugs nuevos); ajustes Mobile en spec y PLPCategoriaPage.tarjetas."
+    }
+  ],
+  "last_run": {
+    "suite": "B2C-71",
+    "fecha": "2026-10-09",
+    "resultado": "3 pendientes: D-007 Aprobado, D-020 y M-007 Bloqueado Data"
+  }
+}

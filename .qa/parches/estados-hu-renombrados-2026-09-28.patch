@@ -1,0 +1,252 @@
+diff -ru '--exclude=__pycache__' /c/Users/dasil/AppData/Local/Temp/claude/C--Users-dasil-Documents-smu-certificacion-qa/929c94eb-8e6a-4156-be94-cf2dfc096c91/scratchpad/orig/evals/evals.json ./evals/evals.json
+--- /c/Users/dasil/AppData/Local/Temp/claude/C--Users-dasil-Documents-smu-certificacion-qa/929c94eb-8e6a-4156-be94-cf2dfc096c91/scratchpad/orig/evals/evals.json	2026-09-28 09:16:40.082076500 -0500
++++ ./evals/evals.json	2026-09-28 09:18:56.153707800 -0500
+@@ -24,7 +24,7 @@
+       "id": 2,
+       "name": "bm-y-app-fuera-de-alcance",
+       "prompt": "Ejecuta los TC pendientes de la planilla de test_claude, incluidos el TC-B2C69-BM-001 (Business Manager) y el TC-B2C69-APP-004 (app nativa).",
+-      "expected_output": "La skill debe: (1) leer los TC con `qa_excel.py read`; (2) reconocer por el segmento del CP-ID que -BM- y -APP- son tipos que esta automatizacion no cubre, y apartarlos en la Fase 2 antes de mirar tokens y antes de explorar (el read los trae con form_factor 'bm'/'app', out_of_scope true, runnable false y block_reason null); (3) marcarlos 'Fuera de Alcance' -NUNCA 'Bloqueado', aunque sus tokens {BM_URL}, {BM_ADMIN_USER} o {BM_ADMIN_PASSWORD} no resuelvan en el Excel de data: la falta de data es irrelevante para un caso que no se iba a ejecutar-; (4) escribir en la Observacion el motivo en lenguaje de cobertura ('TC de Business Manager: fuera del alcance de la automatizacion web'), no una Causa/Accion requerida de impedimento; (5) no generar ni ejecutar ningun test() para ellos ni abrir bug en Jira; (6) seguir con los TC Desktop y Mobile de la planilla con normalidad; (7) al calcular el estado de la HU, no contar los Fuera de Alcance como pendientes: si todos los TC en alcance quedaron Aprobado, la HU va a TESTEADO QA OK aunque queden filas APP y BM.",
++      "expected_output": "La skill debe: (1) leer los TC con `qa_excel.py read`; (2) reconocer por el segmento del CP-ID que -BM- y -APP- son tipos que esta automatizacion no cubre, y apartarlos en la Fase 2 antes de mirar tokens y antes de explorar (el read los trae con form_factor 'bm'/'app', out_of_scope true, runnable false y block_reason null); (3) marcarlos 'Fuera de Alcance' -NUNCA 'Bloqueado', aunque sus tokens {BM_URL}, {BM_ADMIN_USER} o {BM_ADMIN_PASSWORD} no resuelvan en el Excel de data: la falta de data es irrelevante para un caso que no se iba a ejecutar-; (4) escribir en la Observacion el motivo en lenguaje de cobertura ('TC de Business Manager: fuera del alcance de la automatizacion web'), no una Causa/Accion requerida de impedimento; (5) no generar ni ejecutar ningun test() para ellos ni abrir bug en Jira; (6) seguir con los TC Desktop y Mobile de la planilla con normalidad; (7) al calcular el estado de la HU, no contar los Fuera de Alcance como pendientes: si todos los TC en alcance quedaron Aprobado, la HU va a TESTEADO OK aunque queden filas APP y BM.",
+       "assertions": [
+         "TC-B2C69-BM-001 y TC-B2C69-APP-004 quedaron en Estado 'Fuera de Alcance'.",
+         "Ninguno de los dos quedo en 'Bloqueado', ni siquiera mencionando tokens faltantes como causa.",
+diff -ru '--exclude=__pycache__' /c/Users/dasil/AppData/Local/Temp/claude/C--Users-dasil-Documents-smu-certificacion-qa/929c94eb-8e6a-4156-be94-cf2dfc096c91/scratchpad/orig/references/excel-workspace.md ./references/excel-workspace.md
+--- /c/Users/dasil/AppData/Local/Temp/claude/C--Users-dasil-Documents-smu-certificacion-qa/929c94eb-8e6a-4156-be94-cf2dfc096c91/scratchpad/orig/references/excel-workspace.md	2026-09-28 09:16:40.069442800 -0500
++++ ./references/excel-workspace.md	2026-09-28 09:18:00.661725600 -0500
+@@ -138,7 +138,7 @@
+ | `TC-B2C21-APP-001` | `app` (aplicación nativa) | — | — | **`Fuera de Alcance`** |
+ | `TC-B2C21-BM-002` | `bm` (Business Manager) | — | — | **`Fuera de Alcance`** |
+ 
+-Los `app` y `bm` vienen del `read` con `out_of_scope: true`, `runnable: false` y `block_reason: null`. Ese `null` es deliberado: **no se marcan `Bloqueado` aunque les falten tokens o pasos**, porque no se iba a intentar ejecutarlos y no hay nada que destrabar. Su estado es `Fuera de Alcance` y el `write` rechaza el `Bloqueado` si se cuela. Tampoco entran en el conteo que decide la HU: una planilla cuyos TC en alcance quedaron todos `Aprobado` cierra en `TESTEADO QA OK` aunque arrastre filas APP.
++Los `app` y `bm` vienen del `read` con `out_of_scope: true`, `runnable: false` y `block_reason: null`. Ese `null` es deliberado: **no se marcan `Bloqueado` aunque les falten tokens o pasos**, porque no se iba a intentar ejecutarlos y no hay nada que destrabar. Su estado es `Fuera de Alcance` y el `write` rechaza el `Bloqueado` si se cuela. Tampoco entran en el conteo que decide la HU: una planilla cuyos TC en alcance quedaron todos `Aprobado` cierra en `TESTEADO OK` aunque arrastre filas APP.
+ 
+ APP y BM se evalúan **antes** que `-M-` y `-D-` al clasificar, para que unas precondiciones que digan "mobile" no puedan sacar un TC de app de su alcance. Si el CP-ID no dice el tipo, se deduce del texto de `Precondiciones`. El **viewport** se parsea de ahí mismo (`Viewport: Desktop 1440x900` → `{width: 1440, height: 900}`) y es una propiedad del caso: no lo cambies para "adaptarlo" al navegador.
+ 
+@@ -247,11 +247,11 @@
+   "counts": {"Aprobado": 1, "Rechazado": 1, "Fuera de alcance": 1},
+   "grupos": {"rechazado": ["TC-B2C69-M-001"], "bloqueado": [], "abierto": [],
+              "gris": ["TC-B2C69-D-002"], "ok": ["TC-B2C69-D-001"], "desconocido": []},
+-  "hu_target_status": "TESTEADO (QA) CON ERROR",
+-  "hu_target_status_key": "testeado qa con error",
++  "hu_target_status": "TESTEADO CON ERROR",
++  "hu_target_status_key": "testeado con error",
+   "hu_reason": "1 TC en Rechazado",
+-  "hu_allowed_from": ["IN TESTING", "EN DEVELOPMENT (QA)"],
+-  "hu_allowed_from_keys": ["in testing", "en development qa"]
++  "hu_allowed_from": ["IN TESTING", "LISTO EN DEVELOPMENT"],
++  "hu_allowed_from_keys": ["in testing", "listo en development"]
+ }
+ ```
+ 
+@@ -263,14 +263,15 @@
+ | `--out` | Escribe el JSON a archivo; a stdout si se omite |
+ 
+ Los `*_key` son los mismos nombres en minúsculas, sin tildes y sin puntuación: es la forma en que
+-hay que comparar contra el `to.name` de las transiciones de Jira, para que `TESTEADO (QA) CON ERROR`
+-y `TESTEADO QA CON ERROR` cuenten como el mismo estado. Los literales están verificados contra el
+-board de `it-smu`; viven en cuatro constantes al principio de `qa_excel.py` (`HU_ERROR`,
++hay que comparar contra el `to.name` de las transiciones de Jira, para que `TESTEADO CON ERROR`
++y `Testeado con error` cuenten como el mismo estado. La clave no absorbe palabras de más: cuando el
++equipo renombró `TESTEADO QA OK` a `TESTEADO OK` hubo que cambiar las constantes. Los literales están
++verificados contra el board de `it-smu` (2026-09-28); viven en cuatro constantes al principio de `qa_excel.py` (`HU_ERROR`,
+ `HU_BLOQUEADO`, `HU_EN_TESTING`, `HU_OK`) y `HU_DESDE`.
+ 
+ La decisión vive en el script y no en el agente **a propósito**: la precedencia (`Rechazado` →
+ `Bloqueado` → pendientes y grises → `Aprobado`) es una regla del equipo, y re-derivarla de memoria
+-en cada corrida es donde se cuela un `TESTEADO QA OK` sobre una planilla con filas sin correr. La
++en cada corrida es donde se cuela un `TESTEADO OK` sobre una planilla con filas sin correr. La
+ tabla completa y cómo se ejecuta la transición están en `jira-bug-adf.md`.
+ 
+ La **key de la HU** se saca del nombre del archivo (`B2C-69 Test Cases.xlsx` → `B2C-69`) y, si no la
+diff -ru '--exclude=__pycache__' /c/Users/dasil/AppData/Local/Temp/claude/C--Users-dasil-Documents-smu-certificacion-qa/929c94eb-8e6a-4156-be94-cf2dfc096c91/scratchpad/orig/references/jira-bug-adf.md ./references/jira-bug-adf.md
+--- /c/Users/dasil/AppData/Local/Temp/claude/C--Users-dasil-Documents-smu-certificacion-qa/929c94eb-8e6a-4156-be94-cf2dfc096c91/scratchpad/orig/references/jira-bug-adf.md	2026-09-28 09:16:40.070450400 -0500
++++ ./references/jira-bug-adf.md	2026-09-28 09:18:56.152702700 -0500
+@@ -255,10 +255,10 @@
+ 
+ | Condición sobre la planilla | `hu_target_status` |
+ |---|---|
+-| ≥1 `Rechazado` | `TESTEADO (QA) CON ERROR` |
+-| Sin rechazados y ≥1 `Bloqueado` | `TESTEADO QA BLOQUEADO` |
++| ≥1 `Rechazado` | `TESTEADO CON ERROR` |
++| Sin rechazados y ≥1 `Bloqueado` | `TESTEADO BLOQUEADO` |
+ | Sin rechazados ni bloqueados, y ≥1 `Pendiente` | `IN TESTING` |
+-| Todas las filas **en alcance** en `Aprobado` | `TESTEADO QA OK` |
++| Todas las filas **en alcance** en `Aprobado` | `TESTEADO OK` |
+ 
+ Tres decisiones que están dentro de esa tabla y conviene tener presentes:
+ 
+@@ -270,7 +270,7 @@
+   APP no podría cerrarse jamás por bien que hubiera ido todo lo demás: es una decisión de cobertura
+   ya tomada, no trabajo por hacer. El `hu_reason` los nombra aparte, para que quien lea la historia
+   vea qué se certificó y qué no se probó.
+-- **El defecto manda sobre lo anterior.** Si hay un `Rechazado`, el destino es `TESTEADO QA CON
++- **El defecto manda sobre lo anterior.** Si hay un `Rechazado`, el destino es `TESTEADO CON
+   ERROR` aunque queden filas pendientes. Dejar la historia "en testing" escondería la única parte
+   accionable del resultado.
+ 
+@@ -294,7 +294,7 @@
+ resuelve el `cloudId` con la llamada: es una sola por corrida y no depende de que esta nota
+ siga vigente.
+ 
+-- **Solo desde `EN DEVELOPMENT (QA)` o `IN TESTING`** (los literales verificados del board; el
++- **Solo desde `LISTO EN DEVELOPMENT` o `IN TESTING`** (los literales verificados del board; el
+   `tally` los trae en `hu_allowed_from` / `hu_allowed_from_keys`). El primero es donde la deja
+   desarrollo; el segundo es donde la dejó una corrida parcial anterior, y hay que poder cerrarla
+   cuando la planilla se completa. **Desde cualquier otro estado no se toca la historia**: si el PO ya
+@@ -303,21 +303,21 @@
+ - **La transición se elige por su estado destino, no por su nombre ni por un id fijo.** Busca en la
+   respuesta de `getTransitionsForJiraIssue` la transición cuyo **`to.name`** coincida con
+   `hu_target_status`, comparando por la clave que el `tally` ya trae en `hu_target_status_key`
+-  —minúsculas, sin tildes y **sin puntuación**, para que `TESTEADO (QA) CON ERROR` y
+-  `TESTEADO QA CON ERROR` sean el mismo estado—; usa el `id` de esa transición.
++  —minúsculas, sin tildes y **sin puntuación**, para que `TESTEADO CON ERROR` y
++  `Testeado con error` sean el mismo estado—; usa el `id` de esa transición.
+ 
+-  Esto no es una precaución teórica. Verificado el 2026-09-08 sobre `B2C-69` en `it-smu`:
++  Esto no es una precaución teórica. Verificado el 2026-09-28 sobre `B2C-69` en `it-smu`:
+ 
+   | Destino | Transición que lleva ahí | ¿La encuentra un match por nombre de transición? |
+   |---|---|---|
+-  | `TESTEADO (QA) CON ERROR` | `TESTEADO (QA) CON ERROR` (33) y `Testeado` (9) | sí |
++  | `TESTEADO CON ERROR` | `TESTEADO CON ERROR` (33) y `Testeado` (9) | sí |
+   | `IN TESTING` | `IN TESTING` (34) | sí |
+-  | `TESTEADO QA OK` | **`testeado ok`** (10) | **no** |
+-  | `TESTEADO QA BLOQUEADO` | **`Bloqueado`** (13) | **no** |
++  | `TESTEADO OK` | `testeado ok` (10) | solo ignorando mayúsculas |
++  | `TESTEADO BLOQUEADO` | **`Bloqueado`** (13) | **no** |
+ 
+-  Dos de los cuatro destinos no tienen ninguna transición que se llame como el estado. Y hay una
++  `TESTEADO BLOQUEADO` no tiene ninguna transición que se llame como el estado. Y hay una
+   trampa peor: existe además una transición llamada **`BLOQUEADO`** (id 2) que lleva al estado
+-  `BLOQUEADO`, que **no** es `TESTEADO QA BLOQUEADO` sino otra columna del tablero. Un match por
++  `BLOQUEADO`, que **no** es `TESTEADO BLOQUEADO` sino otra columna del tablero. Un match por
+   nombre de transición no solo falla — manda la historia al lugar equivocado y el fallo se ve como
+   un éxito.
+ 
+@@ -333,8 +333,8 @@
+   certificación, mientras que crear un issue le abre trabajo a alguien y no se deshace igual.
+ - **Si la HU no resuelve** (`hu: null` en el `tally`), pregunta cuál es antes de mover nada. Mover la
+   historia equivocada de columna lo ve todo el equipo.
+-- **No mires la `statusCategory` para decidir nada.** En este workflow `IN TESTING` está en categoría
+-  `done` y `TESTEADO (QA) CON ERROR` en `indeterminate`: la categoría no dice si la certificación
++- **No mires la `statusCategory` para decidir nada.** En este workflow `IN TESTING` y `TESTEADO CON ERROR`
++  están los dos en categoría `done`, igual que `TESTEADO OK`: la categoría no dice si la certificación
+   terminó bien, y usarla como atajo lleva a conclusiones al revés.
+ - **Una HU ya en el estado destino** no necesita transición: dilo y sigue.
+ 
+diff -ru '--exclude=__pycache__' /c/Users/dasil/AppData/Local/Temp/claude/C--Users-dasil-Documents-smu-certificacion-qa/929c94eb-8e6a-4156-be94-cf2dfc096c91/scratchpad/orig/scripts/qa_excel.py ./scripts/qa_excel.py
+--- /c/Users/dasil/AppData/Local/Temp/claude/C--Users-dasil-Documents-smu-certificacion-qa/929c94eb-8e6a-4156-be94-cf2dfc096c91/scratchpad/orig/scripts/qa_excel.py	2026-09-28 09:16:40.078478100 -0500
++++ ./scripts/qa_excel.py	2026-09-28 09:18:00.613526300 -0500
+@@ -924,7 +924,7 @@
+                 continue
+             # Un TC de App o de BM no se bloquea: no se intento correrlo porque no entra en el
+             # alcance. Marcarlo `Bloqueado` mandaria al equipo a destrabar un impedimento que
+-            # no existe, y ademas dejaria la HU en "TESTEADO QA BLOQUEADO" por casos que nunca
++            # no existe, y ademas dejaria la HU en "TESTEADO BLOQUEADO" por casos que nunca
+             # se iban a automatizar.
+             if norm(canonical) == "bloqueado" and form_factor_of(tc_id, "") in OUT_OF_SCOPE:
+                 skipped.append("%s: es un TC %s, no se marca Bloqueado sino 'Fuera de Alcance'"
+@@ -964,27 +964,29 @@
+ # planilla, y por eso viven aparte del vocabulario de Excel: la skill no los escribe en
+ # ningun lado, los usa para elegir la transicion cuyo estado destino coincide.
+ #
+-# Verificados el 2026-09-08 contra it-smu / proyecto B2C (getTransitionsForJiraIssue sobre
+-# B2C-69). Los parentesis de "TESTEADO (QA) CON ERROR" y de "EN DEVELOPMENT (QA)" son del
+-# board, no una errata: se comparan con status_key(), que los ignora, asi que la skill
+-# aguanta que el equipo los saque o los mueva sin tocar este archivo.
+-HU_ERROR = "TESTEADO (QA) CON ERROR"
+-HU_BLOQUEADO = "TESTEADO QA BLOQUEADO"
++# Verificados el 2026-09-28 contra it-smu / proyecto B2C (getTransitionsForJiraIssue sobre
++# B2C-69), despues de que el equipo renombrara las columnas: "TESTEADO QA OK" paso a
++# "TESTEADO OK", "TESTEADO (QA) CON ERROR" a "TESTEADO CON ERROR", "TESTEADO QA BLOQUEADO" a
++# "TESTEADO BLOQUEADO" y "EN DEVELOPMENT (QA)" a "LISTO EN DEVELOPMENT". Se comparan con
++# status_key(), que ignora mayusculas y puntuacion, pero no palabras: si el board vuelve a
++# renombrar una columna, hay que tocar estas constantes.
++HU_ERROR = "TESTEADO CON ERROR"
++HU_BLOQUEADO = "TESTEADO BLOQUEADO"
+ HU_EN_TESTING = "IN TESTING"
+-HU_OK = "TESTEADO QA OK"
++HU_OK = "TESTEADO OK"
+ 
+-# Desde donde se permite mover la historia. "EN DEVELOPMENT (QA)" es donde la deja
++# Desde donde se permite mover la historia. "LISTO EN DEVELOPMENT" es donde la deja
+ # desarrollo; "IN TESTING" es donde la dejo una corrida parcial anterior, y hay que poder
+ # cerrarla cuando se completa la planilla. Desde cualquier otro estado no se toca: si el PO
+ # ya la movio a otra parte del tablero, esa decision es suya y no la pisa una corrida.
+-HU_DESDE = (HU_EN_TESTING, "EN DEVELOPMENT (QA)")
++HU_DESDE = (HU_EN_TESTING, "LISTO EN DEVELOPMENT")
+ 
+ 
+ def status_key(name):
+     """Clave para comparar nombres de estado de Jira: sin tildes, sin puntuacion, minusculas.
+ 
+-    "TESTEADO (QA) CON ERROR" y "TESTEADO QA CON ERROR" son el mismo estado escrito con y sin
+-    parentesis, y el board usa una forma u otra segun quien creo la columna. Comparar por esta
++    "TESTEADO CON ERROR" y "Testeado con error" son el mismo estado escrito con y sin
++    parentesis o en otra caja, y el board usa una forma u otra segun quien creo la columna. Comparar por esta
+     clave evita que una transicion valida se descarte por un caracter que no significa nada.
+     """
+     return " ".join(re.sub(r"[^0-9a-z]+", " ", norm(name)).split())
+diff -ru '--exclude=__pycache__' /c/Users/dasil/AppData/Local/Temp/claude/C--Users-dasil-Documents-smu-certificacion-qa/929c94eb-8e6a-4156-be94-cf2dfc096c91/scratchpad/orig/SKILL.md ./SKILL.md
+--- /c/Users/dasil/AppData/Local/Temp/claude/C--Users-dasil-Documents-smu-certificacion-qa/929c94eb-8e6a-4156-be94-cf2dfc096c91/scratchpad/orig/SKILL.md	2026-09-28 09:16:40.057417800 -0500
++++ ./SKILL.md	2026-09-28 09:18:56.151195600 -0500
+@@ -104,7 +104,7 @@
+ | `TC-B2C21-APP-001` | App nativa | **`Fuera de Alcance`** — no se explora, no se genera spec |
+ | `TC-B2C21-BM-002` | Business Manager | **`Fuera de Alcance`** — no se explora, no se genera spec |
+ 
+-**APP y BM van siempre a `Fuera de Alcance`, nunca a `Bloqueado`.** Los dos estados dicen cosas distintas y a públicos distintos: `Bloqueado` significa "esto se iba a probar y algo lo impidió, alguien tiene que destrabarlo" —le abre trabajo al equipo y arrastra la HU a `TESTEADO QA BLOQUEADO`—, mientras que `Fuera de Alcance` significa "esto no lo cubre esta automatización", que es una decisión de cobertura ya tomada y no deja nada pendiente. Un TC de la app nativa o del backoffice no se conduce con el navegador que maneja Playwright, así que jamás fue candidato a ejecutarse: no hay impedimento que reportar.
++**APP y BM van siempre a `Fuera de Alcance`, nunca a `Bloqueado`.** Los dos estados dicen cosas distintas y a públicos distintos: `Bloqueado` significa "esto se iba a probar y algo lo impidió, alguien tiene que destrabarlo" —le abre trabajo al equipo y arrastra la HU a `TESTEADO BLOQUEADO`—, mientras que `Fuera de Alcance` significa "esto no lo cubre esta automatización", que es una decisión de cobertura ya tomada y no deja nada pendiente. Un TC de la app nativa o del backoffice no se conduce con el navegador que maneja Playwright, así que jamás fue candidato a ejecutarse: no hay impedimento que reportar.
+ 
+ De ahí que **le falte lo que le falte, un APP o un BM no se bloquea**: aunque sus tokens estén en TBD o no tenga pasos, esos defectos de la fila son irrelevantes para un caso que no se iba a correr. El `read` ya te lo da resuelto —`form_factor` en `app`/`bm`, `out_of_scope: true`, `block_reason: null`— y `qa_excel.py write` rechaza un `Bloqueado` sobre uno de ellos.
+ 
+@@ -190,7 +190,7 @@
+ 
+ ### Fase 2 — Separar lo que no entra en alcance y resolver la data
+ 
+-**Primero, aparta los APP y los BM.** Todo TC cuyo CP-ID lleve `-APP-` o `-BM-` va a `Fuera de Alcance` aquí mismo, antes de mirar tokens y antes de explorar: no se automatiza con un navegador, así que nada de lo que venga después cambia su desenlace. El `read` te los marca con `out_of_scope: true` y `form_factor` en `app`/`bm`. La Observación dice de qué tipo es y que queda fuera de la automatización web — **nunca `Bloqueado`**, porque no hay impedimento que destrabar, y un bloqueo falso arrastraría la HU entera a `TESTEADO QA BLOQUEADO`.
++**Primero, aparta los APP y los BM.** Todo TC cuyo CP-ID lleve `-APP-` o `-BM-` va a `Fuera de Alcance` aquí mismo, antes de mirar tokens y antes de explorar: no se automatiza con un navegador, así que nada de lo que venga después cambia su desenlace. El `read` te los marca con `out_of_scope: true` y `form_factor` en `app`/`bm`. La Observación dice de qué tipo es y que queda fuera de la automatización web — **nunca `Bloqueado`**, porque no hay impedimento que destrabar, y un bloqueo falso arrastraría la HU entera a `TESTEADO BLOQUEADO`.
+ 
+ Luego, con los TC que sí entran en alcance —los Desktop y los Mobile—, decide con lo que el `read` resolvió de tokens:
+ 
+@@ -461,18 +461,18 @@
+ 
+ | Condición | Estado de la HU |
+ |-----------|-----------------|
+-| ≥1 `Rechazado` | `TESTEADO (QA) CON ERROR` |
+-| Sin rechazados y ≥1 `Bloqueado` | `TESTEADO QA BLOQUEADO` |
++| ≥1 `Rechazado` | `TESTEADO CON ERROR` |
++| Sin rechazados y ≥1 `Bloqueado` | `TESTEADO BLOQUEADO` |
+ | Sin rechazados ni bloqueados, y ≥1 `Pendiente` | `IN TESTING` |
+-| Todos los TC **en alcance** en `Aprobado` | `TESTEADO QA OK` |
++| Todos los TC **en alcance** en `Aprobado` | `TESTEADO OK` |
+ 
+ **Los `Fuera de Alcance` no cuentan para nada de esto.** Son los APP y los BM, que esta automatización no cubre nunca: si contaran como pendientes, una planilla con una sola fila APP no podría cerrarse jamás por bien que hubiera ido todo lo demás. El `hu_reason` los nombra aparte (*"los 12 TC en alcance de la planilla en Aprobado (3 fuera de alcance, no cuentan)"*), para que quien lea la historia vea qué se certificó y qué no se probó.
+ 
+ El contrato completo —cómo se resuelve la transición contra el workflow, desde qué estados se permite mover y qué hacer cuando Jira no ofrece la transición— está en `references/jira-bug-adf.md`, sección *Mover la HU al terminar la corrida*. Léelo antes de mover nada. Lo esencial:
+ 
+-- **Solo se mueve desde `EN DEVELOPMENT (QA)` o `IN TESTING`** (los literales del board; el `tally` los trae en `hu_allowed_from`). Desde cualquier otro estado no se toca la historia y se reporta por qué: si el PO ya la movió a otra parte del tablero, esa decisión es suya y una corrida no la pisa.
++- **Solo se mueve desde `LISTO EN DEVELOPMENT` o `IN TESTING`** (los literales del board; el `tally` los trae en `hu_allowed_from`). Desde cualquier otro estado no se toca la historia y se reporta por qué: si el PO ya la movió a otra parte del tablero, esa decisión es suya y una corrida no la pisa.
+ - **Se aplica sin pedir confirmación**, a diferencia de los bugs. Mover una columna es reversible de un clic y describe el estado de la certificación; crear un issue no lo es.
+-- **La transición se resuelve por su estado destino (`to.name`)**, nunca por el nombre de la transición ni por un id fijo. No es teoría: en el workflow de B2C, `TESTEADO QA OK` se alcanza con una transición llamada `testeado ok` y `TESTEADO QA BLOQUEADO` con una llamada `Bloqueado`, y existe **otra** transición llamada `BLOQUEADO` que lleva a una columna distinta. Buscar por nombre no encuentra dos de los cuatro destinos y en un caso mueve la HU al lugar equivocado. Si ninguna transición disponible llega al destino, **no se fuerza**: se reporta el estado actual, el que correspondía y por qué.
++- **La transición se resuelve por su estado destino (`to.name`)**, nunca por el nombre de la transición ni por un id fijo. No es teoría: en el workflow de B2C, `TESTEADO OK` se alcanza con una transición llamada `testeado ok` y `TESTEADO BLOQUEADO` con una llamada `Bloqueado`, y existe **otra** transición llamada `BLOQUEADO` que lleva a una columna distinta. Buscar por nombre no encuentra `TESTEADO BLOQUEADO` y mueve la HU al lugar equivocado. Si ninguna transición disponible llega al destino, **no se fuerza**: se reporta el estado actual, el que correspondía y por qué.
+ - Un fallo aquí **no cambia ningún veredicto** ni frena el archivado. Sigue con el paso siguiente y dilo en el reporte.
+ 
+ **5. Archiva la planilla.** Con el resultado ya escrito, la corrida está cerrada y el Excel se mueve a la carpeta de ejecutados:
+@@ -533,14 +533,14 @@
+ - **No editar el Excel a mano ni con openpyxl ad-hoc.** Usa `qa_excel.py write`: preserva las fórmulas del dashboard, valida los estados y detecta el archivo abierto en Excel antes de corromperlo.
+ - **No pisar TCs ya cerrados** sin que el usuario lo pida. El default es ejecutar solo los `Pendiente`.
+ - **No trabajar sobre una copia** cuando el archivo esté bloqueado por Excel/Word. Pide que lo cierren: el usuario espera su archivo actualizado, no un duplicado.
+-- **No decidir el estado de la HU a ojo.** Sale de `qa_excel.py tally`, que cuenta la planilla entera con la precedencia acordada (Rechazado → Bloqueado → pendientes/grises → OK). Re-derivarlo mentalmente a partir de "cómo fue la corrida" es exactamente donde se cuela un `TESTEADO QA OK` sobre una planilla que tenía filas sin correr.
+-- **No mover la HU desde un estado que no sea `EN DEVELOPMENT (QA)` o `IN TESTING`**, y no forzar una transición que el workflow no ofrece. Si el PO la movió a otra columna, esa es su decisión; repórtalo y sigue.
++- **No decidir el estado de la HU a ojo.** Sale de `qa_excel.py tally`, que cuenta la planilla entera con la precedencia acordada (Rechazado → Bloqueado → pendientes/grises → OK). Re-derivarlo mentalmente a partir de "cómo fue la corrida" es exactamente donde se cuela un `TESTEADO OK` sobre una planilla que tenía filas sin correr.
++- **No mover la HU desde un estado que no sea `LISTO EN DEVELOPMENT` o `IN TESTING`**, y no forzar una transición que el workflow no ofrece. Si el PO la movió a otra columna, esa es su decisión; repórtalo y sigue.
+ - **No archivar antes de escribir el resultado.** El archivado es el último paso de la corrida: mover la planilla la saca del alcance del descubrimiento, así que un `write` posterior no la encuentra y el veredicto se pierde. Orden: Word → bugs → `write` → `archive`.
+ - **No leer TCs desde la carpeta de ejecutados.** Lo que hay ahí son corridas cerradas. Si el usuario quiere re-ejecutar una suite archivada, la planilla vuelve a `Para Ejecutar` (o se pasa con `--tc-file`), y eso lo decide él, no tú.
+ - **No enlazar una evidencia que todavía no existe.** El Word se genera antes del `write`; si no, la columna `Link de Documentacion` apunta a un archivo fantasma. Lo mismo con el bug: se crea antes del `write` para que su key entre en la Observación en la misma pasada.
+ - **No meter evidencia ni código en el bug.** Nada de capturas, `trace.zip`, el Word adjunto, el nombre del spec, la línea de la aserción o rutas del workspace. La evidencia visual va al Word; el bug va en lenguaje de producto, describiendo qué hace el sistema y qué debería hacer.
+ - **No abrir bugs para `Bloqueado` ni para `Fuera de Alcance`.** Solo `Rechazado` afirma que el producto falla; un bloqueo dice que no se llegó a probarlo y un fuera de alcance, que nadie lo intentó. Reportarlos como defectos manda a desarrollo a buscar algo que no existe.
+-- **No marcar `Bloqueado` un TC APP o BM.** Su estado es `Fuera de Alcance`, sin excepción: no se conducen con Playwright, así que no hay impedimento que destrabar. `Bloqueado` le abre trabajo a alguien y deja la HU en `TESTEADO QA BLOQUEADO` por casos que nunca se iban a automatizar.
++- **No marcar `Bloqueado` un TC APP o BM.** Su estado es `Fuera de Alcance`, sin excepción: no se conducen con Playwright, así que no hay impedimento que destrabar. `Bloqueado` le abre trabajo a alguien y deja la HU en `TESTEADO BLOQUEADO` por casos que nunca se iban a automatizar.
+ - **No escribir un estado que no sea uno de los cinco.** `Pendiente`, `Aprobado`, `Rechazado`, `Bloqueado`, `Fuera de Alcance`. `Aprobado con observaciones` y `En ejecución` ya no existen: lo primero es un `Aprobado` con su Observación, y lo segundo no se escribe nunca porque el TC se queda en `Pendiente` hasta tener veredicto.
+ - **No crear un bug duplicado.** Antes de crear, busca uno vivo que mencione el CP-ID; si existe, coméntalo. Un bug cerrado que vuelve a fallar sí es uno nuevo — es una regresión, y reabrir el viejo borra la constancia de que llegó a arreglarse.
+ - **No hardcodear `issueTypeName: "Bug"` ni la key de la HU.** El tipo se resuelve por proyecto (`Error` en instancias en español) y la HU sale del nombre del archivo de TCs. Si la HU no se puede resolver, pregunta — nunca la adivines.

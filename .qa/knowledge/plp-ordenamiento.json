@@ -1,0 +1,152 @@
+{
+  "flow": "plp-ordenamiento",
+  "last_updated": "2026-10-07T23:00:00Z",
+  "version": 3,
+  "description": "Selector de ordenamiento del listado (PLP/SRP/Colección): el dropdown 'Ordenar por' de la barra superior y la sección 'Ordena tus productos' del modal de filtros. Es el objeto de la HU B2C-87. El componente del modal ya estaba parcialmente modelado por el flujo plp-panel-filtros (B2C-71); aquí vive todo lo propio del orden.",
+  "source": {
+    "suite": "B2C-87",
+    "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-87 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C87-D-001",
+      "TC-B2C87-D-002",
+      "TC-B2C87-D-003",
+      "TC-B2C87-D-004",
+      "TC-B2C87-D-005",
+      "TC-B2C87-D-006",
+      "TC-B2C87-D-008",
+      "TC-B2C87-D-009",
+      "TC-B2C87-D-011",
+      "TC-B2C87-D-012",
+      "TC-B2C87-D-013",
+      "TC-B2C87-D-014",
+      "TC-B2C87-D-015",
+      "TC-B2C87-D-016",
+      "TC-B2C87-D-017",
+      "TC-B2C87-D-019",
+      "TC-B2C87-D-020",
+      "TC-B2C87-D-021",
+      "TC-B2C87-D-023",
+      "TC-B2C87-M-001",
+      "TC-B2C87-M-002"
+    ],
+    "last_sync": "2026-10-07T23:00:00Z"
+  },
+  "navigation": {
+    "entry_url": "/search?q=<termino> ({SRP_URL}) — es la única ubicación que la planilla B2C-87 declara como data",
+    "url_al_ordenar": "el orden viaja en el query param `sort` y se suma a los `refine=` de los filtros: ?q=carne&sort=price-asc, &sort=price-desc, &sort=mas-vendido, &sort=recommend. Es la señal más fiable del orden vigente.",
+    "modals": [
+      "dropdown de orden (chakra-popover, role=dialog)",
+      "panel de filtros (role=dialog con 'Selecciona tus filtros')"
+    ]
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Trigger del dropdown de orden en la barra del listado. NO existe una etiqueta visible 'Ordenar por' como la nombran los TC: el botón muestra el criterio vigente y su accessible name es 'Ordenar: <criterio>'. Expone aria-expanded y aria-controls al popover.",
+        "selector": "button[aria-label^='Ordenar:']",
+        "type": "css"
+      },
+      {
+        "description": "Panel del dropdown. Se resuelve por el aria-controls del trigger, no por role=dialog: la página tiene además el panel de filtros y el popover vacío del header con el mismo rol.",
+        "selector": "document.getElementById(trigger.getAttribute('aria-controls'))",
+        "type": "css"
+      },
+      {
+        "description": "Opciones del dropdown: <button> con un <span> de texto. La SELECCIONADA se distingue porque tiene un hijo extra (un <div> con el check) — 2 hijos frente a 1. Las clases generadas (css-1908s60 seleccionada / css-xlg3au sin seleccionar) cambian entre builds; el recuento de hijos no.",
+        "selector": "panelDropdown.locator('button') — seleccionada = la que tiene 2 hijos",
+        "type": "css"
+      },
+      {
+        "description": "Sección de orden dentro del panel de filtros: un <p> 'Ordena tus productos' seguido de la fila de opciones.",
+        "selector": "panelFiltros.getByText(/ordena tus productos/i)",
+        "type": "texto"
+      },
+      {
+        "description": "Opción de orden DENTRO del panel de filtros. NO es un <button> ni tiene rol: es un <div class=css-bylgjh> con cursor:pointer que contiene un <img> (alt = nombre de la opción) y un <p> con el nombre. Un locator por getByRole('button') no encuentra ninguna.",
+        "selector": "panelFiltros.locator('p').filter({ hasText: /^Precio más bajo$/ }) → su parentElement es el control",
+        "type": "css"
+      },
+      {
+        "description": "Botón de filtros de la barra del listado, que según CA14 debería llevar el indicador bullet cuando el orden no es el default.",
+        "selector": "button[aria-label='Abrir filtros']",
+        "type": "css"
+      },
+      {
+        "description": "Estado de error del listado. En la SRP el código es 'Error: SRP-012' (los TC esperan 'Error PLP-013', que es el de la PLP). Los botones son 'Reintentar' e 'Ir al Inicio' — la UI escribe Inicio con I mayúscula, los TC con minúscula.",
+        "selector": "texto 'Tuvimos un problema al cargar los productos' + button 'Reintentar' + button /ir al inicio/i",
+        "type": "texto"
+      },
+      {
+        "description": "Identificador estable de cada producto del listado para comparar secuencias: el botón del nombre dentro del shelf (ver flujo shelf-producto).",
+        "selector": "main div:has(> div > button[aria-label='Guardar en favoritos'])",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/search/shopper-search/v1/organizations/f_ecom_bmkg_dev/product-search?...&sort=<criterio>",
+        "trigger": "cada confirmación de orden desde el dropdown; el `sort` viaja en el query"
+      },
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/custom/smu-srp/v1/organizations/f_ecom_bmkg_dev/sponsored-blocks?...&c_placementId=srpCarne",
+        "trigger": "carga de la SRP — en DEV responde 404, así que la SRP declarada no sirve productos patrocinados"
+      }
+    ],
+    "intercepts_useful": [
+      {
+        "pattern": "**/shopper-search/**/product-search**",
+        "para": "forzar el estado de error del listado (CA17) devolviendo 500; reproduce el mensaje, el código y los dos botones sin tocar el backend"
+      }
+    ]
+  },
+  "observations": [
+    "CORRIDA MOBILE SP1 2026-10-07 (filas 28-49, CP-ID M-001/M-002 reusados de las filas 4 y 7; los tests van en el describe 'Mobile 390x844 SP1'; tokens en la columna Descripción). CAMBIO DE COMPORTAMIENTO: pulsar un criterio en el modal YA NO falla (antes TypeError): ahora APLICA EL ORDEN AL INSTANTE (URL ?sort=..., product-search sale al pulsar), y 'Mostrar N productos' solo cierra; X/clic fuera no cancelan → bug B2C-1145 (M-002, M-009, M-010). Sin skeleton en ese refresco ni con red lenta. La sección muestra 6 opciones con ícono: Recomendado, Más vendido, Precio más bajo, Precio más alto, Pensados para ti, Mejor descuento; la marca del activo es el borde del recuadro del ícono (PanelFiltros.ordenesMarcados ya lo considera). Recomendado elegido = sort=recommend; al ingresar, sin sort y con Recomendado marcado. En Mobile los nombres de producto son enlaces a .html (ListadoProductos.secuencia usa botones: no sirve en Mobile; usar enlaces). M-001 Bloqueado Data por {COLECCION_URL} sin fila. Resultado: 11 Aprobado, 3 Rechazado, 1 Bloqueado Data. Los D-011..D-013 (Bloqueado por 'pulsar no hace nada') conviene re-evaluarlos: la precondición ahora es alcanzable, aunque el defecto B2C-1145 los afectaría.",
+    "EL SELECTOR MUESTRA SEIS OPCIONES, NO CINCO: Recomendado, Más vendido, Precio más bajo, Precio más alto, Pensados para ti y **Mejor descuento**. Las cinco de CA3 están presentes y en el orden que pide el caso; 'Mejor descuento' es una sexta que la HU no declara. Es idéntico en el dropdown y en el modal, y en Desktop y en Mobile. Afecta a TC-B2C87-D-003 y TC-B2C87-D-023.",
+    "LA SELECCIÓN DE ORDEN DENTRO DEL MODAL DE FILTROS NO FUNCIONA: al pulsar cualquier opción de 'Ordena tus productos' la consola lanza `TypeError: r is not a function`, la opción no queda marcada, la URL no cambia y el botón del footer sigue en 'Mostrar productos' sin conteo. Verificado 4 veces en chromium Desktop (4 clics = 4 TypeError) y 1 vez en webkit Mobile. El dropdown de la barra, en cambio, funciona perfecto. Es el defecto raíz de TC-B2C87-D-004 y TC-B2C87-M-002, y lo que deja sin precondición alcanzable a D-011, D-012 y D-013.",
+    "EL MODAL NO REFLEJA EL ORDEN VIGENTE: con sort=price-desc aplicado desde el dropdown, las seis opciones del modal se renderizan con el mismo background, borde, opacidad y font-weight. No hay ninguna marca de selección. CA5 pide que el modal refleje la misma selección que el dropdown (y viceversa). Afecta a TC-B2C87-D-005.",
+    "EL DROPDOWN SÍ PERSISTE Y MARCA: tras confirmar 'Precio más alto', el trigger pasa a aria-label='Ordenar: Precio más alto', y al reabrirlo esa opción es la única con el hijo extra del check. Eso es lo que hace verificable TC-B2C87-D-014.",
+    "NO HAY INDICADOR BULLET EN EL ICONO DE FILTROS: el outerHTML del button[aria-label='Abrir filtros'] es byte a byte idéntico con sort ausente (default) y con sort=price-asc, y el contenedor mide lo mismo (806 caracteres) en los dos estados. El único hermano posterior es un <div class=css-1s0al8b> de 1x36 px, transparente y sin border-radius: es el separador vertical de la barra, no un bullet. Afecta a TC-B2C87-D-016.",
+    "EL ORDEN POR DEFECTO ES 'Recomendado' SIN PARÁMETRO: al entrar a la SRP la URL no lleva `sort` y el trigger dice 'Ordenar: Recomendado'. Al elegirlo explícitamente la URL pasa a sort=recommend y la secuencia de productos es idéntica a la del ingreso sin parámetro. Eso es lo que permite verificar CA6 y CA15 desde el storefront sin acceso a BM.",
+    "PRECIO ASC Y DESC SON VERIFICABLES DIRECTO: con sort=price-asc los primeros precios fueron 1.790, 1.970, 1.990; con sort=price-desc, 43.990, 18.990, 15.750. El precio se lee del texto del shelf.",
+    "EL ORDEN NO TOCA LOS FILTROS NI EL CONTEO: con refine=c_isOnSale%3Dtrue aplicado (5 productos), cambiar de sort=recommend a sort=price-desc conserva el refine en la URL y el conteo en 5; solo cambia la secuencia. Verifica CA13.",
+    "EL CÓDIGO DE ERROR DE LA SRP ES SRP-012, NO PLP-013: forzando 500 en product-search, la SRP muestra 'Tuvimos un problema al cargar los productos' + 'Estamos trabajando para solucionarlo. Intenta nuevamente en unos segundos.' + 'Error: SRP-012' + los botones 'Reintentar' e 'Ir al Inicio'. El TC-B2C87-D-019 espera el literal 'Error PLP-013'. El mensaje y los botones coinciden; lo que difiere es el código, que parece ser por tipo de página. Conviene que el equipo funcional confirme si CA17 contempla el contexto SRP antes de tratarlo como defecto de front.",
+    "'REINTENTAR' NO RECARGA EL DOCUMENTO, REFETCHEA: tras pulsarlo, una marca puesta en window sobrevive (no hubo navegación) pero se dispara una nueva GET a product-search con el mismo sort. El TC-B2C87-D-020 pide que 'la página se recarga'; lo observable es que el listado se vuelve a pedir. Tratarlo como defecto mandaría a desarrollo a cambiar un refetch por un F5, que es peor comportamiento; se certifica por el reintento efectivo y se deja la desviación en la Observación.",
+    "'IR AL INICIO' NAVEGA A / — verificado; cumple CA17.",
+    "LA SRP DECLARADA NO SIRVE PRODUCTOS PATROCINADOS: el endpoint sponsored-blocks responde 404 para c_placementId=srpCarne. Sin productos patrocinados en el listado no hay nada que observar para CA16, y la fila del TC-B2C87-D-018 tampoco declara un token de SKU patrocinado.",
+    "EL MODAL EN MOBILE 390x844 (webkit) ES UN DRAWER INFERIOR x=0 y=193 390x651, con la misma sección de orden y las mismas seis opciones que en Desktop. Coincide con la geometría que ya registraba plp-panel-filtros.",
+    "EN MOBILE 390x844 SIGUE HABIENDO DROPDOWN DE ORDEN en la barra, además del acceso por el modal. Los TC Mobile de esta suite solo piden el camino del modal, así que no se certifica el dropdown en ese viewport.",
+    "LA SRP {SRP_URL} (q=carne) TRAE 70 PRODUCTOS y renderiza 50 shelves por página. Las comparaciones de secuencia se hacen sobre los shelves renderizados, no sobre los 70.",
+    "LOS TC ESCRIBEN LAS OPCIONES SIN TILDE ('Mas vendido', 'Precio mas bajo') Y LA UI LAS LLEVA ('Más vendido'). Los locators van con clase de caracteres o regex tolerante, nunca con el literal del Excel.",
+    "NO ES OBSERVABLE DESDE EL STOREFRONT el volumen de ventas de 'Más vendido' ni la afinidad de Einstein de 'Pensados para ti': la UI solo expone la secuencia resultante, sin el ranking esperado contra el que contrastarla. Los casos que lo piden necesitan que la planilla aporte el ranking de referencia o que el criterio se reformule.",
+    "CORRIDA 2026-09-16 (B2C-87): 9 Aprobado, 8 Rechazado, 9 Bloqueado sobre 26 TC. Bugs abiertos, consolidando los pares que describen el mismo defecto: B2C-792 (sexta opcion 'Mejor descuento', D-003 y D-023), B2C-793 (la seleccion de orden en el modal no funciona, D-004 y M-002), B2C-794 (los productos con descuento se ordenan por su precio anterior, D-008 y D-009), B2C-795 (el modal no refleja el criterio vigente, D-005) y B2C-796 (sin bullet en el icono de filtros, D-016). La HU quedo en TESTEADO (QA) CON ERROR.",
+    "LOS CINCO DEFECTOS SE REPRODUCEN TAMBIEN EN LA PLP DE CATEGORIA, no solo en la SRP declarada: la sexta opcion, el TypeError al pulsar un criterio en el modal, el modal que no refleja el orden vigente y el icono sin bullet se verificaron en /category/carnes_vacuno. Es decir, no son artefactos de haber certificado sobre la busqueda.",
+    "EL DEFECTO DE ORDEN POR PRECIO SOLO SE DISPARA CON PRODUCTOS EN DESCUENTO: el producto 'Chuleta centro de cerdo Super Cerdo congelado 750 g' (venta $6.291, antes $6.990) se ubica donde corresponderia a $6.990, en los dos sentidos. La PLP carnes_vacuno no tiene ningun producto con descuento porcentual, asi que ahi el orden por precio sale correcto y el defecto no es observable: para re-verificarlo hace falta un listado que contenga al menos un producto con descuento.",
+    "EL CODIGO DE ERROR DEL LISTADO DEPENDE DEL TIPO DE PAGINA: en la SRP es 'Error: SRP-012' y el TC-B2C87-D-019 espera el 'Error PLP-013' de la PLP. Se cerro como Bloqueado por error de data —la fila declara solo {SRP_URL} y el criterio nombra un codigo de PLP—, no como defecto de front. El mensaje, el texto de acompanamiento y los botones si coinciden.",
+    "EL DROPDOWN MARCA EL CRITERIO VIGENTE EN LA SRP PERO NO EN LA PLP: al entrar sin criterio previo, en /search?q=carne la opcion 'Recomendado' aparece con el check y en /category/carnes_vacuno no aparece marcada ninguna. TC-B2C87-D-017 se certifico sobre la SRP, que es lo que declara su fila; si alguna vez el caso se corre sobre una PLP, esta diferencia lo haria fallar.",
+    "'REINTENTAR' DISPARA UNA NUEVA GET a product-search sin recargar el documento (una marca puesta en window sobrevive). Se certifico TC-B2C87-D-020 por el reintento efectivo y no por la recarga literal: pedir un F5 en vez de un refetch seria empeorar el comportamiento.",
+    "EL TRIGGER DE ORDEN EXISTE EN EL DOM PERO SE RENDERIZA OCULTO EN MOBILE 390x844. Usarlo como condicion de 'pagina lista' cuelga todo TC Mobile aunque el listado haya cargado; la condicion compartida por los dos form-factors es el boton 'Abrir filtros'.",
+    "PARA COMPARAR ORDENES POR PRECIO HAY QUE LEER EL PRECIO DESTACADO, NO EL PRIMERO DEL SHELF: una tarjeta con promocion renderiza el precio con mecanica en 11px antes que el de venta en 14px, y tomar el primero mezcla dos magnitudes y hace que un listado bien ordenado parezca desordenado. Se reusa BloqueDePreciosShelf.precioDestacado().",
+    "2026-10-09 (B2C-87 web): 'Pensados para ti' viaja como sort=pensados-para-ti. Con 10.101.010-4 (0 pedidos) el orden difiere del de Recomendado en SRP carne y en carnes_cerdo (suben productos de pollo); el usuario lo dejo Bloqueado Data porque la cuenta pudo acumular clics en otras suites: hace falta una cuenta nueva sin compras ni navegacion. /test-pcv2-collection ({COLECCION_URL}) responde Not found. En panaderia-y-pasteleria no hay patrocinados ni aparece 642688."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/SelectorOrden.ts",
+    "class": "SelectorOrden",
+    "relacionados": [
+      "tests/pages/PanelFiltros.ts (el modal que contiene la sección de orden; ver flujo plp-panel-filtros)",
+      "tests/pages/ListadoProductos.ts (la barra del listado y la secuencia de productos)"
+    ]
+  },
+  "history": [],
+  "last_run": {
+    "suite": "B2C-87 web",
+    "fecha": "2026-10-09",
+    "resultado": "11 pendientes: 11 Bloqueado Data"
+  }
+}

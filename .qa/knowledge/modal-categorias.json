@@ -1,0 +1,96 @@
+{
+ "flow": "modal-categorias",
+ "description": "Modal de categorias de Mobile web (HU B2C-21): se abre con el icono sandwich del header y muestra un carrusel horizontal de top categorias N1 (pildoras) mas un listado vertical de secciones N1, cada una con su carrusel de subcategorias N2.",
+ "last_explored": "2026-09-11",
+ "entry_url": "/",
+ "auth_required": false,
+ "form_factors": {
+  "mobile": {
+   "browser": "webkit",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   }
+  }
+ },
+ "selectors": {
+  "icono_sandwich": "header button[aria-label=\"Categorías\"]  — NO usar getByRole('button', {name:/categorias/i})",
+  "modal": "[role=dialog] con aria-modal=true y clase chakra-modal__content",
+  "estructura_modal": "El contenido del modal tiene EXACTAMENTE 3 hijos: (1) header.chakra-modal__header, (2) el carrusel de pildoras, (3) div.chakra-modal__body con las secciones N1.",
+  "titulo": ".chakra-modal__header p  ->  'Categorías'",
+  "boton_cerrar": ".chakra-modal__header button  (aria-label='Cerrar')",
+  "carrusel_pildoras": "header + div   (el hermano inmediato del header)",
+  "pildoras": "header + div button   — la primera es 'Todas', luego las top categorias N1",
+  "cuerpo": ".chakra-modal__body",
+  "cabeceras_N1": ".chakra-modal__body button:has(svg):not(:has(img))   — ancho completo (358px), con el icono '>'",
+  "tarjetas_N2": ".chakra-modal__body button:has(img)   — 90px de ancho, thumbnail circular + nombre",
+  "entradas_N1_desktop": "[role=dialog] button:has(svg):has(img) — RENDER DESKTOP: el modal no es un chakra-modal (no existe .chakra-modal__body) y las entradas N1 son la columna izquierda de botones con svg E imagen a la vez; las tarjetas N2 llevan imagen sin svg y las hojas N3 ninguna. El selector de Mobile (cabeceras_N1) no falla aqui: devuelve CERO, que se lee como 'el menu no ofrece categorias' teniendo catorce. Locator tolerante a los dos form-factors en ModalCategorias.entradasN1"
+ },
+ "observations": [
+  "NO HAY ENLACES <a> dentro del modal: absolutamente todo son <button> con navegacion por JS. Buscar por getByRole('link') no encuentra nada.",
+  "Como pildoras, cabeceras N1 y tarjetas N2 son todas <button>, hay que distinguirlas por ESTRUCTURA: la cabecera N1 lleva svg y no lleva img; la tarjeta N2 lleva img; las pildoras viven en el hermano inmediato del header. Distinguirlas por coordenada Y es fragil y falla mientras el modal renderiza.",
+  "EL MODAL RENDERIZA EN DOS TIEMPOS: primero el armazon y despues el cuerpo. Hay que esperar a que exista alguna tarjeta N2 ('.chakra-modal__body button:has(img)') antes de medir nada; si se mide antes, el carrusel reporta 1 sola pildora y el cuerpo scrollHeight == clientHeight, y las aserciones fallan sin que exista defecto.",
+  "AL CERRAR, el modal se desmonta con animacion de slide: a los 1.5s puede seguir en el DOM con altura no nula, y despues desaparece por completo (0 nodos [role=dialog]). Usar expect(...).not.toBeVisible(), que reintenta; una comprobacion instantanea da falso negativo.",
+  "Tras navegar desde una tarjeta N2 puede quedar un nodo [role=dialog] HUERFANO con offsetHeight 0. Por eso nunca se debe aseverar con toHaveCount(0) sobre [role=dialog]: hay que filtrar por el modal visible.",
+  "El header del storefront anima al cargar la pagina y el boton de categorias tarda en quedar 'stable': conviene esperar a que la pagina se asiente antes del primer clic, o el click se agota esperando estabilidad.",
+  "DESTINOS DE CLIC: pildora 'Carnes' -> /category/carnes ; cabecera N1 'Frutas y Verduras' -> /category/frutas-y-verduras ; tarjeta N2 'Cerdo' -> /category/carnes_cerdo (N2 usa GUION BAJO entre N1 y N2, no barra). En los tres casos el modal se cierra.",
+  "CARRUSEL DE PILDORAS: scrollWidth 1900 vs clientWidth 390 -> desplazamiento horizontal real. En el primer slide entran 'Todas' + 3 categorias (Carnes, Frutas y Verduras y Lacteos parcialmente visible).",
+  "CUERPO DEL MODAL: scrollHeight 1840 vs clientHeight 721 -> desplazamiento vertical real; scrollTop responde. Hay 14 secciones N1 y 22 tarjetas N2.",
+  "PRESELECCION: la pildora 'Todas' lleva aria-current=\"true\" y NINGUNA categoria lo lleva, tambien al abrir el modal desde la PLP de una N2. Es la forma limpia de comprobar que no hay categoria preseleccionada.",
+  "TRUNCADO DE TOP CATEGORIA (N1): se aplica en el DOM, no por CSS — textContent ya viene cortado a 20 caracteres mas el caracter '…' (U+2026), total 21. Ej: 'Lácteos, Huevos y Refrigerados' -> 'Lácteos, Huevos y Re…'.",
+  "TRUNCADO DE SUBCATEGORIA (N2): se aplica por CSS con -webkit-line-clamp:2 y text-overflow:ellipsis. Al ser un recorte por LINEA y no por palabra, corta a mitad de palabra. Ej: 'Librería, celebraciones y juguetes' -> 'Librería, celebraciones y ju…'. Es el defecto que reporta TC-B2C21-M-015 (bug B2C-756).",
+  "CATEGORIA N1 SIN SUBCATEGORIAS: 'Congelados' (token CATEGORY_N1_WO_SUB) no tiene tarjetas N2; tampoco Limpieza, Perfumeria, Bebes y Ninos ni Mascotas. Su cabecera va seguida directamente de la siguiente cabecera N1.",
+  "CATEGORIA N1 CON EXACTAMENTE UNA N2: 'Panadería y Pastelería' -> solo 'Pan'; 'Hogar' -> solo 'Librería, celebraciones y juguetes'.",
+  "PLACEHOLDER DE THUMBNAIL: las categorias sin imagen configurada usan /static/placeholder/category-placeholder.png (ej. Quesos, Pan, Conservas, Bebidas, Huevos). Las configuradas apuntan a /categories/<slug>.png.",
+  "El banner de consentimiento de cookies aparece tambien aqui; ver [footer-full] para el selector y el motivo de aceptarlo antes de interactuar.",
+  "TRAMPA DE LOCATOR: getByRole('button', { name: /categor[ii]as/i }) resuelve a DOS elementos —el icono sandwich (aria-label='Categorías') y otro boton del contenido cuyo texto visible tambien es 'Categorías'— y rompe por strict mode. El fallo es INTERMITENTE porque ese segundo boton se renderiza con contenido diferido: la misma suite paso una corrida y fallo la siguiente sin que cambiara nada. Usar header button[aria-label=\"Categorías\"].",
+  "El armazon documentado aqui (.chakra-modal__header / .chakra-modal__body) es el de la variante MOBILE. El modal de categorias de Desktop, que abre el boton con texto 'Categorias' del header, tiene otra estructura y no expone ninguna de esas dos clases: ver [[header-storefront]].",
+  "EN DESKTOP, el clic sobre la entrada N1 de la columna izquierda NAVEGA a la PLP N1 (verificado con Carnes y con Congelados); el panel derecho muestra sus N2 con un enlace 'Mostrar todo' propio. Es el punto de entrada 'menu de navegacion por categorias' de B2C-36 (CA2).",
+  "EL MODAL DE DESKTOP ES OTRO COMPONENTE QUE EL DE MOBILE: el de Mobile es un chakra-modal con secciones verticales y carruseles N2; el de Desktop es un panel de dos columnas sin .chakra-modal__body. Sus locators no son intercambiables."
+ ],
+ "datos_del_ambiente": {
+  "top_categorias": [
+   "Carnes",
+   "Frutas y Verduras",
+   "Lácteos, Huevos y Refrigerados",
+   "Quesos y Fiambres",
+   "Panadería y Pastelería",
+   "Congelados",
+   "Despensa",
+   "Desayuno y Dulces",
+   "Bebidas y Licores",
+   "Limpieza",
+   "Perfumería",
+   "Bebés y Niños",
+   "Mascotas",
+   "Hogar"
+  ],
+  "plp_n2_de_ejemplo": "/category/carnes_cerdo",
+  "n2_dos_lineas_sin_cortar": [
+   "Cordero y otros",
+   "Leches y cremas",
+   "Fiambres y embutidos",
+   "Mermelada y manjar",
+   "Destilados y licores",
+   "Vinos y espumantes"
+  ],
+  "n2_truncada_a_mitad_de_palabra": "Librería, celebraciones y juguetes"
+ },
+ "waits": [
+  "Esperar '.chakra-modal__body button:has(img)' tras abrir el modal: garantiza que el cuerpo ya renderizo.",
+  "Dejar asentar la pagina antes del primer clic en el icono sandwich (el header anima al cargar).",
+  "Al cerrar, usar not.toBeVisible() en vez de un chequeo instantaneo (animacion de slide)."
+ ],
+ "page_objects": {
+  "ModalCategorias": "tests/pages/ModalCategorias.ts",
+  "StorefrontPage": "tests/pages/StorefrontPage.ts",
+  "CookieConsentBanner": "tests/pages/CookieConsentBanner.ts"
+ },
+ "deprecated_selectors": [],
+ "history": [],
+ "last_run": {
+  "suite": "B2C-21",
+  "fecha": "2026-09-09",
+  "resultado": "15 Aprobado, 1 Rechazado (M-015, bug B2C-756), 5 Fuera de alcance (APP)"
+ }
+}
