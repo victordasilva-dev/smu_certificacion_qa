@@ -1,0 +1,173 @@
+{
+  "flow": "plp-categoria-n1",
+  "last_updated": "2026-09-11T16:30:00Z",
+  "version": 1,
+  "description": "PLP de categoria de primer nivel (N1): breadcrumb, titulo + contador, fila de pildoras (Todo + N2), una seccion con carrusel por cada subcategoria N2 (con su propio shelf), skeletons y estados de error.",
+  "source": {
+    "suite": "B2C-36",
+    "hu": "B2C-36",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-36 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C36-D-001",
+      "TC-B2C36-D-002",
+      "TC-B2C36-D-003",
+      "TC-B2C36-D-005",
+      "TC-B2C36-D-007",
+      "TC-B2C36-D-008",
+      "TC-B2C36-D-010",
+      "TC-B2C36-D-011",
+      "TC-B2C36-D-012",
+      "TC-B2C36-D-013"
+    ],
+    "last_sync": "2026-09-11T16:30:00Z"
+  },
+  "navigation": {
+    "entry_url": "/category/<slug-n1>",
+    "n1_con_n2": [
+      "carnes (5)",
+      "bebidas-y-licores (5)",
+      "lacteos-huevos-y-refrigerados (3)",
+      "frutas-y-verduras (2: Frutas, Verduras)",
+      "quesos-y-fiambres (2)",
+      "despensa (2)",
+      "panaderia-y-pasteleria (1)",
+      "desayuno-y-dulces (1)",
+      "hogar (1)"
+    ],
+    "n1_sin_n2": ["congelados", "limpieza", "perfumeria", "bebes-y-ninos", "mascotas"],
+    "puntos_de_entrada": [
+      "menu de categorias del header: header button con texto 'Categorias' -> [role=dialog] a[href='/category/<n1>'] (en el modal el item N1 puede ser button; usar el par de selectores)",
+      "URL directa /category/<n1> (SSR)",
+      "banner del Home: main a[href^='/category/'] que contiene img y mide 1440 de ancho (hero rotatorio: leer el href del slide que esta en viewport antes de hacer clic)",
+      "carrusel del Home: main a con texto 'Mostrar todo'"
+    ]
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Breadcrumb de la PLP (B mayuscula, igual que en N2/N3). Sus hijos son: A con aria-label='Ir al inicio' (solo icono, sin texto) y un DIV con el nombre de la categoria SIN href",
+        "selector": "nav[aria-label='Breadcrumb']",
+        "type": "css"
+      },
+      {
+        "description": "Enlace Inicio del breadcrumb: es un icono, no lleva texto, asi que no se encuentra por nombre accesible de texto",
+        "selector": "nav[aria-label='Breadcrumb'] a[aria-label='Ir al inicio']",
+        "type": "css"
+      },
+      {
+        "description": "Nodo actual del breadcrumb: DIV sin href (no clickeable)",
+        "selector": "nav[aria-label='Breadcrumb'] > div",
+        "type": "css"
+      },
+      { "description": "Titulo de la categoria N1", "selector": "main h1", "type": "css" },
+      {
+        "description": "Contador de productos de la N1 ('69 productos')",
+        "selector": "main p con /\\d+ productos/",
+        "type": "texto"
+      },
+      {
+        "description": "Fila de pildoras: el DIV padre del boton 'Todo'. overflow-x:auto (de ahi el scroll horizontal de Mobile). Sus hijos directos son las pildoras en orden",
+        "selector": "main div:has(> button:text-is('Todo'))",
+        "type": "css"
+      },
+      {
+        "description": "Pildoras en orden (Todo + N2). OJO: hay que encadenar .locator('a,button') sobre la fila; escribirlo como un solo string CSS ('... a,button') lo parsea como dos selectores y arrastra los botones del header",
+        "selector": "filaDePildoras.locator('a,button')",
+        "type": "playwright"
+      },
+      {
+        "description": "Pildora 'Todo': es BUTTON sin href (no navega) y se pinta seleccionada (fontWeight 500, borde rgb(29,29,31)); las N2 son A con href y fontWeight 400, borde rgb(221,221,221)",
+        "selector": "filaDePildoras.locator('button')",
+        "type": "playwright"
+      },
+      {
+        "description": "Seccion de una subcategoria N2 (h2 + Mostrar todo + flechas + su shelf). El contenedor exacto es el div mas interno que tiene el h2 Y tarjetas",
+        "selector": "main div filtrado por has(h2 con nombre) y has(button[aria-label='Guardar en favoritos']) -> .last()",
+        "type": "playwright"
+      },
+      {
+        "description": "Encabezados de las secciones N2, en el orden de la taxonomia",
+        "selector": "main h2",
+        "type": "css"
+      },
+      {
+        "description": "Controles de desplazamiento del carrusel N2",
+        "selector": "button[aria-label='Slide anterior'] / button[aria-label='Slide siguiente']",
+        "type": "css"
+      },
+      {
+        "description": "Enlace al N2 desde la cabecera del carrusel. La UI dice 'Mostrar todo'; los TC y la HU escriben 'Mostrar todos'",
+        "selector": "seccion.locator('a', { hasText: /mostrar todo/i })",
+        "type": "playwright"
+      },
+      {
+        "description": "Tarjeta de producto: contar/anclar por el boton de favoritos, que es el unico elemento semantico por tarjeta. NO usar el boton con ' | ' (el nombre 'Marca | Producto'): los productos sin marca no lo llevan y la cuenta sale 0",
+        "selector": "button[aria-label='Guardar en favoritos']",
+        "type": "css"
+      },
+      {
+        "description": "Nombre clickeable del producto (navega a la PDP). Es un button, no un <a>",
+        "selector": "main button.chakra-text",
+        "type": "css"
+      },
+      { "description": "Skeletons de carga (chakra)", "selector": ".chakra-skeleton", "type": "css" },
+      {
+        "description": "Pantalla de error de carga de productos",
+        "selector": "texto 'Tuvimos problemas en cargar tus productos' + 'Error: NAV-005' + botones 'Reintentar' / 'Ir al Inicio'",
+        "type": "texto"
+      },
+      {
+        "description": "Selector de metodo de entrega del header (hay dos en el DOM, uno por form-factor: filtrar por visible)",
+        "selector": "header button con texto /entrega/i filtrado por visible",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/product/shopper-products/v1/organizations/f_ecom_bmkg_dev/categories/<n1>?levels=1&locale=es-CL&siteId=Unimarc",
+        "trigger": "navegacion SPA a la PLP N1; devuelve las N2 en el orden configurado en Business Manager (sirve para verificar el orden de las pildoras)"
+      },
+      {
+        "method": "GET",
+        "path": ".../shopper-search/.../product-search?refine=cgid%3D<n1>&refine=htype%3Dproduct&sort=recommend",
+        "trigger": "navegacion SPA a la PLP N1; alimenta el contador de la cabecera"
+      },
+      {
+        "method": "GET",
+        "path": ".../shopper-search/.../product-search?refine=cgid%3D<n1>_<n2>&refine=htype%3Dproduct",
+        "trigger": "una peticion por cada subcategoria N2; alimenta el shelf de su carrusel"
+      }
+    ],
+    "intercepts_useful": [
+      "503 en '**/shopper-search/**/product-search*' -> pantalla NAV-005 'Tuvimos problemas en cargar tus productos' (CA11). Verificado: 'Reintentar' vuelve a disparar las 6 peticiones y la PLP carga",
+      "503 SOLO en la peticion de una N2 (cgid%3D<n1>_<n2>) -> esa seccion no se renderiza y el resto de la pagina (titulo, contador, pildoras y los demas carruseles) carga normal (CA12)",
+      "Retraso en product-search + shopper-products -> se pintan los .chakra-skeleton de toda la pagina (CA10)"
+    ]
+  },
+  "observations": [
+    "LA EXPLORACION POR URL DIRECTA NO DISPARA NINGUNA PETICION CLIENTE: la PLP N1 viene por SSR. Los mocks de red (error, retraso, orden de taxonomia) solo funcionan entrando por navegacion SPA (menu de categorias, banner o carrusel del Home).",
+    "LOS CARRUSELES N2 SON LAZY: al cargar solo se pinta el primero; los demas aparecen al hacer scroll. Cualquier asercion sobre 'un carrusel por cada N2' tiene que recorrer la pagina con scroll antes de contar (en 'Frutas y Verduras' se ve 1 h2 al entrar y 2 despues de bajar).",
+    "NO HAY UN SHELF PROPIO DE LA N1 ADEMAS DE LOS CARRUSELES: en una N1 con subcategorias, las tarjetas viven dentro de la seccion de cada N2 y la pagina termina en el ultimo carrusel. La HU lo respalda: CA1 enumera 'Shelf de productos de la categoria N2' y en Consideraciones aclara que el shelf tiene HU propia. En una N1 SIN subcategorias (congelados) no hay pildoras ni carruseles y el grid de productos se pinta directo (CA5d).",
+    "EL CONTADOR DE LA N1 NO COINCIDE CON LAS TARJETAS RENDERIZADAS: 'Carnes' declara 69 productos y pinta 33 (cada N2 trae limit=10); 'Frutas y Verduras' declara 6 y pinta 3 (2 de Frutas + 1 de Verduras, que son todos los de sus N2). El contador cuenta el catalogo de la N1 y los carruseles solo un tramo de cada N2, asi que no son comparables.",
+    "MIENTRAS LOS PRODUCTOS ESTAN EN VUELO Y LA TAXONOMIA YA LLEGO, el contador muestra '0 productos' y las secciones N2 no existen todavia (sin skeleton propio); los skeletons se ven cuando tambien esta pendiente la taxonomia. El titulo y las pildoras si se pintan sin esperar a los productos, que es la independencia que pide CA10.",
+    "EL CARRUSEL N2 NO SCROLLEA CON scrollLeft: el track se mueve con transform translateX (-260px por clic en 'Slide siguiente'). La forma estable de afirmar que se desplazo es comparar la x del bounding box de la primera tarjeta antes y despues.",
+    "LAS PILDORAS NO EXPONEN aria-current NI aria-selected (igual que en N2/N3): la seleccionada se distingue por estilo computado (fontWeight >= 500 y borde oscuro rgb(29,29,31)).",
+    "LA PILDORA DICE 'Todo'; la HU y los TC escriben 'Todas'. Usar /^tod(o|as)$/i.",
+    "EL ENLACE DEL CARRUSEL DICE 'Mostrar todo'; la HU y los TC escriben 'Mostrar todos'.",
+    "EL BREADCRUMB DE LA N1 TIENE SOLO DOS NODOS y el primero es un icono sin texto: su innerText es 'Carnes' a secas. Una asercion que espere la palabra 'Inicio' falla sin que el breadcrumb este mal; hay que mirar el <a aria-label='Ir al inicio'>.",
+    "DESPACHO A DOMICILIO EXIGE ESCRIBIR UNA DIRECCION (el invitado no tiene direcciones guardadas), mientras que 'Retiro en tienda' ofrece una lista de tiendas elegible desde la UI. Por eso los TC de contador por direccion/tienda (D-004) y de stock y precios por metodo de entrega (D-014) no se pueden ejecutar sin que la planilla declare la direccion/tienda y el producto sin stock: con una tienda elegida a dedo, un contador que no cambia no distingue defecto de catalogo equivalente.",
+    "EL AMBIENTE DEV NO TIENE NINGUNA CATEGORIA COLECCION EN EL MENU: las 14 N1 son taxonomia normal y ninguna es una 'PLP Coleccion' de Page Designer (CA14, D-015).",
+    "LOS TC D-006 Y D-009 DESCRIBEN COMPORTAMIENTO MOBILE (scroll tactil de pildoras, swipe con el dedo, icono '>') pero su CP-ID es -D- y sus precondiciones declaran Desktop 1440x900. En Desktop las pildoras caben de sobra (la fila no desborda) y la cabecera del carrusel muestra 'Mostrar todo' con dos flechas, no un icono '>'. Quedaron Bloqueado por contradiccion de la fila, no por un defecto del producto."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/PLPCategoriaN1Page.ts",
+    "class": "PLPCategoriaN1Page"
+  },
+  "history": []
+}

@@ -1,0 +1,222 @@
+{
+  "flow": "header-storefront",
+  "last_updated": "2026-09-28T23:14:17Z",
+  "version": 3,
+  "source": {
+    "suite": "B2C-17",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-17 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C17-D-001",
+      "TC-B2C17-D-002",
+      "TC-B2C17-D-003",
+      "TC-B2C17-D-004",
+      "TC-B2C17-M-001",
+      "TC-B2C17-M-002",
+      "TC-B2C17-M-003",
+      "TC-B2C17-M-004"
+    ],
+    "last_sync": "2026-09-10T14:30:00Z"
+  },
+  "navigation": {
+    "entry_url": "/",
+    "paginas_habilitadas": {
+      "Home": "/",
+      "PLP": "/category/carnes_cerdo",
+      "PDP": "/product/<SKU>",
+      "SRP": "/search?q=<termino>",
+      "Mi Cuenta": "/account (accesible como Guest: muestra 'Inicia sesion y descubre beneficios')",
+      "Landing": "NO DISPONIBLE EN DEV — ver observations"
+    },
+    "redirects": [],
+    "modals": [
+      "modal de categorias (ver [[modal-categorias]])",
+      "consentimiento de cookies"
+    ],
+    "iframes": []
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "El header del storefront",
+        "selector": "page.locator('header')",
+        "type": "css"
+      },
+      {
+        "description": "Filas VISIBLES del header: los hijos directos con altura > 0. El header tiene 4 hijos en el DOM en ambos form-factors, pero solo algunos se renderizan segun el viewport.",
+        "selector": "page.locator('header > div').filter({ visible: true })",
+        "type": "css+filter"
+      },
+      {
+        "description": "Logo de Unimarc (unico, mismo selector en Desktop y Mobile)",
+        "selector": "header button[aria-label=\"Unimarc\"]",
+        "type": "css"
+      },
+      {
+        "description": "Boton Categorias de DESKTOP: lleva texto 'Categorias' y NO tiene aria-label",
+        "selector": "header button:has-text('Categorías')  (o getByRole('button', {name:'Categorías'}) filtrado por visible)",
+        "type": "css"
+      },
+      {
+        "description": "Icono sandwich de MOBILE: lleva aria-label='Categorias' y NO tiene texto",
+        "selector": "header button[aria-label=\"Categorías\"]",
+        "type": "css"
+      },
+      {
+        "description": "Buscador del header",
+        "selector": "header input[placeholder=\"¿Qué estás buscando?\"]",
+        "type": "css"
+      },
+      {
+        "description": "Icono de lupa del buscador: svg dentro de .chakra-input__right-element, hermano del input en .chakra-input__group",
+        "selector": "header .chakra-input__group .chakra-input__right-element svg",
+        "type": "css"
+      },
+      {
+        "description": "Area SSO (Guest)",
+        "selector": "header button:has-text('Ingresa aquí')",
+        "type": "css"
+      },
+      {
+        "description": "Mini carrito (el aria-label incluye el contador: 'Mi carrito, número de artículos: 0')",
+        "selector": "header button[aria-label^=\"Mi carrito\"]",
+        "type": "css"
+      },
+      {
+        "description": "Selector de metodo de entrega",
+        "selector": "header button:has-text('Elige una forma de entrega')",
+        "type": "css"
+      },
+      {
+        "description": "Boton de membresia",
+        "selector": "header button:has-text('Suscríbete a')",
+        "type": "css"
+      },
+      {
+        "description": "Contenedor scrollable de los accesos directos (el 'carrusel' del CA7). Envuelve tambien al boton de membresia.",
+        "selector": "header div.unimarc-header-shortcuts",
+        "type": "css"
+      },
+      {
+        "description": "Lista de accesos directos (hay DOS en el DOM, una por form-factor: filtrar por visible)",
+        "selector": "header ul.header-shortcuts",
+        "type": "css"
+      },
+      {
+        "description": "Items del modal de categorias, validos en ambos form-factors (senal de que el contenido ya renderizo)",
+        "selector": "[role=dialog]:visible button:has(img)",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "estructura_observada": {
+    "desktop_1440x900": {
+      "filas_visibles": 2,
+      "alto_total_px": 132,
+      "fila_1": {
+        "alto_px": 76,
+        "orden_por_x": [
+          "logo@80",
+          "Categorías@212",
+          "buscador@404",
+          "Ingresa aquí@1197",
+          "mini carrito@1314"
+        ]
+      },
+      "fila_2": {
+        "alto_px": 56,
+        "orden_por_x": [
+          "Elige una forma de entrega@80",
+          "Ofertas@852",
+          "Marketplace@928",
+          "Locales y horarios@1033",
+          "Suscríbete a UNIMARC@1167"
+        ]
+      },
+      "coincide_con_CA2": true
+    },
+    "mobile_390x844": {
+      "filas_visibles": 3,
+      "alto_total_px": 176,
+      "fila_1": {
+        "alto_px": 52,
+        "contenido": [
+          "Elige una forma de entrega@x16"
+        ]
+      },
+      "fila_2": {
+        "alto_px": 68,
+        "orden_por_x": [
+          "sandwich@16",
+          "logo@44",
+          "buscador@80",
+          "Ingresa aquí@294",
+          "mini carrito@328"
+        ]
+      },
+      "fila_3": {
+        "alto_px": 56,
+        "contenido": [
+          "Suscríbete a@x16 (y=124)",
+          "Ofertas@x217 (y=120)",
+          "Marketplace@x293",
+          "Locales y horarios@x398"
+        ]
+      },
+      "coincide_con_CA1": false,
+      "discrepancia": "CA1 declara 4 filas y separa (3) Boton Membresia de (4) Seccion de accesos directos. Lo observado son 3 filas: membresia y accesos comparten la fila 3 y ademas viven dentro del MISMO contenedor scrollable (div.unimarc-header-shortcuts), por eso se desplazan juntos."
+    }
+  },
+  "forms": [],
+  "auth": {
+    "roles": [
+      "guest"
+    ],
+    "storage_state_paths": {},
+    "observacion": "Toda la suite se verifica como Guest. /account es accesible sin sesion y renderiza el header completo, asi que la superficie 'Mi Cuenta' no exige login. El SSO de DEV no autentica con las credenciales RUT del Excel de data (ver [[pdp-carruseles-recomendacion]])."
+  },
+  "waits": {
+    "ajax_calls": [],
+    "loading_indicators": [],
+    "debounce": [],
+    "animations": [
+      "El header anima al cargar: dejar asentar la pagina antes de medir geometria o hacer el primer clic.",
+      "El modal de categorias entra con slide: esperar a que su cuerpo renderice antes de medir su caja."
+    ]
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": []
+  },
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/HeaderFull.ts",
+    "class": "HeaderFull",
+    "nota": "Componente compartido por Desktop y Mobile; expone los locators por rol funcional y la geometria de las filas visibles. El modal de categorias se modela aparte en tests/pages/ModalCategorias.ts (ver [[modal-categorias]])."
+  },
+  "observations": [
+    "EL HEADER MOBILE TIENE TRES FILAS, NO CUATRO, y desde el 2026-09-14 eso es tambien lo que pide la planilla: (1) metodo de entrega, (2) logo + icono sandwich + buscador + area SSO + mini carrito, (3) boton de membresia JUNTO A la seccion de accesos directos, compartiendo fila. Medido en DEV: alturas 52 / 68 / 56 px. En Desktop son dos filas.",
+    "ESTE CASO CAMBIO DE CRITERIO, NO DE PRODUCTO, y conviene tenerlo presente antes de reabrir nada: TC-B2C17-M-001 pedia 4 filas con membresia y accesos separados, quedo Rechazado en la corrida del 2026-09-10 y abrio el bug B2C-758. El front nunca cambio; lo que se corrigio fue la fila del Excel, que ahora describe las 3 filas reales. Al re-ejecutar el 2026-09-14 la suite quedo 8 Aprobado y 3 Fuera de alcance, y la HU paso a TESTEADO QA OK. B2C-758 quedo DESCARTADO el 2026-09-14, comentado con el motivo: no era un defecto resuelto sino un defecto que no existia.",
+    "OJO CON LA COLUMNA PASO A PASO DE TC-B2C17-M-001: sigue diciendo 'verificar la presencia y el orden de las 4 filas' mientras el nombre, la descripcion y el resultado esperado dicen 3. Se certifica contra el resultado esperado, que es lo que define el veredicto, pero la fila esta internamente inconsistente y conviene alinearla.",
+    "TRAMPA DE SELECTOR: en el DOM conviven DOS botones de categorias, uno por form-factor — el de Desktop lleva el texto 'Categorías' y ningun aria-label; el sandwich de Mobile lleva aria-label='Categorías' y ningun texto. El que no corresponde al viewport queda con altura 0 pero sigue en el DOM, asi que un getByRole('button', {name:'Categorías'}) pelado resuelve a dos elementos. Lo mismo pasa con ul.header-shortcuts, que aparece duplicada (6 enlaces en total, 3 visibles).",
+    "BLOQUEO (2026-09-10): en DEV no hay ninguna pagina Landing disponible. /ofertas, /marketplace, /locales, /centro-de-ayuda, /legales/cookies y /seguimiento-de-compra responden todas 'This page isn't working / Not found' y renderizan un header de error de 1 fila (72px) sin logo, buscador ni accesos. Las otras cinco superficies (Home, PLP, PDP, SRP, Mi Cuenta) si muestran el header completo.",
+    "Los accesos directos del header apuntan a /ofertas, /marketplace y /locales, las tres caidas en DEV: el header los muestra correctamente pero su destino no carga.",
+    "El carrusel de accesos de Mobile SI funciona: div.unimarc-header-shortcuts tiene overflow-x auto con scrollWidth 548 > clientWidth 406, los tres items comparten la misma Y (sin wrapping) y tras desplazar hasta el final los tres quedan dentro del viewport. Con scrollLeft en 0, 'Locales y horarios' arranca en x=398 y queda fuera de los 390px.",
+    "El modal de categorias se ancla a la izquierda en ambos form-factors: en Desktop x=16 con ancho 1144 sobre un viewport de 1440 (deja 280px libres a la derecha); en Mobile ocupa la pantalla completa desde x=0.",
+    "DISCREPANCIA EN LA PLANILLA: el nombre del TC-B2C17-D-001 dice '4 filas', pero su descripcion (CA2) enumera dos filas para Desktop, que es lo que el ambiente muestra. El '4 filas' del titulo parece arrastrado del TC Mobile. Las aserciones se escribieron contra la descripcion del CA, que es la especificacion detallada.",
+    "APRENDIDO EN LA CORRIDA: los modales de categorias de Desktop y de Mobile NO comparten armazon. El de Mobile se arma con .chakra-modal__header + .chakra-modal__body (ver [[modal-categorias]]); el de Desktop no tiene ninguno de los dos —sus hijos directos son dos DIV sin clase semantica— y tampoco tiene un '.chakra-modal__header p' que sirva de titulo. Reutilizar el locator de Mobile en Desktop hace que la espera del cuerpo agote el timeout y produce un Rechazado que es del script, no del producto. Lo que si comparten es un listado de categorias con thumbnail: 'button:has(img)' dentro del modal sirve en los dos, y para el titulo alcanza con toContainText sobre el modal entero.",
+    "B2C-69 (2026-09-28) AREA SSO LOGUEADO: Desktop -> boton aria 'Hola, <Nombre>' con dos lineas: iniciales ('KH') + 'Hola, Karl'. Mobile -> solo las iniciales. El nombre registrado sale de la respuesta shopper-customers/.../customers/{id} (firstName/lastName) que se pide al iniciar sesion: LoginModal.iniciarSesionConPerfil().",
+    "DEFECTOS B2C-69: las iniciales incluyen el apellido (firstName 'Karl' -> 'KH', bugs B2C-847/848); 'Ver mi suscripcion' se muestra a una cuenta SIN membresia (11.223.344-K, su /account/membresia ofrece 'Contratar'), bugs B2C-849/850 — en la exploracion las 3 cuentas de prueba mostraban 'Ver mi suscripcion'; el minicarrito vacio no pinta badge '0' (solo aria-label), bugs B2C-851/852.",
+    "NOMBRE LARGO: 'Hola, Girolamomaximil…' — 15 caracteres + '…' (U+2026, 1 caracter), no '...' (3). TC-B2C69-D-004 se aprobo tomando '…' como la elipsis; anotado en su Observacion.",
+    "MENU MI CUENTA (Desktop): dialog 'Accesos · ¡Hola! Aquí está lo que buscas' con Mi cuenta (/account), Mis compras (/account/mis-compras), Mi membresía (/account/membresia), Mis Favoritos (/account/mis-favoritos), '¿Te ayudamos?' (/help, el link configurable) y Cerrar sesión. Las opciones son botones sin href. {LINKS_MI_CUENTA_SET_001}=/header-account-menu-links.html responde Not found.",
+    "MINI CARRO Desktop: dialog 'Mini carro' ('¡Tu carro está vacío!', 'Ir a comprar'). Mobile: el minicarrito navega a /cart."
+  ],
+  "history": [
+    {
+      "version": 1,
+      "changed_at": "2026-09-10T15:00:00Z",
+      "change": "Se agrego el hallazgo de que el modal de categorias Desktop no comparte armazon con el de Mobile, tras el falso Rechazado de TC-B2C17-D-004."
+    }
+  ]
+}

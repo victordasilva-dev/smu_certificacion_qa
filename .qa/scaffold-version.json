@@ -1,0 +1,30 @@
+{
+  "plugin_version": "1.9.0",
+  "files": {
+    ".env.example": "a8e83af139805ae495679712f2a23415dcaee8cd96900086047d600a18f79784",
+    ".gitignore": "610afcc2a4bf5f16942c155f88c31b1363da06c5fa9a2dc407ca877525f2145e",
+    "package.json": "05f5f57aca3f52423661b0beb02c061abcc841b74a3ea114f846e5e482470fa2",
+    "playwright.config.ci.ts": "a155329097b1df33c8eb68ba0ae51bd5fb9d0516d204e86cf466721aa422bcf2",
+    "playwright.config.ts": "8ae878020840b66b2af0eefcaf2bddd0541e023b0f04a6663908644db637d255",
+    "README.md": "e2aeb8a0803c67e6258f578aeac1a74e03871c7a632d7ad8ed36afdb61dfb42e",
+    "tests/pages/BasePage.ts": "51c7e4068e46ae1677daecb93c827b979c8fe5b290dfe5b370b1a75359bea069",
+    "tests/support/evidencia.ts": "cef3073bf8538d5262b8f783ab85c7ac901da5291474db1b2e96323b67cb5dbd",
+    "tests/support/fixtures.ts": "a15a56f43f8144a640cf2dc1915f7c29aa00783b1c7cc036d00b8553587101be",
+    "tests/support/testData.ts": "bacad07226784754c76a7d3f509c28593727b37da7bbfa7e473b078fe76f996d",
+    "tests/support/viewports.ts": "8e8e9d72ea5c6b7dc93833e3fbbbbbca9854c3c15bc34b6dc53dcb0fd9757d53",
+    "tsconfig.json": "4fb3e4fcddab81b0e5e704072820e2384b688e272c10fb008617f3087b9b64f9",
+    "mobilewright.config.ts": "dcdc817d0cc7367481f83efdfc7bda05997c75fc51fda625adac580f1c60dfd4",
+    "mobilewright.ios.config.ts": "d38e6b885dccdbf2a4a666cf310c942c449790775d54a93e867782b6a57576e4",
+    "tests/support/dotenv.ts": "bf5b8fe80376c5529b4b477b62779998f90d4bfca1b585247f30d730d12f91e4",
+    "tests/support/limpiarEvidencia.ts": "acb65f893e272410c9b8087925fea597086fc6b93243d7937222c7f130da1539",
+    "tests/support/rutasEvidencia.ts": "fd2b2ce890aceb3bf389be209b56576b73c03ff439f3b872cacda579dfc7b8ec",
+    "tests-app/pages/BaseScreen.ts": "e40079ff8b6f5aa2d6dfd38f823012ddc06e77916e80d2a0eaf4f0e21b7c83bd",
+    "tests-app/support/configApp.ts": "2c7da8050cac6f5cde2036b0682759f6a351b4c9ad0372348e4b6494d8e26792",
+    "tests-app/support/evidencia.ts": "52f7351916447de95f5bc916a9292d18b35869184d5a57b40e4eadfbdf6b92a0",
+    "tests-app/support/explorar.ts": "e81b2ff422da0e2bb98e64874407aac9f8f24c564501f97895c16cda93bd5992",
+    "tests-app/support/fixtures.ts": "2658477c09537176ac517163c3c8f5fb3257ea2241840d96b65589150609badd",
+    "tests-app/support/limpiarEvidenciaApp.ts": "c293e710071ccf2dbda7e595784626e48025dc57ded0e0fda44c46538d280a50",
+    "tests-app/support/plataformaApp.ts": "26eddbc7239dba8e4063a4446a5ab662e7550ec21e90aedb732287deb1cf1570",
+    "tests/support/otp.ts": "454b9fd2c55a2c98a3a15587a1159571da5aa3a05471903a483f4b13ff40d1ef"
+  }
+}

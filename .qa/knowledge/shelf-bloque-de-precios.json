@@ -1,0 +1,99 @@
+{
+  "flow": "shelf-bloque-de-precios",
+  "last_updated": "2026-10-07T22:00:00Z",
+  "version": 2,
+  "description": "Bloque de precios DEL SHELF de la PLP/SRP: precio lista, precio de socio (rombo), precios compuestos NxM / NxPrecio, PPUM por precio y badges de promocion. Es el objeto de la HU B2C-62. Comparte reglas con el de la PDP, modelado en [[pdp-bloque-de-precios]]; aqui viven las medidas tomadas sobre el shelf, que no son las mismas.",
+  "source": {
+    "suite": "B2C-62",
+    "hu": "B2C-62",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-62 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C62-D-001",
+      "TC-B2C62-D-002",
+      "TC-B2C62-D-003",
+      "TC-B2C62-D-010",
+      "TC-B2C62-D-011",
+      "TC-B2C62-D-014",
+      "TC-B2C62-D-019",
+      "TC-B2C62-D-020",
+      "TC-B2C62-D-026",
+      "TC-B2C62-M-001",
+      "TC-B2C62-M-002",
+      "TC-B2C62-M-003",
+      "TC-B2C62-M-010",
+      "TC-B2C62-M-011",
+      "TC-B2C62-M-014",
+      "TC-B2C62-M-019",
+      "TC-B2C62-M-020",
+      "TC-B2C62-M-026"
+    ],
+    "last_sync": "2026-09-11T22:25:00Z"
+  },
+  "navigation": {
+    "entry_url": "/category/carnes_vacuno  (la suite declara {PLP_URL})",
+    "mismo_componente_en": "PLP N1/N2/N3, SRP y carruseles de la PDP; el shelf completo esta en [[shelf-producto]]"
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "CLASIFICADOR DE PRECIOS DEL SHELF. Los precios no tienen data-testid: son hojas de texto que encajan en uno de tres formatos, y ese formato es lo que dice de que precio se trata. Es mas robusto que el tamano de fuente porque no depende del build de chakra",
+        "selector": "unitario /^\\$[\\d.]+( c\\/u)?$/  ·  NxPrecio /^Lleva \\d+ por \\$[\\d.]+$/  ·  NxM /^\\d+ por \\d+ a \\$[\\d.]+$/",
+        "type": "texto"
+      },
+      {
+        "description": "PPUM: acompana a CADA precio, entre parentesis, inmediatamente a su derecha. Contarlos dice cuantos precios hay renderizados",
+        "selector": "p con /^\\(\\$[\\d.]+ x (kg|lt|un)\\)$/",
+        "type": "texto"
+      },
+      {
+        "description": "Precio de socio (membresia): se reconoce por el ROMBO como emoji de texto a su izquierda y por el verde petroleo rgb(8, 59, 61). No es un <img> ni un svg. El rombo es hermano del precio dentro de la misma fila",
+        "selector": "span con el rombo (U+1F48E) + precio en color rgb(8, 59, 61)",
+        "type": "estilo"
+      },
+      {
+        "description": "Badge de % de descuento: elemento hoja con solo el porcentaje. OJO al falso positivo: los nombres de producto traen porcentajes (Carne molida 4% grasa), asi que el badge hay que buscarlo DENTRO del bloque de precios, no en el innerText del shelf",
+        "selector": "hoja con /^-?\\d{1,2}%$/ dentro de la banda de precios",
+        "type": "texto"
+      },
+      {
+        "description": "Precio lista tachado de una oferta: prefijo Antes: y textDecorationLine line-through. NO existe en la PLP declarada (ver observaciones)",
+        "selector": "texto /^Antes:\\s*\\$[\\d.]+$/ con textDecorationLine line-through",
+        "type": "estilo"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": ".../shopper-search/.../product-search?refine=cgid%3D<categoria>",
+        "trigger": "navegacion SPA a la PLP. Cada hit trae price, priceMax, tieredPrices y productPromotions; por URL directa la PLP viene por SSR y no hay peticion cliente"
+      }
+    ],
+    "intercepts_useful": []
+  },
+  "observations": [
+    "CORRIDA 2026-10-07 (B2C-62 SP1, 1 reintento, 3 workers): la data YA declara SKUs (el texto de la planilla dice TBD pero el Excel de data tiene valor). Fixtures verificados: % catalogo = 688028 (Canasto plush, juegos-y-juguetes: badge 70%, $2.217 14px, $7.390 tachado con \"Antes\", socio $1.921, SIN PPUM por no tener unidad); precio fijo y oferta = 178089 (Mermelada Watt's 200 g, mermeladas-y-dulces: \"Precio Reducido\", badge 23% = (1550-1200)/1550 redondeado, $1.200 14px, $1.550 tachado, socio $1.200, PPUM $6.000 x kg); pesable = 030202-KG (Pan marraqueta 500 g en panaderia-y-pasteleria_pan, $1.095 ($2.190 x kg)); NxM = 641229002 (Lay's Stax 134 g en papas-fritas: \"3 por 2 a $4.900\" ($12.187 x kg), \"$2.450 c/u\" ($18.284 x kg), socio \"Lleva 3 por $2.592\"). Sin MdP (Unipay/Banco Estado) en carnes_vacuno ni en esas PLP; 662457 (precio miembro) no tiene MdP ni promo de catalogo.",
+    "Resultado 2026-10-07: D/M-004, 007, 008, 009, 022 Aprobado; D/M-006 Bloqueado Data (SKU sin unidad -> sin PPUM, decision del usuario); D/M-012/013/015/016/017/018/021/023/025 Bloqueado Data; D/M-024 Bloqueado (combinacion \"a confirmar\"). PDPPage.categoriaPorDefecto() da la PLP del SKU cuando la fila no la declara.",
+    "JERARQUIA TIPOGRAFICA DEL SHELF (identica en Desktop 1280x900 y Mobile 390x844): el precio unitario/lista va en 14px fw600 rgb(35,35,35) — el mas grande y oscuro; el precio de socio en 11px fw600 verde petroleo rgb(8,59,61); el precio compuesto general (NxM/NxPrecio) en 11px fw600 rgb(29,29,31); y todos los PPUM en 10px fw400 gris rgb(106,106,106), salvo el PPUM del precio de socio, que va en rgb(70,70,70). Es decir: EL PRECIO DESTACADO DEL SHELF ES EL UNITARIO, no el compuesto ni el de socio.",
+    "NINGUN PRECIO DEL SHELF LLEVA TACHADO: textDecorationLine es none en los 9 shelves de la PLP declarada, incluidos los que tienen promocion. El tachado solo aparece con el prefijo Antes: de una oferta de catalogo, y no hay ninguna en esta PLP.",
+    "CADA PRECIO ARRASTRA SU PROPIO PPUM, y el PPUM se calcula sobre el precio al que acompana, no sobre el regular: en la Carne molida de 250 g el precio de socio $2.897 lleva ($11.588 x kg) = 2897/0.25 y el lista $3.890 lleva ($15.560 x kg) = 3890/0.25. En el NxPrecio de 500 g, 'Lleva 2 por $12.490' lleva ($12.490 x kg) — el total sobre 1 kg — y '$7.690 c/u' lleva ($15.380 x kg). Es lo que decide TC-B2C62-D-003 / M-003 y D-011 / M-011.",
+    "LA PROMO DE MEMBRESIA SE RENDERIZA COMO PRECIO FIJO EN CLP, no como pill de porcentaje: el shelf muestra el rombo y el importe efectivo ($2.897 frente al lista $3.890), sin ningun elemento con el % de descuento. Es lo que decide TC-B2C62-D-014 / M-014.",
+    "INVENTARIO PROMOCIONAL DE LA PLP DECLARADA ({PLP_URL} = /category/carnes_vacuno, 9 shelves, identico en los dos viewports): 4 productos SIN promocion (un unico precio + PPUM), 2 con PRECIO DE SOCIO (rombo, precio fijo + lista), 3 con NxPRECIO ('Lleva 2 por $12.490' / 'Lleva 3 por $11.001', cada uno con su variante de socio y su unitario c/u = 3 precios simultaneos). NO HAY en esta PLP: promocion de % de catalogo (ningun Antes: ni badge de %), promocion de precio fijo, mecanica NxM, mecanica 'X% en X unidad', promocion de medio de pago (ni Unipay ni Banco Estado), ni ningun producto pesable a granel con equivalencia de unidades (500 g = 2 a 3 tomates): los productos de carnes son envases de peso fijo (1.8 kg, 250 g, 500 g) y su kg aparece solo como PPUM. Esos escenarios dejan sin fixture a 13 TC de la suite.",
+    "CUIDADO CON EL % EN EL innerText DEL SHELF: los nombres de producto traen porcentajes (Carne molida 4% grasa tartaro), asi que buscar /\\d+%/ sobre el shelf entero da falso positivo de badge de descuento. El badge hay que buscarlo dentro de la banda de precios.",
+    "NO HAY PRECIOS DUPLICADOS NI $0 en la PLP declarada: los dos 'Lleva 2 por ...' del mismo shelf son precios distintos (socio y general), no una etiqueta repetida, y se distinguen por el rombo y el color. La asercion de promo duplicada hay que escribirla sobre el texto exacto del precio repetido, no sobre la cantidad de etiquetas.",
+    "DEFECTO CONFIRMADO (CA11 / precios simultaneos): en los productos con NxPrecio el shelf NO destaca el precio compuesto como principal ni muestra el precio lista como referencia tachada o gris. Ocurre al reves: el unitario '$7.690 c/u' se pinta en 14px fw600 rgb(35,35,35) —el mas grande y oscuro de la tarjeta— y el compuesto 'Lleva 2 por $12.490' en 11px fw600, sin ningun tachado ni gris en el lista. Reportado en B2C-771 (Desktop) y B2C-772 (Mobile) desde TC-B2C62-D-026 / M-026. Coincide con lo que ya se habia observado en la PDP durante la exploracion de B2C-51 (ver [[pdp-bloque-de-precios]]), donde entonces no se pudo reportar porque ningun TC declaraba su fixture.",
+    "LOS TC TEMPORALES NO SON AUTOMATIZABLES EN UNA CORRIDA: 'la promo vence' (D-018/M-018) y 'la promo inicia su vigencia' (D-025/M-025) exigen observar la PLP antes y despues de una fecha/hora configurada en BM. Ni la fila declara esas fechas ({FECHA_INICIO_VIGENCIA} y {FECHA_FIN_VIGENCIA} estan en TBD en el Excel de data) ni un unico test() puede cruzar el limite temporal.",
+    "MISMO COMPONENTE Y MISMAS MEDIDAS EN LOS DOS VIEWPORTS: los 9 shelves, sus precios y sus tamanos de fuente son identicos en Desktop 1280x900 (chromium) y Mobile 390x844 (webkit). Por eso el par D/M de cada TC comparte Page Object y aserciones, y solo difiere en el viewport.",
+    "EL TIMEOUT POR DEFECTO DE PLAYWRIGHT (30 s) NO ALCANZA PARA ESTA PLP: abrir la PLP y esperar a que la red se calme se pasa de los 30 s en chromium y entra justo en webkit, asi que sin test.setTimeout los nueve TC Desktop caen con 'Test timeout exceeded' mientras sus pares Mobile pasan — se lee como un defecto solo-Desktop del bloque de precios y no lo es. La suite fija 180 s por caso, igual que B2C-59.",
+    "UNA CORRIDA CON FALLOS SE LLEVA POR DELANTE test-results/evidence: al reintentar un test fallido Playwright rehace el worker y la carpeta de evidencias acumulada hasta ese momento desaparece; solo sobreviven las capturas posteriores al primer fallo. En esta corrida obligo a preservar las de los dos rechazados aparte y a regenerar las de los 16 aprobados con --grep-invert 026. Conviene tenerlo presente en cualquier suite con rechazados."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/BloqueDePreciosShelf.ts",
+    "class": "BloqueDePreciosShelf"
+  },
+  "history": []
+}

@@ -1,0 +1,116 @@
+{
+  "flow": "home-tabs-carrusel",
+  "last_updated": "2026-10-07T19:00:00Z",
+  "version": 3,
+  "description": "Componente Tabs + Carrusel de productos del Home/Landing: fondo a todo el ancho, encabezado con título y 'Mostrar todo', fila de tabs por colección y carrusel Swiper con las shelves de la tab activa. Es el objeto de la HU B2C-77.",
+  "source": {
+    "suite": "B2C-77",
+    "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-77 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C77-D-001",
+      "TC-B2C77-D-002",
+      "TC-B2C77-D-003",
+      "TC-B2C77-D-004",
+      "TC-B2C77-D-009",
+      "TC-B2C77-D-010",
+      "TC-B2C77-D-013",
+      "TC-B2C77-M-001",
+      "TC-B2C77-M-002",
+      "TC-B2C77-M-006",
+      "TC-B2C77-M-007",
+      "TC-B2C77-M-013",
+      "TC-B2C77-M-015"
+    ],
+    "last_sync": "2026-10-07T19:00:00Z"
+  },
+  "navigation": {
+    "entry_url": "/",
+    "instancia_en_dev": "Configurado en el Home con el título 'Nuestras marcas' y 9 tabs de marca. Es el séptimo de los 8 componentes del Home (ver [[home-page-designer]]). No hay Landing disponible en DEV.",
+    "modals": [
+      "consentimiento de cookies"
+    ]
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "El componente. Como el resto del Home no tiene clase semántica: se ancla por su encabezado visible y se sube al contenedor que ya trae los role=tab. Las clases son hashes de Emotion y cambian en cada build.",
+        "selector": "el div ancestro del h2 'Nuestras marcas' que contiene [role=tab]",
+        "type": "texto+dom"
+      },
+      {
+        "description": "Las tabs. Exponen role=tab y aria-selected, pero NO hay ningún [role=tablist] ni [role=tabpanel] en la página: un locator por tablist no encuentra nada.",
+        "selector": "[role=tab] dentro del componente",
+        "type": "rol"
+      },
+      {
+        "description": "Enlace del encabezado. La UI lo escribe 'Mostrar todo'; los TC lo llaman 'Ver todos'. Su href CAMBIA con la tab activa.",
+        "selector": "a con texto /mostrar todo|ver todo/i dentro del componente",
+        "type": "texto"
+      },
+      {
+        "description": "El carrusel es un Swiper: .swiper / .swiper-wrapper / .swiper-slide, con transform y overflow visible. No es un scroller nativo, así que su desplazamiento se mide por activeIndex o por el transform del wrapper, no por scrollLeft.",
+        "selector": ".swiper dentro del componente",
+        "type": "css"
+      },
+      {
+        "description": "La barra de desplazamiento del carrusel que pide CA3",
+        "selector": ".swiper-scrollbar",
+        "type": "css"
+      },
+      {
+        "description": "Las shelves del carrusel. El nombre NO siempre lleva 'Marca | Producto' —unas sí y otras solo el nombre—, así que filtrar por ' | ' pierde la mayoría. Lo estable es contar los slides o los botones 'Agregar'.",
+        "selector": ".swiper-slide, o button con texto exacto 'Agregar'",
+        "type": "css"
+      },
+      {
+        "description": "La fila de tabs en Mobile SÍ es un scroller nativo (overflow-x: auto, scrollWidth 1065 sobre clientWidth 358), a diferencia del carrusel de productos.",
+        "selector": "el elemento padre de los [role=tab]",
+        "type": "estilo"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": [
+      "page.route sobre la URL exacta de la imagen de un producto, abortándola, es la única forma de producir el error de carga de imagen que pide CA5b: en este ambiente ninguna imagen del Home está rota. Cambiar el src desde el DOM NO sirve, porque el <img> lleva srcset y el navegador sigue resolviendo por ahí."
+    ]
+  },
+  "observations": [
+    "EL AUTOPLAY ES LEGIBLE DEL PROPIO SWIPER: el elemento .swiper expone su instancia en `el.swiper`, y ahí `params.autoplay.delay` vale 3000 — exactamente los 3 segundos que pide CA3. Es una aserción mucho más firme que cronometrar el transform, que además depende de la duración de la transición (~250 ms sobre los 3 s de espera).",
+    "EL AUTOPLAY IMPIDE HACER CLIC EN UNA SHELF: Playwright espera a que el elemento esté estable antes de clicar y la tarjeta nunca deja de moverse, así que el clic agota su timeout con el elemento 'visible, enabled and stable' en el log. `pauseOnMouseEnter` está en false, de modo que pasar el mouse por encima tampoco lo detiene. Para los TC que necesitan clicar una tarjeta hay que parar el autoplay antes (`el.swiper.autoplay.stop()`); es una ayuda de automatización, no cambia lo que el caso verifica.",
+    "EL HREF DE 'Mostrar todo' CAMBIA CON LA TAB: con 'Amada masa' activa apunta a /category/panaderia-y-pasteleria y con 'Como en casa' a /category/carnes. Por eso la redirección se verifica leyendo el href vigente en el momento del clic, no contra un destino fijo.",
+    "PRODUCTOS POR TAB EN DEV (Home, 'Nuestras marcas'): Amada masa 6, Azul 1, Como en casa 12, D-kora 3, Fundo Río al 6, Nubelín 12, Nuestra cocina 6, Smart Clean 3, Tento 1. Las dos que llegan a 12 apuntan a /category/carnes y /category/bebidas-y-licores, categorías con muchos más productos: son las que permiten verificar el tope de 12 que declara CA2 (TC-B2C77-D-013).",
+    "LOS LABELS DE TAB VIENEN TRUNCADOS A 12 CARACTERES: 'Fundo Río al' y 'Nuestra coci' se cortan ahí, coherente con el límite que declara CA2 para el Label.",
+    "ITEMS VISIBLES POR SLIDE: 5 de 6 en Desktop 1440 (CA3 pide 4-5) y 2 en Mobile 390 (CA3 pide 2). `slidesPerView` es 'auto', así que el número sale de medir qué tarjetas caen dentro del ancho del componente, no de un parámetro.",
+    "FONDO Y ALINEACIÓN: el fondo (rgb(249,249,249)) no está en el contenedor del componente —que es transparente— sino en su ancestro, que mide el ancho completo del viewport con padding lateral 0. El contenido interior (título, tabs y carrusel) arranca en x=80, el mismo que el logo del Header, así que la alineación de CA1 se comprueba comparando contra el Header y no contra un número fijo.",
+    "INPUT REAL DE PUNTERO SÍ MUEVE LOS DOS CARRILES, y esto es lo que distingue este componente del carrusel circular de [[home-carrusel-circular]]: (1) el carrusel de productos es un Swiper con simulateTouch, así que un arrastre con el mouse lo desplaza —verificado: activeIndex 0 -> 3—; (2) la fila de tabs es un scroller nativo y `mouse.wheel(deltaX, 0)` por encima la desplaza —verificado: scrollLeft 0 -> 400 y cambian las tabs visibles—. A diferencia de los eventos táctiles fabricados desde el DOM, estos van por la tubería de input real del navegador.",
+    "AMBIENTE DEV: las 9 tabs tienen productos y todas traen Label, así que los casos que exigen una tab oculta (sin productos, sin Label, con categoría inexistente u offline), el componente con menos de 2 o más de 10 tabs, o una tab inicial distinta de la primera, no son observables sin tocar Page Designer.",
+    "AL FALLAR LA IMAGEN, EL COMPONENTE REEMPLAZA LA TARJETA ENTERA por el estado 'Imagen no disponible': desaparecen el <img>, su alt, el nombre del producto y el precio. Eso cumple CA5b, pero deja al caso sin ninguna llave para identificar la shelf afectada — hay que ubicarla por POSICION en el carrusel, no por alt ni por nombre.",
+    "BLOQUEAR LA IMAGEN EXIGE TRES COSAS A LA VEZ: cortar por el identificador del archivo y no por la URL exacta (el srcset trae la misma imagen en varios anchos y basta con que cargue una), pedir revalidacion de cache antes de recargar (si no, la imagen se sirve de cache, no se emite peticion y la ruta nunca se dispara) y no tocar el src desde el DOM (el navegador sigue resolviendo por el srcset).",
+    "EL PRIMER SLIDE DEL SWIPER QUEDA FUERA DEL VIEWPORT: su centro llega a x negativo, asi que clicar nth(0) hace que Playwright reintente hasta agotar el timeout informando que un ancestro 'intercepts pointer events'. Ese mensaje despista: no hay overlay, el punto no existe en pantalla. Hay que elegir el primer slide realmente visible.",
+    "LA PDP NO EXPONE HEADING EN main: se reconoce por [data-testid='unimarc-product-core'], que es lo que ya modela PDPPage. Esperar un heading da por no cargada una pagina que si esta.",
+    "CORRIDA 2026-09-14 (B2C-77): 9 Aprobado, 6 Bloqueado y 5 Fuera de alcance sobre 20 TC, sin rechazados. Los 6 bloqueos son todos por configuracion de Page Designer que el ambiente no tiene. La corrida final fue HEADLESS: con 9 casos headed la maquina se quedo sin memoria dos veces y el proceso fue abortado.",
+    "Mobile (webkit 390x844): en la tarjeta del carrusel la imagen y el nombre son enlaces a[href$=\".html\"] (/<slug>/<sku>.html), no botones; TabsCarrusel busca \"button, a\" para nombre, hueco de imagen y abrirShelf.",
+    "Mobile: la PDP abierta desde el carrusel es /<slug>/<sku>.html (en Desktop /product/...).",
+    "WebKit sirve la imagen desde caché aunque se pida no-cache en la recarga: para forzar el error de imagen se identifica la shelf en un contexto aparte y se carga el Home con la ruta bloqueada en la página del caso (caché vacía).",
+    "Mobile: la PLP no muestra contador (B2C-1138); el tamaño de la colección se mide contando a[href$=\".html\"] distintos en main (2026-10-07: \"Como en casa\" = 34)."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/TabsCarrusel.ts",
+    "class": "TabsCarrusel",
+    "relacionados": [
+      "tests/pages/HomePage.ts (la página que lo contiene; ver flujo home-page-designer)",
+      "tests/pages/ShelfProducto.ts (la shelf del carrusel; su detalle lo cubre B2C-59)"
+    ]
+  },
+  "history": [
+    {
+      "date": "2026-10-07",
+      "suite": "B2C-77",
+      "change": "Corrida Mobile de M-006/007/013/015 (Aprobado); POM TabsCarrusel acepta enlaces de Mobile."
+    }
+  ]
+}

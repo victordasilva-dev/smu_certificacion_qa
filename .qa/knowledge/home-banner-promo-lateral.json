@@ -1,0 +1,42 @@
+{
+  "flow": "home-banner-promo-lateral",
+  "last_updated": "2026-09-15T01:00:00Z",
+  "version": 1,
+  "description": "Banner Promo lateral + Slider de banners del Home/Landing: banner principal en la zona lateral izquierda y, a su derecha, un slider de BANNERS con 2 items visibles más parcial. Es el objeto de la HU B2C-80. NO ESTÁ CONFIGURADO EN DEV.",
+  "source": {
+    "suite": "B2C-80",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-80 Test Cases.xlsx",
+    "test_cases": [],
+    "last_sync": "2026-09-15T01:00:00Z"
+  },
+  "navigation": {
+    "entry_url": "/",
+    "instancia_en_dev": "NINGUNA. Ningún componente del Home combina banner principal lateral con un slider de banners.",
+    "modals": []
+  },
+  "selectors": {
+    "preferred": [],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": []
+  },
+  "observations": [
+    "EL COMPONENTE NO ESTÁ CONFIGURADO EN DEV, y eso bloquea los 13 TC web de B2C-80. El censo completo de los 8 sliders del Home lo deja cerrado: solo dos son de banners —el hero full-width y 'Cada día, una ocasión', los dos de [[home-carrusel-banners]]— y ninguno de los dos tiene banner principal lateral; los otros seis son de productos.",
+    "OJO CON EL PARECIDO QUE ENGAÑA, que es la trampa de esta suite: 'Frescura y calidad' y 'Especial Bebidas' SÍ tienen la disposición que pide el caso —banner lateral izquierdo de 480x553 en x=80 y un slider de 776 px a su derecha— y el ancho del banner coincide con los 480 px que declara la HU. Lo que cambia es el contenido del slider: son SHELVES DE PRODUCTO (con botón 'Agregar' y sin enlace propio por slide), no banners con URL configurada. El caso pide explícitamente 'slider de banners' y que el clic lleve 'a la URL configurada para ese banner', cosa que un producto no tiene: lleva a su PDP. Por eso no sirven para certificar esta HU.",
+    "QUE LA DISPOSICIÓN COINCIDA ES INFORMACIÓN ÚTIL, NO UN DESCARTE: es plausible que sea el mismo layout con otro modo de contenido en el slider. Si así fuera, configurar el componente de B2C-80 podría ser cuestión de cambiar ese modo en Page Designer en vez de montar un componente nuevo. Conviene preguntarlo antes de estimar el trabajo.",
+    "'Prende la parrilla' TAMPOCO ES: tiene un 'banner principal' a la izquierda (411x823 en x=80) y cuatro banners a la derecha, pero están en un MOSAICO ESTÁTICO de dos columnas, sin Swiper, sin controles y sin deslizamiento. El caso pide un slider con 2 items visibles más parcial.",
+    "CÓMO CENSAR LOS SLIDERS DEL HOME sin ir componente por componente: recorrer `main .swiper` y clasificar cada uno por si alguno de sus slides trae un botón con texto exacto 'Agregar' (productos) o un `a[href]` propio (banners). Con eso los 8 quedan clasificados en una sola pasada, y se ve de inmediato cuáles tienen banner lateral asociado.",
+    "QUÉ HARÍA FALTA PARA CERTIFICAR LA SUITE: configurar y publicar en el Home de DEV el componente con su banner principal (imagen y enlace) y entre 2 y 10 banners en el slider, cada uno con su imagen y su URL. Sin eso ninguno de los 13 TC web es observable, ni siquiera los de estructura.",
+    "LA HU CONFIRMA LA LECTURA, y conviene dejarlo por escrito porque el parecido invitaba a dudar: su CA2 pide 'Banners del slider (lista de 2 a 10), cada banner: Imagen + Enlace del banner (URL, requerido) + Alt text', y su CA3a fija el tamano de cada banner del carrusel en 240x240 Desktop y 165x280 Mobile. Nada de eso describe un carrusel de productos, asi que 'Frescura y calidad' y 'Especial Bebidas' quedan descartados sin ambiguedad."
+  ],
+  "page_objects": {
+    "exists": false,
+    "path": null,
+    "class": null,
+    "nota": "No se generó Page Object: el componente no existe en el ambiente, así que no hay selectores que verificar."
+  },
+  "history": []
+}

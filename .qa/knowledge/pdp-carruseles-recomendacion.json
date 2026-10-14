@@ -1,0 +1,166 @@
+{
+ "flow": "pdp-carruseles-recomendacion",
+ "last_updated": "2026-10-06T22:30:00Z",
+ "version": 2,
+ "source": {
+  "suite": "B2C-6",
+  "tc_file": "Casos de Prueba/Para Ejecutar/B2C-6 Test Cases.xlsx",
+  "test_cases": [
+   "TC-B2C6-D-001",
+   "TC-B2C6-D-002",
+   "TC-B2C6-D-003",
+   "TC-B2C6-D-004",
+   "TC-B2C6-D-005",
+   "TC-B2C6-D-006",
+   "TC-B2C6-D-007",
+   "TC-B2C6-D-008",
+   "TC-B2C6-D-009",
+   "TC-B2C6-M-007"
+  ],
+  "last_sync": "2026-10-06T22:30:00Z"
+ },
+ "navigation": {
+  "entry_url": "/product/<SKU>",
+  "exit_url": null,
+  "redirects": [],
+  "breadcrumbs": [
+   "Inicio",
+   "<N1>",
+   "<N2>",
+   "<N3>",
+   "<nombre del producto>"
+  ],
+  "popups": [],
+  "modals": [
+   "consentimiento de cookies (region 'Consentimiento de cookies')"
+  ],
+  "iframes": []
+ },
+ "selectors": {
+  "preferred": [
+   {
+    "description": "Tab 'Productos similares' de la PDP (carrusel 1). Solo se monta si Einstein devuelve recs; en DEV no aparece.",
+    "selector": "getByRole('tab', { name: /productos similares/i })",
+    "type": "getByRole"
+   },
+   {
+    "description": "Tab 'Informacion' de la PDP. Es el UNICO tab presente en DEV al 2026-09-10.",
+    "selector": "getByRole('tab', { name: /informaci[oó]n/i })",
+    "type": "getByRole"
+   },
+   {
+    "description": "Titulo del carrusel 'Van bien juntos' (h2, hermano del bloque de tabs)",
+    "selector": "getByRole('heading', { level: 2, name: /van bien juntos/i })",
+    "type": "getByRole"
+   },
+   {
+    "description": "Titulo del carrusel 'Recomendados para ti' (solo con sesion iniciada)",
+    "selector": "getByRole('heading', { level: 2, name: /recomendados para ti/i })",
+    "type": "getByRole"
+   },
+   {
+    "description": "Boton Agregar del detalle de producto",
+    "selector": "getByRole('button', { name: 'Agregar' })",
+    "type": "getByRole"
+   },
+   {
+    "description": "Selector de forma de entrega del header (punto de entrada del cambio de direccion, TC-B2C6-D-007)",
+    "selector": "getByRole('button').filter({ hasText: /elige una forma de entrega/i })",
+    "type": "getByRole+filter"
+   },
+   {
+    "description": "Banner de cookies: aceptar",
+    "selector": "getByRole('button', { name: 'Aceptar todas las cookies' })",
+    "type": "getByRole"
+   }
+  ],
+  "fallback": [],
+  "deprecated": []
+ },
+ "forms": [],
+ "auth": {
+  "roles": [
+   "guest",
+   "comprador"
+  ],
+  "storage_state_paths": {},
+  "cookies_required": [],
+  "permissions": {},
+  "observacion": "El SSO de /login pide 'Correo electronico'. Las credenciales del Excel de data son RUT (11.223.344-K, 10.101.010-4) y el submit no autentica: la pantalla se queda en /login sin mensaje de error visible. Verificado con COMPRADOR_USER y COMPRADOR_MEMBRESIA_USER el 2026-09-10. CORREGIDO: el login si funciona, por el modal de 'Ingresa aqui' del Header Full. Ver [[header-simplificado]]."
+ },
+ "waits": {
+  "ajax_calls": [
+   "POST api.cquotient.com/v3/personalization/recs/aaij-MobileFirst/product-to-product-einstein (~500ms) alimenta 'Productos similares'",
+   "POST api.cquotient.com/v3/personalization/recs/aaij-MobileFirst/complete-the-set (~500ms) alimenta 'Van bien juntos'",
+   "GET /mobify/proxy/api/product/shopper-products/v1/.../products?ids=... hidrata las tarjetas de los carruseles"
+  ],
+  "loading_indicators": [
+   "skeleton del carrusel durante el refresco (declarado en el TC-B2C6-D-007; no observable en DEV por no renderizar ningun carrusel)"
+  ],
+  "debounce": [],
+  "animations": [
+   "El armazon del tab 'Productos similares' y el h2 'Van bien juntos' alcanzan a pintarse en el primer paint y se desmontan al llegar recs:[] — a partir de ~1s ya no estan en el DOM. Un snapshot tardio no los ve; uno muy temprano si."
+  ]
+ },
+ "network": {
+  "endpoints": [
+   {
+    "method": "POST",
+    "path": "https://api.cquotient.com/v3/personalization/recs/aaij-MobileFirst/product-to-product-einstein",
+    "trigger": "carga de la PDP"
+   },
+   {
+    "method": "POST",
+    "path": "https://api.cquotient.com/v3/personalization/recs/aaij-MobileFirst/complete-the-set",
+    "trigger": "carga de la PDP"
+   },
+   {
+    "method": "POST",
+    "path": "https://api.cquotient.com/v3/activities/aaij-MobileFirst/viewProduct",
+    "trigger": "carga de la PDP (tracking)"
+   }
+  ],
+  "intercepts_useful": [
+   "page.route sobre **/personalization/recs/**/product-to-product-einstein para forzar el escenario 'Einstein sin datos' del TC-B2C6-D-006",
+   "page.route sobre **/personalization/recs/**/complete-the-set para forzar los fallbacks del TC-B2C6-D-002",
+   "El request body lleva {products:[{id,price}],cookieId,realm:'aaij',instanceType:'sbx'} — instanceType 'sbx' confirma que DEV apunta al sandbox de Einstein"
+  ]
+ },
+ "page_objects": {
+  "exists": true,
+  "path": "tests/pages/PDPPage.ts",
+  "class": "PDPPage",
+  "metodos_b2c6": [
+   "recomendadosParaTi",
+   "footer",
+   "scrollAlFinal()",
+   "encuadrarFinDelContenido()",
+   "huecoAntesDelFooter()"
+  ],
+  "spec": "tests/B2C-6.spec.ts"
+ },
+ "observations": [
+  "BLOQUEO PRINCIPAL (2026-09-10): en el ambiente DEV los tres carruseles de la HU B2C-6 no se renderizan en ninguna PDP. Einstein responde {\"recs\":[],\"recoUUID\":\"...\"} tanto en product-to-product-einstein como en complete-the-set.",
+  "Verificado en 6 SKU de la data: SKU_PRODS_SIMILARES (628239), SKU_CROSS_SELLING (401693004), SKU_VALID_001 (675191), SKU_UNITARIO (400254005), SKU_PROM_NxM (640999), SKU_STOCK_LIMITADO (638426003). En los 6 el unico tab de la PDP es 'Informacion'.",
+  "El componente SI esta desplegado: el primer paint de una carga fresca muestra el tab 'Productos similares' [selected] y el h2 'Van bien juntos'. Se retiran del DOM al resolver recs:[]. Es decir, el front hace lo que pide el TC-B2C6-D-006 (no renderizar sin datos), pero eso impide verificar los otros ocho.",
+  "'Recomendados para ti' nunca aparece sin sesion, que es lo que espera el TC-B2C6-D-004 para su mitad de invitado; la mitad logueada no se pudo verificar por el bloqueo de credenciales.",
+  "El consentimiento de cookies no cambia el resultado: con 'Aceptar todas' y con la decision pendiente, los carruseles siguen sin renderizar. Tras aceptar y recargar, las llamadas a cquotient dejan de dispararse.",
+  "TC-B2C6-D-003 y TC-B2C6-D-009 requieren pasos en Business Manager (asociacion Cross-Sell manual, Page Designer) que no se conducen desde el storefront. Aunque el ambiente se destrabe, esos dos necesitan que la configuracion se deje hecha en BM antes de correr el caso web.",
+  "CORRECCION (2026-09-10, durante B2C-25): la afirmacion de que no se puede iniciar sesion es INCORRECTA en su causa. El SSO si acepta las credenciales RUT del Excel de data, pero por el MODAL que abre 'Ingresa aqui' en el Header Full, no por la pantalla /login de Salesforce que se probo aqui. Ver [[header-simplificado]]. El bloqueo de TC-B2C6-D-004 deberia revisarse: el carrusel 'Recomendados para ti' si podria verificarse con sesion iniciada.",
+  "ACTUALIZACION (2026-09-10, durante B2C-31): 'Productos similares' YA SE RENDERIZA en DEV y es el tab activo por defecto: product-to-product-einstein devuelve recs. 'Van bien juntos' sigue sin renderizar porque complete-the-set responde {recs:[]}. Conviene re-evaluar los TC de B2C-6 que dependian solo del primer carrusel. Ver [[pdp-detalle-producto]].",
+  "2026-10-06 (TC-B2C6-M-007, webkit 390x844, invitado, SKU_VALID_001 675191): la PDP muestra tabs 'Productos similares' + 'Informacion' y NINGUN texto 'Recomendados para ti'. Los slots de carrusel hermanos de unimarc-product-core quedan con alto 0; entre el ultimo contenido y el <footer> hay ~64px de margen normal de seccion, no un contenedor reservado.",
+  "En Mobile la barra sticky inferior (precio + Agregar) tapa el comienzo del footer; para la evidencia se encuadra con el footer al 85% del viewport. El header sticky tambien tapa ~350px arriba."
+ ],
+ "history": [
+  {
+   "date": "2026-10-06",
+   "field": "page_objects",
+   "previous": {
+    "exists": false,
+    "path": null,
+    "class": null,
+    "motivo": "Los 9 TC quedaron Bloqueado en la exploracion (Fase 4): no se genero spec ni POM. Cuando se destrabe el ambiente, la PDP se modela como PDPPage con los 3 carruseles como componentes."
+   }
+  }
+ ]
+}

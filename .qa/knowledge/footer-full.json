@@ -1,0 +1,115 @@
+{
+  "flow": "footer-full",
+  "description": "Footer Full del storefront Unimarc: bloque estatico de atencion al cliente, 4 secciones dropdown tipo acordeon, link de Politicas de Cookies y redes sociales.",
+  "last_explored": "2026-10-06",
+  "entry_url": "/",
+  "auth_required": false,
+  "form_factors": {
+    "desktop": {
+      "browser": "chromium",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    "mobile": {
+      "browser": "webkit",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    }
+  },
+  "selectors": {
+    "footer": "getByRole('contentinfo')",
+    "bloque_estatico_items": [
+      {
+        "texto": "Centro de ayuda",
+        "href": "/centro-de-ayuda",
+        "descripcion": "Aqui encontraras preguntas frecuentes y mucho mas"
+      },
+      {
+        "texto": "Seguimiento de compra",
+        "href": "/seguimiento-de-compra",
+        "descripcion": "Revisa el estado y detalle de tu compra"
+      },
+      {
+        "texto": "Whatsapp clientes",
+        "href": "https://wa.me/56XXXXXXXXX",
+        "descripcion": "Escribenos de 9:00 a 20:00 horas"
+      }
+    ],
+    "secciones_dropdown": [
+      "Contactanos",
+      "Servicio al cliente",
+      "Nuestros programas",
+      "Nuestra empresa"
+    ],
+    "boton_seccion": "footer button:has(p:text-is('<NOMBRE>'))",
+    "panel_seccion": "el div hermano inmediato del boton (button + div); NO existe en el DOM cuando la seccion esta colapsada",
+    "cookies": "link 'Politicas de Cookies' -> /legales/cookies",
+    "redes_sociales": [
+      "Facebook",
+      "Instagram",
+      "X",
+      "YouTube"
+    ],
+    "titulo_redes": "Siguenos",
+    "banner_cookies": "[data-testid='cookie-consent-banner']",
+    "banner_cookies_aceptar": "button[aria-label='Aceptar todas las cookies']"
+  },
+  "observations": [
+    "NO hay atributo aria-expanded en los botones de seccion. El estado se determina por: (a) el path del SVG del icono, (b) la existencia del div de contenido.",
+    "Icono COLAPSADO (mas): path d='M8 3v10M3 8h10' (viewBox 16x16). Icono EXPANDIDO (menos): path d='M4 10h12' (viewBox 20x20).",
+    "Seccion colapsada => el div de contenido NO se renderiza (nextElementSibling es null). Expandida => existe un div hermano con el contenido.",
+    "Acordeon exclusivo: al expandir una seccion, la previamente expandida se colapsa automaticamente. Nunca queda mas de una expandida.",
+    "'Contactanos' viene expandida por defecto en la primera carga, en Desktop y en Mobile.",
+    "El texto real de la UI lleva tildes ('Contactanos' -> 'Contáctanos', 'Politicas' -> 'Políticas') mientras la planilla de TC los escribe sin tilde. Usar locators tolerantes.",
+    "El TC escribe 'WhatsApp clientes' pero la UI muestra 'Whatsapp clientes' (p minuscula). Usar regex case-insensitive.",
+    "Las clases CSS son hashes de Chakra (css-196908h, css-1kei78c, css-ahvebh) y no son estables: no usarlas como selector.",
+    "AMBIENTE DEV: todos los destinos del footer devuelven 404 (/centro-de-ayuda, /seguimiento-de-compra, /legales/cookies, /contacto/compras-online, /contacto/compras-tienda). El href configurado es correcto y la navegacion ocurre; la pagina destino no esta desplegada en este ambiente.",
+    "La estructura del footer es identica en Desktop y Mobile (mismos items, mismas secciones, mismo comportamiento de acordeon); solo cambia el layout.",
+    "BLOQUEANTE EN MOBILE: el banner de consentimiento de cookies ([data-testid='cookie-consent-banner']) queda anclado al pie en 390x844 e INTERCEPTA los clics sobre el footer. Hay que aceptarlo (button[aria-label='Aceptar todas las cookies']) antes de interactuar con las secciones, o los TC de acordeon Mobile fallan por interceptacion y no por un defecto del producto. En Desktop 1440x900 no estorba.",
+    "El banner puede no aparecer si el consentimiento ya quedo guardado en el navegador: el POM lo acepta solo si aparece, sin fallar cuando no esta.",
+    "2026-10-06: contenido real de las 4 secciones. Contactanos coincide exacto con {CONTENIDO_SECCION_001} (4 bloques, 6 enlaces: tel, /contacto/compras-online, mailto, tel, /contacto/compras-tienda, mailto). Servicio al cliente 13 enlaces (/legales/*, /ayuda/*, /programas/unipay, /programas/unired); Nuestros programas 4 (/programas/*); Nuestra empresa 14 (/empresa/*).",
+    "{CONTENIDO_SECCION_002} del Excel de data es una variante NEGATIVA de Contactanos (telefono '600 600 0025XYZ'), no el contenido de otra seccion.",
+    "Clic real en 'Crea una solicitud' navega a /contacto/compras-online -> pagina 'This page isn't working / Not found' en DEV. Un a.click() por JS desde eval NO navega: usar clic real.",
+    "POM: FooterFull.enlaceDeSeccion(ruta), FooterFull.expandirSeccionConEnlace(ruta); HomePage.gotoOrigenDe(url) para TC que declaran solo un enlace y no {BASE_URL}."
+  ],
+  "network": [],
+  "waits": [
+    "Tras el clic en una seccion, el panel aparece/desaparece de inmediato (render de React); basta esperar la aparicion/ausencia del div de contenido.",
+    "Tras aceptar el banner de cookies, esperar a que se desprenda del DOM (state: 'detached')."
+  ],
+  "deprecated_selectors": [],
+  "history": [
+    {
+      "date": "2026-10-06",
+      "field": "last_run",
+      "previous": {
+        "suite": "B2C-19",
+        "fecha": "2026-09-09",
+        "resultado": "14/14 en alcance ejecutable en Aprobado"
+      }
+    },
+    {
+      "date": "2026-10-09",
+      "field": "last_run",
+      "previous": {
+        "suite": "B2C-19",
+        "fecha": "2026-10-06",
+        "resultado": "D/M-007 Aprobado; D/M-006 Bloqueado Data"
+      }
+    }
+  ],
+  "page_objects": {
+    "HomePage": "tests/pages/HomePage.ts",
+    "FooterFull": "tests/pages/FooterFull.ts",
+    "CookieConsentBanner": "tests/pages/CookieConsentBanner.ts"
+  },
+  "last_run": {
+    "suite": "B2C-19",
+    "fecha": "2026-10-09",
+    "resultado": "D/M-006 Fuera de alcance por decision del usuario: validar el contenido de cada Content Asset requiere acceso a BM"
+  }
+}

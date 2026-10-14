@@ -1,0 +1,766 @@
+{
+ "nodes": [
+  {
+   "id": "footer-full",
+   "file": "footer-full.json",
+   "description": "Footer Full del storefront (bloque estatico, acordeon de 4 secciones, cookies, redes)",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-19"
+   ],
+   "depends_on": [],
+   "leads_to": [
+    "centro-de-ayuda",
+    "seguimiento-de-compra",
+    "legales-cookies"
+   ]
+  },
+  {
+   "id": "footer-simplificado",
+   "file": "footer-simplificado.json",
+   "description": "Footer Simplificado del flujo de compra y SSO (solo footer-support-block)",
+   "entry_url": "/cart",
+   "auth_required": false,
+   "suites": [
+    "B2C-20"
+   ],
+   "depends_on": [],
+   "leads_to": [],
+   "comparte_content_asset_con": [
+    "footer-full"
+   ]
+  },
+  {
+   "id": "modal-categorias",
+   "file": "modal-categorias.json",
+   "description": "Modal de categorias de Mobile web: pildoras N1 + secciones N1 con carruseles N2",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-21"
+   ],
+   "depends_on": [],
+   "leads_to": [
+    "plp-categoria-n1",
+    "plp-categoria-n2"
+   ]
+  },
+  {
+   "id": "pdp-carruseles-recomendacion",
+   "file": "pdp-carruseles-recomendacion.json",
+   "description": "Carruseles de recomendacion de la PDP: Productos similares, Van bien juntos y Recomendados para ti (Einstein / cquotient)",
+   "entry_url": "/product/<SKU>",
+   "auth_required": false,
+   "auth_roles_opcionales": [
+    "comprador (solo 'Recomendados para ti')"
+   ],
+   "suites": [
+    "B2C-6"
+   ],
+   "depends_on": [],
+   "leads_to": [
+    "carro"
+   ],
+   "estado": "bloqueado en DEV: Einstein devuelve recs vacio y ningun carrusel se renderiza (2026-09-10)"
+  },
+  {
+   "id": "header-storefront",
+   "file": "header-storefront.json",
+   "description": "Header completo del storefront (4 filas Mobile / 2 filas Desktop): entrega, logo, categorias, buscador, SSO, mini carrito, membresia y accesos directos",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-17"
+   ],
+   "depends_on": [],
+   "leads_to": [
+    "modal-categorias",
+    "carro",
+    "busqueda"
+   ],
+   "estado": "re-certificado 2026-09-14: 8 Aprobado, 3 Fuera de alcance, HU en TESTEADO QA OK. Header Mobile de 3 filas (membresia y accesos comparten la tercera); Desktop de 2. Landing sigue no disponible en DEV"
+  },
+  {
+   "id": "header-sticky",
+   "file": "header-sticky.json",
+   "description": "Contraccion del header a modo sticky al hacer scroll, y su restitucion al scroll-up",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-24"
+   ],
+   "depends_on": [
+    "header-storefront"
+   ],
+   "leads_to": [
+    "store-locator"
+   ],
+   "estado": "explorado 2026-09-10"
+  },
+  {
+   "id": "header-simplificado",
+   "file": "header-simplificado.json",
+   "description": "Header Simplificado del flujo de compra y SSO: solo el logo, sin navegacion, sin sticky",
+   "entry_url": "/cart",
+   "auth_required": false,
+   "suites": [
+    "B2C-25",
+    "B2C-20"
+   ],
+   "depends_on": [],
+   "leads_to": [],
+   "estado": "explorado 2026-09-10"
+  },
+  {
+   "id": "home-page-designer",
+   "file": "home-page-designer.json",
+   "description": "Home del storefront: componentes configurados en Page Designer y carrusel My Usuals",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-29"
+   ],
+   "depends_on": [
+    "header-storefront"
+   ],
+   "leads_to": [
+    "my-usuals"
+   ],
+   "estado": "explorado 2026-09-10"
+  },
+  {
+   "id": "consentimiento-cookies",
+   "file": "consentimiento-cookies.json",
+   "description": "Banner de consentimiento de cookies del storefront: Aceptar / Rechazar todas, drawer de la Politica de cookies y persistencia en la cookie smu_cookie_consent",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-30"
+   ],
+   "depends_on": [],
+   "leads_to": [],
+   "aparece_en": [
+    "footer-full",
+    "footer-simplificado",
+    "header-storefront",
+    "home-page-designer",
+    "modal-categorias"
+   ],
+   "estado": "CA5 no certificable en DEV: GA, Marketing Cloud y retargeting no estan integrados en el ambiente (2026-09-10)"
+  },
+  {
+   "id": "pdp-detalle-producto",
+   "file": "pdp-detalle-producto.json",
+   "description": "PDP del storefront: breadcrumb, galeria, bloque de info/precios/botones, tabs y estados de carga/error/404",
+   "entry_url": "/product/<SKU>",
+   "auth_required": false,
+   "suites": [
+    "B2C-31"
+   ],
+   "depends_on": [
+    "plp-categoria"
+   ],
+   "leads_to": [
+    "carro",
+    "busqueda"
+   ],
+   "comparte_componente_con": [
+    "pdp-carruseles-recomendacion"
+   ],
+   "estado": "re-certificado 2026-09-17: 3 Aprobado, 1 Rechazado (B2C-761, pantalla de error de carga, sigue vivo en PR REGISTRADO) y 7 Bloqueado sobre 11 TC. D-001 paso a Aprobado porque el CA1 dejo de pedir breadcrumb simplificado desde carrusel y B2C-760 quedo DESCARTADO. HU ya estaba en TESTEADO (QA) CON ERROR"
+  },
+  {
+   "id": "plp-categoria",
+   "file": "plp-categoria.json",
+   "description": "PLP por categoria N1/N2/N3: breadcrumb, titulo+contador, orden, filtros, pildoras de subcategoria, grilla y estado de error NAV-005",
+   "entry_url": "/category/<slug>",
+   "auth_required": false,
+   "suites": [
+    "B2C-35"
+   ],
+   "depends_on": [
+    "modal-categorias"
+   ],
+   "leads_to": [
+    "pdp-detalle-producto"
+   ],
+   "estado": "CA16 y CA25 con defecto observado; sin categoria de 50+ productos en DEV, la paginacion no es verificable (2026-09-10)"
+  },
+  {
+   "id": "plp-categoria-n1",
+   "file": "plp-categoria-n1.json",
+   "description": "PLP de categoria N1: breadcrumb, titulo + contador, pildoras (Todo + N2), una seccion con carrusel por cada N2, skeletons y estados de error",
+   "entry_url": "/category/<slug-n1>",
+   "auth_required": false,
+   "suites": [
+    "B2C-36"
+   ],
+   "depends_on": [
+    "header-storefront",
+    "modal-categorias",
+    "home-page-designer"
+   ],
+   "leads_to": [
+    "plp-categoria",
+    "pdp-detalle-producto"
+   ],
+   "estado": "explorado 2026-09-11; D-004/D-014/D-015 sin fixture declarado en el ambiente DEV"
+  },
+  {
+   "id": "pdp-bloque-de-precios",
+   "file": "pdp-bloque-de-precios.json",
+   "description": "Bloque de precios de la PDP y de la tarjeta: lista, oferta con Antes tachado y badge de %, precio de socio, compuestos NxM/NxPrecio, PPUM por precio y Combina la promo con su drawer",
+   "entry_url": "/product/<SKU>",
+   "auth_required": false,
+   "suites": [
+    "B2C-51"
+   ],
+   "depends_on": [
+    "pdp-detalle-producto",
+    "plp-categoria"
+   ],
+   "leads_to": [
+    "carro"
+   ],
+   "estado": "explorado 2026-09-11; los 7 TC de B2C-51 Bloqueado por SKU no declarado; DEV sin Unipay, sin Banco Estado y sin 'Completa la promo'"
+  },
+  {
+   "id": "shelf-producto",
+   "file": "shelf-producto.json",
+   "description": "Shelf (tarjeta) de producto de PLP/SRP: cucarda, galeria, favoritos, precios, marca+nombre, label de formato, Combina la promo y Agregar / Ver similares",
+   "entry_url": "/category/<slug>",
+   "auth_required": false,
+   "suites": [
+    "B2C-59",
+    "B2C-89"
+   ],
+   "depends_on": [
+    "plp-categoria",
+    "pdp-bloque-de-precios"
+   ],
+   "leads_to": [
+    "pdp-detalle-producto",
+    "carro"
+   ],
+   "estado": "explorado 2026-09-11; DEV sin Patrocinado, sin producto sin stock, sin Completa la promo y sin producto con 2+ imagenes"
+  },
+  {
+   "id": "shelf-bloque-de-precios",
+   "file": "shelf-bloque-de-precios.json",
+   "description": "Bloque de precios del shelf de la PLP/SRP: lista, socio (rombo), compuestos NxM/NxPrecio y un PPUM por precio",
+   "entry_url": "/category/carnes_vacuno",
+   "auth_required": false,
+   "suites": [
+    "B2C-62"
+   ],
+   "depends_on": [
+    "plp-categoria"
+   ],
+   "leads_to": [],
+   "mismo_componente_que": [
+    "pdp-bloque-de-precios"
+   ],
+   "parte_de": [
+    "shelf-producto"
+   ]
+  },
+  {
+   "id": "store-locator",
+   "file": "store-locator.json",
+   "description": "Store Locator del header: boton selector de forma de entrega y su drawer (despacho a domicilio / retiro en tienda) · B2C-26: drawer por dentro (Google, manual, guardadas, error, permisos).",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-70",
+    "B2C-26"
+   ],
+   "depends_on": [
+    "header-storefront",
+    "login"
+   ],
+   "leads_to": [
+    "confirmacion-pin-b2c-99",
+    "sin-cobertura-b2c-123",
+    "sin-horarios-b2c-127",
+    "cambio-direccion-con-carro-b2c-122",
+    "asociacion-direccion-b2c-124"
+   ],
+   "usado_por": [
+    "header-sticky"
+   ]
+  },
+  {
+   "id": "plp-panel-filtros",
+   "file": "plp-panel-filtros.json",
+   "description": "Panel de filtros de la PLP/SRP/Coleccion: orden, secciones colapsables por tipo, filtro Ofertas (switch), filtro Precio (campos min/max + range slider de doble control), chips de filtros aplicados, boton de aplicar y estado sin resultados",
+   "entry_url": "/category/<slug>",
+   "auth_required": false,
+   "suites": [
+    "B2C-71",
+    "B2C-95",
+    "B2C-96",
+    "B2C-97",
+    "B2C-98"
+   ],
+   "depends_on": [
+    "plp-categoria"
+   ],
+   "leads_to": [],
+   "estado": "explorado 2026-09-17 (B2C-98, filtro Marca sobre la SRP 'carne'): 70 productos y 11 marcas; los refinements c_tipoEnvase y c_formato existen en el backend pero sin valores, asi que esos dos dropdowns no se renderizan en ningun contexto probado"
+  },
+  {
+   "id": "home-carrusel-circular",
+   "file": "home-carrusel-circular.json",
+   "description": "Layout Carrusel + imagen circular (Round Category Tile) del Home: titulo centrado, slider de tiles circulares que enlazan a categorias, con controles Anterior/Siguiente",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-191",
+    "B2C-72"
+   ],
+   "depends_on": [
+    "home-page-designer"
+   ],
+   "leads_to": [
+    "plp-categoria"
+   ],
+   "estado": "certificado por DOS HU sobre la misma instancia (tb-categorias-hp). B2C-72 re-certificada 2026-09-17 en TESTEADO QA OK; B2C-191 el mismo dia con 2 Aprobado, 1 Rechazado (bug B2C-821: Mobile en fila deslizable y no en grilla 3x2), 4 Bloqueado y 4 Fuera de alcance. Las dos HU describen Mobile de forma incompatible"
+  },
+  {
+   "id": "home-tabs-carrusel",
+   "file": "home-tabs-carrusel.json",
+   "description": "Componente Tabs + Carrusel de productos del Home: fondo a todo el ancho, fila de tabs por coleccion y carrusel Swiper con las shelves de la tab activa",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-77"
+   ],
+   "depends_on": [
+    "home-page-designer",
+    "shelf-producto"
+   ],
+   "leads_to": [
+    "pdp-detalle-producto",
+    "plp-categoria"
+   ],
+   "estado": "explorado 2026-09-14; instanciado en DEV como 'Nuestras marcas' con 9 tabs"
+  },
+  {
+   "id": "home-modulo-bomba",
+   "file": "home-modulo-bomba.json",
+   "description": "Modulo Bomba del Home/Landing (variantes T5 logo lateral y T6 imagen de fondo) con bomba badge de cuenta regresiva y carrusel de productos",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-78"
+   ],
+   "depends_on": [
+    "home-page-designer"
+   ],
+   "leads_to": [
+    "pdp-detalle-producto",
+    "plp-categoria",
+    "carro"
+   ],
+   "estado": "CONFIGURADO en DEV desde 2026-09-14 (hp-bomba-hw, con logo, cuenta regresiva y carrusel). B2C-78 se cerro con 20 TC Bloqueado por 'no configurado': conviene re-correrla"
+  },
+  {
+   "id": "home-carrusel-banners",
+   "file": "home-carrusel-banners.json",
+   "description": "Carrusel de Banners del Home/Landing en variantes T1 (full-width), T2 (compact) y T4 (con titulo y texto)",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-79"
+   ],
+   "depends_on": [
+    "home-page-designer"
+   ],
+   "leads_to": [
+    "plp-categoria"
+   ],
+   "estado": "explorado y certificado 2026-09-14; T1 (tb-banner-hp) y T4 (tb-banner-t4-hp, 'Cada dia, una ocasion') instanciadas, T2 no configurada",
+   "relacionado_con": [
+    "home-slider-banners-titulo",
+    "home-collage-banners"
+   ]
+  },
+  {
+   "id": "home-banner-promo-lateral",
+   "file": "home-banner-promo-lateral.json",
+   "description": "Banner Promo lateral + Slider de banners del Home/Landing: banner principal lateral y slider de banners a su derecha",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-80"
+   ],
+   "depends_on": [
+    "home-page-designer"
+   ],
+   "leads_to": [
+    "plp-categoria"
+   ],
+   "estado": "NO CONFIGURADO en DEV (verificado 2026-09-14 censando los 8 sliders del Home): la suite B2C-80 quedo bloqueada en su parte web"
+  },
+  {
+   "id": "home-slider-banners-titulo",
+   "file": "home-slider-banners-titulo.json",
+   "description": "Slider de Banners con Titulo (variante T7): imagen rectangular con su titulo debajo, pretitulo, texto y 'Mostrar todo'",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-82"
+   ],
+   "depends_on": [
+    "home-page-designer"
+   ],
+   "leads_to": [
+    "plp-categoria"
+   ],
+   "relacionado_con": [
+    "home-carrusel-banners"
+   ],
+   "estado": "NO CONFIGURADA en DEV: lo que se tomo por T7 el 2026-09-14 es la variante T4 de B2C-79. Los 10 TC web de B2C-82 quedaron Bloqueado"
+  },
+  {
+   "id": "home-collage-banners",
+   "file": "home-collage-banners.json",
+   "description": "Collage de Banners del Home/Landing: bloque ESTATICO de banners clickables, variantes T1/T2/T4/T5",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-83"
+   ],
+   "depends_on": [
+    "home-page-designer"
+   ],
+   "leads_to": [
+    "plp-categoria"
+   ],
+   "relacionado_con": [
+    "home-carrusel-banners"
+   ],
+   "estado": "explorado y certificado 2026-09-14; en DEV hay dos instancias, una T1 (hp-strip-t1-hw) y una T6 (hp-collage-hw, 'Prende la parrilla'). T2, T4 y T5 no configuradas"
+  },
+  {
+   "id": "cuenta-productos-frecuentes",
+   "file": "cuenta-productos-frecuentes.json",
+   "description": "Pagina 'Mis productos frecuentes' (My Usuals) de Mi Cuenta: grilla de los productos que el cliente compra habitualmente",
+   "entry_url": "/account/my-usuals",
+   "auth_required": true,
+   "suites": [
+    "B2C-85"
+   ],
+   "depends_on": [
+    "header-storefront"
+   ],
+   "leads_to": [
+    "carro",
+    "pdp-detalle-producto"
+   ],
+   "relacionado_con": [
+    "shelf-producto",
+    "home-page-designer"
+   ],
+   "estado": "explorado 2026-09-14; la pagina existe y sin sesion redirige al Home con el drawer de login. 11 de los 12 TC web de B2C-85 quedaron Bloqueado porque la planilla no declara con que cuenta se ejecutan"
+  },
+  {
+   "id": "plp-ordenamiento",
+   "file": "plp-ordenamiento.json",
+   "description": "Selector de ordenamiento del listado: dropdown 'Ordenar por' de la barra y seccion 'Ordena tus productos' del modal de filtros (PLP/SRP/Coleccion)",
+   "entry_url": "/search?q=<termino>",
+   "auth_required": false,
+   "suites": [
+    "B2C-87"
+   ],
+   "depends_on": [
+    "plp-panel-filtros",
+    "shelf-producto"
+   ],
+   "leads_to": [
+    "pdp-detalle-producto"
+   ],
+   "estado": "La seleccion de orden dentro del modal no funciona (TypeError); el modal no refleja el orden vigente; no hay bullet en el icono de filtros; el selector expone una sexta opcion 'Mejor descuento' que la HU no declara (2026-09-16)"
+  },
+  {
+   "id": "buscador-modal",
+   "file": "buscador-modal.json",
+   "description": "Modal del buscador del header: contenido por defecto (busquedas recientes, lo ultimo que viste, lo mas buscado) y panel de resultados con debounce, chips de autocompletado y carrusel",
+   "entry_url": "/",
+   "auth_required": false,
+   "auth_roles_opcionales": [
+    "comprador (para 'Lo ultimo que viste')"
+   ],
+   "suites": [
+    "B2C-100"
+   ],
+   "depends_on": [
+    "header-storefront"
+   ],
+   "leads_to": [
+    "srp",
+    "pdp-detalle-producto"
+   ],
+   "estado": "certificado 2026-09-17: 41 Aprobado, 4 Rechazado (todos Mobile: sin tabbar inferior, historial que sobrevive al logout, y carrusel de sugerencias como grid 2x2 en vez de deslizable), 7 Bloqueado por data no declarada. HU en TESTEADO (QA) CON ERROR. Bugs B2C-804/805/806/807"
+  },
+  {
+   "id": "plp-filtro-sellos-advertencia",
+   "file": "plp-filtro-sellos-advertencia.json",
+   "description": "Filtro 'Sellos de advertencia' (Ok to Shop) del panel de filtros de la PLP/SRP",
+   "entry_url": "/category/carnes_vacuno",
+   "auth_required": false,
+   "suites": [
+    "B2C-103"
+   ],
+   "depends_on": [
+    "plp-panel-filtros"
+   ],
+   "leads_to": [],
+   "estado": "certificado 2026-09-17: 1 Rechazado (el dropdown no se renderiza en ningun contexto, bug B2C-808) y 4 Bloqueado por depender de ese dropdown. HU en TESTEADO (QA) CON ERROR. El backend SI entrega los refinements c_okts* con productos, asi que la ausencia no es CA4 funcionando bien"
+  },
+  {
+   "id": "shelf-simplificada",
+   "file": "shelf-simplificada.json",
+   "description": "Shelf simplificada del modal de buscador y de los modales de promocion: la tarjeta de shelf-producto sin 'Combina la promo' ni 'Ver similares'",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-64"
+   ],
+   "depends_on": [
+    "shelf-producto",
+    "buscador-modal"
+   ],
+   "leads_to": [
+    "pdp-detalle-producto",
+    "carro"
+   ],
+   "estado": "certificado 2026-09-17: 2 Aprobado y 32 Bloqueado sobre 34 TC. La estructura y el orden de slots se verificaron en los dos form-factors; el resto no se pudo correr porque la planilla no declara ni las cuentas ni los productos que cada caso necesita. HU en TESTEADO QA BLOQUEADO"
+  },
+  {
+   "id": "combina-la-promo",
+   "file": "combina-la-promo.json",
+   "description": "Modal 'Combina la promo': drawer en Desktop y bottom sheet en Mobile, con barra de progreso por unidades y grid de variantes combinables",
+   "entry_url": "/category/carnes_vacuno",
+   "auth_required": false,
+   "suites": [
+    "B2C-74"
+   ],
+   "depends_on": [
+    "shelf-producto",
+    "plp-categoria"
+   ],
+   "leads_to": [
+    "carro"
+   ],
+   "estado": "certificado 2026-09-17: 6 Aprobado, 2 Rechazado (B2C-822 y B2C-823: el modal muestra una sola variante aunque la promocion agrupe dos y el servicio las devuelva) y 39 Bloqueado. HU en TESTEADO (QA) CON ERROR"
+  },
+  {
+   "id": "cucarda-shelf",
+   "file": "cucarda-shelf.json",
+   "description": "Cucarda (label promocional) del shelf de producto: render, posicion y estilo, y su configuracion desde BM via JOB1/JOB2",
+   "entry_url": "/search?q=carne (es el unico sitio donde hoy hay cucardas; la PLP declarada no tiene ninguna)",
+   "auth_required": false,
+   "suites": [
+    "B2C-65"
+   ],
+   "depends_on": [
+    "shelf-producto"
+   ],
+   "leads_to": [],
+   "nota": "Es un slot del shelf de [[shelf-producto]], no un componente aparte: comparte Page Object (ShelfProducto)."
+  },
+  {
+   "id": "srp-busqueda",
+   "file": "srp-busqueda.json",
+   "description": "Search Results Page: titulo con el termino, contador, chips de categoria, grilla de shelves, barra de filtros y orden, skeleton de carga, sin resultados (SRP-014) y error (SRP-012)",
+   "entry_url": "/search?q=<termino>",
+   "auth_required": false,
+   "suites": [
+    "B2C-18"
+   ],
+   "depends_on": [
+    "buscador-modal",
+    "shelf-producto",
+    "plp-panel-filtros",
+    "plp-ordenamiento"
+   ],
+   "leads_to": [
+    "pdp-detalle-producto",
+    "plp-categoria",
+    "carro"
+   ],
+   "estado": "certificado 2026-09-24: 27 TC ejecutables de 54; los otros 27 Bloqueado por precondiciones sin data declarada (mas de 50 resultados, content assets no configurados, metodo de entrega sin direccion ni tienda) y dos casos operados en BM"
+  },
+  {
+   "id": "modal-ver-similares",
+   "file": "modal-ver-similares.json",
+   "description": "Modal Ver similares de producto sin stock (B2C-40)",
+   "entry_url": "/category/carnes_vacuno",
+   "auth_required": false,
+   "suites": [
+    "B2C-40"
+   ],
+   "depends_on": [
+    "shelf-producto",
+    "pdp-detalle-producto"
+   ],
+   "leads_to": [
+    "carro"
+   ]
+  },
+  {
+   "id": "completa-la-promo",
+   "file": "completa-la-promo.json",
+   "description": "Toast y barra de progreso de 'Completa la promo' (B2C-63)",
+   "entry_url": "/product/000000000664214001-UN",
+   "auth_required": false,
+   "suites": [
+    "B2C-63"
+   ],
+   "depends_on": [
+    "shelf-producto",
+    "pdp-detalle-producto",
+    "store-locator"
+   ],
+   "leads_to": [
+    "carro"
+   ]
+  },
+  {
+   "id": "home-carrusel-productos",
+   "file": "home-carrusel-productos.json",
+   "description": "Carrusel de productos del Home, variantes T1/T2/T3 (B2C-75)",
+   "entry_url": "/",
+   "auth_required": false,
+   "suites": [
+    "B2C-75"
+   ],
+   "depends_on": [
+    "home-page-designer",
+    "shelf-producto",
+    "header-storefront"
+   ],
+   "leads_to": [
+    "plp-categoria",
+    "pdp-detalle-producto",
+    "carro"
+   ]
+  },
+  {
+   "id": "app-tapbar",
+   "file": "app-tapbar.json",
+   "description": "App nativa: TapBar inferior y Floating Pill del carro",
+   "entry_url": "app:com.smuapp.unimarc",
+   "auth_required": false,
+   "suites": [
+    "B2C-22"
+   ],
+   "depends_on": [],
+   "leads_to": [
+    "app-modal-categorias"
+   ]
+  },
+  {
+   "id": "app-navbar",
+   "file": "app-navbar.json",
+   "description": "App nativa: NavBar superior (método de entrega, membresía, accesos)",
+   "entry_url": "app:com.smuapp.unimarc",
+   "auth_required": false,
+   "suites": [
+    "B2C-23"
+   ],
+   "depends_on": [
+    "app-tapbar"
+   ],
+   "leads_to": [
+    "app-modal-categorias"
+   ]
+  },
+  {
+   "id": "app-splash",
+   "file": "app-splash.json",
+   "description": "App nativa: Splash en cold start y reanudación",
+   "entry_url": "app:com.smuapp.unimarc",
+   "auth_required": false,
+   "suites": [
+    "B2C-67"
+   ],
+   "depends_on": [],
+   "leads_to": [
+    "app-navbar",
+    "app-tapbar"
+   ]
+  },
+  {
+   "id": "app-ordenamiento",
+   "file": "app-ordenamiento.json",
+   "description": "App nativa: ordenamiento en PLP/SRP",
+   "entry_url": "app:com.smuapp.unimarc",
+   "auth_required": false,
+   "suites": [
+    "B2C-87"
+   ],
+   "depends_on": [
+    "app-modal-categorias",
+    "app-tapbar"
+   ],
+   "leads_to": []
+  },
+  {
+   "id": "app-store-locator",
+   "file": "app-store-locator.json",
+   "description": "App nativa: Store Locator del header y modal de método de entrega (Despacho a domicilio)",
+   "entry_url": "app:com.smuapp.unimarc",
+   "auth_required": false,
+   "suites": [
+    "B2C-26"
+   ],
+   "depends_on": [
+    "app-tapbar"
+   ],
+   "leads_to": []
+  },
+  {
+   "id": "carro-no-disponibles",
+   "file": "carro-no-disponibles.json",
+   "depends_on": [
+    "store-locator",
+    "modal-ver-similares"
+   ],
+   "suites": [
+    "B2C-39"
+   ]
+  },
+  {
+   "id": "carro-membresia",
+   "file": "carro-membresia.json",
+   "depends_on": [
+    "carro-no-disponibles"
+   ],
+   "suites": [
+    "B2C-42"
+   ]
+  },
+  {
+   "id": "carro-fusion",
+   "file": "carro-fusion.json",
+   "description": "Fusión del carro invitado con el carro guardado al iniciar sesión",
+   "entry_url": "/cart",
+   "auth_required": true,
+   "suites": [
+    "B2C-168"
+   ],
+   "depends_on": [
+    "store-locator",
+    "checkout-datos-entrega"
+   ],
+   "leads_to": [
+    "checkout-datos-entrega"
+   ],
+   "estado": "2026-10-14: 6 Aprobado, 24 Bloqueado Data, APP fuera de alcance"
+  }
+ ],
+ "last_updated": "2026-10-10T00:10:00Z"
+}

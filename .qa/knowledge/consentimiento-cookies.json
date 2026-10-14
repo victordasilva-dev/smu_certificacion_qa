@@ -1,0 +1,68 @@
+{
+  "flow": "consentimiento-cookies",
+  "description": "Banner de consentimiento de cookies del storefront (CA1-CA8 de B2C-30): banner fijo al pie, Aceptar / Rechazar todas, enlace a la Politica de cookies (dialog) y persistencia del consentimiento.",
+  "entry_url": "/",
+  "auth_required": false,
+  "suites": [
+    "B2C-19",
+    "B2C-20",
+    "B2C-21",
+    "B2C-30"
+  ],
+  "explored_at": "2026-09-10",
+  "browsers": {
+    "desktop": "chromium 1440x900",
+    "mobile": "webkit 390x844"
+  },
+  "selectors": {
+    "banner": "[data-testid='cookie-consent-banner']",
+    "banner_role": "region con aria-label 'Consentimiento de cookies'",
+    "banner_texto": "Usamos cookies para mejorar y hacer más segura tu experiencia. Revisa nuestra Política de cookies.",
+    "enlace_politica": "button (NO link) con texto 'Política de cookies', dentro del banner",
+    "boton_aceptar": "button[aria-label='Aceptar todas las cookies'] (texto visible: 'Aceptar')",
+    "boton_rechazar": "button[aria-label='Rechazar todas las cookies opcionales'] (texto visible: 'Rechazar todas')",
+    "drawer_politica": "[data-testid='cookie-policy-drawer'] (role=dialog, aria-modal=true)",
+    "drawer_titulo": "header con texto 'Política de Cookies'",
+    "drawer_cerrar": "button[aria-label='Cerrar política de cookies']",
+    "drawer_acordeon": "7 secciones ('1. ¿Qué son las Cookies?' ... '7. ¿Qué tipos de Cookies utiliza el sitio?')",
+    "drawer_footer": "repite los botones Aceptar / Rechazar todas"
+  },
+  "persistencia": {
+    "cookie_consentimiento": "smu_cookie_consent",
+    "valores": [
+      "accepted",
+      "rejected"
+    ],
+    "atributos": "expires: 365 dias (12 meses), secure en https, sameSite Lax, path /",
+    "dnt": "dw_dnt=0 al aceptar, dw_dnt=1 al rechazar, ausente sin decision",
+    "sin_decision": "sessionStorage['smu_cookie_consent_dismissed'] = '1' (por pestana, NO persiste entre sesiones)",
+    "cookies_previas_a_la_decision": [
+      "sid",
+      "dwsid",
+      "dwanonymous_<hash>",
+      "cc-nx-g_Unimarc",
+      "usid_Unimarc"
+    ]
+  },
+  "comportamiento": {
+    "cierre_sin_accion": "un mousedown fuera del banner (con target != document.documentElement) marca dismissed y oculta el banner; tambien lo hace un cambio de ruta despues de que el usuario interactuo (pointerdown/keydown). NO se registra cookie de consentimiento.",
+    "banner_tras_aceptar_o_rechazar": "no reaparece mientras viva la cookie smu_cookie_consent (365 dias)",
+    "banner_tras_sin_decision": "no reaparece en la misma pestana; reaparece en una pestana/sesion nueva porque el flag vive en sessionStorage",
+    "politica_desktop": "dialog anclado a la DERECHA (448x900 en 1440x900) — es un drawer lateral, no un modal centrado",
+    "politica_mobile": "dialog anclado ABAJO (390x717 en 390x844) — drawer inferior",
+    "banner_durante_el_drawer": "sigue renderizado y visible (display block, opacity 1); el contenedor recibe aria-hidden mientras el dialog esta abierto",
+    "gating_analitica": "los eventos de promocion se encolan (max 50) mientras no hay consentimiento y solo se vuelcan a window.dataLayer cuando el consentimiento pasa a 'accepted'. window.dataLayer no existe antes de aceptar."
+  },
+  "observations": [
+    "El texto de la UI lleva tildes ('más segura', 'Política') y la planilla de TC los escribe sin tilde. Usar regex tolerante (/pol[ií]tica de cookies/i), nunca el literal del Excel.",
+    "'Política de cookies' es un <button>, no un <a>: getByRole('link') no lo encuentra.",
+    "Cuando el drawer de la politica esta abierto, sus botones Aceptar / Rechazar todas DUPLICAN a los del banner. Todo locator de esos botones debe ir scopeado al banner o al drawer, o rompe por strict mode.",
+    "AMBIENTE DEV: el storefront no integra Google Analytics/GTM, Marketing Cloud ni retargeting — no hay script ni llamada de red de esos proveedores en el bundle ni en el HTML. Einstein si esta configurado (api.cquotient.com, einsteinId) pero no dispara llamadas en el Home. Por eso los TC que verifican la activacion/desactivacion de esos cuatro servicios no son certificables aqui.",
+    "El clic fuera del banner solo lo descarta si el target no es <html>: un clic en una zona de fondo puro (documentElement) no lo cierra. En el spec hay que hacer clic sobre un elemento real de la pagina.",
+    "sessionStorage es por pestana: page.context().newPage() basta para simular 'nueva sesion' en el TC de reaparicion, mientras que las cookies del contexto se conservan.",
+    "El clic fuera del banner tampoco puede caer sobre el contenido: el hero del Home es un carrusel de enlaces que rota, y el clic descarta el banner y navega, con lo que la ruta nueva vuelve a montarlo. El punto del clic se busca en tiempo de ejecucion (CookieConsentBanner.cerrarSinDecidir) recorriendo el viewport hasta dar con uno que no sea <html> ni pertenezca a un control navegable.",
+    "dw_dnt no se escribe en el mismo tick que el clic en Aceptar/Rechazar: el storefront confirma el consentimiento contra el backend y recien entonces fija el flag. Leerlo de una sola vez hace fallar el TC en Desktop (es mas rapido que Mobile); hay que esperar por el valor con expect.poll."
+  ],
+  "deprecated_selectors": [],
+  "history": []
+}

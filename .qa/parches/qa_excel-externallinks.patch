@@ -1,0 +1,173 @@
+--- /c/Users/dasil/AppData/Local/Temp/claude/C--Users-dasil-Documents-smu-certificacion-qa/4cbf4292-84b9-4c86-ba75-2884b1fb82df/scratchpad/qa_excel.py.orig	2026-09-24 13:08:05.578447900 -0500
++++ C:/Users/dasil/.claude/plugins/cache/avatar-qa/qa-executor/1.4.0/skills/qa-executor/scripts/qa_excel.py	2026-09-24 13:09:24.234278200 -0500
+@@ -77,6 +77,135 @@
+     return "" if v is None else str(v).strip()
+ 
+ 
++# --------------------------------------------------------------------------- integridad del xlsx
++
++def repair_package(path):
++    """Repara lo que openpyxl rompe al reescribir un .xlsx, y verifica que quedo integro.
++
++    openpyxl no conserva bien dos cosas de un libro hecho en Excel, y las dos se manifiestan
++    igual para quien abre el archivo: el aviso de "encontramos un problema con parte del
++    contenido", que no distingue entre un detalle cosmetico y la perdida de una hoja entera.
++
++    1. **Las referencias externas quedan colgando.** Si el libro trae formulas contra otro
++       archivo, `xl/externalLinks/externalLinkN.xml` cita su destino por `r:id`, y openpyxl
++       reescribe el `.rels` de esa parte con un Id distinto del que la parte usa. La referencia
++       deja de resolver y Excel la reporta como contenido ilegible. Se alinea el Id al que la
++       parte realmente cita, que es la fuente fiable: el destino externo sigue siendo correcto,
++       lo que se perdio es la correspondencia entre los dos.
++    2. **Quedan partes `[trash]/NNNN.dat`** dentro del zip, sin declarar en `[Content_Types]`.
++       Son restos del libro original que openpyxl no supo reubicar. Excel las ignora, pero no
++       pertenecen al paquete y solo abultan el archivo.
++
++    La comprobacion final no es un lujo: el sintoma aparece al ABRIR el archivo, que es horas
++    despues y en la maquina de otra persona. Barre todas las partes buscando `r:id` sin
++    relacion declarada y devuelve lo que no pudo arreglar, para que quien corre la herramienta
++    se entere en el momento y no el dia de la entrega.
++
++    Devuelve (arreglos, pendientes): dos listas de texto listo para imprimir.
++    """
++    import posixpath
++    import zipfile
++
++    arreglos, pendientes = [], []
++    try:
++        src = zipfile.ZipFile(path)
++    except Exception as e:                                    # noqa: BLE001
++        return [], ["no pude revisar la integridad del .xlsx: %s" % e]
++
++    try:
++        items, cambiado = [], False
++        for info in src.infolist():
++            name = info.filename
++            if name.startswith("[trash]/"):
++                cambiado = True
++                arreglos.append("parte sobrante %s eliminada del paquete" % name)
++                continue
++            data = src.read(name)
++            m = re.match(r"xl/externalLinks/_rels/(externalLink\d+\.xml)\.rels$", name)
++            if m:
++                parte = "xl/externalLinks/" + m.group(1)
++                try:
++                    xml = src.read(parte).decode("utf-8")
++                except KeyError:
++                    items.append((info, data))
++                    continue
++                usa = re.search(r"externalBook[^>]*r:id=\"([^\"]+)\"", xml)
++                txt = data.decode("utf-8")
++                declarados = re.findall(r"Id=\"([^\"]+)\"", txt)
++                if usa and usa.group(1) not in declarados:
++                    txt = re.sub(r"Id=\"[^\"]+\"", "Id=\"%s\"" % usa.group(1), txt)
++                    data = txt.encode("utf-8")
++                    cambiado = True
++                    arreglos.append(
++                        "referencia externa de %s reapuntada a %s (openpyxl la dejo en %s)"
++                        % (m.group(1), usa.group(1), ", ".join(declarados) or "ninguna")
++                    )
++            items.append((info, data))
++
++        if cambiado:
++            tmp = path + ".fix"
++            out = zipfile.ZipFile(tmp, "w", zipfile.ZIP_DEFLATED)
++            for info, data in items:
++                ni = zipfile.ZipInfo(info.filename, date_time=info.date_time)
++                ni.compress_type = zipfile.ZIP_DEFLATED
++                ni.external_attr = info.external_attr
++                out.writestr(ni, data)
++            out.close()
++            src.close()
++            os.replace(tmp, path)
++            src = zipfile.ZipFile(path)
++
++        # Verificacion: ninguna parte puede citar un r:id que su .rels no declare.
++        nombres = set(src.namelist())
++        for name in sorted(nombres):
++            if name.endswith(".rels") or not name.endswith(".xml"):
++                continue
++            try:
++                xml = src.read(name).decode("utf-8", "replace")
++            except Exception:                                 # noqa: BLE001
++                continue
++            usados = set(re.findall(r"r:(?:id|embed)=\"([^\"]+)\"", xml))
++            if not usados:
++                continue
++            rels = posixpath.join(posixpath.dirname(name), "_rels",
++                                  posixpath.basename(name) + ".rels")
++            declarados = set()
++            if rels in nombres:
++                declarados = set(re.findall(
++                    r"Id=\"([^\"]+)\"", src.read(rels).decode("utf-8", "replace")))
++            faltan = sorted(usados - declarados)
++            if faltan:
++                pendientes.append(
++                    "%s cita %s y su .rels no lo declara" % (name, ", ".join(faltan)))
++    finally:
++        try:
++            src.close()
++        except Exception:                                     # noqa: BLE001
++            pass
++
++    return arreglos, pendientes
++
++
++def save_workbook(wb, path):
++    """Guarda el libro y deja el paquete integro, que es lo que Excel exige para abrirlo.
++
++    Todo guardado de esta herramienta pasa por aqui: un `wb.save()` suelto vuelve a dejar el
++    archivo con el aviso de contenido ilegible, y eso no se ve hasta que alguien lo abre.
++    """
++    wb.save(path)
++    return repair_package(path)
++
++
++def report_package(arreglos, pendientes):
++    """Imprime lo que la reparacion toco y lo que no pudo dejar bien."""
++    for line in arreglos:
++        print("  ~", line)
++    for line in pendientes:
++        print("AVISO  %s" % line)
++    if pendientes:
++        print("       Excel puede avisar de contenido ilegible al abrir la planilla.")
++
++
+ # --------------------------------------------------------------------------- descubrimiento
+ 
+ def is_locked(path):
+@@ -817,11 +946,12 @@
+             linked = "  [link: %s]" % link_label(doc)
+         written.append("%s (fila %d) -> %s%s" % (tc_id, row, status, linked))
+ 
+-    wb.save(tc_file)
++    arreglos, pendientes = save_workbook(wb, tc_file)
+     sys.stdout.reconfigure(encoding="utf-8")
+     print("OK  %d fila(s) actualizada(s) en %s" % (len(written), tc_file))
+     for line in written:
+         print("  +", line)
++    report_package(arreglos, pendientes)
+     for line in skipped:
+         print("  !", line)
+     if skipped:
+@@ -1151,13 +1281,19 @@
+ 
+     cambios = relink_docs(ws, cols, old_dir, os.path.dirname(destino))
+     if cambios:
+-        wb.save(destino)
++        arreglos, pendientes = save_workbook(wb, destino)
++    else:
++        # Sin reescritura no hay nada que openpyxl pueda romper aqui, pero el archivo archivado
++        # es el entregable: se verifica igual para no descubrir en la entrega un destrozo que
++        # venga de un guardado anterior.
++        arreglos, pendientes = repair_package(destino)
+ 
+     print("OK  planilla archivada")
+     print("  + de: %s" % tc_file)
+     print("  + a:  %s" % destino)
+     if cambios:
+         print("  + %d enlace(s) de evidencia reapuntados a la nueva carpeta" % cambios)
++    report_package(arreglos, pendientes)
+     if abiertas:
+         muestra = ", ".join(abiertas[:5]) + (", ..." if len(abiertas) > 5 else "")
+         print("AVISO  %d TC se archivaron sin veredicto (%s)." % (len(abiertas), muestra))

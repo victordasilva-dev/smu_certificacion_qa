@@ -1,0 +1,96 @@
+{
+  "flow": "home-carrusel-banners",
+  "last_updated": "2026-09-14T23:00:00Z",
+  "version": 4,
+  "description": "Carrusel de Banners del Home/Landing en sus variantes T1 (full-width), T2 (compact, 3 banners) y T4 (banners altos con título y texto). Es el objeto de la HU B2C-79. En DEV están instanciadas T1 y T4; T2 no.",
+  "source": {
+    "suite": "B2C-79",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-79 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C79-D-001",
+      "TC-B2C79-D-003",
+      "TC-B2C79-D-004",
+      "TC-B2C79-D-006",
+      "TC-B2C79-D-007",
+      "TC-B2C79-D-010",
+      "TC-B2C79-D-017",
+      "TC-B2C79-M-001",
+      "TC-B2C79-M-003",
+      "TC-B2C79-M-004"
+    ],
+    "last_sync": "2026-09-14T23:59:00Z"
+  },
+  "navigation": {
+    "entry_url": "/",
+    "instancia_en_dev": "Dos de las tres variantes están instanciadas en el Home. T1 es el hero de arriba del todo (`tb-banner-hp`), sin título propio, con 3 banners de 1440x420 y autoplay cada 5000 ms. T4 es el bloque 'Cada día, una ocasión' (`tb-banner-t4-hp`), con 4 banners, 'Mostrar todo' a /search?q=ofertas y autoplay apagado. T2 NO está configurada.",
+    "modals": []
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Los carruseles de banners se distinguen de los de producto por lo que NO tienen: ningún slide con botón 'Agregar'. Es el filtro fiable, porque los dos usan el mismo Swiper y las clases son hashes de Emotion.",
+        "selector": "main .swiper sin ningún button con texto exacto 'Agregar'",
+        "type": "css+contenido"
+      },
+      {
+        "description": "Cada banner es un <a> con la imagen dentro; su href es el destino configurado.",
+        "selector": ".swiper-slide a con img",
+        "type": "css"
+      },
+      {
+        "description": "Controles de navegación: mismos aria-label que el resto de los carruseles del sitio.",
+        "selector": "button[aria-label='Anterior'] / button[aria-label='Siguiente']",
+        "type": "css"
+      },
+      {
+        "description": "La slide-bar del carrusel. No hay indicadores (dots) en ninguna de las dos variantes configuradas.",
+        "selector": ".swiper-scrollbar (presente) / .swiper-pagination (ausente)",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": [
+      "page.route sobre el nombre de archivo de la imagen de un banner, abortándola, produce el error de carga que pide CA8. Hay que cortar por identificador de archivo y no por URL exacta —el <img> lleva srcset con varios anchos— y pedir revalidación de caché antes de recargar, o la imagen se sirve de caché y la ruta no se dispara (ver [[home-tabs-carrusel]])."
+    ]
+  },
+  "observations": [
+    "LA ATRIBUCIÓN DE 'Cada día, una ocasión' ES T4, Y ESTÁ ZANJADA CON TRES DATOS DUROS, no con un parecido: (1) el componente se identifica en Page Designer como `tb-banner-t4-hp` (ver los anclas en [[home-page-designer]]); (2) el CA5 de la HU pide para T4 'Desktop: 4 a 5 banners' y 'Mobile: 1 banner + parcial', que es EXACTAMENTE lo que se mide —4 y 1+parcial—, mientras que T7 (HU B2C-82) pide 5-6 y 2+parcial; (3) monta un Swiper con controles, el comportamiento que describe el CA6 de esta HU, no un slider ajeno. El 2026-09-14 se llegó a reatribuirlo a T7 porque cada item lleva un título debajo de la imagen y la descripción de T4 no lo menciona; ese rasgo NO basta, porque la HU no enumera de forma exhaustiva el contenido del banner y las dos medidas que sí son criterio de aceptación apuntan a T4 sin ambigüedad. Ver [[home-slider-banners-titulo]].",
+    "LA LECCIÓN, QUE ES LA MISMA QUE DEJÓ B2C-83: para decidir una variante hay que ir a los criterios MEDIBLES de la HU y al marcador del DOM, no al rasgo cualitativo que 'suena' propio de una u otra. Aquí el rasgo cualitativo (título por item) apuntaba a T7 y las dos medidas numéricas apuntaban a T4; ganaron las medidas, y comprobarlo evitó dos bugs falsos. En B2C-83 el mismo problema se resolvió de una con `data-variant`.",
+    "CUIDADO AL CONTAR 'BANNERS VISIBLES' EN DESKTOP: la barra de scroll vertical de la página estrecha el carril de 1280 a 1265 px y deja el cuarto banner recortado unos 15 px, con lo que contarlos por 'caben enteros' da 3 donde el usuario ve 4. Por eso `CarruselBanners.banners()` expone `visible` (fracción del banner dentro del carril) y el caso cuenta los que se ven al menos al 90 %. La misma trampa está descrita en [[home-tabs-carrusel]].",
+    "MEDIDAS OBSERVADAS EN DEV. T1 Desktop 1440x900: 3 banners de 1440x420, 1 visible por slide, autoplay ACTIVO con delay 5000 ms, slide-bar y 2 flechas, sin indicadores. T1 Mobile 390x844: banners de 342x201 dentro de un carril de 358 que arranca en x=16, es decir con padding lateral, 1 visible. T4 Desktop: 4 banners de 302x519, los 4 visibles a la vez, título 'Cada día, una ocasión', 'Mostrar todo' a /search?q=ofertas, autoplay APAGADO. T4 Mobile: banners de 320x411 en un carril de 358, 1 entero más el siguiente asomando.",
+    "LOS TAMAÑOS NO COINCIDEN CON LOS QUE DECLARAN LOS TC EN T4: el caso pide banners de ~240x420 y se observan 302x519 en Desktop. En T1 sí coinciden (1440x420 declarado y medido). Conviene confirmar con funcional si el número del TC está desactualizado antes de leerlo como defecto.",
+    "LA VARIANTE T2 NO ESTÁ CONFIGURADA en este ambiente: no hay ningún carrusel de 3 banners de ~980x240. Los únicos dos carruseles sin productos del Home son T1 y T4, así que TC-B2C79-D-002 y TC-B2C79-M-002 no son observables.",
+    "NO HAY INDICADORES (dots) EN NINGUNA VARIANTE: ni T1 ni T4 renderizan .swiper-pagination, solo .swiper-scrollbar. Eso deja sin precondición al caso que verifica que los indicadores marquen el slide activo.",
+    "EL AUTOPLAY SE LEE DEL PROPIO SWIPER, igual que en [[home-tabs-carrusel]]: `el.swiper.params.autoplay.delay` da 5000 en T1 y `false` en T4. Ojo con la trampa de interpretación: que T4 tenga autoplay en false NO permite afirmar que el administrador no lo configuró —que es lo que piden los casos de valor por defecto—, solo que el valor vigente es false.",
+    "LA MEDICIÓN DE 'BANNERS VISIBLES' HAY QUE HACERLA CON EL CARRUSEL QUIETO: T1 tiene autoplay activo y si se mide a mitad de transición salen 0 enteros y 2 asomando. Conviene parar el autoplay (`el.swiper.autoplay.stop()`) antes de contar.",
+    "AMBIENTE DEV: los 7 banners configurados entre las dos variantes tienen todos href a una categoría, así que el caso del banner sin URL no tiene dónde observarse.",
+    "CORRIDA 2026-09-14 (B2C-79): 10 Aprobado, 11 Bloqueado y 8 Fuera de alcance sobre 29 TC, sin rechazados. Los 10 ejecutables pasaron a la primera, apoyandose en lo que ya dejaron [[home-tabs-carrusel]] (leer el autoplay del propio Swiper, parar el autoplay antes de clicar, elegir el slide visible) y [[home-carrusel-circular]] (arrastre de puntero para los Swiper). Reutilizar ese conocimiento evito repetir las cuatro iteraciones de depuracion de B2C-77.",
+    "LOS CASOS DE 'VALOR POR DEFECTO' NO SON CERTIFICABLES DESDE EL STOREFRONT: los que preguntan que pasa cuando el administrador NO configura Autoplay, Velocidad, Mostrar indicadores o Mostrar controles quedaron Bloqueado aunque el resultado observable coincida con el default. El front expone el valor vigente (`el.swiper.params.autoplay` da 5000 en T1 y false en T4) pero no distingue 'sin configurar' de 'configurado con ese mismo valor', y aprobarlos seria afirmar algo sobre Page Designer mirando el front."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/CarruselBanners.ts",
+    "class": "CarruselBanners",
+    "relacionados": [
+      "tests/pages/HomePage.ts (la página que los contiene; ver flujo home-page-designer)"
+    ]
+  },
+  "history": [
+    {
+      "fecha": "2026-09-14",
+      "version_anterior": 2,
+      "que_cambio": "Se retira la afirmación de que 'Cada día, una ocasión' es la variante T4. La corrida de B2C-82 mostró que ese bloque es T7 (título por item). En v2 se afirmaba: \"T4 es el bloque 'Cada día, una ocasión', con 4 banners y enlace 'Mostrar todo'\", y sobre esa premisa se certificaron TC-B2C79-D-003, TC-B2C79-M-003 y TC-B2C79-D-007.",
+      "por_que": "El título por item es el rasgo distintivo de T7 y está presente en ese bloque; la descripción de T4 no lo contempla. Confirmado con el usuario el 2026-09-14."
+    },
+    {
+      "fecha": "2026-09-14",
+      "version_anterior": 3,
+      "que_cambio": "Se revierte la corrección de v3, que había reatribuido 'Cada día, una ocasión' a la variante T7 de B2C-82. Vuelve a ser T4, que es lo que decía v2.",
+      "por_que": "La reatribución se apoyaba en un solo rasgo cualitativo (el título por item). Al leer los criterios de aceptación de las dos historias y el id de Page Designer del componente, las dos medidas que sí son criterio —4-5 banners en Desktop y 1+parcial en Mobile— coinciden con T4 y contradicen T7. TC-B2C79-D-003, M-003 y D-007 vuelven a Aprobado y los bugs B2C-781 y B2C-782 se descartaron."
+    }
+  ]
+}

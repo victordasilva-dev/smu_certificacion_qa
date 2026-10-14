@@ -1,0 +1,120 @@
+{
+  "flow": "app-store-locator",
+  "description": "App nativa Unimarc: Store Locator del header y modal 'Elige tu método de entrega' — Despacho a domicilio (HU B2C-26).",
+  "last_updated": "2026-10-14T16:30:00Z",
+  "version": 1,
+  "source": {
+    "suite": "B2C-26",
+    "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-26 APP Test Cases.xlsx",
+    "spec": "tests-app/B2C-26.spec.ts",
+    "test_cases": [
+      "TC-B2C26-APP-003",
+      "TC-B2C26-APP-008",
+      "TC-B2C26-APP-012",
+      "TC-B2C26-APP-013",
+      "TC-B2C26-APP-015",
+      "TC-B2C26-APP-016",
+      "TC-B2C26-APP-017",
+      "TC-B2C26-APP-019",
+      "TC-B2C26-APP-021",
+      "TC-B2C26-APP-024",
+      "TC-B2C26-APP-025",
+      "TC-B2C26-APP-028",
+      "TC-B2C26-APP-033",
+      "TC-B2C26-APP-034"
+    ],
+    "last_sync": "2026-10-10T00:10:00Z"
+  },
+  "app": {
+    "ref": "app-modal-categorias.json#app",
+    "android_package": "com.smuapp.unimarc",
+    "build_certificado": "unimarc-v1.0.7.apk"
+  },
+  "platforms_explored": {
+    "android": {
+      "device": "Medium_Phone_API_36.1 (emulador, Android 16)",
+      "driver": "mobilecli local",
+      "gps": "37.421998,-122.084 (predeterminado del emulador)"
+    }
+  },
+  "page_objects": {
+    "MetodoEntregaModal": "tests-app/pages/MetodoEntregaModal.ts",
+    "DireccionManualScreen": "tests-app/pages/DireccionManualScreen.ts",
+    "DetalleDireccionScreen": "tests-app/pages/DetalleDireccionScreen.ts",
+    "PermisoUbicacionDialog": "tests-app/pages/PermisoUbicacionDialog.ts"
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Modal: título",
+        "selector": "getByText('Elige tu método de entrega')",
+        "type": "getByText"
+      },
+      {
+        "description": "Buscador de direcciones (EditText, placeholder 'Ej: Av. Manquehue norte 457, Las Condes')",
+        "selector": "getByPlaceholder('Manquehue', {exact:false})",
+        "type": "getByPlaceholder"
+      },
+      {
+        "description": "Sugerencias de Google: textos que terminan en ', Chile'",
+        "selector": "getByRole('text').filter({hasText: /, Chile$/})",
+        "type": "getByRole"
+      },
+      {
+        "description": "Agregar dirección manual (tras escribir ≥1 caracter)",
+        "selector": "getByRole('button', {name: 'Agregar'})",
+        "type": "getByRole"
+      },
+      {
+        "description": "⋮ de cada dirección guardada",
+        "selector": "getByRole('button', {name: 'Opciones de dirección'})",
+        "type": "getByRole"
+      },
+      {
+        "description": "Desplegables Región / Comuna del formulario manual ('<valor>, ⌄')",
+        "selector": "getByText(/, ⌄$/).nth(0|1)",
+        "type": "getByText"
+      },
+      {
+        "description": "Continuar del formulario manual",
+        "selector": "getByRole('button', {name: /continuar con detalles? de la direcci[oó]n/i})",
+        "type": "getByRole"
+      },
+      {
+        "description": "Permiso de ubicación del sistema (Android)",
+        "selector": "getByTestId('com.android.permissioncontroller:id/permission_allow_foreground_only_button' | '..._deny_button')",
+        "type": "getByTestId"
+      },
+      {
+        "description": "OTP al elegir dirección guardada con sesión",
+        "selector": "getByText('Autenticación requerida') / otp-digit-1..6",
+        "type": "getByText"
+      }
+    ]
+  },
+  "behaviour": [
+    "Sin testIDs en el modal: todo se ubica por textos o por el árbol (viewTree).",
+    "Las hojas 'Seleccionar región' / 'Seleccionar comuna' son modales: mientras están abiertas el árbol solo trae sus filas. Leerlas con una sola lectura de viewTree por pasada (leer opción por opción no entra en 3 min).",
+    "Región: 16 regiones; escribe 'Bio Bio', 'La Araucanía', 'Magallanes y de la Antártica Chilena'. Comuna (RM): 39 comunas, incluye Machalí (bug B2C-1164).",
+    "El ⋮ abre directamente '¿Quieres eliminar tu dirección?' (sin menú intermedio). La activa no tiene ⋮.",
+    "Agregar una dirección con sesión pide OTP por correo: no se puede recrear una dirección borrada.",
+    "PLP y PDP no tienen Store Locator en el header (bug B2C-1165).",
+    "El modal logueado sube ya cargado, sin skeleton (bug B2C-1166, web B2C-1160). Verificarlo con el video, los screencaps del dispositivo van a ~1-2 fps.",
+    "Tras pm clear el primer volcado de UI falla con 'no XML content' durante el splash: esperar en bucle tolerante.",
+    "Cuenta {COMPRADOR_USER}: activa 'Calle Uno 23, La Florida'; guardadas 'Otra Casa' (Las Condes) y 'Sin cobertura' (Mechique, Los Lagos).",
+    "B2C-122 (2026-10-14, Android v1.0.7): el botón de 'Detalles de la dirección' dice 'Confirmar dirección' o 'Agregar dirección' según el caso (DetalleDireccionScreen.botonConfirmar acepta ambos). Con carro y otra tienda abastecedora abre la hoja 'Algunos productos podrían agotarse' (X 'Cerrar', 'Sí, continuar', 'No, gracias'); POM tests-app/pages/AgotarseModal.ts.",
+    "Tras 'No, gracias' o la X se queda en 'Detalles de la dirección'. Tras 'Sí, continuar' el invitado ve 'Iniciar sesión o registrarse' (PromptLogin); al cerrarlo la dirección queda aplicada.",
+    "Sugerencias de Google: cada fila es un ViewGroup con label '<calle>, <comuna>, Chile'; getByRole('text') no la encuentra. MetodoEntregaModal.elegirSugerencia busca por getByText(/<patrón>.*, Chile$/) para no casar con el texto del buscador.",
+    "Login de la app v1.0.7: 'Clave de acceso por correo' viene deshabilitado (enabled=false); solo RUT + contraseña.",
+    "Emulador inestable con el teclado abierto: 'no XML content', 'failed to send text', daemon i/o timeout. tests-app/support/tolerante.ts reintenta esos errores; si persisten, reiniciar el emulador en frío (-no-snapshot-load) y 'mobilecli daemon stop'.",
+    "Fijar la dirección de invitado a veces devuelve el toast 'Lo sentimos, no pudimos procesar tu solicitud' (intermitente en DEV). En un caso, tras 'Sí, continuar', el botón quedó 'busy' más de 70 s sin aplicar el cambio; al reintentar funcionó.",
+    "B2C-123 (2026-10-14, Android v1.0.7): dirección sin cobertura → hoja 'Aún no llegamos a esta dirección' (mensaje con 'tiendas' y punto final; 'Continuar con esta dirección' / 'Cambiar método de entrega'); POM tests-app/pages/SinCoberturaModal.ts. Al continuar, el navbar muestra '<calle>' + 'Despacho sin cobertura'.",
+    "Con sin cobertura, 'Agregar' muestra el toast 'Cambia tu dirección de despacho para poder agregar productos.' con 'Cerrar aviso' (bug B2C-1205). Ojo: un getByText(/cobertura/) casa también con el navbar.",
+    "Retiro: el buscador (placeholder 'Ej: dirección, comuna o nombre') filtra por localidad; cada tienda es un RadioButton '<nombre>. <dirección>'. Una tienda fuera de zona abre 'Esta tienda aún no está disponible para retiro' / 'Continuar con esta tienda' (bug B2C-1206).",
+    "Helpers comunes de invitado en tests-app/support/entregaApp.ts (arrancarInvitado, invitadoConDireccion, agregarAlCarro, visibleEn).",
+    "B2C-138 (2026-10-14, Android v1.0.7): invitado sin método → navbar 'Elige una forma de entrega'; el modal 'Elige tu método de entrega' ocupa toda la pantalla (no hay zona fuera: bug B2C-1207), cierra con '✕'. Sin direcciones: imagen + 'Aún no tienes direcciones guardadas' + 'Para armar tu carro, ingresa una dirección…'.",
+    "Pestañas: la activa lleva el ícono en rojo (~rgb 218,41,28), la inactiva en gris. getByText('Despacho a domicilio') resuelve al ViewGroup de la pestaña (~490 px); MetodoEntregaModal.pixelesRojosDelIcono mide el tercio izquierdo.",
+    "'Activar mi ubicación actual' con permiso concedido (adb pm grant + 'adb emu geo fix -70.5980 -33.5230') abre 'Detalles de la dirección' con 'La Florida, Región Metropolitana'.",
+    "La PDP de la app tampoco tiene Store Locator (además de la PLP): B2C-1165, DESCARTADO."
+  ]
+}

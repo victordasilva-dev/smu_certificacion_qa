@@ -1,0 +1,67 @@
+{
+  "flow": "home-slider-banners-titulo",
+  "last_updated": "2026-09-14T23:00:00Z",
+  "version": 2,
+  "description": "Slider de Banners con Título — variante T7 del carrusel de banners: imagen rectangular con su título debajo, pretítulo, texto y enlace 'Mostrar todo'. Es el objeto de la HU B2C-82. NO ESTÁ CONFIGURADA EN DEV.",
+  "source": {
+    "suite": "B2C-82",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-82 Test Cases.xlsx",
+    "test_cases": [],
+    "last_sync": "2026-09-14T21:30:00Z"
+  },
+  "navigation": {
+    "entry_url": "/",
+    "instancia_en_dev": "NINGUNA. El bloque 'Cada día, una ocasión', que el 2026-09-14 se tomó por T7, es la variante T4 del Carrusel de Banners (HU B2C-79): ver [[home-carrusel-banners]].",
+    "modals": []
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "LA FIRMA DE T7 ES EL TÍTULO POR ITEM, y es el único filtro estable: un Swiper del main sin ningún botón 'Agregar' —eso descarta los seis carruseles de producto— cuyos slides traen, dentro del mismo <a>, una imagen Y un párrafo de texto propio. Los banners de T1 llevan su leyenda dentro de la imagen y no tienen ese párrafo.",
+        "selector": "main .swiper sin button 'Agregar' y con a > img + a > p en todos sus slides",
+        "type": "css+contenido"
+      },
+      {
+        "description": "Cada item es un <a> con la imagen y su título dentro; el href es el destino configurado. El enlace envuelve a los dos, así que el clic en el título navega igual que el clic en la imagen (lo verifica D-003).",
+        "selector": ".swiper-slide a con img y p",
+        "type": "css"
+      },
+      {
+        "description": "Controles y barra: mismos aria-label que el resto de los carruseles del sitio. Sin indicadores (.swiper-pagination ausente).",
+        "selector": "button[aria-label='Anterior'] / button[aria-label='Siguiente'] / .swiper-scrollbar",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": [
+      "page.route sobre el nombre de archivo de la imagen de un item, abortándola, produce el error de carga que pide D-008. Hay que cortar por identificador de archivo y no por URL exacta —el <img> lleva srcset con varios anchos— y pedir revalidación de caché antes de recargar, o la imagen se sirve de caché y la ruta no se dispara (ver [[home-tabs-carrusel]])."
+    ]
+  },
+  "observations": [
+    "LA VARIANTE T7 NO ESTÁ CONFIGURADA EN DEV, y eso bloquea los 10 TC web de B2C-82. El bloque 'Cada día, una ocasión' se tomó por T7 el 2026-09-14 y es T4. Lo deciden tres datos: el componente se identifica en Page Designer como `tb-banner-t4-hp`; el CA5 de B2C-79 pide para T4 'Desktop: 4 a 5 banners' y 'Mobile: 1 + parcial', que es exactamente lo medido, mientras T7 pide 5-6 y 2 + parcial; y monta un Swiper con controles. Ver [[home-carrusel-banners]].",
+    "EL ERROR QUE HAY QUE NO REPETIR: se reatribuyó el componente a T7 por un solo rasgo cualitativo —cada item lleva un título debajo de la imagen, que la descripción de T4 no menciona— ignorando que las dos medidas que SÍ son criterio de aceptación coincidían con T4. Sobre esa premisa se certificó la suite y se abrieron dos bugs (B2C-781 y B2C-782) por 'mostrar menos items de los esperados', que no eran defectos sino la diferencia entre los criterios de dos variantes. Los dos quedaron descartados. Regla que sale de aquí: para decidir una variante, mandan los criterios MEDIBLES de la HU y el marcador del DOM, no el rasgo que suene característico.",
+    "QUÉ HARÍA FALTA PARA CERTIFICAR LA SUITE: configurar y publicar la variante T7 en el Home de DEV —imagen rectangular con su título debajo, item de unos 220x300, 5-6 visibles en Desktop y 2 + parcial en Mobile— o indicar un ambiente donde ya esté publicada. Sin eso ninguno de los 10 TC web es observable.",
+    "DÓNDE MIRAR PRIMERO CUANDO SE RETOME: `document.querySelectorAll('[data-variant]')` devuelve la variante declarada de los componentes que la publican, y `main div.component[id]` los delimita uno a uno con id semántico. Es la vía rápida para comprobar si T7 ya está publicada sin volver a censar el Home entero. Ver [[home-page-designer]]."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/SliderBannersTitulo.ts",
+    "class": "SliderBannersTitulo",
+    "nota": "El Page Object y el spec tests/B2C-82.spec.ts se conservan, escritos contra el componente equivocado. Cuando T7 se publique hay que revisar que `localizar()` apunte a ella y no a T4: su filtro actual —Swiper sin botón Agregar y con un párrafo propio por slide— encuentra justamente el bloque T4.",
+    "relacionados": [
+      "tests/pages/CarruselBanners.ts (las variantes T1/T2/T4; ver [[home-carrusel-banners]])"
+    ]
+  },
+  "history": [
+    {
+      "fecha": "2026-09-14",
+      "version_anterior": 1,
+      "que_cambio": "Se retira la afirmación de que 'Cada día, una ocasión' es la variante T7 y de que la suite quedó certificada con 3 Aprobado y 2 Rechazado. T7 no está configurada y los 10 TC web quedaron en Bloqueado.",
+      "por_que": "Los criterios de aceptación medibles de las dos historias y el id de Page Designer del componente sitúan ese bloque en T4 (HU B2C-79)."
+    }
+  ]
+}

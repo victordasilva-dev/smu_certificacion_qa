@@ -1,0 +1,106 @@
+{
+  "flow": "app-tapbar",
+  "description": "App nativa Unimarc: TapBar inferior y Floating Pill del carro (HU B2C-22).",
+  "last_updated": "2026-10-06T23:30:00Z",
+  "version": 1,
+  "source": {
+    "suite": "B2C-22",
+    "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-22 APP Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C22-APP-001",
+      "TC-B2C22-APP-004",
+      "TC-B2C22-APP-005",
+      "TC-B2C22-APP-006",
+      "TC-B2C22-APP-008",
+      "TC-B2C22-APP-010",
+      "TC-B2C22-APP-011",
+      "TC-B2C22-APP-013",
+      "TC-B2C22-APP-016",
+      "TC-B2C22-APP-018",
+      "TC-B2C22-APP-020"
+    ],
+    "last_sync": "2026-10-06T23:30:00Z"
+  },
+  "app": {
+    "ref": "app-modal-categorias.json#app",
+    "android_package": "com.smuapp.unimarc",
+    "build_certificado": "unimarc-v1.0.7.apk (sha256 6ee08555...)"
+  },
+  "platforms_explored": {
+    "android": {
+      "device": "Medium_Phone_API_36.1 (emulador, Android 16)",
+      "driver": "mobilecli local"
+    }
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Tabs (ver app-modal-categorias.json)",
+        "selector": "getByTestId('tab-<Nombre>')",
+        "type": "getByTestId"
+      },
+      {
+        "description": "Floating Pill del carro ('N unidades … Ir al carro')",
+        "selector": "getByTestId('cart-open')",
+        "type": "getByTestId"
+      },
+      {
+        "description": "Campo de búsqueda (pantalla del tab Buscar)",
+        "selector": "getByTestId('product-search')",
+        "type": "getByTestId"
+      },
+      {
+        "description": "Botón Iniciar sesión de Mi cuenta (invitado)",
+        "selector": "getByTestId('account-login')",
+        "type": "getByTestId"
+      },
+      {
+        "description": "Campo RUT del Login",
+        "selector": "getByTestId('login-rut')",
+        "type": "getByTestId"
+      },
+      {
+        "description": "Cerrar Login",
+        "selector": "getByRole('button', { name: 'Cerrar' })",
+        "type": "getByRole"
+      },
+      {
+        "description": "PLP (la distingue de la landing)",
+        "selector": "getByRole('button', { name: 'Abrir filtros y ordenamiento' })",
+        "type": "getByRole"
+      },
+      {
+        "description": "Agregar/quitar del carro en shelf",
+        "selector": "getByTestId('product-add-<sku>') / getByRole('button', { name: 'Quitar del carro' })",
+        "type": "getByTestId"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "page_objects": {
+    "TabBar": "tests-app/pages/TabBar.ts",
+    "HomeScreen": "tests-app/pages/HomeScreen.ts",
+    "ListadoScreen": "tests-app/pages/ListadoScreen.ts",
+    "BuscarScreen": "tests-app/pages/BuscarScreen.ts",
+    "MiCuentaScreen": "tests-app/pages/MiCuentaScreen.ts",
+    "LoginScreen": "tests-app/pages/LoginScreen.ts"
+  },
+  "observations": [
+    "TapBar v1.0.7 (invitado y con sesión): Home, Categorías, Buscar, Mis productos, Mi cuenta; todos con icono + texto. B2C-22 pide Inicio/Categorías/Búsqueda(campo con placeholder)/Favoritos/Inicio de sesión con solo Búsqueda con texto.",
+    "El árbol no expone el tab activo (sin selected): se mide por color, el activo pinta ~10% de píxeles rojos y los inactivos 0 (tests-app/support/pixeles.ts, sharp transitivo de mobilewright).",
+    "Splash: es una capa sobre el Home ya montado; el árbol trae la TapBar aunque no se vea. Se verifica por captura justo tras launchApp (~3 s de splash).",
+    "Invitado: el tab Mi cuenta abre la página Mi cuenta con 'Iniciar sesión' (account-login), no el Login directo.",
+    "Tab Buscar abre 'product-search' sin foco ni teclado (mInputShown=false).",
+    "'Mostrar todo' de 'Los más vendidos' abre la landing de Carnes (chips Todo + N2); un chip N2 abre la PLP. Home queda activo en ambos.",
+    "La app solo declara el scheme com.unimarcapp://oauthredirect: no hay deep link para llegar a una página 404/500.",
+    "'Ofertas' del header del Home no navega (v1.0.7).",
+    "2026-10-09 (Android v1.0.7, emulador): con sesion el tab de cuenta expone 'K, Mi cuenta' (inicial del nombre); sin sesion 'Mi cuenta'. Login: Mi cuenta → account-login → login-rut → login-submit → login-password → login-submit. Cerrar sesion: al final de Mi cuenta 'Cerrar sesion' → account-sign-out-confirm (la pagina queda desplazada: esperar que se vaya el saludo). INVITADO YA AGREGA AL CARRO SIN DIRECCION (antes abria 'Elige tu metodo de entrega'). Stepper de tarjeta: 'Quitar del carro'/'Quitar una unidad…' (sin testID) + product-increment-<sku>. La tarjeta de 675191 queda asomada a la derecha del carrusel 'Los mas vendidos': deslizar el carrusel desde una tarjeta centrada (desde el borde no mueve; desde la izquierda da 'negative coordinates'). Floating Pill (cart-open): 'N unidades, Te faltan $X para despacho GRATIS, Ir al carro'; no aparece en Mi cuenta del invitado (bug B2C-1163). La PDP no tiene TapBar (screen.goBack para volver). Carro 'Mi carro': minimo de compra $20.000 y 675191 tope 8 un. ($19.920): el checkout no se alcanza con ese SKU."
+  ],
+  "history": [],
+  "last_run": {
+    "suite": "B2C-22 APP",
+    "fecha": "2026-10-09",
+    "resultado": "Android: 6 Aprobado, 2 Rechazado (B2C-1124 comentado, B2C-1163 nuevo), 3 Bloqueado Data; iOS Pendiente"
+  }
+}

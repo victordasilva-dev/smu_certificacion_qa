@@ -1,0 +1,34 @@
+{
+  "flow": "app-navbar",
+  "description": "App nativa Unimarc: NavBar superior (método de entrega, botón Membresía, accesos directos) (HU B2C-23).",
+  "last_updated": "2026-10-06T23:59:00Z",
+  "version": 1,
+  "source": {
+    "suite": "B2C-23",
+    "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-23 APP Test Cases.xlsx",
+    "test_cases": ["TC-B2C23-APP-001", "TC-B2C23-APP-002", "TC-B2C23-APP-005", "TC-B2C23-APP-006", "TC-B2C23-APP-008", "TC-B2C23-APP-010"],
+    "last_sync": "2026-10-06T23:59:00Z"
+  },
+  "app": { "ref": "app-modal-categorias.json#app" },
+  "platforms_explored": { "android": { "device": "Medium_Phone_API_36.1 (emulador, Android 16)", "driver": "mobilecli local" } },
+  "selectors": {
+    "preferred": [
+      { "description": "Sección Método de entrega del NavBar (y=74, ancho completo)", "selector": "getByTestId('delivery-open')", "type": "getByTestId" },
+      { "description": "Botón Membresía", "selector": "getByText(/suscr[ií]bete a|ver mi suscripci[oó]n/i)", "type": "getByText" },
+      { "description": "Popup de método de entrega ('Elige tu método de entrega')", "selector": "getByText(/m[eé]todo de entrega/i)", "type": "getByText" },
+      { "description": "Cerrar popup", "selector": "getByText('✕')", "type": "getByText" }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "page_objects": { "NavBar": "tests-app/pages/NavBar.ts", "CategoriasModal.tapPrimeraN1": "tests-app/pages/CategoriasModal.ts" },
+  "observations": [
+    "Sin método: moto + 'Elige una forma de entrega' + chevron (v) a la derecha; B2C-23 pide icono '+'. El icono no está en el árbol: se mide en la captura (tests-app/support/pixeles.ts esIconoMas).",
+    "Accesos directos (content asset de BM): Ofertas, Marketplace, Locales y horarios, en la fila de 'Suscríbete a UNIMARC'. El nodo contenedor del chip está 18 px más arriba que sus textos: comparar por centro vertical.",
+    "El NavBar queda fijo arriba al hacer scroll (misma y).",
+    "PLP N1 (menú de categorías → título de sección N1): '<' Volver + '¿Qué estás buscando?' en vez del NavBar.",
+    "Splash: entra con fundido (primer cuadro blanco, logo desvaído). Detectarlo por píxeles rojizos (R − max(G,B) > 50) al centro + sin TapBar; el rojo de marca estricto falla.",
+    "Popup de método de entrega como invitado: 'Despacho a domicilio' / 'Retiro en tienda', 'Calle, dirección o lugar', 'Aún no tienes direcciones guardadas'."
+  ],
+  "history": []
+}

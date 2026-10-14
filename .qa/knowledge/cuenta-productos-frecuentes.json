@@ -1,0 +1,84 @@
+{
+  "flow": "cuenta-productos-frecuentes",
+  "last_updated": "2026-10-07T22:00:00Z",
+  "version": 2,
+  "description": "Página 'Mis productos frecuentes' (My Usuals) de Mi Cuenta: grilla de los productos que el cliente compra habitualmente, con el shelf estándar del sitio. Es el objeto de la HU B2C-85. Existe en DEV, pero casi toda la suite está bloqueada por data.",
+  "source": {
+    "suite": "B2C-85",
+    "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-85 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C85-D-001",
+      "TC-B2C85-D-002",
+      "TC-B2C85-D-003",
+      "TC-B2C85-D-004",
+      "TC-B2C85-D-005",
+      "TC-B2C85-D-007",
+      "TC-B2C85-D-008",
+      "TC-B2C85-D-009",
+      "TC-B2C85-M-002"
+    ],
+    "last_sync": "2026-10-07T22:00:00Z"
+  },
+  "navigation": {
+    "entry_url": "/account/my-usuals",
+    "instancia_en_dev": "La página existe y responde. Con sesión activa sirve el título 'Mis productos frecuentes' y la grilla de productos del usuario. Sin sesión, el sistema NO la sirve: redirige a la Home y abre el drawer de login.",
+    "auth_required": true,
+    "modals": [
+      "Drawer de inicio de sesión: se abre solo al entrar sin sesión. Es un `chakra-slide chakra-modal__content` anclado a la derecha, de 448 px en Desktop 1440x900, con 'Iniciar sesión o registrarse', campo de RUT y botón Continuar."
+    ]
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "El título de la página, que es también lo que confirma que cargó con sesión.",
+        "selector": "getByRole('heading', { name: /mis productos frecuentes/i })",
+        "type": "role"
+      },
+      {
+        "description": "El aviso que aparece cuando la cuenta no tiene ningún producto frecuente. Sirve para que un test COMPRUEBE su precondición en vez de darla por supuesta.",
+        "selector": "getByText(/todavía no tienes productos frecuentes/i)",
+        "type": "texto"
+      },
+      {
+        "description": "El drawer de login que se abre al entrar sin sesión. Se filtra por su propio contenido y no por el rol: el storefront usa role=dialog también para el mini carro y el modal de categorías, así que un getByRole('dialog') pelado da por bueno el panel equivocado.",
+        "selector": "[role=\"dialog\"] filtrado por tener el textbox de RUT",
+        "type": "css+contenido"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": [
+      "El caso del error al recuperar `c_myUsuals` (D-008) pediría interceptar la llamada que trae ese atributo del cliente. No se llegó a identificar el endpoint porque el caso está bloqueado por data antes de eso: hace falta la sesión para que la llamada llegue a producirse."
+    ]
+  },
+  "observations": [
+    "CORRIDA 2026-10-07: las filas ya declaran {COMPRADOR_USER}/{COMPRADOR_PASSWORD}. Esa cuenta tiene 3 frecuentes en c_myUsuals (000000000000027332-UN galletas con stock y sin marca en el nombre, 000000000000662457-UN carne molida con precio de membresía, 000000000000029403-KG tapapecho sin stock → 'Pronto disponible' + 'Ver similares'). c_myUsuals llega en el GET shopper-customers/.../customers/{id}?siteId; los productos, en shopper-products ...products?ids=. La grilla sigue el orden de c_myUsuals; 5 columnas en Desktop 1440, 2 en Mobile 390. Hay DOS <main> (#app-main y uno interno): usar #app-main para capturas. Las tarjetas tienen el corazón 'Quitar de favoritos' (no 'Guardar en favoritos'): MyUsualsPage.tarjetas ancla con aria-label*=favoritos. Carga (D-007): skeletons (10 placeholders), no ícono → Aprobado con nota por decisión del usuario. Error de customer 500 (D-008) → muestra el estado vacío 'Todavía no tienes productos frecuentes' sin Reintentar: bug B2C-1144. D-006/M-001 (>50) y D-010 (promos/cucardas) → Bloqueado Data con esta cuenta. Resultado: 8 Aprobado (con D-003), 1 Rechazado, 3 Bloqueado Data, 1 Fuera de alcance.",
+    "2026-10-07: tras la corrida de B2C-85 quedó 1 unidad de Galletas (000000000000027332-UN) en el carro de {COMPRADOR_USER} (residuo de D-005); se eliminó desde la app. Revisar el carro de la cuenta al terminar D-005.",
+    "EL ÚNICO CERTIFICABLE ES D-003, Y PRECISAMENTE PORQUE NO USA CUENTA: verifica qué pasa cuando un invitado entra a la URL. Es un patrón que conviene recordar al planificar una suite de área privada — los casos de 'sin sesión' suelen ser los únicos ejecutables mientras la planilla no declare las cuentas.",
+    "COMPORTAMIENTO SIN SESIÓN, MEDIDO: entrar a /account/my-usuals como invitado deja el navegador en la Home (`/`) y abre el drawer de login, un panel de 448 px anclado a la derecha con el campo de RUT ya visible. No hay pantalla intermedia ni /login: el storefront autentica por este drawer, no por el formulario de Salesforce (ver [[header-simplificado]]).",
+    "PARA NAVEGAR A UNA PÁGINA QUE REDIRIGE HAY QUE NO ESPERAR SU CONTENIDO: `MyUsualsPage.goto()` espera al título 'Mis productos frecuentes', que con un invitado no aparece nunca, así que agotaría el tiempo antes de que el test comprobara la redirección, que es justo lo que verifica. Por eso el POM expone `navegarSinEsperarContenido()`.",
+    "LA PÁGINA SÍ EXISTE EN EL AMBIENTE, cosa que ya había registrado [[home-page-designer]] al certificar B2C-29: con sesión responde con su título y lista los productos del usuario. Lo que faltaba entonces era el carrusel de frecuentes en el Home, que implementa otra historia (B2C-55). Esto NO se volvió a verificar en esta corrida a propósito: comprobarlo exigía iniciar sesión con una cuenta que la suite no declara, que es exactamente lo que estos casos no permiten.",
+    "QUÉ HARÍA FALTA PARA CERTIFICAR LA SUITE: que la planilla declare como token, en el Excel de data, las cuentas con cada estado que los casos piden —una con productos frecuentes, una con al menos un frecuente sin stock, una con más de 50 frecuentes, una con frecuentes en promoción con badges— y que las filas las referencien. Con eso once de los doce TC web pasan a ser ejecutables sin tocar una línea de código.",
+    "CORRIDA 2026-09-14 (B2C-85): 1 Aprobado, 11 Bloqueado y 1 Fuera de alcance sobre 13 TC.",
+    "2026-10-09: 11.223.344-K tiene 4 frecuentes (Galletas La Galleteria, Carne molida tartaro 250 g con precio socio, Tapapecho 'Pronto disponible', Carne molida tartaro 500 g con NxPrecio + Combina la promo). Ninguno con tachado ni cucarda de campana. D-006/M-001/D-010 siguen Bloqueado Data."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/HomePage.ts",
+    "class": "MyUsualsPage",
+    "nota": "Vive junto a HomePage porque nació al certificar el carrusel de frecuentes del Home. Expone el título, el aviso de 'sin productos frecuentes' —para que un test compruebe su precondición en vez de suponerla— y la navegación sin esperar contenido.",
+    "relacionados": [
+      "tests/pages/LoginModal.ts (el drawer de login; ver [[header-simplificado]])",
+      "tests/pages/ShelfProducto.ts (el componente de tarjeta que la grilla reutiliza; ver [[shelf-producto]])"
+    ]
+  },
+  "history": [],
+  "last_run": {
+    "suite": "B2C-85",
+    "fecha": "2026-10-09",
+    "resultado": "3 pendientes: 3 Bloqueado Data"
+  }
+}

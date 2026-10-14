@@ -1,0 +1,40 @@
+{
+  "flow": "completa-la-promo",
+  "version": 2,
+  "last_updated": "2026-10-07T22:30:00Z",
+  "description": "Promo 'Completa la promo' (B2C-63): toast 'Agrega N y ahorra más' / '¡Completaste la promo!' y barra de progreso al agregar/quitar unidades desde PLP, PDP, modal y Home. Suite 100% Bloqueado Data al 2026-09-28: no se llegó a ver el toast.",
+  "source": {
+    "suite": "B2C-63",
+    "hu": "B2C-63",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-63 Test cases.xlsx",
+    "test_cases": [],
+    "last_sync": "2026-09-28T20:45:15Z"
+  },
+  "navigation": {
+    "entry_url": "/product/000000000664214001-UN (SKU_PROM_2x1)",
+    "modals": [
+      "'Elige tu método de entrega' al pulsar Agregar como invitado"
+    ]
+  },
+  "selectors": {
+    "preferred": [],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": []
+  },
+  "observations": [
+    "CORRIDA 2026-10-07 (B2C-63 SP1, 10 TC Desktop pendientes): los 10 a Bloqueado Data sin ejecutar. {SKU_PROM_2X1} (= {SKU_PROM_2x1} = 664214001, Lay's artesanas 150 g en despensa_coctel-y-snacks_papas-fritas) sigue con 'Combina la promo' y precio '2 por 1 a $NaN', NO 'Completa la promo'; {SKU_PROM_NxM} (641229002, Lay's Stax 134 g) esta sin stock ('Pronto disponible' + 'Ver similares'). Ademas las filas piden invitado con direccion seleccionada y no declaran direccion. La suite queda 38/38 Bloqueado Data; la HU esta en 'HU TEST CASES OBSERVADOS' y no se movio.",
+    "TOKEN MAL ESCRITO: la planilla de B2C-63 declara {SKU_PROM_2X1}; el Excel de data lo tiene como {SKU_PROM_2x1} (x minuscula). El read no lo resuelve (sensible a mayusculas). QA acepto tomarlo como el mismo.",
+    "{SKU_PROM_2x1} = 000000000664214001-UN, Papas fritas Lay's artesanas sal de mar 150 g (Despensa > Coctel y snacks > Papas fritas). Tiene mecanica 'Combina la promo' (boton del modal de B2C-74), NO 'Completa la promo'. Su PDP muestra el precio de la promo como '2 por 1 a $NaN' (posible defecto de precio, no cubierto por ningun TC).",
+    "COMO INVITADO 'Agregar' abre 'Elige tu método de entrega' y no agrega: todo TC de invitado que agregue al carro necesita una direccion declarada.",
+    "CON {COMPRADOR_USER} (direccion Calle Uno 23, La Florida) el SKU aparece 'Pronto disponible' + 'Ver similares': sin stock para esa direccion.",
+    "CUIDADO EN LA PDP: el primer 'Agregar' de #app-main, cuando el producto principal esta sin stock, es el del carrusel 'Productos similares'. En la exploracion eso agrego una salchicha San Jorge al carro de la cuenta; se quito con 'Quitar del carro' y se verifico el carro en 0 tras recargar."
+  ],
+  "page_objects": {
+    "exists": false
+  },
+  "history": []
+}

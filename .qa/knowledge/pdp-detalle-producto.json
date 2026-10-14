@@ -1,0 +1,185 @@
+{
+  "flow": "pdp-detalle-producto",
+  "last_updated": "2026-10-07T18:00:00Z",
+  "version": 3,
+  "description": "Pagina de detalle de producto (PDP) del storefront: breadcrumb, galeria, bloque de info/precios/botones, tabs y estados de carga/error/404. Es el objeto de la HU B2C-31.",
+  "source": {
+    "suite": "B2C-31",
+    "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-31 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C31-D-001",
+      "TC-B2C31-D-002",
+      "TC-B2C31-D-004",
+      "TC-B2C31-D-005"
+    ],
+    "last_sync": "2026-09-10T20:10:00Z"
+  },
+  "navigation": {
+    "entry_url": "/product/<SKU>",
+    "origenes": [
+      "PLP: /category/<slug> — las tarjetas NO son enlaces; el nombre del producto es un <button> que navega por JS",
+      "carrusel 'Productos similares' de otra PDP — mismo patron de <button>"
+    ],
+    "breadcrumbs": [
+      "<N1>",
+      "<N2>",
+      "<N3>",
+      "<nombre del producto>"
+    ],
+    "modals": [
+      "consentimiento de cookies ([data-testid='cookie-consent-banner'])"
+    ]
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Raiz de la PDP",
+        "selector": "[data-testid='unimarc-pdp']",
+        "type": "testid"
+      },
+      {
+        "description": "Bloque principal de la PDP (breadcrumb + galeria + info + tabs)",
+        "selector": "[data-testid='unimarc-product-core']",
+        "type": "testid"
+      },
+      {
+        "description": "Cada nivel de categoria del breadcrumb",
+        "selector": "[data-testid='sf-crumb-item']",
+        "type": "testid"
+      },
+      {
+        "description": "Nav del breadcrumb (no incluye el boton 'Inicio' ni el nombre del producto, que son hermanos)",
+        "selector": "nav[aria-label='breadcrumb']",
+        "type": "css"
+      },
+      {
+        "description": "Miniatura de la galeria (una por imagen del producto)",
+        "selector": "[data-testid='product-gallery-thumb']",
+        "type": "testid"
+      },
+      {
+        "description": "Imagen principal de la galeria (Desktop)",
+        "selector": "[data-testid='product-gallery-main']",
+        "type": "testid"
+      },
+      {
+        "description": "Zoom de la galeria en Desktop",
+        "selector": "[data-testid='product-gallery-zoom-in'] / [data-testid='product-gallery-zoom-out']",
+        "type": "testid"
+      },
+      {
+        "description": "Imagen principal de la galeria en Mobile",
+        "selector": "[data-testid='product-gallery-main-mobile']",
+        "type": "testid"
+      },
+      {
+        "description": "Marca del producto: es un <a> a una busqueda, no a un filtro de marca",
+        "selector": "[data-testid='unimarc-product-core'] a[href^='/search?q=']",
+        "type": "css"
+      },
+      {
+        "description": "Boton Agregar del bloque principal",
+        "selector": "getByRole('button', { name: 'Agregar' })",
+        "type": "getByRole"
+      },
+      {
+        "description": "Acciones del bloque principal",
+        "selector": "button[aria-label='Guardar en favoritos'] · button[aria-label='Compartir'] · button con texto 'Guardar en listas'",
+        "type": "css"
+      },
+      {
+        "description": "Tabs de la PDP",
+        "selector": "getByRole('tab', { name: /productos similares|informaci[oó]n/i })",
+        "type": "getByRole"
+      },
+      {
+        "description": "Producto en la PLP y en los carruseles: el nombre es un boton 'Marca | Nombre'",
+        "selector": "getByRole('button', { name: '<Marca> | <Nombre>' })",
+        "type": "getByRole"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/product/shopper-products/v1/organizations/f_ecom_bmkg_dev/products/<SKU>?expand=availability,promotions,options,images,prices,variations,set_products,bundled_products,page_meta_tags",
+        "trigger": "navegacion SPA a la PDP; es la carga del producto"
+      },
+      {
+        "method": "GET",
+        "path": ".../products/<SKU>?expand=recommendations",
+        "trigger": "carga de la PDP"
+      },
+      {
+        "method": "GET",
+        "path": ".../products?ids=<lista>",
+        "trigger": "hidratacion de las tarjetas del carrusel"
+      },
+      {
+        "method": "POST",
+        "path": "https://api.cquotient.com/v3/personalization/recs/aaij-MobileFirst/product-to-product-einstein",
+        "trigger": "alimenta 'Productos similares'"
+      },
+      {
+        "method": "POST",
+        "path": "https://api.cquotient.com/v3/personalization/recs/aaij-MobileFirst/complete-the-set",
+        "trigger": "alimentaria 'Van bien juntos'; en DEV devuelve recs: []"
+      }
+    ],
+    "intercepts_useful": [
+      "page.route sobre '**/shopper-products/v1/organizations/*/products/*expand=availability*' con status 500 fuerza el fallo de carga del producto (TC-B2C31-D-002)",
+      "El mismo route con un delay antes de continuar deja ver el skeleton de carga"
+    ]
+  },
+  "observations": [
+    "CORRIDA MOBILE 2026-10-07 (planilla SP1, webkit 390x844, 1 reintento, 3 workers --fully-parallel): 17 Aprobado, 1 Rechazado (M-005: \"Recomendados para ti\" no aparece con sesion -> bug B2C-1137), 10 Bloqueado Data. La planilla trae los tokens en la columna Descripcion (columnas intercambiadas).",
+    "MOBILE: en la PLP y la SRP el nombre del producto es un <a href=\"/<slug>/<SKU>.html\"> truncado con \"…\", no el <button> de Desktop (PLPPage.enlacesDeProducto / abrirProductoMobile). /product/<SKU> redirige a la URL canonica .html.",
+    "MOBILE: el \"Agregar\" visible puede ser el de la barra sticky inferior; para medir el orden de secciones el bloque de informacion se ancla en la marca (a[href^=\"/search\"]).",
+    "COMPARTIR en Mobile: webkit de Playwright no trae navigator.share y la PDP cae a su dialogo propio \"Compartir productos\" (WhatsApp / correo / Copiar enlace). Con navigator.share presente la PDP lo invoca con {title, url: <slug>/<SKU>.html} (PDPPage.simularWebShare).",
+    "FAVORITOS: el corazon cambia su aria-label a \"Quitar de favoritos\" (aria-pressed=true, fill rgb(218,41,28)); la lista vive en /account/mis-favoritos (no /account/favorites). Al quitarlo sale el toast \"Ya no es tu favorito\" con Deshacer.",
+    "Guardar en listas (logueado) abre el dialog \"Agregar como lista\" anclado abajo (y=127, alto 717 en 844). Invitado sin metodo de entrega: Agregar abre \"Elige tu metodo de entrega\" y no suma al carro.",
+    "DATA EN DEV: {SKU_PATROCINADO} 642688 abre una PDP sin ficha (sin precio/imagen/Agregar); {SKU_CUCARDA} 662457 tiene c_cucardaActivo=false; {SKU_VALID_001} no tiene descripcion (la seccion muestra solo \"sku: ...\"). NxPrecio se pinta \"Lleva N por $X\" (aceptado como X×$XXXX).",
+    "SKELETON con red lenta (route con 600 ms por peticion): se registraron hasta 6 nodos de skeleton con la ficha ya montada (PDPPage.registrarSkeletons via addInitScript+MutationObserver).",
+    "EN LA PRIMERA CARGA (navegacion directa por URL) el producto viene por SSR: no hay ninguna llamada cliente a products/<SKU>. La llamada solo aparece en navegacion SPA desde la PLP o desde un carrusel. Un mock de la API solo puede forzar el fallo en el segundo caso.",
+    "DEFECTO OBSERVADO (CA1): el breadcrumb NO depende del origen. El mismo producto (000000000000671182-UN) abierto desde su PLP y desde el carrusel 'Productos similares' de otra PDP muestra el mismo breadcrumb completo 'Quesos y Fiambres > Fiambres y embutidos > Parrilleros'. La HU pide breadcrumb simplificado cuando se llega desde un carrusel.",
+    "DEFECTO OBSERVADO (CA21): si la carga del producto falla, la PDP no muestra ninguna pantalla de error, y no es cuestion de esperar. El front reintenta la consulta en una rafaga densa (~200 peticiones en 2,6 s, sin espera entre intentos) y despues deja de reintentar; a partir de ahi el area de contenido queda vacia de forma permanente. Verificado con 45 s de espera + 60 s de observacion en tres intentos, y por separado con mas de tres minutos de observacion continua: no aparece \"Tuvimos un problema al cargar tu producto\", ni codigo de error, ni Reintentar / Ir a inicio. Bug B2C-761.",
+    "La 404 de producto SI existe: 'El producto que buscas no existe o ya no esta disponible' + 'Puede que el enlace este incorrecto o que ya no exista.' + boton 'Ir a la pagina de Inicio'. Redirige sola al Home ~3 s despues de renderizarse (medido: 4.2 s desde el inicio de la navegacion, con la pantalla montada a ~1.2 s).",
+    "'Van bien juntos' y 'Recomendados para ti' NO se renderizan en DEV: complete-the-set responde {recs:[]}. 'Productos similares' SI se renderiza y es el tab activo por defecto — esto CAMBIO respecto de la exploracion de B2C-6 del 2026-09-10, que no veia ningun carrusel. Ver [[pdp-carruseles-recomendacion]].",
+    "El tab 'Informacion' muestra las pills de secciones con contenido. En los productos de la PLP de vacuno solo aparece 'Descripcion', con el texto 'sku: <SKU>'.",
+    "La marca enlaza a /search?q=<marca>, es decir una busqueda por el nombre de la marca, no un refinamiento por marca del SRP.",
+    "La cucarda (ej. 'Nuevo') se muestra sobre el nombre del producto y es unica. El rombo 💎 acompana al precio de miembro y no es una cucarda: no se cuenta como tal.",
+    "Las tarjetas de producto de la PLP y de los carruseles no son <a>: son <button> con el texto 'Marca | Nombre'. Un locator por a[href*='/product/'] no encuentra nada.",
+    "La PDP no expone h1/h2: el nombre del producto es un <p> dentro de unimarc-product-core y los titulos de carrusel no existen en DEV. Contar secciones por encabezados no funciona aqui.",
+    "El breadcrumb se pinta por niveles: leerlo en cuanto existe unimarc-product-core devuelve una ruta a medias, sin dar error. En TC-B2C31-D-001 eso hacia que dos lecturas del mismo producto salieran distintas y que un reintento diera por bueno el defecto que la primera pasada habia detectado. PDPPage.rutaDeBreadcrumbEstable() espera a que dos lecturas seguidas coincidan.",
+    "unimarc-product-core envuelve tambien los tabs y el carrusel: contar precios o cucardas sobre ese contenedor suma los de las tarjetas del carrusel (7 precios donde el producto tiene 1). PDPPage.datosDelProducto() excluye los subarboles de [role=tablist] y [role=tabpanel] antes de contar.",
+    "EL BLOQUE DE PRECIOS TIENE FLUJO PROPIO: sus selectores (precio lista, oferta con 'Antes' tachado y badge de %, precio de socio, compuestos NxM/NxPrecio, PPUM por precio y el boton 'Combina la promo' con su drawer) viven en [[pdp-bloque-de-precios]], explorado para B2C-51. No se duplican aqui.",
+    "RE-EJECUCION 2026-09-17 (planilla desde Ejecutados, a peticion del usuario): 3 Aprobado, 1 Rechazado y 7 Bloqueado sobre 11 TC. Antes eran 2 Aprobado, 2 Rechazado y 7 Bloqueado.",
+    "CA1 CORREGIDO, y es lo que aprueba TC-B2C31-D-001: la tabla 'Origen -> Breadcrumb' declara hoy un unico destino, 'PLP / SRP / Coleccion -> Breadcrumb completo: Inicio > N1 > N2 (> N3 si aplica) > Nombre del producto'. La fila que pedia ruta simplificada desde un carrusel ya no existe, y el bug B2C-760 figura DESCARTADO. El producto no cambio: el breadcrumb sigue siendo el mismo por los dos origenes.",
+    "EL 'Inicio' DEL BREADCRUMB ES UN ICONO SIN TEXTO: un button[aria-label='Inicio'] hermano del nav, igual que el <p> del nombre del producto. No aparece en el innerText del nav ni entre los sf-crumb-item, asi que leer el breadcrumb como cadena hace concluir que la estructura arranca en la categoria N1 y que falta el primer nivel que pide CA1. Vive en PDPPage.inicioDelBreadcrumb.",
+    "EL DEFECTO DE B2C-761 SIGUE VIVO al 2026-09-17 y se reprodujo identico en 3 de 3 intentos: ante un fallo de carga la PDP queda vacia, sin mensaje ni botones. El issue esta en PR REGISTRADO, asi que la correccion no llego todavia a DEV. No se abrio bug nuevo: se comento la reproduccion en el existente.",
+    "'VAN BIEN JUNTOS' SIGUE SIN RENDERIZARSE al 2026-09-17, incluso recorriendo la PDP hasta el final: la pagina termina en los tabs 'Productos similares' e 'Informacion'. TC-B2C31-D-009 sigue Bloqueado por la misma causa ambiental, y su evidencia es la captura del final de la PDP.",
+    "LOS SIETE BLOQUEOS SE MANTIENEN porque la columna 'Test data' de esos TC no cambio: siguen declarando solo la URL base y la URL de categoria, y los casos necesitan productos concretos (con varias imagenes, sin imagen valida, con tres precios, pesable, sin stock, con cartlimit, con promo combinable) o una cuenta logueada que nadie declara. Seis son de data no declarada; el septimo, D-009, es ambiental.",
+    "2026-10-09 (B2C-31 M re-corrida con {DIRECCION_DESPACHO} = Camino La Fuente 1589 Las Condes como invitado): stepper de la PDP = 'En carro' + 'N un.' con botones 'Quitar del carro' y 'Aumentar cantidad'; el '+' se deshabilita un instante mientras procesa cada clic (no confundir con el tope). {SKU_CAR_LIMIT} 626717 tope 5 con 'Usted ha agregado la cantidad maxima de productos'. {SKU_STOCK_LIMITADO} 638426003 acepta >60 sin tope (no sirve para stock bajo/FOMO). {SKU_SIN_STOCK} 029403-KG tiene stock con esa direccion ('Ultimas unidades'); {SKU_PROM_NxM} 641229002 'Pronto disponible'. {SKU_VALID_001} ya tiene descripcion. Tras navegar con goto el header tarda en restaurar la direccion del invitado: esperar 'Desde:' antes de Agregar.",
+    "2026-10-12 (B2C-31 M pendientes, invitado con {DIRECCION_DESPACHO}): {SKU_SIN_STOCK} 029403-KG ahora 'Pronto disponible' sin Agregar en la ficha (M-026 Aprobado); {SKU_STOCK_LIMITADO} 638426003 muestra 'Últimas unidades' y el '+' se deshabilita a las 5 un. (M-027/M-029 Aprobado); {SKU_PROM_NxM} 641229002 con stock pero promo '3 por 2' con 'Combina la promo' (no Completa la promo) → M-049 Bloqueado Data; {SKU_PATROCINADO} 642688 sigue sin ficha y {SKU_CUCARDA} 662457 sigue c_cucardaActivo=false. TRAMPA: PDPPage.agregarVisible (core) también encuentra el 'Agregar' de las tarjetas del carrusel de similares; para afirmar 'sin Agregar' usar textosDeLaFicha(). POM: PDPPage.prontoDisponible / ultimasUnidades."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/PDPPage.ts, tests/pages/PLPPage.ts",
+    "class": "PDPPage, PLPPage"
+  },
+  "history": [
+    {
+      "version": 1,
+      "changed_at": "2026-09-17T00:00:00Z",
+      "change": "Hasta esta fecha el knowledge registraba como DEFECTO (CA1) que el breadcrumb no cambiara segun el origen. El criterio cambio: la tabla 'Origen -> Breadcrumb' del CA1 ya no trae la fila del carrusel con ruta simplificada, y B2C-760 quedo DESCARTADO. Ya no es un defecto."
+    }
+  ],
+  "last_run": {
+    "suite": "B2C-31",
+    "fecha": "2026-10-09",
+    "resultado": "10 pendientes Mobile: 4 Aprobado (M-023, M-024, M-028, M-035), 6 Bloqueado Data"
+  }
+}

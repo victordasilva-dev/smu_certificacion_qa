@@ -1,0 +1,222 @@
+{
+  "flow": "buscador-modal",
+  "last_updated": "2026-10-07T23:30:00Z",
+  "version": 3,
+  "source": {
+    "suite": "B2C-100",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-100 Test Cases.xlsx",
+    "test_cases": [
+      "TC-100-D-001 .. TC-100-D-026",
+      "TC-100-M-001 .. TC-100-M-026",
+      "TC-100-D-027, TC-100-M-027 (2026-10-06)"
+    ],
+    "last_sync": "2026-09-17T00:00:00Z"
+  },
+  "navigation": {
+    "entry_url": "/",
+    "exit_url": "/search?q=<termino>",
+    "redirects": [
+      {
+        "from": "modal",
+        "to": "/search?q=<chip>",
+        "condition": "clic en cualquier chip (recientes o mas buscado)"
+      },
+      {
+        "from": "modal",
+        "to": "/search?q=<termino>",
+        "condition": "clic en 'Ver todos' del panel de resultados"
+      },
+      {
+        "from": "modal",
+        "to": "/product/<sku>",
+        "condition": "clic en imagen o nombre de 'Lo ultimo que viste'"
+      }
+    ],
+    "paginas_donde_abre": [
+      "Home",
+      "SRP",
+      "PLP",
+      "PDP"
+    ],
+    "modals": [
+      "panel del buscador (Desktop)",
+      "overlay a pantalla completa en chakra-portal (Mobile)"
+    ],
+    "iframes": []
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Caja de texto del buscador. En Desktop vive en el header; en Mobile, al abrirse, el input SE MUEVE del header al portal, asi que un locator anclado a 'header' deja de encontrarlo",
+        "selector": "page.getByRole('textbox', { name: '¿Qué estás buscando?' })",
+        "type": "getByRole"
+      },
+      {
+        "description": "DESKTOP — panel del buscador: hermano inmediato del form del header. Es la unica referencia estable: no hay data-testid ni role y las clases son de Emotion (css-1e7hb5a), que cambian con cada build",
+        "selector": "page.locator('header form + div')",
+        "type": "css"
+      },
+      {
+        "description": "MOBILE — overlay a pantalla completa: div fijo de 390x844 dentro de .chakra-portal que contiene el input",
+        "selector": "page.locator('.chakra-portal > div').filter({ has: input })",
+        "type": "css+filter"
+      },
+      {
+        "description": "Cuerpo del modal: unico hijo del panel en Desktop, segundo hijo del overlay en Mobile. En ambos casos su clase es css-1iyvruu y sus hijos son las secciones",
+        "selector": "panel.locator('> div') / overlay.locator('> div').nth(1)",
+        "type": "css"
+      },
+      {
+        "description": "Seccion del modo por defecto: hijo directo del cuerpo que contiene el titulo. Cada seccion es [cabecera, contenido]; la cabecera lleva el emoji + el <p> del titulo y, cuando aplica, el boton 'Limpiar'",
+        "selector": "cuerpo.locator('> div').filter({ hasText: /Tus búsquedas recientes|Lo último que viste|Lo más buscado/ })",
+        "type": "css+filter"
+      },
+      {
+        "description": "Chips de una seccion (terminos recientes / mas buscados): botones hijos directos del contenido de la seccion",
+        "selector": "seccion.locator('> div').last().locator('> button')",
+        "type": "css"
+      },
+      {
+        "description": "Boton 'Limpiar' de una seccion: BUTTON hijo directo de la cabecera de la seccion",
+        "selector": "seccion.getByRole('button', { name: 'Limpiar' })",
+        "type": "getByRole"
+      },
+      {
+        "description": "MOBILE — boton 'Cancelar' a la derecha del buscador dentro del overlay",
+        "selector": "overlay.getByRole('button', { name: 'Cancelar' })",
+        "type": "getByRole"
+      },
+      {
+        "description": "Titulo del panel de resultados: primer <p> del cuerpo. Lleva el termino entre comillas tipograficas y un <span> con 'N productos'",
+        "selector": "cuerpo.locator('p').first()",
+        "type": "css"
+      },
+      {
+        "description": "Boton 'Ver todos' del panel de resultados (en la cabecera, junto al titulo)",
+        "selector": "cuerpo.getByRole('button', { name: 'Ver todos' })",
+        "type": "getByRole"
+      },
+      {
+        "description": "Chips de autocompletado del panel de resultados: botones con texto que no son 'Ver todos' ni las flechas (las flechas solo llevan svg)",
+        "selector": "cuerpo.locator('> div > button').filter({ hasNotText: 'Ver todos' })",
+        "type": "css+filter"
+      },
+      {
+        "description": "Tarjetas de producto del carrusel de resultados: el ancla es el boton de favoritos, igual que en el shelf de la PLP",
+        "selector": "cuerpo.locator('div:has(> div > button[aria-label=\"Guardar en favoritos\"])')",
+        "type": "css"
+      },
+      {
+        "description": "Item de 'Lo ultimo que viste': BUTTON con [IMG, P]. El src de la imagen lleva el SKU, que es lo que permite cruzar el item con la PDP a la que redirige",
+        "selector": "seccion.locator('> div').last().locator('> button')",
+        "type": "css"
+      },
+      {
+        "description": "Boton de la cuenta en el header (logueado): Desktop lleva el texto 'Hola, <nombre>', Mobile solo las iniciales y el saludo en el aria-label",
+        "selector": "header button[aria-label^=\"Hola,\"], header button:has-text(\"Hola,\")",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "auth": {
+    "roles": [
+      "guest",
+      "comprador"
+    ],
+    "login": "modal del header ('Ingresa aquí' → RUT → Continuar → contraseña → Ingresar). Ver [[header-simplificado]] y LoginModal.ts",
+    "storage_state_paths": {},
+    "observacion": "El historial del buscador (recientes y vistos) es de SESION de pestaña, no de cuenta: vive en sessionStorage ('recent-search-key') y un Guest tambien lo acumula. En Desktop el cierre de sesion lo borra; en Mobile NO (ver observations), y esa diferencia es el defecto que rechaza TC-100-M-003."
+  },
+  "waits": {
+    "ajax_calls": [
+      "GET search-suggestions?q=<termino> — se dispara al 3er caracter",
+      "GET product-search?q=<termino>&refine=htype=product&limit=4 — el carrusel del modal"
+    ],
+    "loading_indicators": [
+      "Skeleton loader: el panel queda SIN TEXTO y con ~8 elementos con animacion CSS activa durante ~350 ms. NO usa la clase chakra-skeleton, asi que se detecta por getComputedStyle(el).animationName !== 'none' y innerText vacio. Es tan breve que un polling desde fuera de la pagina no lo alcanza: hay que instalar un muestreador in-page ANTES de escribir"
+    ],
+    "debounce": [
+      "~300 ms desde la ultima tecla. Escribir antes de que venza reinicia el timer: al teclear 'lech' de corrido solo sale una peticion, la de 'lech'"
+    ],
+    "animations": [
+      "Apertura del panel: transicion corta de Chakra"
+    ]
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/search/shopper-search/v1/organizations/<org>/search-suggestions?q=<t>",
+        "trigger": "3er caracter + debounce"
+      },
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/search/shopper-search/v1/organizations/<org>/product-search?q=<t>&refine=htype%3Dproduct&limit=4",
+        "trigger": "3er caracter + debounce"
+      },
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/experience/shopper-experience/v1/organizations/<org>/contents/search-most-searched",
+        "trigger": "apertura del modal",
+        "estado": "404 en DEV"
+      }
+    ],
+    "intercepts_useful": [
+      "Contar las peticiones a search-suggestions por termino es como se certifica el debounce (TC-100-D-017 / M-017) sin depender de timings"
+    ]
+  },
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/BuscadorModal.ts",
+    "class": "BuscadorModal",
+    "relacionados": [
+      "tests/pages/MenuCuenta.ts (cierre de sesion en los dos form-factors)"
+    ]
+  },
+  "observations": [
+    "El modal SOLO se abre haciendo clic en la caja de texto. Escribir con el input enfocado pero el panel cerrado no lo reabre, y eso hace pensar que la funcion no existe: durante la exploracion produjo un falso 'con 0 resultados no se renderiza el modal' que se cayo al repetirlo desde una pagina recien cargada. Cualquier verificacion del panel empieza por el clic.",
+    "Con un termino sin resultados (>=3 chars) el panel SI se renderiza: muestra 'Resultado para “Xkq” 0 productos' y ninguna otra seccion.",
+    "El titulo real dice 'Resultado para' en SINGULAR y capitaliza el termino ('Leche' aunque se haya escrito 'leche'); la planilla lo cita como 'Resultados para'. Los locators usan /resultados? para/i para no romperse por esa diferencia de copy.",
+    "La seccion 'Lo mas buscado' se renderiza con 6 chips fijos (leche, arroz, pan, aceite, azucar, huevos) AUNQUE su content asset search-most-searched responda 404 en DEV: hay un fallback en el front.",
+    "'Lo ultimo que viste' ordena en cronologico inverso (el ultimo PDP visitado primero) y solo aparece para usuario logueado; un Guest con busquedas ve 'Tus busquedas recientes' + 'Lo mas buscado' y nunca 'Lo ultimo que viste'.",
+    "MOBILE — no existe tabbar inferior en la web: no hay ningun elemento fixed al pie del viewport en 390x844. El buscador solo esta en el header. Es lo que rechaza el TC-100-M-001.",
+    "MOBILE — el carrusel de productos del panel de resultados NO es deslizable: es un grid de 2 columnas x 2 filas (display:grid, grid-template-columns: 169px 169px, overflow-x visible, scrollWidth == clientWidth). Es lo que rechaza TC-100-M-018 y TC-100-M-023.",
+    "DESKTOP — el carrusel si desliza (scrollWidth 692 > clientWidth 558) y tiene dos flechas; la flecha derecha avanza el scrollLeft.",
+    "maxlength del input = 100, declarado en el atributo. El campo corta el input 101 sin mostrar mensaje de error.",
+    "Escape cierra el panel, limpia el campo y deja al usuario en la misma pagina. En Mobile el equivalente es el boton 'Cancelar' del overlay.",
+    "El historial de busquedas recientes vive en sessionStorage bajo la clave 'recent-search-key' (un array de terminos). No esta en localStorage ni en el servidor: por eso sobrevive a recargas y navegaciones de la pestaña, y muere al cerrarla.",
+    "DESKTOP — al cerrar sesion, 'recent-search-key' se borra (queda null). MOBILE — no: el cierre de sesion deja el array intacto y los terminos de la sesion anterior reaparecen al volver a entrar. Es lo que rechaza el TC-100-M-003, y la diferencia esta en el punto de salida: en Desktop el saludo del header abre un dialogo con 'Cerrar sesion' dentro; en Mobile ese mismo boton NAVEGA a /account y el cierre se hace desde el pie de esa pagina.",
+    "El saludo del header no se rotula igual en los dos form-factors: Desktop lleva el texto 'Hola, <nombre>' y Mobile solo las iniciales ('KH'), con el saludo en el aria-label. Un locator por texto encuentra uno y no el otro.",
+    "El panel abre al ENFOCAR el campo, no al pulsarlo. Si el foco ya esta ahi —queda asi tras enviar una busqueda con Enter— el clic no dispara nada; hay que soltar el foco antes. Este detalle costo una corrida entera de diagnostico.",
+    "El contenedor del carrusel tambien reporta scrollWidth > clientWidth, pero su scrollLeft se queda en 0: quien scrollea es un hijo con overflow-x auto/scroll. Medir sobre el contenedor hace concluir que la flecha no mueve el carrusel cuando en la captura se ve desplazado.",
+    {
+      "date": "2026-10-06",
+      "note": "Las busquedas recientes viven en el estado del front: una recarga completa (page.goto) las descarta. Para volver al Home conservandolas se usa el logo del header (clic), no goto(\"/\"). D/M-027 fallaron por esto en la primera corrida (falso negativo del script)."
+    },
+    {
+      "date": "2026-10-06",
+      "note": "Al borrar desde \"leche\" hasta \"le\" no sale ninguna consulta search-suggestions con <3 caracteres, no hay skeleton y vuelve el contenido por defecto (recientes + mas buscado)."
+    },
+    {
+      "date": "2026-10-06",
+      "note": "Mobile 390x844 sigue sin tabbar inferior (B2C-804 DESCARTADO el 2026-09-25). El usuario decidio dejar TC-100-M-001 Rechazado sin abrir bug nuevo."
+    },
+    {
+      "date": "2026-10-06",
+      "note": "En la PLP (/category/...) y en el Home el nombre del shelf es un <a>, no el button \"Marca | Nombre\" de la SRP: ShelfProducto.nombre no lo encuentra; entrar a la PDP por la imagen. URL de PDP: /<slug>/<sku>.html (no /product/)."
+    },
+    {
+      "date": "2026-10-07",
+      "note": "SP1 (B2C-100 WEB): {SEARCH_1A3_PRODUCTOS}='marraqueta' → 2 productos (carrusel de 2, sin flechas ni 'Ver todos', sin celdas vacías). {SEARCH_SIN_SUGERENCIAS}='papaya' → 0 productos y 0 sugerencias. El modal NO muestra como chip la sugerencia idéntica al término escrito (backend de 'marraqueta' devuelve solo 'marraqueta' → 0 chips; 'marraq' → chip 'marraqueta'; los chips de 'lech' son categorías: 'Leches blancas'...). Por eso {SEARCH_1A3_SUGERENCIAS}='marraqueta' no sirve para D/M-025 (Bloqueado Data). En la SRP el nombre del shelf ya no es el botón 'Marca | Nombre': visitarPDPs entra por el enlace .html. D-002 Aprobado visitando PDPs antes de buscar y volviendo al Home con el logo (las recientes mueren con page.goto)."
+    },
+    "2026-10-09 (B2C-101 D/M-002, D/M-005 con tokens): en DEV 'arroz', 'arroz integral' y 'arroz integrl' traen los mismos 2 productos (ningun arroz integral); 'papas fritas marco polo' y 'marco polo' traen 1 solo producto. Los 4 quedaron Bloqueado Data."
+  ],
+  "history": [],
+  "last_run": {
+    "suite": "B2C-101 WEB",
+    "fecha": "2026-10-09",
+    "resultado": "4 pendientes: 4 Bloqueado Data"
+  }
+}

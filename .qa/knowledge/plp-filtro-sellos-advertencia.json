@@ -1,0 +1,101 @@
+{
+  "flow": "plp-filtro-sellos-advertencia",
+  "last_updated": "2026-09-17T00:00:00Z",
+  "version": 1,
+  "description": "Filtro 'Sellos de advertencia' (Ok to Shop) del panel de filtros de la PLP/SRP. Es el objeto de la HU B2C-103. El panel que lo contendria esta modelado en [[plp-panel-filtros]]; aqui solo vive lo propio de este filtro.",
+  "source": {
+    "suite": "B2C-103",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-103 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C103-D-001",
+      "TC-B2C103-D-002",
+      "TC-B2C103-D-003",
+      "TC-B2C103-D-004",
+      "TC-B2C103-D-005"
+    ],
+    "last_sync": "2026-09-17T00:00:00Z",
+    "hu": "B2C-103 — Sellos de advertencia (Ok to Shop)"
+  },
+  "estado": "NO IMPLEMENTADO EN DEV (2026-09-17). El panel de filtros no renderiza ninguna seccion 'Sellos de advertencia' en ningun contexto probado, pese a que el backend si entrega sus refinements con productos. Un solo TC pudo ejecutarse (D-001, Rechazado); los otros cuatro quedaron Bloqueados porque su precondicion es tener el dropdown delante.",
+  "navigation": {
+    "entry_url": "/category/carnes_vacuno ({PLP_URL})",
+    "apertura_del_panel": "button[aria-label='Abrir filtros'] en la cabecera del listado",
+    "contextos_probados": [
+      "/category/carnes_vacuno (9 productos) — {PLP_URL}, el que declaran los TC",
+      "/category/carnes_cerdo (15 productos)",
+      "/category/carnes_cerdo_chuleta",
+      "/search?q=carne (SRP)"
+    ],
+    "modals": [
+      "panel de filtros (ver [[plp-panel-filtros]])"
+    ],
+    "iframes": []
+  },
+  "criterios_de_la_hu": {
+    "orden_fijo_ca2": [
+      "Sin sellos",
+      "No alto en azúcares",
+      "No alto en calorías",
+      "No alto en grasas saturadas",
+      "No alto en sodio",
+      "No alto en alcohol"
+    ],
+    "nota_conteo": "La HU (CA2) lista SEIS opciones; la planilla de TC habla de 'las 5 opciones' en D-002. La discrepancia es de redaccion entre los dos documentos, no del producto: CA4 ademas recorta el listado a los sellos con productos en el contexto, asi que el numero visible depende de donde se mire.",
+    "nota_combinacion": "CA5 se contradice: dice 'productos que cumplen TODOS los criterios seleccionados (logica OR)'. La HU hermana B2C-96 ('Estilos de alimentacion', mismo origen Ok to Shop) define OR. Mientras el AC no se corrija, el resultado esperado de TC-B2C103-D-005 no es determinable a partir de la planilla."
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "La seccion 'Sellos de advertencia' dentro del panel, si algun dia se renderiza. Seguiria la forma del resto de secciones colapsables: un button[aria-expanded] cuyo <p> lleva el nombre",
+        "selector": "panel.locator('button[aria-expanded]').filter({ hasText: /sellos de advertencia/i })",
+        "type": "css+filter",
+        "estado": "NO EXISTE HOY en el DOM"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/search/shopper-search/v1/organizations/<org>/product-search?refine=cgid%3D<slug>",
+        "trigger": "carga del listado",
+        "nota": "Su array `refinements` es lo que alimenta el panel. Requiere Authorization: Bearer <access_token_Unimarc de localStorage>; sin cabecera responde 401."
+      }
+    ],
+    "refinements_de_sellos": {
+      "c_oktsSinSellos": "'Sin sellos' — en carnes_vacuno true:2",
+      "c_oktsHighSugar": "'Alto en azúcares' — false:2",
+      "c_oktsHighCalories": "'Alto en calorías' — false:2",
+      "c_oktsHighSatFat": "'Alto en grasas saturadas' — false:2",
+      "c_oktsHighSodium": "'Alto en sodio' — false:2",
+      "c_oktsHighAlcohol": "NO APARECE en ningun contexto probado: 'No alto en alcohol' no tiene productos en DEV",
+      "c_oktsSinSello": "'Sellos ausentes' — siempre con 0 valores; parece un atributo duplicado o muerto"
+    },
+    "intercepts_useful": [
+      "Comparar los refinements c_okts* de la respuesta contra las secciones que el panel renderiza es lo que separa 'no hay datos' de 'el front no los mapea'. Es lo que permitio afirmar que la ausencia del filtro NO es el comportamiento correcto de CA4."
+    ]
+  },
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/PanelFiltros.ts",
+    "class": "PanelFiltros",
+    "nota": "No hizo falta POM propio: el unico TC ejecutable comprueba la ausencia de una seccion, y eso se lee con los metodos que el panel ya expone (tiposDeFiltro, estadoDeLasSecciones)."
+  },
+  "observations": [
+    "EL FILTRO NO SE RENDERIZA EN NINGUN CONTEXTO PROBADO. El panel muestra siempre las mismas cuatro secciones —Ofertas, Estilos de alimentacion, Marca, Precio— en carnes_vacuno, carnes_cerdo, carnes_cerdo_chuleta y en la SRP de 'carne'.",
+    "Y NO ES EL COMPORTAMIENTO CORRECTO DE CA4. La conclusion facil es que no hay productos con sellos en DEV, igual que paso con Tipo de envase y Formato en B2C-98. Pero ahi los refinements venian con la lista de valores VACIA, y aqui vienen con valores y hitCount: en carnes_vacuno, cinco de los seis sellos de CA2 tienen 2 productos cada uno. El dato esta; lo que falta es que el panel lo pinte.",
+    "EL PANEL SI CONSUME ATRIBUTOS OK TO SHOP: 'Estilos de alimentacion' (c_estiloAlimentacion, 8 valores) se renderiza sin problemas. Lo que no existe es el mapeo de los atributos c_okts* a una seccion 'Sellos de advertencia'.",
+    "'No alto en alcohol' no tiene datos en DEV: c_oktsHighAlcohol no aparece en la respuesta de ninguna categoria probada. Ese es justamente el escenario de CA4 que necesita TC-B2C103-D-004, asi que el contexto declarado serviria para ese caso en cuanto el filtro se renderice.",
+    "UNA CATEGORIA N1 NO TIENE PANEL DE FILTROS: /category/despensa no expone el boton 'Abrir filtros' porque es una landing de categoria, no un listado. Para comprobar el panel hay que entrar a una hoja (N2/N3) o a la SRP.",
+    "LA API DE BUSQUEDA EXIGE EL TOKEN: sin la cabecera Authorization responde 401 con un cuerpo JSON de 'Unauthorized', y un script que no mire el status concluye en silencio que la categoria no tiene refinements.",
+    "2026-10-09: EL DROPDOWN 'Sellos de advertencia' YA SE RENDERIZA en carnes_vacuno (tercero, tras Estilos). 5 checkbox (role=checkbox, aria-checked) en orden CA2: Sin sellos, No alto en azucares, No alto en calorias, No alto en grasas saturadas, No alto en sodio; sin 'No alto en alcohol' (sin productos). Azucares sola = 2 y + sodio = 2 (refine c_oktsSinSello=altoEnAzucares|altoEnSodio). Refinements c_okts del backend: Sin sellos, Alto en calorias/azucares/sodio/grasas saturadas (1 c/u) y 'Sellos ausentes'(5). D-001 re-ejecutado (antes Rechazado por B2C-808 DESCARTADO) y D-002..D-005: los 5 Aprobado."
+  ],
+  "history": [],
+  "last_run": {
+    "suite": "B2C-103",
+    "fecha": "2026-10-09",
+    "resultado": "5/5 Aprobado (D-001 re-ejecutado a pedido)"
+  }
+}

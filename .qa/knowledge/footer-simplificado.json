@@ -1,0 +1,52 @@
+{
+  "flow": "footer-simplificado",
+  "description": "Footer Simplificado del storefront Unimarc (HU B2C-20): en las paginas del flujo de compra y en SSO, el footer muestra unicamente el Content Asset footer-support-block con sus 3 accesos de atencion al cliente. No lleva secciones dropdown, ni Politicas de Cookies, ni redes sociales.",
+  "last_explored": "2026-09-09",
+  "entry_url": "/cart",
+  "auth_required": false,
+  "form_factors": {
+    "desktop": { "browser": "chromium", "viewport": { "width": 1440, "height": 900 } },
+    "mobile": { "browser": "chromium", "viewport": { "width": 390, "height": 844 } }
+  },
+  "paginas_con_footer_simplificado": [
+    { "ruta": "/cart", "descripcion": "Carro de compra" },
+    { "ruta": "/login", "descripcion": "Pantalla de SSO (Sign In, con Google y Apple)" },
+    { "ruta": "/account", "descripcion": "Mi cuenta" },
+    { "ruta": "/checkout", "descripcion": "Redirige a /login cuando el usuario es Guest" }
+  ],
+  "selectors": {
+    "footer": "getByRole('contentinfo')",
+    "header": "getByRole('banner')",
+    "items": [
+      { "texto": "Centro de ayuda", "href": "/centro-de-ayuda", "descripcion": "Aqui encontraras preguntas frecuentes y mucho mas" },
+      { "texto": "Seguimiento de compra", "href": "/seguimiento-de-compra", "descripcion": "Revisa el estado y detalle de tu compra" },
+      { "texto": "Whatsapp clientes", "href": "https://wa.me/56XXXXXXXXX", "descripcion": "Escribenos de 9:00 a 20:00 horas" }
+    ],
+    "banner_cookies": "[data-testid='cookie-consent-banner']",
+    "banner_cookies_aceptar": "button[aria-label='Aceptar todas las cookies']"
+  },
+  "observations": [
+    "El footer simplificado contiene EXACTAMENTE 3 enlaces y ningun boton. Es la forma directa de comprobar la ausencia del Footer Full: 0 botones de seccion, 0 enlace a /legales/cookies, 0 iconos de redes sociales.",
+    "LAYOUT POR VIEWPORT: a 1440x900 los 3 items comparten la misma coordenada Y (818) y difieren en X -> disposicion HORIZONTAL. A 390x844 comparten la misma X (32) y se apilan en Y (664, 716, 768) -> disposicion VERTICAL. El mismo HTML (2453 caracteres) en ambos: el layout lo aplica el CSS por viewport, no el content asset.",
+    "El HEADER de estas paginas es simplificado: solo el logo Unimarc, sin enlaces ni botones (0 <a>, 0 <button>), altura 60px.",
+    "El header NO es sticky: computedStyle.position = 'static' y se mantiene en top=0 sin contraerse. Un carro vacio no genera scroll, asi que la prueba solida del no-sticky es la propiedad position, no el desplazamiento.",
+    "AMBIENTE DEV: /centro-de-ayuda y /seguimiento-de-compra devuelven HTTP 404 (paginas de contenido no desplegadas en DEV). Es la misma desviacion observada en B2C-19; ver [footer-full].",
+    "DATO SIN CONFIGURAR: el item de WhatsApp apunta a https://wa.me/56XXXXXXXXX, un numero placeholder que sigue sin configurarse en el content asset footer-support-block.",
+    "El banner de consentimiento de cookies aparece tambien en estas paginas y conviene aceptarlo antes de medir o hacer clic; en viewport chico se ancla al pie y tapa el footer.",
+    "footer-support-block es el MISMO content asset que usa el Footer Full de B2C-19, renderizado con otro layout (alli vertical en columna izquierda, aqui horizontal en Desktop). Por eso el HTML del asset no debe traer clases de layout."
+  ],
+  "network": [],
+  "waits": [
+    "Tras aceptar el banner de cookies, esperar a que se desprenda del DOM (state: 'detached').",
+    "El footer se renderiza con la pagina; basta esperar a que el <footer> sea visible."
+  ],
+  "page_objects": {
+    "CarroPage": "tests/pages/CarroPage.ts",
+    "SSOPage": "tests/pages/SSOPage.ts",
+    "FooterSimplificado": "tests/pages/FooterSimplificado.ts",
+    "HeaderSimplificado": "tests/pages/HeaderSimplificado.ts",
+    "CookieConsentBanner": "tests/pages/CookieConsentBanner.ts"
+  },
+  "deprecated_selectors": [],
+  "history": []
+}

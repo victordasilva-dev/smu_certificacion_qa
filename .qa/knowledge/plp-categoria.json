@@ -1,0 +1,128 @@
+{
+  "flow": "plp-categoria",
+  "last_updated": "2026-10-07T20:00:00Z",
+  "version": 2,
+  "description": "Listado de productos por categoria (PLP) N1/N2/N3: breadcrumb, titulo + contador, control de orden, modal de filtros, pildoras de subcategoria, grilla y estados de error.",
+  "source": {
+    "suite": "B2C-35",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-35 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C35-D-002",
+      "TC-B2C35-D-003",
+      "TC-B2C35-D-006",
+      "TC-B2C35-D-007",
+      "TC-B2C35-D-012",
+      "TC-B2C35-D-015"
+    ],
+    "last_sync": "2026-09-10T22:10:00Z"
+  },
+  "navigation": {
+    "entry_url": "/category/<slug>",
+    "jerarquia": "N1 = 'carnes'; N2 = 'carnes_cerdo'; N3 = 'carnes_cerdo_chuleta'. El nivel se lee contando los '_' del slug.",
+    "modals": [
+      "consentimiento de cookies",
+      "modal de filtros",
+      "dropdown de orden"
+    ]
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Breadcrumb de la PLP. OJO: aqui el aria-label va con B MAYUSCULA, mientras que en la PDP es 'breadcrumb' en minuscula. Un selector sensible a mayusculas encuentra uno y pierde el otro.",
+        "selector": "nav[aria-label='Breadcrumb']",
+        "type": "css"
+      },
+      {
+        "description": "Titulo de la categoria",
+        "selector": "main h1",
+        "type": "css"
+      },
+      {
+        "description": "Contador de productos: el <p> hermano del h1, con el texto 'N productos'",
+        "selector": "main p con /\\d+ productos/",
+        "type": "texto"
+      },
+      {
+        "description": "Control de orden. El aria-label lleva el valor actual, asi que se busca por prefijo",
+        "selector": "button[aria-label^='Ordenar']",
+        "type": "css"
+      },
+      {
+        "description": "Boton que abre el modal de filtros",
+        "selector": "button[aria-label='Abrir filtros']",
+        "type": "css"
+      },
+      {
+        "description": "Pildora 'Todo' en una PLP N2: es un <button> (no navega, ya se esta en el N2)",
+        "selector": "main button con texto 'Todo'",
+        "type": "texto"
+      },
+      {
+        "description": "Pildora 'Todo' en una PLP N3: es un <a> al N2 padre",
+        "selector": "main a[href='/category/<N2>'] con texto 'Todo'",
+        "type": "css"
+      },
+      {
+        "description": "Pildoras de subcategoria N3",
+        "selector": "main a[href^='/category/<N2>_']",
+        "type": "css"
+      },
+      {
+        "description": "Tarjeta de producto: el nombre es un <button> 'Marca | Nombre'. No hay <a> a /product/",
+        "selector": "main button con ' | '",
+        "type": "texto"
+      },
+      {
+        "description": "Pantalla de error de carga de productos",
+        "selector": "texto 'Tuvimos problemas en cargar tus productos' + 'Error: NAV-005' + botones 'Reintentar' / 'Ir al Inicio'",
+        "type": "texto"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/mobify/proxy/api/search/shopper-search/v1/organizations/f_ecom_bmkg_dev/product-search?refine=cgid%3D<categoria>&refine=htype%3Dproduct&...",
+        "trigger": "navegacion SPA a una PLP"
+      }
+    ],
+    "intercepts_useful": [
+      "page.route sobre '**/shopper-search/**/product-search*' con status 503 fuerza la pantalla NAV-005 (TC-B2C35-D-012); con un delay > 8 s fuerza el timeout que declara la HU"
+    ]
+  },
+  "observations": [
+    "CORRIDA MOBILE 2026-10-07 (planilla SP1, webkit 390x844, 1 reintento, 3 workers): 17 Aprobado, 5 Rechazado, 2 Bloqueado Data. Bugs B2C-1138 (contador oculto en Mobile: M-005/008/013), B2C-1139 (\"Todo\" de la N2 sin destino: M-011), B2C-1140 (sin skeletons por URL directa con red lenta: M-034). Tokens en la columna Descripcion (columnas intercambiadas).",
+    "MOBILE: el contador \"N productos\" existe en el DOM pero oculto; el breadcrumb de una N3 se trunca a Inicio (a[aria-label=\"Ir al inicio\"]) > boton \"Mostrar todas las categorias\" (\"...\") > actual, y al tocarlo se expande a N1 > N2 > N3. Filtros (button[aria-label=\"Abrir filtros\"]) comparte fila con las pildoras; la fila mide ~960 px y se desliza con rueda horizontal. Los nombres de producto son a[href$=\".html\"] truncados.",
+    "carnes_cerdo (N2) tiene BANNER CIRCULAR bajo el titulo (Carnes, Chuleta, Pavo) que tambien enlaza a /category/...: estadoDeLasPildoras lo mezcla con las pildoras; la fila real empieza en \"Todo\". La pildora \"Todo\" de la N2 no tiene href.",
+    "SSR: por URL directa la PLP llega renderizada (sin product-search en el cliente). Entrando por el menu de categorias del Home (tarjeta N2) se pide product-search?refine=cgid%3D<slug>: es el camino para retener/bloquear la consulta (PLPCategoriaPage.retenerProductos/bloquearProductos). Con la consulta retenida, cabecera y pildoras se ven reales y la grilla muestra bloques grises animados (skeleton sin clase chakra: se detecta por animationName). A los ~9 s sin respuesta aparece \"Tuvimos problemas en cargar tus productos\" + \"Error NAV-005\" + \"Reintentar\".",
+    "EN NAVEGACION DIRECTA POR URL los productos vienen por SSR: no hay ninguna llamada cliente a product-search, y por eso un mock de esa API no afecta a la PLP. El fallo solo se puede forzar entrando a la PLP por navegacion SPA (desde otra PLP o desde el Home).",
+    "La PLP N1 no consulta su propia categoria: dispara una peticion por cada subcategoria con limit=10 y compone la grilla con esos trozos. Por eso 'Carnes' declara 69 productos y renderiza 33 tarjetas.",
+    "AMBIENTE DEV: ninguna categoria N2/N3 llega a 50 productos. La mayor encontrada es 'Vinos y espumantes' con 37; le siguen Cerdo (15) y Cervezas (25). Los TC que exigen 50 productos o mas de 5 paginas no son verificables aqui.",
+    "NO EXISTE PAGINACION en ninguna PLP observada, ni siquiera en la N1 'Carnes' con 69 productos declarados. No se renderiza ningun nav de paginacion.",
+    "La pildora dice 'Todo', no 'Todas' como la escriben los TC. Usar regex tolerante /^tod(o|as)$/i.",
+    "El estado seleccionado de una pildora NO usa aria-current ni aria-selected: se distingue solo por estilo (border-color rgb(29,29,31) y font-weight 500 frente a rgb(221,221,221) y 400). Una asercion accesible por rol no puede leerlo; hay que mirar el estilo computado.",
+    "El modal de filtros y el dropdown de orden son AMBOS role=dialog con aria-modal. Un getByRole('dialog') pelado resuelve a cualquiera de los dos: hay que filtrar por contenido ('Selecciona tus filtros' frente a las seis opciones de orden).",
+    "Las opciones de orden estan duplicadas: aparecen en el dropdown 'Ordenar' y tambien dentro del modal de filtros, bajo 'Ordena tus productos'. Al elegir una, la URL recibe ?sort=<clave> (ej. price-asc) y el aria-label del boton pasa a 'Ordenar: Precio mas bajo'.",
+    "DEFECTO OBSERVADO (CA16): tras tres clics en 'Reintentar' con el servicio de productos caido, la PLP NO redirige al Home: se queda en la misma URL mostrando NAV-005.",
+    "DEFECTO OBSERVADO (CA25): al volver desde la PDP con el boton atras, el scroll no se restaura a la posicion previa. Medido en 'Vinos y espumantes': se sale desde scrollY 1200 y se vuelve a 365.",
+    "La PLP N3 conserva visibles las pildoras del N2 padre y marca la actual; el breadcrumb de una N3 es 'Carnes > Cerdo > Chuleta' con el nodo actual sin enlace.",
+    "El ordenamiento por \"Precio mas bajo\" sigue el precio de LISTA, no el promocional: un producto con precio de socio 6.291 y precio anterior 6.990 se ubica despues de otro de 6.490. Una asercion de monotonia sobre el precio visible mas bajo falla sin que el listado este mal ordenado; conviene confirmar la clave contra B2C-87 antes de afirmar nada.",
+    "Las pildoras se pintan despues del titulo, y el nombre de la subcategoria aparece TAMBIEN en el breadcrumb: esperar por el texto se resuelve antes de que exista ninguna pildora. Hay que esperar por el estado de las pildoras (expect.poll sobre estadoDeLasPildoras) y no por un locator de texto.",
+    "Los defectos observados quedaron reportados: CA16 (sin redireccion al Home tras 3 reintentos) en B2C-762 y CA25 (scroll no restaurado al volver de la PDP) en B2C-763.",
+    "2026-10-09 (B2C-35 re-corrida): con {DIRECCION_DESPACHO} (Camino La Fuente 1589 Las Condes) el sitio asigna la tienda 917 (GET /stores?ids=917 -> inventoryId smu-inv-uni-917). La disponibilidad de la grilla coincide con shopper-products ?inventoryIds=smu-inv-uni-917 (PLPCategoriaPage.disponibilidadEnInventario). Contenidos de la PLP N2 se piden a shopper-experience/contents/<cat>-plp-banner-circular | -plp-grid-banner y <top>-plp-links-seo; carnes-plp-links-seo responde 404 (Carnes no tiene SEO). Home_Banner (tb-banner-hp) enlaza solo a N1; 'Carrusel_Banner' no existe. /category/bebes-y-ninos muestra PLP-013 sin productos."
+  ],
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/PLPCategoriaPage.ts",
+    "class": "PLPCategoriaPage"
+  },
+  "history": [],
+  "last_run": {
+    "suite": "B2C-35",
+    "fecha": "2026-10-09",
+    "resultado": "17 pendientes: 1 Aprobado (M-022), 16 Bloqueado Data"
+  }
+}
