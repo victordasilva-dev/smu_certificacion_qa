@@ -23,6 +23,16 @@ export class ListadoScreen extends BaseScreen {
     return this.screen.getByRole('button', { name: 'Volver' });
   }
 
+  /** Tarjeta de un SKU (`product-<sku>`): al tocarla abre su PDP. */
+  producto(sku: string): Locator {
+    return this.screen.getByTestId(`product-${sku}`);
+  }
+
+  /** "Agregar" de la tarjeta de un SKU en la SRP/PLP (`product-add-<sku>`, como en el Home). */
+  botonAgregar(sku: string): Locator {
+    return this.screen.getByTestId(`product-add-${sku}`);
+  }
+
   get readyLocator(): Locator {
     return this.volver;
   }

@@ -23,10 +23,11 @@ import { esperarOtp, marcaOtp } from './support/otp';
  *     de invitado con productos cuando la fila declara la dirección (D/M-007).
  * Después el invitado inicia sesión con correo + OTP desde "Ingresa aquí" y el caso mira el carro.
  *
- * Quedan sin `test()`, por data (ver la Observación de cada fila):
- *  - 001, 002, 003, 006, 008, 009 y 015: carro de invitado con productos sin dirección ni tienda declarada.
+ * Quedan sin `test()`, por data (ver la Observación de cada fila; re-verificado 2026-10-15):
+ *  - 001 y 002: {SKU_VALID_001} × 1 queda bajo el mínimo de $20.000 y el carro no ofrece botón de login.
+ *  - 003, 006, 009 y 015: {SKU_UNITARIO} está "Pronto disponible" para {DIRECCION_DESPACHO_001}.
  *  - 010 y 011: {SKU_NO_DISPONIBLE} tiene stock en {TIENDA_SIN_STOCK}.
- *  - 012: {SKU_UNIPAY_001} en TBD. 013: {APP_BUILD} no es un build. 014: falta {EMAIL_NUEVO_REGISTRO}.
+ *  - 012: {SKU_PROM_NxM} no declarado. 013: {APP_BUILD} no es un build. 014: sin dirección del invitado.
  */
 
 const SESION = path.resolve('.qa/auth/b148-user.json');
@@ -202,6 +203,30 @@ test.describe('B2C-168 — Fusión de carros al iniciar sesión', () => {
         expect(despues.match(/desde:\s*[^$]+?hrs\.?/i)?.[0], 'misma ventana que la del invitado').toBe(ventanaInvitado);
         await home.capturarEvidencia(cp, 3, 'Store Locator tras la fusión', { elemento: home.header.storeLocator });
         await home.capturarEvidencia(cp);
+      });
+
+      test(`TC-B2C168-${L}-008 · Un producto duplicado queda con la cantidad del carro invitado [Guest] (${sufijo})`, async ({ page, browser, testData }) => {
+        const cp = `TC-B2C168-${L}-008`;
+        const nombres = await prepararCarroGuardado(browser, testData, [['SKU_VALID_001', 5]]);
+
+        await fijarDireccionInvitado(page, token(testData, 'DIRECCION_DESPACHO_001')!);
+        const pdp = await new PDPPage(page).abrir(token(testData, 'SKU_VALID_001')!);
+        await pdp.fijarCantidad(2);
+        const invitado = await new CarroPage(page).goto();
+        await expect(invitado.cantidadDe(nombres.SKU_VALID_001), 'carro invitado: {SKU_VALID_001} × 2').toHaveText('2 un.', { timeout: 30000 });
+        await invitado.capturarEvidencia(cp, 0, 'carro de invitado con {SKU_VALID_001} × 2');
+
+        const home = await new PaginaHabilitada(page).goto();
+        await iniciarSesionConOtp(page, testData);
+        await expect(home.header.saludo).toBeVisible({ timeout: 30000 });
+        await home.capturarEvidencia(cp, 1, 'sesión iniciada');
+
+        const carro = await new CarroPage(page).goto();
+        await expect(carro.botonesEliminar.first()).toBeVisible({ timeout: 30000 });
+        await carro.capturarEvidencia(cp, 4, 'carro tras la fusión');
+        await expect(carro.cantidadDe(nombres.SKU_VALID_001), '{SKU_VALID_001} con la cantidad del invitado (2, no 5 ni 7)').toHaveText('2 un.');
+        expect(await carro.productos(), 'solo {SKU_VALID_001}').toEqual([nombres.SKU_VALID_001]);
+        await carro.capturarEvidencia(cp);
       });
     });
   }

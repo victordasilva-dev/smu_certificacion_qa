@@ -1,7 +1,7 @@
 {
   "flow": "app-store-locator",
   "description": "App nativa Unimarc: Store Locator del header y modal 'Elige tu método de entrega' — Despacho a domicilio (HU B2C-26).",
-  "last_updated": "2026-10-14T16:30:00Z",
+  "last_updated": "2026-10-16T16:30:00Z",
   "version": 1,
   "source": {
     "suite": "B2C-26",
@@ -9,21 +9,14 @@
     "spec": "tests-app/B2C-26.spec.ts",
     "test_cases": [
       "TC-B2C26-APP-003",
-      "TC-B2C26-APP-008",
       "TC-B2C26-APP-012",
       "TC-B2C26-APP-013",
       "TC-B2C26-APP-015",
       "TC-B2C26-APP-016",
       "TC-B2C26-APP-017",
-      "TC-B2C26-APP-019",
-      "TC-B2C26-APP-021",
-      "TC-B2C26-APP-024",
-      "TC-B2C26-APP-025",
-      "TC-B2C26-APP-028",
-      "TC-B2C26-APP-033",
-      "TC-B2C26-APP-034"
+      "TC-B2C26-APP-036"
     ],
-    "last_sync": "2026-10-10T00:10:00Z"
+    "last_sync": "2026-10-16T16:30:00Z"
   },
   "app": {
     "ref": "app-modal-categorias.json#app",
@@ -115,6 +108,13 @@
     "B2C-138 (2026-10-14, Android v1.0.7): invitado sin método → navbar 'Elige una forma de entrega'; el modal 'Elige tu método de entrega' ocupa toda la pantalla (no hay zona fuera: bug B2C-1207), cierra con '✕'. Sin direcciones: imagen + 'Aún no tienes direcciones guardadas' + 'Para armar tu carro, ingresa una dirección…'.",
     "Pestañas: la activa lleva el ícono en rojo (~rgb 218,41,28), la inactiva en gris. getByText('Despacho a domicilio') resuelve al ViewGroup de la pestaña (~490 px); MetodoEntregaModal.pixelesRojosDelIcono mide el tercio izquierdo.",
     "'Activar mi ubicación actual' con permiso concedido (adb pm grant + 'adb emu geo fix -70.5980 -33.5230') abre 'Detalles de la dirección' con 'La Florida, Región Metropolitana'.",
-    "La PDP de la app tampoco tiene Store Locator (además de la PLP): B2C-1165, DESCARTADO."
+    "La PDP de la app tampoco tiene Store Locator (además de la PLP): B2C-1165, DESCARTADO.",
+    "B2C-26 APP re-corrida 2026-10-16 (Android v1.0.7): la planilla volvió a Pendiente y tests-app/B2C-26.spec.ts no existía; se reescribió. La hoja de regiones rotula la RM como 'Metropolitana' (no 'Región Metropolitana').",
+    "Machalí sigue en las comunas de la RM (B2C-1164 DESCARTADO) -> APP-017 Rechazado sin bug nuevo.",
+    "Dirección manual sin numeración (RM / Las Condes / 'Las Condes'): header 'Las Condes, Desde: …' y modal 'Las Condes, Las Condes, Metropolitana', sin 'S/N' -> bug B2C-1224 (APP-036).",
+    "Búsqueda tipo comuna ('Providencia') -> sugerencia 'Providencia, Chile' -> Detalles de la dirección con 'Providencia' / 'Providencia, Región Metropolitana' (CA4 OK en exploración).",
+    "{DIRECCION_PLUS_CODE} 'HG74+86G Las Condes, Chile' aparece como sugerencia y llega al PIN con 'Las Condes, Región Metropolitana', pero al confirmar: 'Aún no llegamos a esta dirección' (sin cobertura).",
+    "GPS sin señal: pm grant ACCESS_FINE/COARSE_LOCATION + 'cmd location set-location-enabled false' -> 'Activar mi ubicación actual' muestra el toast 'No pudimos obtener tu ubicación actual. Inténtalo nuevamente.' (helpers en tests-app/support/adbAndroid.ts). Reactivar la ubicación después.",
+    "Sin pm clear, al relanzar la app el invitado conserva la dirección de la sesión anterior (visto 2026-10-16 tras APP-036; relevante para APP-031)."
   ]
 }

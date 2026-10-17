@@ -1,27 +1,51 @@
 {
- "flow": "carro-no-disponibles",
- "version": 1,
- "last_updated": "2026-10-12T14:00:00Z",
- "description": "Carro (/cart) con ítems no disponibles: CTA Reemplazar (abre modal-ver-similares, B2C-40) y link Eliminar (B2C-39). Sin spec todavía: los 20 TC quedaron Bloqueado Data el 2026-10-12.",
- "source": {"suite": "B2C-39", "hu": "B2C-39", "tc_file": "Casos de Prueba/Ejecutados/SP2/B2C-39 Test Cases.xlsx", "last_sync": "2026-10-12T14:00:00Z"},
- "navigation": {
-  "entry_url": "/cart",
-  "store_change": "Header 'Elige una forma de entrega' -> drawer data-testid=delivery-method-drawer -> button 'Retiro en tienda' -> textbox 'Buscar tienda' -> clic en el NOMBRE de la tienda (el radio no acepta check) -> 'Confirmar tienda' -> modal 'Algunos productos podrían agotarse' -> 'Sí, continuar'. El header pasa a mostrar la tienda (ej. 'Unimarc Los Leones')."
- },
- "selectors": {
-  "preferred": [
-   {"description": "Lista del carro: cabecera 'Mis productos' + 'N unidades'; por ítem link 'Eliminar' y botones 'Eliminar <nombre>' / 'Sumar <nombre>'", "selector": "getByRole(button,{name:/^Eliminar /})", "type": "getByRole"},
-   {"description": "CTA resumen: 'Mínimo de compra $20.000' (disabled) bajo el subtotal", "selector": "getByRole(button,{name:/mínimo de compra|continuar/i})", "type": "getByRole"}
+  "flow": "carro-no-disponibles",
+  "version": 1,
+  "last_updated": "2026-10-14T23:00:00Z",
+  "description": "Carro (/cart) con ítems no disponibles: CTA Reemplazar (abre modal-ver-similares, B2C-40) y link Eliminar (B2C-39). Sin spec todavía: los 20 TC quedaron Bloqueado Data el 2026-10-12 y otra vez el 2026-10-14 (SKU con stock).",
+  "source": {
+    "suite": "B2C-39",
+    "hu": "B2C-39",
+    "tc_file": "Casos de Prueba/Ejecutados/SP2/Unimarc/B2C-39 Test Cases.xlsx",
+    "last_sync": "2026-10-12T14:00:00Z"
+  },
+  "navigation": {
+    "entry_url": "/cart",
+    "store_change": "Header 'Elige una forma de entrega' -> drawer data-testid=delivery-method-drawer -> button 'Retiro en tienda' -> textbox 'Buscar tienda' -> clic en el NOMBRE de la tienda (el radio no acepta check) -> 'Confirmar tienda' -> modal 'Algunos productos podrían agotarse' -> 'Sí, continuar'. El header pasa a mostrar la tienda (ej. 'Unimarc Los Leones'). 2026-10-14: como invitado, al confirmar la tienda se abre además el modal \"¡Hola, ingresa aquí!\" (se cierra con \"Cerrar\"); la tienda queda fijada igual."
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Lista del carro: cabecera 'Mis productos' + 'N unidades'; por ítem link 'Eliminar' y botones 'Eliminar <nombre>' / 'Sumar <nombre>'",
+        "selector": "getByRole(button,{name:/^Eliminar /})",
+        "type": "getByRole"
+      },
+      {
+        "description": "CTA resumen: 'Mínimo de compra $20.000' (disabled) bajo el subtotal",
+        "selector": "getByRole(button,{name:/mínimo de compra|continuar/i})",
+        "type": "getByRole"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": []
+  },
+  "auth": "El modal 'Ingresa aquí' solo acepta RUT ('Continuar' queda deshabilitado con un correo). /login (Salesforce, en iframe) pide correo y con {USER_AUTH_001}=girolamo_coppo@hotmail.com responde 'Something went wrong. Try again!' (2026-10-12). Usar cuentas con RUT. 2026-10-14: {USER_AUTH_001} pasó a vhchirinos+comprador@… (login correo + OTP legible en Gmail); no se probó porque el SKU bloquea antes.",
+  "observations": [
+    "2026-10-12: {SKU_NO_DISPONIBLE}=000000000400254005-UN (Picado Nestlé Naturnes) TIENE stock en Unimarc Los Leones ({TIENDA_SIN_STOCK}) y en la tienda por defecto de invitado: queda en 'Mis productos', no hay sección de no disponibles.",
+    "2026-10-12: {SKU_NO_DISPONIBLE_2}=000000000000966668-KG (Pan marraqueta granel Amada Masa) SÍ está 'Pronto disponible' con 'Ver similares' en Unimarc Los Leones.",
+    "Como invitado 'Agregar' en la SRP suma al carro sin pedir dirección ni tienda.",
+    "2026-10-14: con Retiro en tienda Unimarc Los Leones, {SKU_NO_DISPONIBLE}=000000000400254005-UN y {SKU_NO_DISPONIBLE_2}=000000000000966668-KG muestran \"Agregar\" en /search?q=<sku> (ambos con stock; el segundo ya no está \"Pronto disponible\").",
+    "2026-10-16 (B2C-39 APP, Android v1.0.7): invitado con retiro en Unimarc Los Leones -> {SKU_NO_DISPONIBLE}=400254005 aparece con 'Agregar' en Buscar (con stock). Las 10 filas APP a Bloqueado Data (9 además por login con correo)."
   ],
-  "fallback": [], "deprecated": []
- },
- "network": {"endpoints": [], "intercepts_useful": []},
- "auth": "El modal 'Ingresa aquí' solo acepta RUT ('Continuar' queda deshabilitado con un correo). /login (Salesforce, en iframe) pide correo y con {USER_AUTH_001}=girolamo_coppo@hotmail.com responde 'Something went wrong. Try again!' (2026-10-12). Usar cuentas con RUT.",
- "observations": [
-  "2026-10-12: {SKU_NO_DISPONIBLE}=000000000400254005-UN (Picado Nestlé Naturnes) TIENE stock en Unimarc Los Leones ({TIENDA_SIN_STOCK}) y en la tienda por defecto de invitado: queda en 'Mis productos', no hay sección de no disponibles.",
-  "2026-10-12: {SKU_NO_DISPONIBLE_2}=000000000000966668-KG (Pan marraqueta granel Amada Masa) SÍ está 'Pronto disponible' con 'Ver similares' en Unimarc Los Leones.",
-  "Como invitado 'Agregar' en la SRP suma al carro sin pedir dirección ni tienda."
- ],
- "page_objects": {"exists": true, "path": "tests/pages/CarroPage.ts", "class": "CarroPage", "note": "aún sin locators de no disponibles"},
- "history": []
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/CarroPage.ts",
+    "class": "CarroPage",
+    "note": "aún sin locators de no disponibles"
+  },
+  "history": []
 }

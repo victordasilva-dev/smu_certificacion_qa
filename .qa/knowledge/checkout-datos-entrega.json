@@ -88,7 +88,15 @@
     "B2C-189 (2026-10-14): cambiar a una dirección nueva desde el ícono ▾ (sugerencia → Continuar con detalles → Agregar dirección → 'Algunos productos podrían agotarse' → OTP) cierra el drawer, hay spinner, el header pasa a la nueva dirección pero la tarjeta de Mis Envíos sigue mostrando la anterior, incluso recargando.",
     "{DIRECCION_OTRA_TIENDA} = 'A. Las Conder 14791, Lo Barnechea' (typo): Google sugiere 'Avenida Las Condes 14791 … Lo Barnechea' y la guarda como 'Avenida Las Condes 14791, Las Condes'.",
     "{DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) en DEV no tiene cobertura: 'Aún no llegamos a esta dirección' → Continuar → OTP → redirige al Home con 'Despacho sin cobertura'. No sirve para 'Sin horarios disponibles' (STL-041).",
-    "Mobile 390x844: el drawer ocupa la pantalla completa; el ícono ▾ queda en (334,155) 24x24."
+    "Mobile 390x844: el drawer ocupa la pantalla completa; el ícono ▾ queda en (334,155) 24x24.",
+    "B2C-147 (2026-10-16): carga inicial = POST /mobify/proxy/api/custom/smu-delivery/v1/organizations/<org>/schedule (Janis). Retrasándola con page.route se ve el skeleton: .chakra-skeleton (16 placeholders) con el h1 'Datos de entrega' visible.",
+    "B2C-147: en retiro la tarjeta dice solo 'Retira tu compra en: Unimarc Las Condes', sin dirección/comuna/región (CA5) -> bug B2C-1222 (D-010/M-010).",
+    "B2C-147: el modal de sugeridos se titula '¡Que no se te olviden!' (la HU dice 'No te olvides'); con {USER_AUTH_001} trae 'Imperdibles / Lo que más compro / Mis favoritos'.",
+    "B2C-147: el selector de días puede llegar a 8 días; el viernes se rotula 'Vier' (4 letras) y el resto con 3 ('Sab', 'Dom', 'Lun', 'Mar', 'Mie', 'Jue').",
+    "B2C-147: con Calle Uno 23, La Florida no hay Envío Express (solo ventanas de 3 h a $2.990). {SKU_UNIPAY_001}=661945 no tiene precio Unipay ('Subtotal con Unipay' = 'Subtotal').",
+    "B2C-147: sin cobertura en DEV (Store Locator 'Aún no llegamos a esta dirección'): Pasaje Diez 359, Peñaflor y la tienda de retiro 'Unimarc Los Lagos II'. 'Metropolitana, Las Condes, Las Condes' no tiene sugerencia de Google.",
+    "Invitado con dirección y carro sobre el mínimo: 'Continuar con la entrega' (carro) e 'Ir a pagar' (minicarro, dialog 'Mini carro') abren '¡Hola, ingresa aquí!' sin navegar a /checkout/entrega."
   ],
-  "history": []
+  "history": [],
+  "last_updated": "2026-10-16T15:40:00Z"
 }

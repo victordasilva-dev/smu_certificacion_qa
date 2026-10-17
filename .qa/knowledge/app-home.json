@@ -1,0 +1,32 @@
+{
+  "flow": "app-home",
+  "version": 1,
+  "description": "Home de la app nativa Unimarc (Page Designer, HU B2C-29).",
+  "source": {
+    "suite": "B2C-29 APP",
+    "spec": "tests-app/B2C-29.spec.ts",
+    "test_cases": [
+      "TC-B2C29-APP-001",
+      "TC-B2C29-APP-002",
+      "TC-B2C29-APP-014"
+    ],
+    "last_sync": "2026-10-16T17:30:00Z"
+  },
+  "selectors": {
+    "preferred": [],
+    "fallback": [],
+    "deprecated": []
+  },
+  "observations": [
+    "Android v1.0.7, invitado (2026-10-16): orden de la Home = banners, 'Los más vendidos', Módulo Bomba (imagen + cuenta regresiva días/horas/minutos/segundos, fondo gris 249 de borde a borde), 'Categorías destacadas', 'Cada día, una ocasión', 'Frescura y calidad', 'Prende la parrilla', 'Chocolates Milka', 'Nuestras marcas', 'Especial Bebidas', 'Contrata la membresía', 'TÉRMINOS Y CONDICIONES UNIMARC' (fin).",
+    "El Módulo Bomba ({COMPONENTE_PROGRAMADO}) cuenta 57 días al 2026-10-16: termina el 2026-12-12 ({FECHA_FIN_VIGENCIA}).",
+    "Medir fondos: el borde derecho suele estar tapado por la tarjeta de un carrusel que asoma; un bloque de fondo cuenta como 'de extremo a extremo' si alguna de sus filas tiene el mismo color en el borde derecho. El NavBar translúcido (y<300) deja ver el contenido de detrás.",
+    "Sin sesión no se ve ningún carrusel de frecuentes; su título en la app no se conoce (no se pudo entrar con correo)."
+  ],
+  "history": [],
+  "page_objects": {
+    "HomeScreen.recorrer": "tests-app/pages/HomeScreen.ts",
+    "fondosDeExtremoAExtremo": "tests-app/support/pixeles.ts"
+  },
+  "last_updated": "2026-10-16T17:30:00Z"
+}

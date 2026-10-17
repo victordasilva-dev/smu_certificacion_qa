@@ -50,8 +50,23 @@ export class ShelfCarro {
     await shelf.agregar.waitFor({ state: 'visible', timeout: 30000 });
     const nombre = ((await shelf.imagen.first().getAttribute('alt')) ?? '').trim();
     await shelf.agregar.click();
-    await shelf.root.getByText(/en carro/i).waitFor({ state: 'visible', timeout: 30000 });
+    // Como invitado la shelf pasa a "N en carro"; con sesión, al stepper "Aumentar cantidad".
+    await shelf.root
+      .getByText(/en carro/i)
+      .or(shelf.root.getByRole('button', { name: /^aumentar cantidad$/i }))
+      .first()
+      .waitFor({ state: 'visible', timeout: 30000 });
     return nombre;
+  }
+
+  /** Mensaje de promo incompleta ("Te faltan N para la promo") del ítem (B2C-50). */
+  get mensajePromo(): Locator {
+    return this.root.getByTestId('sf-cart-promo-cta');
+  }
+
+  /** Chevron "›" dentro del mensaje de promo: un svg con una polilínea que apunta a la derecha. */
+  get chevronPromo(): Locator {
+    return this.mensajePromo.locator('svg polyline');
   }
 
   get linkEliminar(): Locator {

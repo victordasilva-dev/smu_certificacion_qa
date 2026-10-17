@@ -22,6 +22,16 @@ export function borrarDatosApp(paquete: string, serial?: string): void {
   adb(['shell', 'pm', 'clear', paquete], serial);
 }
 
+/** Activa o desactiva la ubicación del sistema ("emulador Android sin ubicación", B2C-26 APP-014). */
+export function ubicacionDelSistema(activa: boolean, serial?: string): void {
+  adb(['shell', 'cmd', 'location', 'set-location-enabled', String(activa)], serial);
+}
+
+/** Otorga a la app el permiso de ubicación sin pasar por el diálogo del sistema. */
+export function otorgarUbicacion(paquete: string, serial?: string): void {
+  for (const p of ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']) adb(['shell', 'pm', 'grant', paquete, `android.permission.${p}`], serial);
+}
+
 /** Coordenadas que el emulador entrega hoy como ubicación del dispositivo (último fix de GPS). */
 export function ubicacionDelDispositivo(serial?: string): { lat: number; lon: number } | null {
   const salida = adb(['shell', 'dumpsys', 'location'], serial).toString();

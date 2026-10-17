@@ -11,6 +11,50 @@ async function pixeles(png: Buffer, recorte?: { left: number; top: number; width
   return { data, ch: info.channels, total: info.width * info.height };
 }
 
+/**
+ * Bloques de fondo de color en el borde izquierdo de la captura (entre `top` y `bottom`) y cuántos
+ * no llegan al borde derecho (B2C-29 APP-002). Un bloque son filas contiguas cuyo píxel del borde
+ * izquierdo no es blanco puro. El borde derecho puede estar tapado por la tarjeta de un carrusel que
+ * asoma, así que basta con que **alguna** fila del bloque tenga ahí el mismo color para darlo por
+ * "de extremo a extremo" (el gris del Módulo Bomba, 249, sobre fondo blanco 255).
+ */
+export async function fondosDeExtremoAExtremo(png: Buffer, top: number, bottom: number): Promise<{ bloques: number; cortados: number }> {
+  const { data, info } = await sharp(png).raw().toBuffer({ resolveWithObject: true });
+  const px = (x: number, y: number) => {
+    const i = (y * info.width + x) * info.channels;
+    return [data[i], data[i + 1], data[i + 2]];
+  };
+  const blanco = (c: number[]) => c.every((v) => v >= 253);
+  const parecido = (a: number[], b: number[]) => a.every((v, k) => Math.abs(v - b[k]) < 6);
+  let bloques = 0;
+  let cortados = 0;
+  let enBloque = false;
+  let llega = false;
+  let filas = 0;
+  const cerrar = () => {
+    // Un bloque de menos de 40 px es un borde o una sombra, no un fondo de componente.
+    if (enBloque && filas * 4 >= 40) {
+      bloques++;
+      if (!llega) cortados++;
+    }
+    enBloque = false;
+    llega = false;
+    filas = 0;
+  };
+  for (let y = top; y < Math.min(bottom, info.height); y += 4) {
+    const izq = px(1, y);
+    if (blanco(izq)) {
+      cerrar();
+      continue;
+    }
+    enBloque = true;
+    filas++;
+    if (parecido(izq, px(info.width - 2, y))) llega = true;
+  }
+  cerrar();
+  return { bloques, cortados };
+}
+
 /** Proporción (0..1) de píxeles rojos de marca (R alto, G y B bajos). */
 export async function proporcionRoja(png: Buffer, recorte?: Parameters<typeof pixeles>[1]): Promise<number> {
   const { data, ch, total } = await pixeles(png, recorte);
@@ -120,4 +164,43 @@ async function proporcionOscura(png: Buffer, recorte: { left: number; top: numbe
   let n = 0;
   for (let i = 0; i < data.length; i += ch) if (data[i] < 80 && data[i + 1] < 80 && data[i + 2] < 80) n++;
   return n / total;
+}
+
+/** Recuadro en píxeles del dispositivo. */
+export interface Caja {
+  x: number;
+  y: number;
+  ancho: number;
+  alto: number;
+}
+
+/** Color medio (RGB) de un recuadro de la captura (B2C-51: fondo del badge "XX%"). */
+export async function colorMedio(png: Buffer, c: Caja): Promise<[number, number, number]> {
+  const { data, info } = await sharp(png).extract({ left: c.x, top: c.y, width: c.ancho, height: c.alto }).raw().toBuffer({ resolveWithObject: true });
+  const s = [0, 0, 0];
+  for (let i = 0; i < data.length; i += info.channels) for (let k = 0; k < 3; k++) s[k] += data[i + k];
+  const n = data.length / info.channels;
+  return [Math.round(s[0] / n), Math.round(s[1] / n), Math.round(s[2] / n)];
+}
+
+/**
+ * ¿Hay una línea horizontal que cruza el texto (tachado)? Busca, en la franja central del recuadro,
+ * una fila con un tramo de píxeles no blancos contiguos de al menos `minPx`. Se mide en píxeles y no
+ * en proporción del recuadro porque en Android el TextView suele ocupar todo el ancho (B2C-51:
+ * "Antes: $1.550" mide 996 px y el texto ~230); un glifo suelto no llega a 60 px seguidos.
+ */
+export async function tieneTachado(png: Buffer, c: Caja, minPx = 60): Promise<boolean> {
+  const { data, info } = await sharp(png).extract({ left: c.x, top: c.y, width: c.ancho, height: c.alto }).raw().toBuffer({ resolveWithObject: true });
+  for (let y = Math.floor(info.height * 0.3); y < Math.ceil(info.height * 0.75); y++) {
+    let racha = 0;
+    let mejor = 0;
+    for (let x = 0; x < info.width; x++) {
+      const i = (y * info.width + x) * info.channels;
+      const tinta = data[i] < 200 || data[i + 1] < 200 || data[i + 2] < 200;
+      racha = tinta ? racha + 1 : 0;
+      mejor = Math.max(mejor, racha);
+    }
+    if (mejor >= minPx) return true;
+  }
+  return false;
 }

@@ -1,14 +1,34 @@
 {
   "flow": "completa-la-promo",
-  "version": 2,
-  "last_updated": "2026-10-07T22:30:00Z",
+  "version": 3,
+  "last_updated": "2026-10-15T15:30:00Z",
   "description": "Promo 'Completa la promo' (B2C-63): toast 'Agrega N y ahorra más' / '¡Completaste la promo!' y barra de progreso al agregar/quitar unidades desde PLP, PDP, modal y Home. Suite 100% Bloqueado Data al 2026-09-28: no se llegó a ver el toast.",
   "source": {
     "suite": "B2C-63",
     "hu": "B2C-63",
     "tc_file": "Casos de Prueba/Para Ejecutar/B2C-63 Test cases.xlsx",
     "test_cases": [],
-    "last_sync": "2026-09-28T20:45:15Z"
+    "last_sync": "2026-09-28T20:45:15Z",
+    "test_cases_app": [
+      "TC-B2C63-APP-001",
+      "TC-B2C63-APP-002",
+      "TC-B2C63-APP-003",
+      "TC-B2C63-APP-004",
+      "TC-B2C63-APP-005",
+      "TC-B2C63-APP-006",
+      "TC-B2C63-APP-007",
+      "TC-B2C63-APP-008",
+      "TC-B2C63-APP-009",
+      "TC-B2C63-APP-010",
+      "TC-B2C63-APP-011",
+      "TC-B2C63-APP-012",
+      "TC-B2C63-APP-013",
+      "TC-B2C63-APP-014",
+      "TC-B2C63-APP-015",
+      "TC-B2C63-APP-016",
+      "TC-B2C63-APP-017",
+      "TC-B2C63-APP-018"
+    ]
   },
   "navigation": {
     "entry_url": "/product/000000000664214001-UN (SKU_PROM_2x1)",
@@ -31,7 +51,10 @@
     "{SKU_PROM_2x1} = 000000000664214001-UN, Papas fritas Lay's artesanas sal de mar 150 g (Despensa > Coctel y snacks > Papas fritas). Tiene mecanica 'Combina la promo' (boton del modal de B2C-74), NO 'Completa la promo'. Su PDP muestra el precio de la promo como '2 por 1 a $NaN' (posible defecto de precio, no cubierto por ningun TC).",
     "COMO INVITADO 'Agregar' abre 'Elige tu método de entrega' y no agrega: todo TC de invitado que agregue al carro necesita una direccion declarada.",
     "CON {COMPRADOR_USER} (direccion Calle Uno 23, La Florida) el SKU aparece 'Pronto disponible' + 'Ver similares': sin stock para esa direccion.",
-    "CUIDADO EN LA PDP: el primer 'Agregar' de #app-main, cuando el producto principal esta sin stock, es el del carrusel 'Productos similares'. En la exploracion eso agrego una salchicha San Jorge al carro de la cuenta; se quito con 'Quitar del carro' y se verifico el carro en 0 tras recargar."
+    "CUIDADO EN LA PDP: el primer 'Agregar' de #app-main, cuando el producto principal esta sin stock, es el del carrusel 'Productos similares'. En la exploracion eso agrego una salchicha San Jorge al carro de la cuenta; se quito con 'Quitar del carro' y se verifico el carro en 0 tras recargar.",
+    "APP Android v1.0.7 (emulador, 2026-10-15, B2C-63 APP): en la SRP (buscar el SKU completo en tab Buscar → product-search) {SKU_COMPLETA_PROMO_2X1}=664214001 muestra cucarda '2x1 a $2.550' y {SKU_COMPLETA_PROMO_3X2}=641229001 '3x2 a $4.900'. Agregar/sumar 1-3 unidades (product-add-<sku>, product-increment-<sku>) NO muestra toast 'Agrega N y ahorra más'/'¡Completaste la promo!' ni barra de progreso, con o sin dirección (Calle Uno 23); tampoco en la PDP (cucarda '2 por 1 a $2.550'). El NxM sí se aplica (Floating Cart 'Te faltan' no sube con la 2ª unidad 2x1). Invitado sin dirección SÍ agrega desde la SRP.",
+    "Decisión del usuario 2026-10-15: suite APP a 'Bloqueado' (no Rechazado) porque la tarea APP B2C-366 está en LISTO EN DEVELOPMENT y el APK v1.0.7 es del 06-10; APP-007 Bloqueado Data (cuenta correo vs login RUT). iOS Pendiente; planilla sin archivar y HU sin mover.",
+    "Los SKU de promo no aparecen en la primera pantalla del Home con dirección (carrusel 'Los más vendidos'): los TC de carrusel del Home no tienen aún carrusel verificado."
   ],
   "page_objects": {
     "exists": false
