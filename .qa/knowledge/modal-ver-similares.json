@@ -1,59 +1,60 @@
 {
- "flow": "modal-ver-similares",
- "version": 2,
- "last_updated": "2026-10-07T23:45:00Z",
- "description": "Modal 'Ver similares' (B2C-40): lo abre el boton 'Ver similares' de un producto sin stock (shelf de PLP/SRP, PDP, carro, minicarro). Drawer de Chakra: panel lateral derecho en Desktop, bottom sheet en Mobile. POM tests/pages/ModalSimilares.ts.",
- "source": {
-  "suite": "B2C-40",
-  "hu": "B2C-40",
-  "tc_file": "Casos de Prueba/Para Ejecutar/B2C-40 Test Cases.xlsx",
-  "test_cases": [
-   "TC-40-D-001",
-   "TC-40-M-001"
+  "flow": "modal-ver-similares",
+  "version": 2,
+  "last_updated": "2026-10-07T23:45:00Z",
+  "description": "Modal 'Ver similares' (B2C-40): lo abre el boton 'Ver similares' de un producto sin stock (shelf de PLP/SRP, PDP, carro, minicarro). Drawer de Chakra: panel lateral derecho en Desktop, bottom sheet en Mobile. POM tests/pages/ModalSimilares.ts.",
+  "source": {
+    "suite": "B2C-40",
+    "hu": "B2C-40",
+    "tc_file": "Casos de Prueba/Para Ejecutar/B2C-40 Test Cases.xlsx",
+    "test_cases": [
+      "TC-40-D-001",
+      "TC-40-M-001"
+    ],
+    "last_sync": "2026-09-28T20:08:06Z"
+  },
+  "navigation": {
+    "entry_url": "/category/carnes_vacuno (PLP con 1 producto sin stock al 2026-09-28)",
+    "modals": [
+      "[role=dialog] con 'Productos similares' y 'Estás reemplazando:'"
+    ]
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Boton en el shelf",
+        "selector": "ShelfProducto.verSimilares = getByRole(button,{name:/ver similares/i})",
+        "type": "getByRole"
+      },
+      {
+        "description": "Raiz del modal: dialog filtrado por 'Estás reemplazando'. Titulo 'Productos similares' (banner); cierre = button 'Close' (sin traducir)",
+        "selector": "[role=dialog] hasText /est[áa]s reemplazando/i",
+        "type": "css"
+      },
+      {
+        "description": "Lista de similares: tarjetas de shelf simplificada con button 'Agregar'; pie con button 'Reemplazar productos' (plural en la UI; la planilla dice a veces 'Reemplazar producto')",
+        "selector": "root.getByRole(button,{name:/^agregar$/i}) · /reemplazar productos?/i",
+        "type": "getByRole"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "network": {
+    "endpoints": [],
+    "intercepts_useful": []
+  },
+  "observations": [
+    "GEOMETRIA: Desktop 1280x900 -> panel 448x900 en x=832 (borde derecho), overlay .chakra-modal__overlay visible. Mobile 390x844 -> panel 390 de ancho, y=127 a 844 (anclado abajo), clase chakra-slide.",
+    "LOS SIMILARES SON LOS MISMOS PARA CUALQUIER PRODUCTO en DEV: para un tapapecho vacuno Einstein devuelve salchichas/chorizos San Jorge, La Crianza, La Preferida, Super Pollo — la misma lista que el carrusel 'Productos similares' de las PDP de 628239 y 675191. Relevante para TC que validan pertinencia o estado vacio.",
+    "DATA: {SKU_PRODS_SIMILARES}=628239 y {SKU_SIN_SIMILARES}=675191 tienen stock (2026-09-28); 32 de 34 TC de B2C-40 quedaron Bloqueado Data por eso. El carro de {COMPRADOR_USER} esta vacio.",
+    "2026-10-07: TC-40-M-009 volvió a Pendiente con el mismo {SKU_SIN_SIMILARES}=000000000000675191-UN; re-verificado: sigue con stock ('Agregar') y su PDP muestra 'Productos similares' (6) → Bloqueado Data otra vez. Se encuentra rápido con /search?q=<sku> (1 resultado) y su PDP /albondigas-super-pollo-espaciales-congeladas-300-g/000000000000675191-UN.html.",
+    "2026-10-16 (B2C-40 APP, Android v1.0.7, invitado): {SKU_PRODS_SIMILARES}=628239 y {SKU_SIN_SIMILARES}=675191 aparecen con 'Agregar' en Buscar (con stock) -> las 17 filas APP a Bloqueado Data (4 además por login con correo, 2 por proxy en TBD)."
   ],
-  "last_sync": "2026-09-28T20:08:06Z"
- },
- "navigation": {
-  "entry_url": "/category/carnes_vacuno (PLP con 1 producto sin stock al 2026-09-28)",
-  "modals": [
-   "[role=dialog] con 'Productos similares' y 'Estás reemplazando:'"
-  ]
- },
- "selectors": {
-  "preferred": [
-   {
-    "description": "Boton en el shelf",
-    "selector": "ShelfProducto.verSimilares = getByRole(button,{name:/ver similares/i})",
-    "type": "getByRole"
-   },
-   {
-    "description": "Raiz del modal: dialog filtrado por 'Estás reemplazando'. Titulo 'Productos similares' (banner); cierre = button 'Close' (sin traducir)",
-    "selector": "[role=dialog] hasText /est[áa]s reemplazando/i",
-    "type": "css"
-   },
-   {
-    "description": "Lista de similares: tarjetas de shelf simplificada con button 'Agregar'; pie con button 'Reemplazar productos' (plural en la UI; la planilla dice a veces 'Reemplazar producto')",
-    "selector": "root.getByRole(button,{name:/^agregar$/i}) · /reemplazar productos?/i",
-    "type": "getByRole"
-   }
-  ],
-  "fallback": [],
-  "deprecated": []
- },
- "network": {
-  "endpoints": [],
-  "intercepts_useful": []
- },
- "observations": [
-  "GEOMETRIA: Desktop 1280x900 -> panel 448x900 en x=832 (borde derecho), overlay .chakra-modal__overlay visible. Mobile 390x844 -> panel 390 de ancho, y=127 a 844 (anclado abajo), clase chakra-slide.",
-  "LOS SIMILARES SON LOS MISMOS PARA CUALQUIER PRODUCTO en DEV: para un tapapecho vacuno Einstein devuelve salchichas/chorizos San Jorge, La Crianza, La Preferida, Super Pollo — la misma lista que el carrusel 'Productos similares' de las PDP de 628239 y 675191. Relevante para TC que validan pertinencia o estado vacio.",
-  "DATA: {SKU_PRODS_SIMILARES}=628239 y {SKU_SIN_SIMILARES}=675191 tienen stock (2026-09-28); 32 de 34 TC de B2C-40 quedaron Bloqueado Data por eso. El carro de {COMPRADOR_USER} esta vacio.",
-  "2026-10-07: TC-40-M-009 volvió a Pendiente con el mismo {SKU_SIN_SIMILARES}=000000000000675191-UN; re-verificado: sigue con stock ('Agregar') y su PDP muestra 'Productos similares' (6) → Bloqueado Data otra vez. Se encuentra rápido con /search?q=<sku> (1 resultado) y su PDP /albondigas-super-pollo-espaciales-congeladas-300-g/000000000000675191-UN.html."
- ],
- "page_objects": {
-  "exists": true,
-  "path": "tests/pages/ModalSimilares.ts",
-  "class": "ModalSimilares"
- },
- "history": []
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/ModalSimilares.ts",
+    "class": "ModalSimilares"
+  },
+  "history": []
 }

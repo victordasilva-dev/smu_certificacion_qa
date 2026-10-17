@@ -1,30 +1,53 @@
 {
-  "flow": "carro-fusion",
-  "description": "Fusión del carro de invitado con el carro guardado de la cuenta al iniciar sesión (B2C-168)",
-  "entry_url": "/ (Ingresa aquí) -> /cart",
-  "auth": {
-    "type": "correo + OTP (ver checkout-datos-entrega / login-solo-correo)",
-    "storage_state": ".qa/auth/b148-user.json: sirve para armar el carro guardado de la cuenta en otro contexto sin gastar OTP; sigue válida después de iniciar sesión en otro contexto"
-  },
-  "network": ["POST /mobify/proxy/api/checkout/shopper-baskets/v2/organizations/f_ecom_bmkg_dev/baskets/actions/merge?siteId=Unimarc&createDestinationBasket=true (al iniciar sesión)"],
-  "selectors": {
-    "preferred": [
-      {"description": "Ítems del carro: botones 'Eliminar <nombre>' (dos por ítem); el nombre coincide con el <title> de la PDP", "selector": "getByRole(button,{name:/^Eliminar .+/})", "type": "getByRole"},
-      {"description": "Cantidad del ítem: div más interno con su 'Eliminar <nombre>' y /\\d+ un\\./, luego getByText(/^\\d+ un\\.$/)", "selector": "CarroPage.cantidadDe(nombre)", "type": "css+text"},
-      {"description": "Vaciar carro (solo Desktop) -> alertdialog 'Vaciar el carro' -> 'Sí, eliminar'. En Mobile 390x844 no existe: eliminar ítem por ítem", "selector": "CarroPage.vaciar()", "type": "getByRole"},
-      {"description": "PDP: bloque de compra = div más interno de unimarc-product-core con el link de marca a[href^='/search'] y 'Agregar'/'Aumentar cantidad'. 'Compartir' NO sirve de ancla: en Mobile está junto a la imagen", "selector": "PDPPage.ficha / fijarCantidad(n)", "type": "css"}
-    ],
-    "fallback": [],
-    "deprecated": []
-  },
-  "observations": [
-    "2026-10-14: como invitado 'Agregar' (PDP y SRP) abre 'Elige tu método de entrega' sin agregar: un carro de invitado con productos exige dirección o tienda declarada.",
-    "Guest con dirección por sugerencia de Google: buscador -> option -> 'Continuar con detalles de la dirección' -> 'Agregar dirección'; el Store Locator muestra 'Calle Uno 23 · Desde: Mié 14/10, 09:00 hrs. · $2.990'.",
-    "Si el invitado tenía dirección, tras el login el sitio pide un segundo OTP 'Autenticación requerida' (correo de 5 min, sin nombre; el del login dice 'Hola, Karl Paul Fin' y 10 min). En Mobile/webkit llega después de la oferta de passkey y la tapa: atender ambos en bucle.",
-    "Resultados 2026-10-14: carro invitado vacío + guardado con productos -> queda el guardado intacto; ambos vacíos -> '¡Tu carro está vacío!'; Store Locator conserva la dirección y ventana del invitado.",
-    "{SKU_NO_DISPONIBLE}=000000000400254005-UN sigue con stock en Unimarc Los Leones (2026-10-14) y es el mismo SKU que {SKU_UNITARIO}.",
-    "{SKU_CROSS_SELLING}=000000000401693004-UN es 'Yoghurt batido Danone frutilla 110 gr' (promo 'Lleva 8'); {SKU_NOMBRE_CORTO}=Pera bolsa 1 Kg."
+ "flow": "carro-fusion",
+ "description": "Fusión del carro de invitado con el carro guardado de la cuenta al iniciar sesión (B2C-168)",
+ "entry_url": "/ (Ingresa aquí) -> /cart",
+ "auth": {
+  "type": "correo + OTP (ver checkout-datos-entrega / login-solo-correo)",
+  "storage_state": ".qa/auth/b148-user.json: sirve para armar el carro guardado de la cuenta en otro contexto sin gastar OTP; sigue válida después de iniciar sesión en otro contexto"
+ },
+ "network": [
+  "POST /mobify/proxy/api/checkout/shopper-baskets/v2/organizations/f_ecom_bmkg_dev/baskets/actions/merge?siteId=Unimarc&createDestinationBasket=true (al iniciar sesión)"
+ ],
+ "selectors": {
+  "preferred": [
+   {
+    "description": "Ítems del carro: botones 'Eliminar <nombre>' (dos por ítem); el nombre coincide con el <title> de la PDP",
+    "selector": "getByRole(button,{name:/^Eliminar .+/})",
+    "type": "getByRole"
+   },
+   {
+    "description": "Cantidad del ítem: div más interno con su 'Eliminar <nombre>' y /\\d+ un\\./, luego getByText(/^\\d+ un\\.$/)",
+    "selector": "CarroPage.cantidadDe(nombre)",
+    "type": "css+text"
+   },
+   {
+    "description": "Vaciar carro (solo Desktop) -> alertdialog 'Vaciar el carro' -> 'Sí, eliminar'. En Mobile 390x844 no existe: eliminar ítem por ítem",
+    "selector": "CarroPage.vaciar()",
+    "type": "getByRole"
+   },
+   {
+    "description": "PDP: bloque de compra = div más interno de unimarc-product-core con el link de marca a[href^='/search'] y 'Agregar'/'Aumentar cantidad'. 'Compartir' NO sirve de ancla: en Mobile está junto a la imagen",
+    "selector": "PDPPage.ficha / fijarCantidad(n)",
+    "type": "css"
+   }
   ],
-  "suites": ["B2C-168"],
-  "updated": "2026-10-14"
+  "fallback": [],
+  "deprecated": []
+ },
+ "observations": [
+  "2026-10-14: como invitado 'Agregar' (PDP y SRP) abre 'Elige tu método de entrega' sin agregar: un carro de invitado con productos exige dirección o tienda declarada.",
+  "Guest con dirección por sugerencia de Google: buscador -> option -> 'Continuar con detalles de la dirección' -> 'Agregar dirección'; el Store Locator muestra 'Calle Uno 23 · Desde: Mié 14/10, 09:00 hrs. · $2.990'.",
+  "Si el invitado tenía dirección, tras el login el sitio pide un segundo OTP 'Autenticación requerida' (correo de 5 min, sin nombre; el del login dice 'Hola, Karl Paul Fin' y 10 min). En Mobile/webkit llega después de la oferta de passkey y la tapa: atender ambos en bucle.",
+  "Resultados 2026-10-14: carro invitado vacío + guardado con productos -> queda el guardado intacto; ambos vacíos -> '¡Tu carro está vacío!'; Store Locator conserva la dirección y ventana del invitado.",
+  "{SKU_NO_DISPONIBLE}=000000000400254005-UN sigue con stock en Unimarc Los Leones (2026-10-14) y es el mismo SKU que {SKU_UNITARIO}.",
+  "{SKU_CROSS_SELLING}=000000000401693004-UN es 'Yoghurt batido Danone frutilla 110 gr' (promo 'Lleva 8'); {SKU_NOMBRE_CORTO}=Pera bolsa 1 Kg.",
+  "2026-10-15: carro de invitado bajo el mínimo ($20.000) muestra solo 'Mínimo de compra $20.000' deshabilitado (sin botón de login). Sobre el mínimo el botón es 'Continuar con la entrega' (no 'Inicia sesión o regístrate' del CA1) y como invitado abre '¡Hola, ingresa aquí!'.",
+  "2026-10-15: {SKU_UNITARIO}=000000000400254005-UN está 'Pronto disponible' con la dirección Calle Uno 23, La Florida (sin 'Agregar'); en Unimarc Los Leones sigue con stock.",
+  "2026-10-15: D/M-008 Aprobado (invitado ×2 vs guardado ×5 -> queda 2). El login de un invitado con dirección pide 2 OTP (login 10 min + 'Autenticación requerida' 5 min)."
+ ],
+ "suites": [
+  "B2C-168"
+ ],
+ "updated": "2026-10-15"
 }

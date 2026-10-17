@@ -1,5 +1,10 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { Page } from '@playwright/test';
 import { test, expect, token } from './support/fixtures';
+import { LoadedTestData } from './support/testData';
+import { LoginModal } from './pages/LoginModal';
+import { esperarOtp, marcaOtp } from './support/otp';
 import { DESKTOP, MOBILE } from './support/viewports';
 import { PaginaHabilitada } from './pages/PaginaHabilitada';
 import { PDPPage } from './pages/PDPPage';
@@ -10,8 +15,8 @@ import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
  *
  * Corren como invitado los TC cuya precondición acepta "invitado o con sesión activa" (el `read`
  * los marca `cuenta_no_declarada`, pero la rama invitado no usa cuenta). Quedan sin `test()`:
- * - D/M-002 y D/M-005 (logueado): {COMPRADOR_USER} es por RUT y el login pasó a pedir solo correo.
- * - M-003: su paso 4 repite el caso con un usuario logueado sin dirección que la fila no declara.
+ * Los logueados (D/M-002, D/M-005 y el paso 4 de M-003) usan {COMPRADOR_SIN_DIRECCION_USER}, por correo
+ * + OTP; la sesión queda en `.qa/auth/b138-sin-direccion.json` para no pedir un OTP por caso.
  * - D/M-010 y 011: como invitado el modal se abre sin pedir nada a la red (no hay request que
  *   hacer fallar) y la fila no declara qué llamada simular. Sin red, el sitio entra en modo
  *   "navegando sin conexión" y el modal ni se abre.
@@ -50,6 +55,51 @@ async function headerSinCambios(page: Page, home: PaginaHabilitada): Promise<voi
   await expect(home.header.storeLocator).toContainText(/elige una forma de entrega/i, { timeout: 30000 });
 }
 
+/** Sesión de {COMPRADOR_SIN_DIRECCION_USER}. No se commitea. */
+const SESION = path.resolve('.qa/auth/b138-sin-direccion.json');
+
+/**
+ * Inicia sesión con {COMPRADOR_SIN_DIRECCION_USER}: reusa la sesión guardada y, si no sirve, entra
+ * por correo + OTP desde "Ingresa aquí" (atendiendo la oferta de passkey y un posible segundo OTP).
+ */
+async function iniciarSesion(page: Page, testData: LoadedTestData): Promise<PaginaHabilitada> {
+  const correo = token(testData, 'COMPRADOR_SIN_DIRECCION_USER')!.trim();
+  if (fs.existsSync(SESION)) {
+    await page.context().addCookies(JSON.parse(fs.readFileSync(SESION, 'utf-8')).cookies ?? []);
+  }
+  const home = await new PaginaHabilitada(page).goto();
+  await home.cookies.aceptarSiAparece();
+  const login = new LoginModal(page);
+  const conSesion = await home.header.saludo.waitFor({ state: 'visible', timeout: 20000 }).then(() => true, () => false);
+  if (!conSesion) {
+    const desde = marcaOtp();
+    await login.pedirCodigo(correo);
+    const codigo = await esperarOtp(correo, desde, { digitos: 6 });
+    const desde2 = marcaOtp();
+    await login.escribirCodigo(codigo);
+    await login.disparador.first().waitFor({ state: 'hidden', timeout: 45000 });
+    const otp = page.getByRole('dialog').filter({ hasText: /autenticaci[óo]n requerida/i });
+    const ahoraNo = login.ofertaPasskey.getByRole('button', { name: /^ahora no$/i });
+    let otpRespondido = false;
+    const fin = Date.now() + 20000;
+    while (Date.now() < fin) {
+      if (!otpRespondido && (await otp.isVisible().catch(() => false))) {
+        await login.escribirCodigo(await esperarOtp(correo, desde2, { digitos: 6 }));
+        await otp.waitFor({ state: 'hidden', timeout: 30000 });
+        otpRespondido = true;
+        continue;
+      }
+      if (await ahoraNo.isVisible().catch(() => false)) await ahoraNo.click({ timeout: 5000 }).catch(() => {});
+      await page.waitForTimeout(500);
+    }
+  }
+  await login.descartarPasskey();
+  await expect(home.header.saludo, 'sesión iniciada').toBeVisible({ timeout: 30000 });
+  fs.mkdirSync(path.dirname(SESION), { recursive: true });
+  await page.context().storageState({ path: SESION });
+  return home;
+}
+
 function rel(url: string): string {
   const u = new URL(url);
   return (u.pathname + u.search).replace(/^\//, '');
@@ -78,6 +128,68 @@ test.describe('B2C-138 — Store Locator sin método de entrega', () => {
         await sinMetodoEn(pdp, 'PDP', cp, 4);
         await pdp.capturarEvidencia(cp);
       });
+
+      test(`TC-B2C138-${L}-002 · Header muestra «Elige una forma de entrega» + ícono ∨ sin método seleccionado [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        const cp = `TC-B2C138-${L}-002`;
+        const home = await iniciarSesion(page, testData);
+        await sinMetodoEn(home, 'Home', cp, 2);
+
+        const plp = await new PaginaHabilitada(page, rel(token(testData, 'PLP_URL')!), 'PLP').goto();
+        await sinMetodoEn(plp, 'PLP', cp, 3);
+
+        const pdp = await new PDPPage(page).abrir(token(testData, 'SKU_VALID_001')!);
+        await sinMetodoEn(pdp, 'PDP', cp, 4);
+        await pdp.capturarEvidencia(cp);
+      });
+
+      test(`TC-B2C138-${L}-005 · Estructura del modal para logueado: tabs, imagen y «sin direcciones guardadas» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        const cp = `TC-B2C138-${L}-005`;
+        const home = await iniciarSesion(page, testData);
+        await home.capturarEvidencia(cp, 1, 'sesión iniciada sin método de entrega', { elemento: home.header.barraDelSitio });
+        await home.header.storeLocator.click();
+        const modal = await new MetodoEntregaModal(page).esperarAbierto();
+        await modal.capturarModal(cp, 2, 'modal abierto');
+
+        const despacho = await modal.estiloTab(modal.tabDespachoDomicilio);
+        const retiro = await modal.estiloTab(modal.tabRetiroEnTienda);
+        expect(despacho.activa, '«Despacho a domicilio» activa por defecto').toBe(true);
+        expect(despacho.icono, 'ícono de Despacho en rojo').toBe(ROJO);
+        expect(retiro.activa, '«Retiro en tienda» inactiva').toBe(false);
+        expect(retiro.icono, 'Retiro en gris (no rojo)').not.toBe(ROJO);
+        expect(retiro.icono, 'ícono de Retiro presente').not.toBeNull();
+        expect(despacho.icono, 'ícono de Despacho presente').not.toBeNull();
+        await modal.capturarModal(cp, 4, 'pestañas Despacho (activa) y Retiro (inactiva)', modal.tabDespachoDomicilio.locator('..'));
+
+        await expect(modal.imagenContenido, 'imagen en el área de contenido').toBeVisible();
+        await expect(modal.mensajeSinDirecciones).toBeVisible();
+        await expect(modal.textoAyuda, 'texto de ayuda').toBeVisible();
+        await modal.capturarModal(cp);
+      });
+
+      if (L === 'M') {
+        test(`TC-B2C138-M-003 · Tap en el Store Locator abre el modal «Elige tu método de entrega» con botón X (Mobile)`, async ({ page, testData }) => {
+          const cp = 'TC-B2C138-M-003';
+          // Pasos 1-3 como invitado.
+          const { home, modal } = await abrirModal(page);
+          await expect(modal.encabezado).toBeVisible();
+          await expect(modal.botonCerrar, 'botón X (invitado)').toBeVisible();
+          await expect(modal.botonCerrar).toBeEnabled();
+          await modal.capturarModal(cp, 2, 'invitado: modal «Elige tu método de entrega» con X', page);
+          await modal.cerrarConX();
+          await expect(modal.root, 'modal cerrado').toBeHidden();
+
+          // Paso 4: lo mismo con un usuario logueado sin dirección.
+          await iniciarSesion(page, testData);
+          await sinMetodoEn(home, 'Home', cp, 4);
+          await home.header.storeLocator.click();
+          const modal2 = await new MetodoEntregaModal(page).esperarAbierto();
+          await expect(modal2.encabezado).toBeVisible();
+          await expect(modal2.botonCerrar, 'botón X (logueado)').toBeVisible();
+          await expect(modal2.botonCerrar).toBeEnabled();
+          await modal2.capturarModal(cp, 4, 'logueado sin dirección: modal con X', page);
+          await modal2.capturarModal(cp, undefined, undefined, page);
+        });
+      }
 
       if (L === 'D') {
         test(`TC-B2C138-D-003 · Clic en el Store Locator abre el modal «Elige tu método de entrega» con botón X (Desktop)`, async ({ page }) => {

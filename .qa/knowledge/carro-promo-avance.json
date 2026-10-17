@@ -1,0 +1,52 @@
+{
+  "flow": "carro-promo-avance",
+  "version": 1,
+  "last_updated": "2026-10-16T15:00:00Z",
+  "description": "Mensaje de avance de promo en el shelf del carro y minicarro (B2C-50): 'Te faltan N para la promo ›' (Combina, CTA que abre [[combina-la-promo]]) / sin CTA (Completa), 'Llevas la promo ✓' al completar.",
+  "source": {
+    "suite": "B2C-50",
+    "hu": "B2C-50",
+    "tc_file": "Casos de Prueba/Ejecutados/SP2/B2C-50 Test Cases.xlsx",
+    "test_cases": [
+      "TC-B2C50-D-003",
+      "TC-B2C50-M-002"
+    ],
+    "last_sync": "2026-10-16T15:00:00Z"
+  },
+  "navigation": {
+    "entry_url": "/cart ({CART_URL})",
+    "armado": "con sesión: /search?q=<SKU> -> 'Agregar' (pasa a stepper 'Aumentar cantidad') -> /cart"
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Mensaje de promo incompleta del ítem (es un button)",
+        "selector": "getByTestId('sf-cart-promo-cta')",
+        "type": "getByTestId"
+      },
+      {
+        "description": "Chevron '›' del CTA: svg con polyline '9 5 16 12 9 19' dentro del mensaje",
+        "selector": "getByTestId('sf-cart-promo-cta').locator('svg polyline')",
+        "type": "css"
+      }
+    ],
+    "fallback": [],
+    "deprecated": []
+  },
+  "page_objects": {
+    "exists": true,
+    "path": "tests/pages/ShelfCarro.ts",
+    "class": "ShelfCarro (mensajePromo, chevronPromo)"
+  },
+  "observations": [
+    "2026-10-16: invitado sin dirección -> 'Agregar' (SRP) abre 'Elige tu método de entrega' sin sumar: los 24 TC de invitado de B2C-50 quedaron Bloqueado Data (no declaran dirección/tienda).",
+    "{SKU_COMBINA_PROMO}=000000000000666200-UN (carne molida Fundo Río Alegre 500 g) tiene 'Lleva 2 por $12.490' (nxp-2x12490, M=2; el modal dice '1 / 2 productos'), pero {CANTIDAD_PROMO_COMBINA}=3 en el Excel de data.",
+    "Con {USER_AUTH_001} (vhchirinos+comprador, Calle Uno 23, La Florida) y 666200 x1 el carro muestra 'Te faltan 1 para la promo' + chevron, en 1440x900 (chromium) y 390x844 (webkit). D-003/M-002 Aprobado.",
+    "666200 es favorito de {USER_AUTH_001}: su shelf muestra 'Quitar de favoritos' en vez de 'Guardar en favoritos'; ShelfProducto.todos() acepta ambos. Su imagen no lleva el SKU en el src: porSku también busca a[href*=SKU].",
+    "La sesión de {USER_AUTH_001} se reutiliza de .qa/auth/b189-user.json -> .qa/auth/b50-user.json (sin OTP en la corrida).",
+    "APP Android v1.0.7 (2026-10-16): invitado agrega desde Buscar sin dirección. En 'Mi carro' el mensaje es hermano del cart-item-<sku> (no hijo): Button 'Te faltan N para la promo. Ver productos combinables' (Combina, con CTA) o TextView 'Llevas la promo'. POM tests-app/pages/CarroScreen.ts (mensajePromo, ctaPromoCombina, llevasLaPromo).",
+    "APP: el CTA abre la hoja 'Combina la promo' (tests-app/pages/CombinaLaPromoModal.ts): '1 / 2 productos', 666200 'En carro 1 un.' y 666285 (tártaro) con 'Agregar'; pie 'Volver al inicio'. Durante la animación el dump de UI puede volver vacío o con el carro: reintentar.",
+    "APP: {SKU_COMPLETA_PROMO_3X2}=641229001 es promo Combina (SRP 'Combina la promo', carro 'Ver productos combinables'), no Completa del mismo SKU -> TC de Completa a Bloqueado Data. APP-003 y APP-011 Aprobado."
+  ],
+  "history": []
+}

@@ -26,6 +26,39 @@ export class HomeScreen extends BaseScreen {
     return new ListadoScreen(this.screen, this.plataforma);
   }
 
+  /**
+   * Recorre el Home de arriba abajo (B2C-29) hasta que aparece `fin` o deja de haber contenido
+   * nuevo. Devuelve los textos del contenido —sin el NavBar de arriba ni la TabBar flotante de
+   * abajo— con su posición horizontal, y una captura por pantalla.
+   */
+  async recorrer(fin: RegExp, maxPantallas = 25): Promise<{ textos: { t: string; x: number; ancho: number }[]; pantallas: Buffer[] }> {
+    const textos: { t: string; x: number; ancho: number }[] = [];
+    const pantallas: Buffer[] = [];
+    let sinNuevos = 0;
+    for (let i = 0; i < maxPantallas && sinNuevos < 2; i++) {
+      const nodos: { t: string; x: number; y: number; ancho: number }[] = [];
+      const visitar = (n: any) => {
+        const t = (n.text ?? n.label ?? '').trim();
+        const r = n.rect ?? n.bounds;
+        const id = String(n.identifier ?? n.resourceId ?? '');
+        if (t && r && /TextView|StaticText/.test(String(n.type ?? '')) && !id.startsWith('com.android.systemui')) {
+          nodos.push({ t, x: r.x, y: r.y, ancho: r.width });
+        }
+        for (const c of n.children ?? []) visitar(c);
+      };
+      for (const n of await this.screen.viewTree()) visitar(n);
+      pantallas.push(await this.screen.screenshot());
+      // Fuera: el NavBar (arriba) y la TabBar flotante (abajo).
+      const contenido = nodos.filter((n) => n.y > 260 && n.y < 2150);
+      const antes = textos.length;
+      for (const n of contenido) if (!textos.some((v) => v.t === n.t && v.x === n.x)) textos.push({ t: n.t, x: n.x, ancho: n.ancho });
+      sinNuevos = textos.length === antes ? sinNuevos + 1 : 0;
+      if (contenido.some((n) => fin.test(n.t))) break;
+      await this.screen.swipe('up');
+    }
+    return { textos, pantallas };
+  }
+
   /** Tarjeta de un producto en las vitrinas del Home (`product-<sku>`). */
   producto(sku: string): Locator {
     return this.screen.getByTestId(`product-${sku}`);

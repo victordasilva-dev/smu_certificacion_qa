@@ -71,7 +71,8 @@ export class ShelfProducto {
 
   /** Todos los shelves de la página, en el orden en que se renderizan. */
   static todos(page: Page): Locator {
-    return page.locator('main div:has(> div > button[aria-label="Guardar en favoritos"])');
+    // Con sesión, un producto ya favorito muestra "Quitar de favoritos" (666200 en {USER_AUTH_001}, B2C-50).
+    return page.locator('main div:has(> div > button:is([aria-label="Guardar en favoritos"], [aria-label="Quitar de favoritos"]))');
   }
 
   static enIndice(page: Page, indice: number): ShelfProducto {
@@ -331,7 +332,12 @@ export class ShelfProducto {
    * `data-*` que no existe.
    */
   static porSku(page: Page, sku: string): ShelfProducto {
-    return new ShelfProducto(page, ShelfProducto.todos(page).filter({ has: page.locator(`img[src*="${sku}"]`) }));
+    // Algunas imágenes no llevan el SKU en el src (carne molida 666200, B2C-50): el link a la PDP
+    // (`/<slug>/<SKU>.html`) sí lo lleva.
+    return new ShelfProducto(
+      page,
+      ShelfProducto.todos(page).filter({ has: page.locator(`img[src*="${sku}"], a[href*="${sku}"]`) }),
+    );
   }
 
   /**

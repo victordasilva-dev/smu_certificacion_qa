@@ -150,6 +150,32 @@ export class DatosEntregaPage extends BasePage {
     return this.botonIrAPagar.locator('xpath=..');
   }
 
+  // --- Estructura de la página (B2C-147) -----------------------------------------------------
+
+  /** Ícono "<" junto al título. */
+  get botonVolver(): Locator {
+    return this.page.getByRole('button', { name: /^volver$/i }).first();
+  }
+
+  /** Párrafo de una línea del resumen de costos ("Despacho", "Subtotal", "Subtotal con Unipay"). */
+  lineaCosto(nombre: RegExp): Locator {
+    return this.page.locator('main p').filter({ hasText: nombre }).first();
+  }
+
+  /** "¿Recibe alguien más?" con su texto de ayuda. */
+  get recibeAlguienMas(): Locator {
+    return this.page.locator('main p').filter({ hasText: /^¿recibe alguien m[áa]s\?$/i }).first();
+  }
+
+  get ayudaRecibeAlguienMas(): Locator {
+    return this.page.locator('main p').filter({ hasText: /^solo la usaremos si necesitas/i }).first();
+  }
+
+  /** Placeholders grises del skeleton de carga (Chakra). */
+  get skeletons(): Locator {
+    return this.page.locator('.chakra-skeleton');
+  }
+
   /** El toast de confirmación o de error de la ventana. */
   toast(texto: RegExp): Locator {
     return this.page.getByRole('status').filter({ hasText: texto }).first();
