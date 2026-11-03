@@ -310,6 +310,39 @@ test.describe('B2C-147 — Mis Envíos: ver y seleccionar la ventana de despacho
         await entrega.capturarEvidencia(cp);
       });
 
+      if (L === 'D') {
+        test(`TC-B2C147-D-006 · El resumen de totales incluye despacho, subtotal y subtotal con Unipay [Logueado] (${sufijo})`, async ({ page, testData }) => {
+          const cp = 'TC-B2C147-D-006';
+          await iniciarSesion(page, testData);
+          await asegurarMetodo(page, testData, 'despacho');
+          await asegurarCarro(page, testData);
+          // Precondición: el carro también contiene {SKU_UNIPAY_001}.
+          const pdp = await new PDPPage(page).abrir(token(testData, 'SKU_UNIPAY_001')!);
+          await pdp.agregarVisible.click();
+          await page.waitForTimeout(3000);
+          const carro = await new CarroPage(page).goto();
+          await expect(carro.titulo).toBeVisible({ timeout: 30000 });
+          expect((await carro.productos()).length, 'el carro tiene {SKU_VALID_001} y {SKU_UNIPAY_001}').toBe(2);
+          await carro.capturarEvidencia(cp, 2, 'carro con {SKU_VALID_001} y {SKU_UNIPAY_001}');
+          await carro.continuarConLaEntrega();
+          const entrega = new DatosEntregaPage(page);
+          await entrega.waitUntilReady();
+          await expect(entrega.skeletons).toHaveCount(0, { timeout: 30000 });
+          await entrega.capturarEvidencia(cp, 4, 'Mis Envíos (despacho) con producto Unipay');
+          const bloque = ((await entrega.bloqueCostos.innerText()) ?? '').replace(/\s+/g, ' ');
+          test.info().annotations.push({ type: 'resumen de totales', description: bloque });
+          await expect.soft(entrega.lineaCosto(/^despacho$/i), 'línea «Despacho»').toBeVisible();
+          await expect.soft(entrega.lineaCosto(/^subtotal$/i), 'línea «Subtotal»').toBeVisible();
+          await expect.soft(entrega.lineaCosto(/^subtotal con unipay$/i), 'línea «Subtotal con Unipay»').toBeVisible();
+          const monto = (re: RegExp) => Number((bloque.match(re)?.[1] ?? '').replace(/\D/g, '')) || NaN;
+          const sub = monto(/subtotal\s*\$\s*([\d.]+)/i);
+          const unipay = monto(/subtotal con unipay\s*\$\s*([\d.]+)/i);
+          test.info().annotations.push({ type: 'montos', description: `Subtotal ${sub}; Subtotal con Unipay ${unipay}` });
+          expect.soft(unipay, 'Subtotal con Unipay menor que Subtotal (descuento Unipay)').toBeLessThan(sub);
+          await entrega.capturarEvidencia(cp);
+        });
+      }
+
       test(`TC-B2C147-${L}-005 · El selector de fechas muestra los días de Janis con el primero disponible marcado [Logueado] (${sufijo})`, async ({ page, testData }) => {
         const cp = `TC-B2C147-${L}-005`;
         const entrega = await hastaMisEnvios(page, testData, cp, 'despacho');
