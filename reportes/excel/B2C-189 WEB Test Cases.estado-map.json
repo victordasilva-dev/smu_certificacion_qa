@@ -1,0 +1,62 @@
+{
+  "TC-B2C189-D-007": {
+    "Estado": "Aprobado",
+    "Observación": "Después de cambiar la dirección y completar la validación OTP, apareció el flujo de productos no disponibles esperado."
+  },
+  "TC-B2C189-D-008": {
+    "Estado": "Rechazado",
+    "Observación": "Tras confirmar la nueva dirección, no apareció el diálogo de productos no disponibles dentro del tiempo de espera de la prueba."
+  },
+  "TC-B2C189-D-012": {
+    "Estado": "Rechazado",
+    "Observación": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudieron comprobar STL-041 ni las acciones indicadas."
+  },
+  "TC-B2C189-D-013": {
+    "Estado": "Rechazado",
+    "Observación": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Cambiar dirección”."
+  },
+  "TC-B2C189-D-014": {
+    "Estado": "Rechazado",
+    "Observación": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Volver al inicio”."
+  },
+  "TC-B2C189-D-015": {
+    "Estado": "Bloqueado",
+    "Observación": "La primera navegación falló con ERR_NETWORK_CHANGED. En el reintento, la navegación agotó 300 segundos y Playwright cerró la página antes de ejecutar los pasos del caso."
+  },
+  "TC-B2C189-D-018": {
+    "Estado": "Bloqueado",
+    "Observación": "La preparación del carro no encontró el estado de carro vacío ni el contador de unidades dentro de 30 segundos; el caso no alcanzó Mis Envíos."
+  },
+  "TC-B2C189-M-007": {
+    "Estado": "Rechazado",
+    "Observación": "Tras confirmar la nueva dirección y completar la validación OTP, no apareció el diálogo de productos no disponibles dentro del tiempo de espera."
+  },
+  "TC-B2C189-M-008": {
+    "Estado": "Rechazado",
+    "Observación": "Tras confirmar la nueva dirección y completar la validación OTP, no apareció el diálogo de productos no disponibles dentro del tiempo de espera."
+  },
+  "TC-B2C189-M-012": {
+    "Estado": "Rechazado",
+    "Observación": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudieron comprobar STL-041 ni las acciones indicadas."
+  },
+  "TC-B2C189-M-013": {
+    "Estado": "Rechazado",
+    "Observación": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Cambiar dirección”."
+  },
+  "TC-B2C189-M-014": {
+    "Estado": "Bloqueado",
+    "Observación": "La navegación a /cart agotó 60 segundos antes de cargar el carro; los pasos del caso no comenzaron."
+  },
+  "TC-B2C189-M-015": {
+    "Estado": "Rechazado",
+    "Observación": "Tras seleccionar la dirección de la misma tienda, Mis Envíos siguió mostrando “Calle Uno 23, La Florida” en vez de “Gral. José Artigas 3250”."
+  },
+  "TC-B2C189-M-016": {
+    "Estado": "Aprobado",
+    "Observación": "Se escribió “Camino La Fuente 1589 Las Condes” sin confirmar y se cerró el Store Locator con la X; Mis Envíos conservó destino, ventana y subtotal."
+  },
+  "TC-B2C189-M-018": {
+    "Estado": "Aprobado",
+    "Observación": "Tras cambiar la tienda de retiro y completar la validación OTP, apareció el flujo de productos no disponibles; el artículo se retiró del carro como esperaba el caso."
+  }
+}

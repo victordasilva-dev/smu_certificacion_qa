@@ -23,9 +23,12 @@ evidencias/**/*.webm
 # Locales, sensibles o temporales (no se suben a GitHub)
 tools/
 scripts/
-reportes/
 .qa/respaldo/
 .qa/gmail-venv/
 .qa/explore*/
 .qa/*.png
 .qa/*.txt
+
+# Trazas y videos de Playwright: son de depuracion y pesan demasiado para GitHub (no se suben)
+evidencias/**/trace.zip
+evidencias/**/*.webm
