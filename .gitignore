@@ -29,3 +29,4 @@ tools/
 
 # Traza de B2C-26 D-013 (193,7 MB): supera el limite de GitHub; se sube partida en evidencias/.../trace.zip.parte-*
 evidencias/B2C-26 Evidencias/TC-B2C26-D-013-run-1/trace.zip
+scripts/
