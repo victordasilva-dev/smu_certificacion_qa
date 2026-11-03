@@ -25,9 +25,7 @@
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
-| 2026-11-02 | 32 | TC-B2C37-D-003, TC-B2C37-D-006, TC-B2C37-D-007, TC-B2C37-D-009, TC-B2C37-D-010, TC-B2C37-D-011, TC-B2C37-D-012, TC-B2C37-D-015, TC-B2C37-D-016, TC-B2C37-D-017, TC-B2C37-D-018, TC-B2C37-D-020, TC-B2C37-D-039, TC-B2C37-D-040, TC-B2C37-D-041, TC-B2C37-D-042, TC-B2C37-M-002, TC-B2C37-M-007, TC-B2C37-M-008, TC-B2C37-M-010, TC-B2C37-M-011, TC-B2C37-M-012, TC-B2C37-M-013, TC-B2C37-M-016, TC-B2C37-M-017, TC-B2C37-M-018, TC-B2C37-M-020, TC-B2C37-M-039, TC-B2C37-M-040, TC-B2C37-M-041, TC-B2C37-M-042, TC-B2C37-M-047 |
-| 2026-10-21 | 4 | TC-B2C37-D-032, TC-B2C37-D-033, TC-B2C37-M-032, TC-B2C37-M-033 |
-| 2026-10-20 | 91 | TC-B2C37-D-001, TC-B2C37-D-002, TC-B2C37-D-003, TC-B2C37-D-004, TC-B2C37-D-005, TC-B2C37-D-006, TC-B2C37-D-007, TC-B2C37-D-009, TC-B2C37-D-010, TC-B2C37-D-011, TC-B2C37-D-012, TC-B2C37-D-013, TC-B2C37-D-014, TC-B2C37-D-015, TC-B2C37-D-016, TC-B2C37-D-017, TC-B2C37-D-018, TC-B2C37-D-019, TC-B2C37-D-020, TC-B2C37-D-021, TC-B2C37-D-022, TC-B2C37-D-023, TC-B2C37-D-024, TC-B2C37-D-025, TC-B2C37-D-026, TC-B2C37-D-027, TC-B2C37-D-028, TC-B2C37-D-029, TC-B2C37-D-030, TC-B2C37-D-031, TC-B2C37-D-032, TC-B2C37-D-033, TC-B2C37-D-034, TC-B2C37-D-035, TC-B2C37-D-036, TC-B2C37-D-037, TC-B2C37-D-038, TC-B2C37-D-039, TC-B2C37-D-040, TC-B2C37-D-041, TC-B2C37-D-042, TC-B2C37-D-043, TC-B2C37-D-044, TC-B2C37-D-045, TC-B2C37-D-046, TC-B2C37-M-001, TC-B2C37-M-002, TC-B2C37-M-003, TC-B2C37-M-004, TC-B2C37-M-005, TC-B2C37-M-006, TC-B2C37-M-007, TC-B2C37-M-008, TC-B2C37-M-010, TC-B2C37-M-011, TC-B2C37-M-012, TC-B2C37-M-013, TC-B2C37-M-014, TC-B2C37-M-015, TC-B2C37-M-016, TC-B2C37-M-017, TC-B2C37-M-018, TC-B2C37-M-019, TC-B2C37-M-020, TC-B2C37-M-021, TC-B2C37-M-022, TC-B2C37-M-023, TC-B2C37-M-024, TC-B2C37-M-025, TC-B2C37-M-026, TC-B2C37-M-027, TC-B2C37-M-028, TC-B2C37-M-029, TC-B2C37-M-030, TC-B2C37-M-031, TC-B2C37-M-032, TC-B2C37-M-033, TC-B2C37-M-034, TC-B2C37-M-035, TC-B2C37-M-036, TC-B2C37-M-037, TC-B2C37-M-038, TC-B2C37-M-039, TC-B2C37-M-040, TC-B2C37-M-041, TC-B2C37-M-042, TC-B2C37-M-043, TC-B2C37-M-044, TC-B2C37-M-045, TC-B2C37-M-046, TC-B2C37-M-047 |
+| 2026-11-02 | 91 | TC-B2C37-D-001, TC-B2C37-D-002, TC-B2C37-D-003, TC-B2C37-D-004, TC-B2C37-D-005, TC-B2C37-D-006, TC-B2C37-D-007, TC-B2C37-D-009, TC-B2C37-D-010, TC-B2C37-D-011, TC-B2C37-D-012, TC-B2C37-D-013, TC-B2C37-D-014, TC-B2C37-D-015, TC-B2C37-D-016, TC-B2C37-D-017, TC-B2C37-D-018, TC-B2C37-D-019, TC-B2C37-D-020, TC-B2C37-D-021, TC-B2C37-D-022, TC-B2C37-D-023, TC-B2C37-D-024, TC-B2C37-D-025, TC-B2C37-D-026, TC-B2C37-D-027, TC-B2C37-D-028, TC-B2C37-D-029, TC-B2C37-D-030, TC-B2C37-D-031, TC-B2C37-D-032, TC-B2C37-D-033, TC-B2C37-D-034, TC-B2C37-D-035, TC-B2C37-D-036, TC-B2C37-D-037, TC-B2C37-D-038, TC-B2C37-D-039, TC-B2C37-D-040, TC-B2C37-D-041, TC-B2C37-D-042, TC-B2C37-D-043, TC-B2C37-D-044, TC-B2C37-D-045, TC-B2C37-D-046, TC-B2C37-M-001, TC-B2C37-M-002, TC-B2C37-M-003, TC-B2C37-M-004, TC-B2C37-M-005, TC-B2C37-M-006, TC-B2C37-M-007, TC-B2C37-M-008, TC-B2C37-M-010, TC-B2C37-M-011, TC-B2C37-M-012, TC-B2C37-M-013, TC-B2C37-M-014, TC-B2C37-M-015, TC-B2C37-M-016, TC-B2C37-M-017, TC-B2C37-M-018, TC-B2C37-M-019, TC-B2C37-M-020, TC-B2C37-M-021, TC-B2C37-M-022, TC-B2C37-M-023, TC-B2C37-M-024, TC-B2C37-M-025, TC-B2C37-M-026, TC-B2C37-M-027, TC-B2C37-M-028, TC-B2C37-M-029, TC-B2C37-M-030, TC-B2C37-M-031, TC-B2C37-M-032, TC-B2C37-M-033, TC-B2C37-M-034, TC-B2C37-M-035, TC-B2C37-M-036, TC-B2C37-M-037, TC-B2C37-M-038, TC-B2C37-M-039, TC-B2C37-M-040, TC-B2C37-M-041, TC-B2C37-M-042, TC-B2C37-M-043, TC-B2C37-M-044, TC-B2C37-M-045, TC-B2C37-M-046, TC-B2C37-M-047 |
 
 ## Detalle por caso de prueba
 
@@ -695,11 +693,11 @@ La lista de ítems disponibles muestra primero {SKU_VALID_001}, luego {SKU_PESAB
 
 **Resultado obtenido**
 
-Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts.
+Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts. Bug: B2C-1257.
 
 **Observación**
 
-Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts.
+Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts. Bug: B2C-1257.
 
 **Evidencia**
 
@@ -951,11 +949,11 @@ El modal muestra imagen, título "Vaciar el carro", subtítulo "¿Deseas elimina
 
 **Resultado obtenido**
 
-Esperado: el modal 'Vaciar el carro' muestra imagen, título, subtítulo, 'Sí, eliminar', 'No, gracias' e ícono 'X' en la esquina superior izquierda. Obtenido: todo está, pero la X está en la esquina superior derecha (a 400 px del borde izquierdo de un modal de 448 px). tests/B2C-37.spec.ts.
+Esperado: el modal 'Vaciar el carro' muestra imagen, título, subtítulo, 'Sí, eliminar', 'No, gracias' e ícono 'X' en la esquina superior izquierda. Obtenido: todo está, pero la X está en la esquina superior derecha (a 400 px del borde izquierdo de un modal de 448 px). tests/B2C-37.spec.ts. Bug: B2C-1259.
 
 **Observación**
 
-Esperado: el modal 'Vaciar el carro' muestra imagen, título, subtítulo, 'Sí, eliminar', 'No, gracias' e ícono 'X' en la esquina superior izquierda. Obtenido: todo está, pero la X está en la esquina superior derecha (a 400 px del borde izquierdo de un modal de 448 px). tests/B2C-37.spec.ts.
+Esperado: el modal 'Vaciar el carro' muestra imagen, título, subtítulo, 'Sí, eliminar', 'No, gracias' e ícono 'X' en la esquina superior izquierda. Obtenido: todo está, pero la X está en la esquina superior derecha (a 400 px del borde izquierdo de un modal de 448 px). tests/B2C-37.spec.ts. Bug: B2C-1259.
 
 **Evidencia**
 
@@ -3154,11 +3152,11 @@ La lista de ítems disponibles muestra primero {SKU_VALID_001}, luego {SKU_PESAB
 
 **Resultado obtenido**
 
-Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts.
+Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts. Bug: B2C-1258.
 
 **Observación**
 
-Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts.
+Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts. Bug: B2C-1258.
 
 **Evidencia**
 
@@ -4909,7 +4907,7 @@ Falta data: el SKU {SKU_UNIPAY_001} queda en el carro con su precio normal y sin
   "updated_at": "2026-11-02"
  },
  "history": {
-  "2026-10-20": [
+  "2026-11-02": [
    "TC-B2C37-D-001",
    "TC-B2C37-D-002",
    "TC-B2C37-D-003",
@@ -5000,46 +4998,6 @@ Falta data: el SKU {SKU_UNIPAY_001} queda en el carro con su precio normal y sin
    "TC-B2C37-M-044",
    "TC-B2C37-M-045",
    "TC-B2C37-M-046",
-   "TC-B2C37-M-047"
-  ],
-  "2026-10-21": [
-   "TC-B2C37-D-032",
-   "TC-B2C37-D-033",
-   "TC-B2C37-M-032",
-   "TC-B2C37-M-033"
-  ],
-  "2026-11-02": [
-   "TC-B2C37-D-003",
-   "TC-B2C37-D-006",
-   "TC-B2C37-D-007",
-   "TC-B2C37-D-009",
-   "TC-B2C37-D-010",
-   "TC-B2C37-D-011",
-   "TC-B2C37-D-012",
-   "TC-B2C37-D-015",
-   "TC-B2C37-D-016",
-   "TC-B2C37-D-017",
-   "TC-B2C37-D-018",
-   "TC-B2C37-D-020",
-   "TC-B2C37-D-039",
-   "TC-B2C37-D-040",
-   "TC-B2C37-D-041",
-   "TC-B2C37-D-042",
-   "TC-B2C37-M-002",
-   "TC-B2C37-M-007",
-   "TC-B2C37-M-008",
-   "TC-B2C37-M-010",
-   "TC-B2C37-M-011",
-   "TC-B2C37-M-012",
-   "TC-B2C37-M-013",
-   "TC-B2C37-M-016",
-   "TC-B2C37-M-017",
-   "TC-B2C37-M-018",
-   "TC-B2C37-M-020",
-   "TC-B2C37-M-039",
-   "TC-B2C37-M-040",
-   "TC-B2C37-M-041",
-   "TC-B2C37-M-042",
    "TC-B2C37-M-047"
   ]
  },
@@ -5316,8 +5274,8 @@ Falta data: el SKU {SKU_UNIPAY_001} queda en el carro con su precio normal y sin
    "form_factor": "desktop",
    "id": "TC-B2C37-D-014",
    "name": "Verificar que los ítems disponibles se ordenan del agregado más reciente al más antiguo [Desktop] [Logueado]",
-   "observation": "Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts.",
-   "observed": "Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts.",
+   "observation": "Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts. Bug: B2C-1257.",
+   "observed": "Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts. Bug: B2C-1257.",
    "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: PDP\n- Sesión iniciada con la cuenta {COMPRADOR_USER}\n- El carro está vacío",
    "screenshots": [
     {
@@ -5422,8 +5380,8 @@ Falta data: el SKU {SKU_UNIPAY_001} queda en el carro con su precio normal y sin
    "form_factor": "desktop",
    "id": "TC-B2C37-D-019",
    "name": "Verificar que \"Vaciar carro\" abre el modal de confirmación con su contenido [Desktop] [Logueado]",
-   "observation": "Esperado: el modal 'Vaciar el carro' muestra imagen, título, subtítulo, 'Sí, eliminar', 'No, gracias' e ícono 'X' en la esquina superior izquierda. Obtenido: todo está, pero la X está en la esquina superior derecha (a 400 px del borde izquierdo de un modal de 448 px). tests/B2C-37.spec.ts.",
-   "observed": "Esperado: el modal 'Vaciar el carro' muestra imagen, título, subtítulo, 'Sí, eliminar', 'No, gracias' e ícono 'X' en la esquina superior izquierda. Obtenido: todo está, pero la X está en la esquina superior derecha (a 400 px del borde izquierdo de un modal de 448 px). tests/B2C-37.spec.ts.",
+   "observation": "Esperado: el modal 'Vaciar el carro' muestra imagen, título, subtítulo, 'Sí, eliminar', 'No, gracias' e ícono 'X' en la esquina superior izquierda. Obtenido: todo está, pero la X está en la esquina superior derecha (a 400 px del borde izquierdo de un modal de 448 px). tests/B2C-37.spec.ts. Bug: B2C-1259.",
+   "observed": "Esperado: el modal 'Vaciar el carro' muestra imagen, título, subtítulo, 'Sí, eliminar', 'No, gracias' e ícono 'X' en la esquina superior izquierda. Obtenido: todo está, pero la X está en la esquina superior derecha (a 400 px del borde izquierdo de un modal de 448 px). tests/B2C-37.spec.ts. Bug: B2C-1259.",
    "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta {COMPRADOR_USER}\n- El carro contiene {SKU_VALID_001} y {SKU_UNITARIO}",
    "screenshots": [
     {
@@ -6351,8 +6309,8 @@ Falta data: el SKU {SKU_UNIPAY_001} queda en el carro con su precio normal y sin
    "form_factor": "mobile",
    "id": "TC-B2C37-M-015",
    "name": "Verificar que los ítems disponibles se ordenan del agregado más reciente al más antiguo [Mobile] [Logueado]",
-   "observation": "Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts.",
-   "observed": "Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts.",
+   "observation": "Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts. Bug: B2C-1258.",
+   "observed": "Esperado: los ítems se listan del agregado más reciente al más antiguo ({SKU_VALID_001}, {SKU_PESABLE}, {SKU_UNITARIO}). Obtenido: tras agregar en orden Lavalozas Quix → Mangos granel → Albóndigas Super Pollo, el carro los lista Lavalozas Quix, Mangos granel, Albóndigas: del más antiguo al más reciente. tests/B2C-37.spec.ts. Bug: B2C-1258.",
    "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- Sesión iniciada con la cuenta {COMPRADOR_USER}\n- El carro está vacío",
    "screenshots": [
     {

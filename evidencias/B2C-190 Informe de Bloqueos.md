@@ -48,3 +48,7 @@
 
 `TC-B2C190-APP-002`
 
+## Aviso
+
+Umbral alcanzado: avisar a **Juan Carlos Moran** y enviarle este informe como evidencia del umbral.
+
