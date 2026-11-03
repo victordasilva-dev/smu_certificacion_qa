@@ -20,4 +20,9 @@ export class MisFavoritosPage extends BasePage {
   producto(sku: string): Locator {
     return this.page.locator(`main :is(a[href*="${sku}"], img[src*="${sku}"])`).first();
   }
+
+  /** Cantidad de productos guardados: un checkbox "Seleccionar <producto>" por cada uno (sin contar "Seleccionar todos"). */
+  async cantidad(): Promise<number> {
+    return this.page.getByRole('checkbox', { name: /^seleccionar (?!todos)/i }).count();
+  }
 }

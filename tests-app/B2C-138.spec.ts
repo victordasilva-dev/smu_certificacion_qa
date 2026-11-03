@@ -19,7 +19,7 @@ import { arrancarInvitado, calle } from './support/entregaApp';
  */
 
 const PLATAFORMA = 'Android' as const;
-const PAQUETE = 'com.smuapp.unimarc';
+const PAQUETE = 'cl.smu.unimarcapp.sfcc.qa';
 
 test.describe(`B2C-138 — Store Locator sin dirección (${PLATAFORMA})`, () => {
   test.describe.configure({ timeout: 300000 });

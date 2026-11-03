@@ -6,7 +6,7 @@
 | Última actualización | 2026-10-14 |
 | Ejecutado por | Victor Chirinos |
 | Ambiente | App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV |
-| Dispositivo Android | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo Android | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-138 APP Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
@@ -35,7 +35,7 @@
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 51.1 s |
 | Spec | tests-app/B2C-138.spec.ts:39 |
 
@@ -91,7 +91,7 @@ Esperado: Store Locator con 'Elige una forma de entrega' en Home, PLP y PDP. Obt
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -132,7 +132,7 @@ Causa: {SIN_DIRECCION_USER} (vhchirinos+noaddress@avatar-global.com) es un corre
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 19.0 s |
 | Spec | tests-app/B2C-138.spec.ts:64 |
 
@@ -184,7 +184,7 @@ Al tocar el Store Locator del navbar se abre 'Elige tu método de entrega' con l
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 22.5 s |
 | Spec | tests-app/B2C-138.spec.ts:71 |
 
@@ -236,7 +236,7 @@ El modal muestra 'Despacho a domicilio' activa (ícono en rojo) y 'Retiro en tie
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -275,7 +275,7 @@ Causa: {SIN_DIRECCION_USER} (vhchirinos+noaddress@avatar-global.com) es un corre
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 28.5 s |
 | Spec | tests-app/B2C-138.spec.ts:85 |
 
@@ -329,7 +329,7 @@ Al escribir Calle Uno 23, La Florida en el buscador y elegir la sugerencia se ab
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 28.4 s |
 | Spec | tests-app/B2C-138.spec.ts:95 |
 
@@ -384,7 +384,7 @@ Con permiso de ubicación concedido (emulador ubicado en La Florida, Santiago), 
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 23.8 s |
 | Spec | tests-app/B2C-138.spec.ts:108 |
 
@@ -438,7 +438,7 @@ Al tocar 'Retiro en tienda' queda activa con el ícono en rojo, 'Despacho a domi
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 23.6 s |
 | Spec | tests-app/B2C-138.spec.ts:120 |
 
@@ -492,7 +492,7 @@ La X cierra el modal y el navbar sigue mostrando 'Elige una forma de entrega'. C
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 25.0 s |
 | Spec | tests-app/B2C-138.spec.ts:129 |
 
@@ -548,7 +548,7 @@ Esperado: tocar fuera del modal lo cierra. Obtenido: el modal ocupa toda la pant
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -587,7 +587,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -629,7 +629,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -668,7 +668,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
  "header": {
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "devices": {
-   "android": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)"
+   "android": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)"
   },
   "environment": "App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV",
   "executed_by": "Victor Chirinos",
@@ -696,7 +696,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
  },
  "results": [
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 51.1,
    "executed_at": "2026-10-14",
    "expected": "En Home, PLP y PDP el Store Locator del header muestra ícono + \"Elige una forma de entrega\" + chevron ∨.",
@@ -731,7 +731,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Con el usuario logueado, en Home, PLP y PDP el Store Locator del header muestra ícono + \"Elige una forma de entrega\" + chevron ∨.",
    "form_factor": "app",
@@ -745,7 +745,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno, {SIN_DIRECCION_PASSWORD}, vhchirinos+noaddress@avatar-global.com, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 19.0,
    "executed_at": "2026-10-14",
    "expected": "Se muestra el modal \"Elige tu método de entrega\" con el botón \"X\".",
@@ -776,7 +776,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 22.5,
    "executed_at": "2026-10-14",
    "expected": "El modal muestra \"Despacho a domicilio\" activa, \"Retiro en tienda\" en gris, la imagen, \"Aún no tienes direcciones guardadas\" y el texto de ayuda.",
@@ -807,7 +807,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El modal muestra \"Despacho a domicilio\" activa, \"Retiro en tienda\" en gris, la imagen, \"Aún no tienes direcciones guardadas\" y el texto de ayuda.",
    "form_factor": "app",
@@ -821,7 +821,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, {SIN_DIRECCION_PASSWORD}, vhchirinos+noaddress@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 28.5,
    "executed_at": "2026-10-14",
    "expected": "Se inicia el flujo de configuración de despacho a domicilio definido en B2C-26.",
@@ -852,7 +852,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 28.4,
    "executed_at": "2026-10-14",
    "expected": "Se inicia el flujo de configuración de despacho a domicilio definido en B2C-26.",
@@ -883,7 +883,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 23.8,
    "executed_at": "2026-10-14",
    "expected": "\"Retiro en tienda\" queda activa en rojo, \"Despacho a domicilio\" en gris y se inicia el flujo definido en B2C-121.",
@@ -914,7 +914,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 23.6,
    "executed_at": "2026-10-14",
    "expected": "El modal se cierra y el header sigue mostrando ícono + \"Elige una forma de entrega\" + chevron ∨.",
@@ -945,7 +945,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 25.0,
    "executed_at": "2026-10-14",
    "expected": "El modal se cierra y el header sigue mostrando ícono + \"Elige una forma de entrega\" + chevron ∨.",
@@ -980,7 +980,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El modal permanece abierto con la pantalla de error, \"Reintentar\" y \"Volver al Inicio\", y el header sigue mostrando ícono + \"Elige una forma de entrega\" + chevron ∨.",
    "form_factor": "app",
@@ -994,7 +994,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, {HERRAMIENTA_PROXY_APP}, {STORE_LOCATOR_API_ENDPOINT}"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El modal carga el selector \"Elige tu método de entrega\" con sus pestañas.",
    "form_factor": "app",
@@ -1008,7 +1008,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, {HERRAMIENTA_PROXY_APP}, {STORE_LOCATOR_API_ENDPOINT}"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El usuario queda en el Home de la App.",
    "form_factor": "app",

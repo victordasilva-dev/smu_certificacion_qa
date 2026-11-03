@@ -1,10 +1,10 @@
-# B2C-189 - Mis Envíos: cambiar dirección o tienda desde la tarjeta - Evidencias QA
+# B2C-189 - Mis Envíos: cambiar dirección o tienda - Evidencias QA
 
 | Campo | Valor |
 |---|---|
 | Suite | B2C-189 |
-| Última actualización | 2026-10-14 |
-| Ejecutado por | Victor Chirinos |
+| Última actualización | 2026-10-28 |
+| Ejecutado por | Daniel Uñuruco |
 | Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
 | Navegador Mobile | webkit |
@@ -15,15 +15,18 @@
 
 | Estado | Casos |
 |---|---|
-| Bloqueado Data | 24 |
-| Aprobado | 10 |
-| Rechazado | 2 |
+| Bloqueado Data | 8 |
+| Bloqueado | 3 |
+| Aprobado | 14 |
+| Rechazado | 11 |
 | **Total** | **36** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-10-28 | 15 | TC-B2C189-D-007, TC-B2C189-D-008, TC-B2C189-D-012, TC-B2C189-D-013, TC-B2C189-D-014, TC-B2C189-D-015, TC-B2C189-D-018, TC-B2C189-M-007, TC-B2C189-M-008, TC-B2C189-M-012, TC-B2C189-M-013, TC-B2C189-M-014, TC-B2C189-M-015, TC-B2C189-M-016, TC-B2C189-M-018 |
+| 2026-10-19 | 10 | TC-B2C189-D-007, TC-B2C189-D-008, TC-B2C189-D-015, TC-B2C189-D-016, TC-B2C189-D-017, TC-B2C189-D-018, TC-B2C189-M-007, TC-B2C189-M-015, TC-B2C189-M-016, TC-B2C189-M-018 |
 | 2026-10-14 | 36 | TC-B2C189-D-001, TC-B2C189-D-002, TC-B2C189-D-003, TC-B2C189-D-004, TC-B2C189-D-005, TC-B2C189-D-006, TC-B2C189-D-007, TC-B2C189-D-008, TC-B2C189-D-009, TC-B2C189-D-010, TC-B2C189-D-011, TC-B2C189-D-012, TC-B2C189-D-013, TC-B2C189-D-014, TC-B2C189-D-015, TC-B2C189-D-016, TC-B2C189-D-017, TC-B2C189-D-018, TC-B2C189-M-001, TC-B2C189-M-002, TC-B2C189-M-003, TC-B2C189-M-004, TC-B2C189-M-005, TC-B2C189-M-006, TC-B2C189-M-007, TC-B2C189-M-008, TC-B2C189-M-009, TC-B2C189-M-010, TC-B2C189-M-011, TC-B2C189-M-012, TC-B2C189-M-013, TC-B2C189-M-014, TC-B2C189-M-015, TC-B2C189-M-016, TC-B2C189-M-017, TC-B2C189-M-018 |
 
 ## Detalle por caso de prueba
@@ -376,8 +379,8 @@ Tras confirmar Unimarc Los Trapenses y validar el OTP, hay loader, Mis Envíos m
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Aprobado |
+| Ejecutado | 2026-10-28 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -387,7 +390,7 @@ Tras confirmar Unimarc Los Trapenses y validar el OTP, hay loader, Mis Envíos m
 - User type: Logueado
 - Viewport: Desktop 1440x900
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
 - El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}
 - Despacho a domicilio configurado con Calle Uno 23, La Florida
 - {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea
@@ -395,7 +398,21 @@ Tras confirmar Unimarc Los Trapenses y validar el OTP, hay loader, Mis Envíos m
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida
+
+{DIRECCION_OTRA_TIENDA} = A. Las Conder 14791, Lo Barnechea
+
+{MONTO_MINIMO_COMPRA} = 20000
+
+{SKU_VALID_001} = 000000000000675191-UN
+
+{UNIDADES_SOBRE_MINIMO} = 11
+
+{USER_AUTH_001} = daunuruco+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
@@ -413,18 +430,28 @@ https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev
 
 Se activa el flujo de productos no disponibles de B2C-126 para {SKU_STOCK_SOLO_TIENDA_A}.
 
+**Resultado obtenido**
+
+Después de cambiar la dirección y completar la validación OTP, apareció el flujo de productos no disponibles esperado.
 **Observación**
 
-Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.
+Después de cambiar la dirección y completar la validación OTP, apareció el flujo de productos no disponibles esperado.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-D-007-p04-mis-envios-despacho.png](<B2C-189 Evidencias/TC-B2C189-D-007-p04-mis-envios-despacho.png>)
+- [TC-B2C189-D-007-p09-flujo-de-productos-no-disponibles.png](<B2C-189 Evidencias/TC-B2C189-D-007-p09-flujo-de-productos-no-disponibles.png>)
+- [TC-B2C189-D-007.png](<B2C-189 Evidencias/TC-B2C189-D-007.png>)
+- [TC-B2C189-D-007-p04-mis-envios-antes-del-cambio.png](<B2C-189 Evidencias/TC-B2C189-D-007-p04-mis-envios-antes-del-cambio.png>)
+- [TC-B2C189-D-007-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-D-007-p02-carro-cargado.png>)
 ---
 
 ### TC-B2C189-D-008 - Verificar que tras resolver los productos no disponibles se redirige al carro [Desktop] [Logueado]
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Rechazado |
+| Ejecutado | 2026-10-28 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -434,7 +461,7 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
 - User type: Logueado
 - Viewport: Desktop 1440x900
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
 - El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}
 - Despacho a domicilio configurado con Calle Uno 23, La Florida
 - {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea
@@ -442,7 +469,21 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida
+
+{DIRECCION_OTRA_TIENDA} = A. Las Conder 14791, Lo Barnechea
+
+{MONTO_MINIMO_COMPRA} = 20000
+
+{SKU_VALID_001} = 000000000000675191-UN
+
+{UNIDADES_SOBRE_MINIMO} = 11
+
+{USER_AUTH_001} = daunuruco+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
@@ -461,10 +502,18 @@ https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev
 
 El usuario llega al carro de compras sin {SKU_STOCK_SOLO_TIENDA_A}.
 
+**Resultado obtenido**
+
+Tras confirmar la nueva dirección, no apareció el diálogo de productos no disponibles dentro del tiempo de espera de la prueba.
 **Observación**
 
-Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.
+Tras confirmar la nueva dirección, no apareció el diálogo de productos no disponibles dentro del tiempo de espera de la prueba.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-D-008-p04-mis-envios-despacho.png](<B2C-189 Evidencias/TC-B2C189-D-008-p04-mis-envios-despacho.png>)
+- [TC-B2C189-D-008-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-D-008-p02-carro-cargado.png>)
+- [TC-B2C189-D-008-p04-mis-envios-antes-del-cambio.png](<B2C-189 Evidencias/TC-B2C189-D-008-p04-mis-envios-antes-del-cambio.png>)
 ---
 
 ### TC-B2C189-D-009 - Verificar que si falla el servicio de ventanas tras el cambio se muestra el error ME-034 [Desktop] [Logueado]
@@ -616,8 +665,8 @@ Causa: {JANIS_API_ENDPOINT} está en TBD en el Excel de data. Acción: cargar el
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Rechazado |
+| Ejecutado | 2026-10-28 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -655,16 +704,21 @@ Se muestra la pantalla "Sin horarios disponibles" con el código de trazabilidad
 
 **Observación**
 
-Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.
+Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudieron comprobar STL-041 ni las acciones indicadas.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-D-012-p04-mis-envios-despacho.png](<B2C-189 Evidencias/TC-B2C189-D-012-p04-mis-envios-despacho.png>)
+- [TC-B2C189-D-012-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-D-012-p02-carro-cargado.png>)
+- [TC-B2C189-D-012-p04-mis-envios-antes-del-cambio.png](<B2C-189 Evidencias/TC-B2C189-D-012-p04-mis-envios-antes-del-cambio.png>)
 ---
 
 ### TC-B2C189-D-013 - Verificar que Cambiar dirección en Sin horarios disponibles vuelve a abrir el Store Locator [Desktop] [Logueado]
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Rechazado |
+| Ejecutado | 2026-10-28 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -702,16 +756,21 @@ Se abre el Store Locator para seleccionar otra dirección o tienda.
 
 **Observación**
 
-Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.
+Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Cambiar dirección”.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-D-013-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-D-013-p02-carro-cargado.png>)
+- [TC-B2C189-D-013-p04-mis-envios-despacho.png](<B2C-189 Evidencias/TC-B2C189-D-013-p04-mis-envios-despacho.png>)
+- [TC-B2C189-D-013-p04-mis-envios-antes-del-cambio.png](<B2C-189 Evidencias/TC-B2C189-D-013-p04-mis-envios-antes-del-cambio.png>)
 ---
 
 ### TC-B2C189-D-014 - Verificar que Volver al inicio desde Sin horarios disponibles redirige al Home [Desktop] [Logueado]
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Rechazado |
+| Ejecutado | 2026-10-28 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -749,16 +808,21 @@ El usuario es redirigido al Home.
 
 **Observación**
 
-Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.
+Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Volver al inicio”.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-D-014-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-D-014-p02-carro-cargado.png>)
+- [TC-B2C189-D-014-p04-mis-envios-despacho.png](<B2C-189 Evidencias/TC-B2C189-D-014-p04-mis-envios-despacho.png>)
+- [TC-B2C189-D-014-p04-mis-envios-antes-del-cambio.png](<B2C-189 Evidencias/TC-B2C189-D-014-p04-mis-envios-antes-del-cambio.png>)
 ---
 
 ### TC-B2C189-D-015 - Verificar que una dirección de la misma tienda abastecedora se actualiza sin validar productos [Desktop] [Logueado]
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Bloqueado |
+| Ejecutado | 2026-10-28 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -768,7 +832,7 @@ Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú
 - User type: Logueado
 - Viewport: Desktop 1440x900
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
 - El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}
 - Despacho a domicilio configurado con Calle Uno 23, La Florida
 - Gral. José Artigas 3250, Ñuñoa es atendida por la misma tienda abastecedora que Calle Uno 23, La Florida
@@ -776,7 +840,21 @@ Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, Gral. José Artigas 3250, Ñuñoa, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida
+
+{DIRECCION_MISMA_TIENDA} = Gral. José Artigas 3250, Ñuñoa
+
+{MONTO_MINIMO_COMPRA} = 20000
+
+{SKU_VALID_001} = 000000000000675191-UN
+
+{UNIDADES_SOBRE_MINIMO} = 11
+
+{USER_AUTH_001} = daunuruco+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
@@ -791,11 +869,17 @@ https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev
 
 **Resultado esperado**
 
-Mis Envíos muestra Gral. José Artigas 3250, Ñuñoa con sus ventanas recargadas, sin modal de productos no disponibles y con el carro intacto.
+Mis Envíos muestra {DIRECCION_MISMA_TIENDA} con sus ventanas recargadas, sin modal de productos no disponibles y con el carro intacto.
 
+**Resultado obtenido**
+
+La primera navegación falló con ERR_NETWORK_CHANGED. En el reintento, la navegación agotó 300 segundos y Playwright cerró la página antes de ejecutar los pasos del caso.
 **Observación**
 
-Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.
+La primera navegación falló con ERR_NETWORK_CHANGED. En el reintento, la navegación agotó 300 segundos y Playwright cerró la página antes de ejecutar los pasos del caso.
+
+**Evidencia de esta ejecución**
+
 
 ---
 
@@ -803,24 +887,40 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Aprobado |
+| Ejecutado | 2026-10-19 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
+| Duración | 71.8 s |
+| Spec | tests/B2C-189.spec.ts:277 |
 
 **Precondiciones**
 
 - User type: Logueado
 - Viewport: Desktop 1440x900
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
 - El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000
 - Despacho a domicilio configurado con Calle Uno 23, La Florida
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida
+
+{DIRECCION_DESPACHO} = Camino La Fuente 1589 Las Condes
+
+{MONTO_MINIMO_COMPRA} = 20000
+
+{SKU_VALID_001} = 000000000000675191-UN
+
+{UNIDADES_SOBRE_MINIMO} = 11
+
+{USER_AUTH_001} = daunuruco+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
@@ -838,11 +938,27 @@ https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev
 
 **Resultado esperado**
 
-Mis Envíos muestra Calle Uno 23, La Florida, la misma ventana seleccionada y el mismo subtotal anotados en el paso 5, sin ningún cambio producido por la interacción parcial en el Store Locator.
+Mis Envíos muestra {DIRECCION_DESPACHO_001}, la misma ventana seleccionada y el mismo subtotal anotados en el paso 5, sin ningún cambio producido por la interacción parcial en el Store Locator.
+
+**Resultado obtenido**
+
+Se cumple el resultado esperado.
 
 **Observación**
 
-Causa: el paso 8 ingresa 'una nueva dirección diferente a {DIRECCION_DESPACHO_001}' y la columna Test data no declara cuál. Acción: declarar el token de la dirección a ingresar en la fila del TC.
+Se escribió 'Camino La Fuente 1589 Las Condes' (Camino La Fuente 1589 Las Condes) en el buscador del Store Locator sin confirmarla y se cerró con la X: Mis Envíos conserva la dirección activa (Calle Uno 23, La Florida), la ventana seleccionada y el subtotal.
+
+**Evidencia**
+
+![Paso 2 — carro cargado](<B2C-189 Evidencias/TC-B2C189-D-016-p02-carro-cargado.png>)
+
+![Paso 4 — mis envios despacho](<B2C-189 Evidencias/TC-B2C189-D-016-p04-mis-envios-despacho.png>)
+
+![Paso 8 — direccion nueva escrita en el buscador sin confirmar](<B2C-189 Evidencias/TC-B2C189-D-016-p08-direccion-nueva-escrita-en-el-buscador-sin-confirmar.png>)
+
+![Paso 11 — mis envios tras cerrar con la x](<B2C-189 Evidencias/TC-B2C189-D-016-p11-mis-envios-tras-cerrar-con-la-x.png>)
+
+![Estado final](<B2C-189 Evidencias/TC-B2C189-D-016.png>)
 
 ---
 
@@ -851,7 +967,7 @@ Causa: el paso 8 ingresa 'una nueva dirección diferente a {DIRECCION_DESPACHO_0
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-10-19 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -861,7 +977,7 @@ Causa: el paso 8 ingresa 'una nueva dirección diferente a {DIRECCION_DESPACHO_0
 - User type: Logueado
 - Viewport: Desktop 1440x900
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
 - El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000
 - Despacho a domicilio configurado con Calle Uno 23, La Florida
 - 000000000000675191-UN tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea
@@ -870,7 +986,21 @@ Causa: el paso 8 ingresa 'una nueva dirección diferente a {DIRECCION_DESPACHO_0
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com, {VENTANA_ESPERADA_POR_REGLA}
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida
+
+{DIRECCION_OTRA_TIENDA} = A. Las Conder 14791, Lo Barnechea
+
+{MONTO_MINIMO_COMPRA} = 20000
+
+{SKU_VALID_001} = 000000000000675191-UN
+
+{UNIDADES_SOBRE_MINIMO} = 11
+
+{USER_AUTH_001} = daunuruco+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
@@ -891,9 +1021,13 @@ https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev
 
 La ventana seleccionada automáticamente es {VENTANA_ESPERADA_POR_REGLA}, cumpliendo la regla de priorización por defecto definida en B2C-147 CA4. Ninguna otra ventana queda marcada como seleccionada.
 
+**Resultado obtenido**
+
+No se pudo ejecutar el caso con la data declarada.
+
 **Observación**
 
-Causa: {VENTANA_ESPERADA_POR_REGLA} está en TBD en el Excel de data. Acción: cargar la ventana que la regla de B2C-147 CA4 debe seleccionar para {DIRECCION_OTRA_TIENDA}.
+Causa: {VENTANA_ESPERADA_POR_REGLA} no tiene fila (o está en TBD) en el Excel de data. Acción: cargar la ventana que la regla de B2C-147 CA4 debe seleccionar para Calle Uno 23, La Florida.
 
 ---
 
@@ -901,8 +1035,8 @@ Causa: {VENTANA_ESPERADA_POR_REGLA} está en TBD en el Excel de data. Acción: c
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Bloqueado |
+| Ejecutado | 2026-10-28 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -912,7 +1046,7 @@ Causa: {VENTANA_ESPERADA_POR_REGLA} está en TBD en el Excel de data. Acción: c
 - User type: Logueado
 - Viewport: Desktop 1440x900
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
 - El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}
 - Retiro en tienda configurado con Unimarc Las Condes
 - {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en Unimarc Los Trapenses
@@ -920,7 +1054,21 @@ Causa: {VENTANA_ESPERADA_POR_REGLA} está en TBD en el Excel de data. Acción: c
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, Unimarc Las Condes, Unimarc Los Trapenses, 11, vhchirinos+comprador@avatar-global.com
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{MONTO_MINIMO_COMPRA} = 20000
+
+{SKU_VALID_001} = 000000000000675191-UN
+
+{TIENDA_RETIRO_001} = Unimarc Las Condes
+
+{TIENDA_RETIRO_002} = Unimarc Los Trapenses
+
+{UNIDADES_SOBRE_MINIMO} = 11
+
+{USER_AUTH_001} = daunuruco+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
@@ -938,9 +1086,15 @@ https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev
 
 Se activa el flujo de productos no disponibles de B2C-126 para {SKU_STOCK_SOLO_TIENDA_A}.
 
+**Resultado obtenido**
+
+La preparación del carro no encontró el estado de carro vacío ni el contador de unidades dentro de 30 segundos; el caso no alcanzó Mis Envíos.
 **Observación**
 
-Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.
+La preparación del carro no encontró el estado de carro vacío ni el contador de unidades dentro de 30 segundos; el caso no alcanzó Mis Envíos.
+
+**Evidencia de esta ejecución**
+
 
 ---
 
@@ -1304,8 +1458,8 @@ Tras confirmar Unimarc Los Trapenses y validar el OTP, hay loader, Mis Envíos m
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Rechazado |
+| Ejecutado | 2026-10-28 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
@@ -1315,7 +1469,7 @@ Tras confirmar Unimarc Los Trapenses y validar el OTP, hay loader, Mis Envíos m
 - User type: Logueado
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
 - El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}
 - Despacho a domicilio configurado con Calle Uno 23, La Florida
 - {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea
@@ -1323,7 +1477,21 @@ Tras confirmar Unimarc Los Trapenses y validar el OTP, hay loader, Mis Envíos m
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida
+
+{DIRECCION_OTRA_TIENDA} = A. Las Conder 14791, Lo Barnechea
+
+{MONTO_MINIMO_COMPRA} = 20000
+
+{SKU_VALID_001} = 000000000000675191-UN
+
+{UNIDADES_SOBRE_MINIMO} = 11
+
+{USER_AUTH_001} = daunuruco+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
@@ -1341,18 +1509,26 @@ https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev
 
 Se activa el flujo de productos no disponibles de B2C-126 para {SKU_STOCK_SOLO_TIENDA_A}.
 
+**Resultado obtenido**
+
+Tras confirmar la nueva dirección y completar la validación OTP, no apareció el diálogo de productos no disponibles dentro del tiempo de espera.
 **Observación**
 
-Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.
+Tras confirmar la nueva dirección y completar la validación OTP, no apareció el diálogo de productos no disponibles dentro del tiempo de espera.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-M-007-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-M-007-p02-carro-cargado.png>)
+- [TC-B2C189-M-007-p04-mis-envios-antes-del-cambio.png](<B2C-189 Evidencias/TC-B2C189-M-007-p04-mis-envios-antes-del-cambio.png>)
+- [TC-B2C189-M-007-p04-mis-envios-despacho.png](<B2C-189 Evidencias/TC-B2C189-M-007-p04-mis-envios-despacho.png>)
 ---
 
 ### TC-B2C189-M-008 - Verificar que tras resolver los productos no disponibles se redirige al carro [Mobile] [Logueado]
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Rechazado |
+| Ejecutado | 2026-10-28 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
@@ -1391,8 +1567,13 @@ El usuario llega al carro de compras sin {SKU_STOCK_SOLO_TIENDA_A}.
 
 **Observación**
 
-Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.
+Tras confirmar la nueva dirección y completar la validación OTP, no apareció el diálogo de productos no disponibles dentro del tiempo de espera.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-M-008-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-M-008-p02-carro-cargado.png>)
+- [TC-B2C189-M-008-p04-mis-envios-antes-del-cambio.png](<B2C-189 Evidencias/TC-B2C189-M-008-p04-mis-envios-antes-del-cambio.png>)
+- [TC-B2C189-M-008-p04-mis-envios-despacho.png](<B2C-189 Evidencias/TC-B2C189-M-008-p04-mis-envios-despacho.png>)
 ---
 
 ### TC-B2C189-M-009 - Verificar que si falla el servicio de ventanas tras el cambio se muestra el error ME-034 [Mobile] [Logueado]
@@ -1544,8 +1725,8 @@ Causa: {JANIS_API_ENDPOINT} está en TBD en el Excel de data. Acción: cargar el
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Rechazado |
+| Ejecutado | 2026-10-28 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
@@ -1583,16 +1764,21 @@ Se muestra la pantalla "Sin horarios disponibles" con el código de trazabilidad
 
 **Observación**
 
-Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.
+Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudieron comprobar STL-041 ni las acciones indicadas.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-M-012-p04-mis-envios-antes-del-cambio.png](<B2C-189 Evidencias/TC-B2C189-M-012-p04-mis-envios-antes-del-cambio.png>)
+- [TC-B2C189-M-012-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-M-012-p02-carro-cargado.png>)
+- [TC-B2C189-M-012-p04-mis-envios-despacho.png](<B2C-189 Evidencias/TC-B2C189-M-012-p04-mis-envios-despacho.png>)
 ---
 
 ### TC-B2C189-M-013 - Verificar que Cambiar dirección en Sin horarios disponibles vuelve a abrir el Store Locator [Mobile] [Logueado]
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Rechazado |
+| Ejecutado | 2026-10-28 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
@@ -1630,16 +1816,21 @@ Se abre el Store Locator para seleccionar otra dirección o tienda.
 
 **Observación**
 
-Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.
+Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Cambiar dirección”.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-M-013-p04-mis-envios-despacho.png](<B2C-189 Evidencias/TC-B2C189-M-013-p04-mis-envios-despacho.png>)
+- [TC-B2C189-M-013-p04-mis-envios-antes-del-cambio.png](<B2C-189 Evidencias/TC-B2C189-M-013-p04-mis-envios-antes-del-cambio.png>)
+- [TC-B2C189-M-013-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-M-013-p02-carro-cargado.png>)
 ---
 
 ### TC-B2C189-M-014 - Verificar que Volver al inicio desde Sin horarios disponibles redirige al Home [Mobile] [Logueado]
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Bloqueado |
+| Ejecutado | 2026-10-28 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
@@ -1677,7 +1868,10 @@ El usuario es redirigido al Home.
 
 **Observación**
 
-Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.
+La navegación a /cart agotó 60 segundos antes de cargar el carro; los pasos del caso no comenzaron.
+
+**Evidencia de esta ejecución**
+
 
 ---
 
@@ -1685,8 +1879,8 @@ Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Rechazado |
+| Ejecutado | 2026-10-28 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
@@ -1696,7 +1890,7 @@ Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú
 - User type: Logueado
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
 - El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}
 - Despacho a domicilio configurado con Calle Uno 23, La Florida
 - Gral. José Artigas 3250, Ñuñoa es atendida por la misma tienda abastecedora que Calle Uno 23, La Florida
@@ -1704,7 +1898,21 @@ Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, Gral. José Artigas 3250, Ñuñoa, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida
+
+{DIRECCION_MISMA_TIENDA} = Gral. José Artigas 3250, Ñuñoa
+
+{MONTO_MINIMO_COMPRA} = 20000
+
+{SKU_VALID_001} = 000000000000675191-UN
+
+{UNIDADES_SOBRE_MINIMO} = 11
+
+{USER_AUTH_001} = daunuruco+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
@@ -1719,20 +1927,27 @@ https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev
 
 **Resultado esperado**
 
-Mis Envíos muestra Gral. José Artigas 3250, Ñuñoa con sus ventanas recargadas, sin modal de productos no disponibles y con el carro intacto.
+Mis Envíos muestra {DIRECCION_MISMA_TIENDA} con sus ventanas recargadas, sin modal de productos no disponibles y con el carro intacto.
 
+**Resultado obtenido**
+
+Tras seleccionar la dirección de la misma tienda, Mis Envíos siguió mostrando “Calle Uno 23, La Florida” en vez de “Gral. José Artigas 3250”.
 **Observación**
 
-Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.
+Tras seleccionar la dirección de la misma tienda, Mis Envíos siguió mostrando “Calle Uno 23, La Florida” en vez de “Gral. José Artigas 3250”.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-M-015-p04-mis-envios-despacho.png](<B2C-189 Evidencias/TC-B2C189-M-015-p04-mis-envios-despacho.png>)
+- [TC-B2C189-M-015-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-M-015-p02-carro-cargado.png>)
 ---
 
 ### TC-B2C189-M-016 - Verificar que Mis Envíos mantiene su estado mientras el Store Locator completa parcialmente el flujo sin confirmar [Mobile] [Logueado]
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Aprobado |
+| Ejecutado | 2026-10-28 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
@@ -1742,13 +1957,25 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
 - User type: Logueado
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
 - El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000
 - Despacho a domicilio configurado con Calle Uno 23, La Florida
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida
+
+{MONTO_MINIMO_COMPRA} = 20000
+
+{SKU_VALID_001} = 000000000000675191-UN
+
+{UNIDADES_SOBRE_MINIMO} = 11
+
+{USER_AUTH_001} = daunuruco+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
@@ -1766,12 +1993,22 @@ https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev
 
 **Resultado esperado**
 
-Mis Envíos muestra Calle Uno 23, La Florida, la misma ventana seleccionada y el mismo subtotal anotados en el paso 5, sin ningún cambio producido por la interacción parcial en el Store Locator.
+Mis Envíos muestra {DIRECCION_DESPACHO_001}, la misma ventana seleccionada y el mismo subtotal anotados en el paso 5, sin ningún cambio producido por la interacción parcial en el Store Locator.
 
+**Resultado obtenido**
+
+Se escribió “Camino La Fuente 1589 Las Condes” sin confirmar y se cerró el Store Locator con la X; Mis Envíos conservó destino, ventana y subtotal.
 **Observación**
 
-Causa: el paso 8 ingresa 'una nueva dirección diferente a {DIRECCION_DESPACHO_001}' y la columna Test data no declara cuál. Acción: declarar el token de la dirección a ingresar en la fila del TC.
+Se escribió “Camino La Fuente 1589 Las Condes” sin confirmar y se cerró el Store Locator con la X; Mis Envíos conservó destino, ventana y subtotal.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-M-016-p04-mis-envios-despacho.png](<B2C-189 Evidencias/TC-B2C189-M-016-p04-mis-envios-despacho.png>)
+- [TC-B2C189-M-016.png](<B2C-189 Evidencias/TC-B2C189-M-016.png>)
+- [TC-B2C189-M-016-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-M-016-p02-carro-cargado.png>)
+- [TC-B2C189-M-016-p11-mis-envios-tras-cerrar-el-store-locator.png](<B2C-189 Evidencias/TC-B2C189-M-016-p11-mis-envios-tras-cerrar-el-store-locator.png>)
+- [TC-B2C189-M-016-p08-direccion-alternativa-escrita-sin-confirmar.png](<B2C-189 Evidencias/TC-B2C189-M-016-p08-direccion-alternativa-escrita-sin-confirmar.png>)
 ---
 
 ### TC-B2C189-M-017 - Verificar que la ventana seleccionada automáticamente tras el cambio cumple la regla de priorización de B2C-147 CA4 [Mobile] [Logueado]
@@ -1829,8 +2066,8 @@ Causa: {VENTANA_ESPERADA_POR_REGLA} está en TBD en el Excel de data. Acción: c
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Aprobado |
+| Ejecutado | 2026-10-28 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
@@ -1840,7 +2077,7 @@ Causa: {VENTANA_ESPERADA_POR_REGLA} está en TBD en el Excel de data. Acción: c
 - User type: Logueado
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
 - El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}
 - Retiro en tienda configurado con Unimarc Las Condes
 - {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en Unimarc Los Trapenses
@@ -1848,7 +2085,21 @@ Causa: {VENTANA_ESPERADA_POR_REGLA} está en TBD en el Excel de data. Acción: c
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, Unimarc Las Condes, Unimarc Los Trapenses, 11, vhchirinos+comprador@avatar-global.com
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{MONTO_MINIMO_COMPRA} = 20000
+
+{SKU_VALID_001} = 000000000000675191-UN
+
+{TIENDA_RETIRO_001} = Unimarc Las Condes
+
+{TIENDA_RETIRO_002} = Unimarc Los Trapenses
+
+{UNIDADES_SOBRE_MINIMO} = 11
+
+{USER_AUTH_001} = daunuruco+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
@@ -1866,10 +2117,20 @@ https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev
 
 Se activa el flujo de productos no disponibles de B2C-126 para {SKU_STOCK_SOLO_TIENDA_A}.
 
+**Resultado obtenido**
+
+Tras cambiar la tienda de retiro y completar la validación OTP, apareció el flujo de productos no disponibles; el artículo se retiró del carro como esperaba el caso.
 **Observación**
 
-Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.
+Tras cambiar la tienda de retiro y completar la validación OTP, apareció el flujo de productos no disponibles; el artículo se retiró del carro como esperaba el caso.
 
+**Evidencia de esta ejecución**
+
+- [TC-B2C189-M-018-p09-flujo-de-productos-no-disponibles.png](<B2C-189 Evidencias/TC-B2C189-M-018-p09-flujo-de-productos-no-disponibles.png>)
+- [TC-B2C189-M-018-p04-mis-envios-antes-del-cambio-de-tienda.png](<B2C-189 Evidencias/TC-B2C189-M-018-p04-mis-envios-antes-del-cambio-de-tienda.png>)
+- [TC-B2C189-M-018.png](<B2C-189 Evidencias/TC-B2C189-M-018.png>)
+- [TC-B2C189-M-018-p04-mis-envios-retiro.png](<B2C-189 Evidencias/TC-B2C189-M-018-p04-mis-envios-retiro.png>)
+- [TC-B2C189-M-018-p02-carro-cargado.png](<B2C-189 Evidencias/TC-B2C189-M-018-p02-carro-cargado.png>)
 ---
 
 <!-- qa-evidence-state
@@ -1881,11 +2142,11 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
   },
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
-  "executed_by": "Victor Chirinos",
+  "executed_by": "Daniel Uñuruco",
   "suite": "B2C-189",
-  "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-189 WEB Test Cases.xlsx",
-  "title": "B2C-189 - Mis Envíos: cambiar dirección o tienda desde la tarjeta - Evidencias QA",
-  "updated_at": "2026-10-14"
+  "tc_file": "Casos de Prueba/Ejecutados/SP2/Unimarc/B2C-189 WEB Test Cases.xlsx",
+  "title": "B2C-189 - Mis Envíos: cambiar dirección o tienda - Evidencias QA",
+  "updated_at": "2026-10-28"
  },
  "history": {
   "2026-10-14": [
@@ -1924,6 +2185,35 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
    "TC-B2C189-M-015",
    "TC-B2C189-M-016",
    "TC-B2C189-M-017",
+   "TC-B2C189-M-018"
+  ],
+  "2026-10-19": [
+   "TC-B2C189-D-007",
+   "TC-B2C189-D-008",
+   "TC-B2C189-D-015",
+   "TC-B2C189-D-016",
+   "TC-B2C189-D-017",
+   "TC-B2C189-D-018",
+   "TC-B2C189-M-007",
+   "TC-B2C189-M-015",
+   "TC-B2C189-M-016",
+   "TC-B2C189-M-018"
+  ],
+  "2026-10-28": [
+   "TC-B2C189-D-007",
+   "TC-B2C189-D-008",
+   "TC-B2C189-D-012",
+   "TC-B2C189-D-013",
+   "TC-B2C189-D-014",
+   "TC-B2C189-D-015",
+   "TC-B2C189-D-018",
+   "TC-B2C189-M-007",
+   "TC-B2C189-M-008",
+   "TC-B2C189-M-012",
+   "TC-B2C189-M-013",
+   "TC-B2C189-M-014",
+   "TC-B2C189-M-015",
+   "TC-B2C189-M-016",
    "TC-B2C189-M-018"
   ]
  },
@@ -2143,30 +2433,34 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-14",
+   "duration_s": null,
+   "executed_at": "2026-10-28",
    "expected": "Se activa el flujo de productos no disponibles de B2C-126 para {SKU_STOCK_SOLO_TIENDA_A}.",
    "form_factor": "desktop",
    "id": "TC-B2C189-D-007",
    "name": "Verificar que una nueva dirección con productos no disponibles activa el flujo de no disponibles [Desktop] [Logueado]",
-   "observation": "Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.",
-   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "observation": "Después de cambiar la dirección y completar la validación OTP, apareció el flujo de productos no disponibles esperado.",
+   "observed": "Después de cambiar la dirección y completar la validación OTP, apareció el flujo de productos no disponibles esperado.",
+   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
+   "status": "Aprobado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario hace clic en el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra un loader mientras verifica la disponibilidad.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida\n{DIRECCION_OTRA_TIENDA} = A. Las Conder 14791, Lo Barnechea\n{MONTO_MINIMO_COMPRA} = 20000\n{SKU_VALID_001} = 000000000000675191-UN\n{UNIDADES_SOBRE_MINIMO} = 11\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com",
    "viewport": "1440x900"
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-14",
+   "duration_s": null,
+   "executed_at": "2026-10-28",
    "expected": "El usuario llega al carro de compras sin {SKU_STOCK_SOLO_TIENDA_A}.",
    "form_factor": "desktop",
    "id": "TC-B2C189-D-008",
    "name": "Verificar que tras resolver los productos no disponibles se redirige al carro [Desktop] [Logueado]",
-   "observation": "Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.",
-   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "observation": "Tras confirmar la nueva dirección, no apareció el diálogo de productos no disponibles dentro del tiempo de espera de la prueba.",
+   "observed": "Tras confirmar la nueva dirección, no apareció el diálogo de productos no disponibles dentro del tiempo de espera de la prueba.",
+   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
+   "status": "Rechazado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario hace clic en el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra el flujo de productos no disponibles (B2C-126).\n10. El usuario hace clic en \"Entendido\" en el modal \"Se agotaron\".",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida\n{DIRECCION_OTRA_TIENDA} = A. Las Conder 14791, Lo Barnechea\n{MONTO_MINIMO_COMPRA} = 20000\n{SKU_VALID_001} = 000000000000675191-UN\n{UNIDADES_SOBRE_MINIMO} = 11\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com",
    "viewport": "1440x900"
   },
   {
@@ -2213,100 +2507,137 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-14",
+   "executed_at": "2026-10-28",
    "expected": "Se muestra la pantalla \"Sin horarios disponibles\" con el código de trazabilidad STL-041 legible en pantalla y los botones \"Cambiar dirección\" y \"Volver al inicio\" activos.",
    "form_factor": "desktop",
    "id": "TC-B2C189-D-012",
    "name": "Verificar que una nueva dirección sin horarios muestra la pantalla Sin horarios disponibles [Desktop] [Logueado]",
-   "observation": "Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.",
+   "observation": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudieron comprobar STL-041 ni las acciones indicadas.",
    "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "status": "Rechazado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario hace clic en el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección Av Libertador Gral Bernardo O'Higgins 1072, Maipú y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra la pantalla \"Sin horarios disponibles\".\n10. El usuario verifica que el código STL-041 es legible en pantalla.",
    "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, Av Libertador Gral Bernardo O'Higgins 1072, Maipú, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
-   "viewport": "1440x900"
+   "viewport": "1440x900",
+   "observed": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudieron comprobar STL-041 ni las acciones indicadas.",
+   "duration_s": null
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-14",
+   "executed_at": "2026-10-28",
    "expected": "Se abre el Store Locator para seleccionar otra dirección o tienda.",
    "form_factor": "desktop",
    "id": "TC-B2C189-D-013",
    "name": "Verificar que Cambiar dirección en Sin horarios disponibles vuelve a abrir el Store Locator [Desktop] [Logueado]",
-   "observation": "Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.",
+   "observation": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Cambiar dirección”.",
    "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "status": "Rechazado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario hace clic en el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección Av Libertador Gral Bernardo O'Higgins 1072, Maipú y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra la pantalla \"Sin horarios disponibles\".\n10. El usuario hace clic en \"Cambiar dirección\".",
    "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, Av Libertador Gral Bernardo O'Higgins 1072, Maipú, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
-   "viewport": "1440x900"
+   "viewport": "1440x900",
+   "observed": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Cambiar dirección”.",
+   "duration_s": null
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-14",
+   "executed_at": "2026-10-28",
    "expected": "El usuario es redirigido al Home.",
    "form_factor": "desktop",
    "id": "TC-B2C189-D-014",
    "name": "Verificar que Volver al inicio desde Sin horarios disponibles redirige al Home [Desktop] [Logueado]",
-   "observation": "Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.",
+   "observation": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Volver al inicio”.",
    "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "status": "Rechazado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario hace clic en el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección Av Libertador Gral Bernardo O'Higgins 1072, Maipú y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra la pantalla \"Sin horarios disponibles\".\n10. El usuario hace clic en \"Volver al inicio\".",
    "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, Av Libertador Gral Bernardo O'Higgins 1072, Maipú, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
-   "viewport": "1440x900"
+   "viewport": "1440x900",
+   "observed": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Volver al inicio”.",
+   "duration_s": null
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-14",
-   "expected": "Mis Envíos muestra Gral. José Artigas 3250, Ñuñoa con sus ventanas recargadas, sin modal de productos no disponibles y con el carro intacto.",
+   "duration_s": null,
+   "executed_at": "2026-10-28",
+   "expected": "Mis Envíos muestra {DIRECCION_MISMA_TIENDA} con sus ventanas recargadas, sin modal de productos no disponibles y con el carro intacto.",
    "form_factor": "desktop",
    "id": "TC-B2C189-D-015",
    "name": "Verificar que una dirección de la misma tienda abastecedora se actualiza sin validar productos [Desktop] [Logueado]",
-   "observation": "Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.",
-   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- Gral. José Artigas 3250, Ñuñoa es atendida por la misma tienda abastecedora que Calle Uno 23, La Florida\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "observation": "La primera navegación falló con ERR_NETWORK_CHANGED. En el reintento, la navegación agotó 300 segundos y Playwright cerró la página antes de ejecutar los pasos del caso.",
+   "observed": "La primera navegación falló con ERR_NETWORK_CHANGED. En el reintento, la navegación agotó 300 segundos y Playwright cerró la página antes de ejecutar los pasos del caso.",
+   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- Gral. José Artigas 3250, Ñuñoa es atendida por la misma tienda abastecedora que Calle Uno 23, La Florida\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
+   "status": "Bloqueado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario hace clic en el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección Gral. José Artigas 3250, Ñuñoa y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, Gral. José Artigas 3250, Ñuñoa, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida\n{DIRECCION_MISMA_TIENDA} = Gral. José Artigas 3250, Ñuñoa\n{MONTO_MINIMO_COMPRA} = 20000\n{SKU_VALID_001} = 000000000000675191-UN\n{UNIDADES_SOBRE_MINIMO} = 11\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com",
    "viewport": "1440x900"
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-14",
-   "expected": "Mis Envíos muestra Calle Uno 23, La Florida, la misma ventana seleccionada y el mismo subtotal anotados en el paso 5, sin ningún cambio producido por la interacción parcial en el Store Locator.",
+   "duration_s": 71.8,
+   "executed_at": "2026-10-19",
+   "expected": "Mis Envíos muestra {DIRECCION_DESPACHO_001}, la misma ventana seleccionada y el mismo subtotal anotados en el paso 5, sin ningún cambio producido por la interacción parcial en el Store Locator.",
    "form_factor": "desktop",
    "id": "TC-B2C189-D-016",
    "name": "Verificar que Mis Envíos mantiene su estado mientras el Store Locator completa parcialmente el flujo sin confirmar [Desktop] [Logueado]",
-   "observation": "Causa: el paso 8 ingresa 'una nueva dirección diferente a {DIRECCION_DESPACHO_001}' y la columna Test data no declara cuál. Acción: declarar el token de la dirección a ingresar en la fila del TC.",
-   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida",
-   "status": "Bloqueado Data",
+   "observation": "Se escribió 'Camino La Fuente 1589 Las Condes' (Camino La Fuente 1589 Las Condes) en el buscador del Store Locator sin confirmarla y se cerró con la X: Mis Envíos conserva la dirección activa (Calle Uno 23, La Florida), la ventana seleccionada y el subtotal.",
+   "observed": "Se cumple el resultado esperado.",
+   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida",
+   "screenshots": [
+    {
+     "caption": "Paso 2 — carro cargado",
+     "file": "TC-B2C189-D-016-p02-carro-cargado.png"
+    },
+    {
+     "caption": "Paso 4 — mis envios despacho",
+     "file": "TC-B2C189-D-016-p04-mis-envios-despacho.png"
+    },
+    {
+     "caption": "Paso 8 — direccion nueva escrita en el buscador sin confirmar",
+     "file": "TC-B2C189-D-016-p08-direccion-nueva-escrita-en-el-buscador-sin-confirmar.png"
+    },
+    {
+     "caption": "Paso 11 — mis envios tras cerrar con la x",
+     "file": "TC-B2C189-D-016-p11-mis-envios-tras-cerrar-con-la-x.png"
+    },
+    {
+     "caption": "Estado final",
+     "file": "TC-B2C189-D-016.png"
+    }
+   ],
+   "spec": "tests/B2C-189.spec.ts:277",
+   "status": "Aprobado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario anota la dirección activa (Calle Uno 23, La Florida), la ventana seleccionada y el subtotal visibles en Mis Envíos.\n6. El usuario hace clic en el ícono ▾ de la tarjeta de dirección.\n7. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n8. El usuario ingresa una nueva dirección diferente a Calle Uno 23, La Florida en el buscador del Store Locator pero NO la confirma.\n9. El usuario hace clic en la X del Store Locator.\n10. El sistema cierra el Store Locator y vuelve a Mis Envíos.\n11. El usuario verifica la dirección, la ventana seleccionada y el subtotal en Mis Envíos.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida\n{DIRECCION_DESPACHO} = Camino La Fuente 1589 Las Condes\n{MONTO_MINIMO_COMPRA} = 20000\n{SKU_VALID_001} = 000000000000675191-UN\n{UNIDADES_SOBRE_MINIMO} = 11\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com",
    "viewport": "1440x900"
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-14",
+   "duration_s": 0,
+   "executed_at": "2026-10-19",
    "expected": "La ventana seleccionada automáticamente es {VENTANA_ESPERADA_POR_REGLA}, cumpliendo la regla de priorización por defecto definida en B2C-147 CA4. Ninguna otra ventana queda marcada como seleccionada.",
    "form_factor": "desktop",
    "id": "TC-B2C189-D-017",
    "name": "Verificar que la ventana seleccionada automáticamente tras el cambio cumple la regla de priorización de B2C-147 CA4 [Desktop] [Logueado]",
-   "observation": "Causa: {VENTANA_ESPERADA_POR_REGLA} está en TBD en el Excel de data. Acción: cargar la ventana que la regla de B2C-147 CA4 debe seleccionar para {DIRECCION_OTRA_TIENDA}.",
-   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- 000000000000675191-UN tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea\n- A. Las Conder 14791, Lo Barnechea tiene múltiples ventanas de entrega disponibles\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
+   "observation": "Causa: {VENTANA_ESPERADA_POR_REGLA} no tiene fila (o está en TBD) en el Excel de data. Acción: cargar la ventana que la regla de B2C-147 CA4 debe seleccionar para Calle Uno 23, La Florida.",
+   "observed": "No se pudo ejecutar el caso con la data declarada.",
+   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- 000000000000675191-UN tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea\n- A. Las Conder 14791, Lo Barnechea tiene múltiples ventanas de entrega disponibles\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario hace clic en el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra un loader mientras recarga las ventanas.\n10. El sistema regresa a Mis Envíos con las ventanas de A. Las Conder 14791, Lo Barnechea.\n11. El usuario anota la ventana que queda seleccionada automáticamente.\n12. El usuario compara la ventana seleccionada con {VENTANA_ESPERADA_POR_REGLA}.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com, {VENTANA_ESPERADA_POR_REGLA}",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida\n{DIRECCION_OTRA_TIENDA} = A. Las Conder 14791, Lo Barnechea\n{MONTO_MINIMO_COMPRA} = 20000\n{SKU_VALID_001} = 000000000000675191-UN\n{UNIDADES_SOBRE_MINIMO} = 11\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com",
    "viewport": "1440x900"
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-14",
+   "duration_s": null,
+   "executed_at": "2026-10-28",
    "expected": "Se activa el flujo de productos no disponibles de B2C-126 para {SKU_STOCK_SOLO_TIENDA_A}.",
    "form_factor": "desktop",
    "id": "TC-B2C189-D-018",
    "name": "Verificar que una nueva tienda de retiro con producto no disponible activa el flujo de no disponibles [Desktop] [Logueado]",
-   "observation": "Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.",
-   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Retiro en tienda configurado con Unimarc Las Condes\n- {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en Unimarc Los Trapenses\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "observation": "La preparación del carro no encontró el estado de carro vacío ni el contador de unidades dentro de 30 segundos; el caso no alcanzó Mis Envíos.",
+   "observed": "La preparación del carro no encontró el estado de carro vacío ni el contador de unidades dentro de 30 segundos; el caso no alcanzó Mis Envíos.",
+   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Retiro en tienda configurado con Unimarc Las Condes\n- {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en Unimarc Los Trapenses\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
+   "status": "Bloqueado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario hace clic en el ícono ▾ de la tarjeta de tienda.\n6. El sistema abre el Store Locator de retiro en tienda (B2C-121).\n7. El usuario selecciona la tienda Unimarc Los Trapenses y hace clic en \"Confirmar tienda\".\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra un loader mientras verifica la disponibilidad de productos.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, Unimarc Las Condes, Unimarc Los Trapenses, 11, vhchirinos+comprador@avatar-global.com",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{MONTO_MINIMO_COMPRA} = 20000\n{SKU_VALID_001} = 000000000000675191-UN\n{TIENDA_RETIRO_001} = Unimarc Las Condes\n{TIENDA_RETIRO_002} = Unimarc Los Trapenses\n{UNIDADES_SOBRE_MINIMO} = 11\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com",
    "viewport": "1440x900"
   },
   {
@@ -2548,31 +2879,35 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-10-14",
+   "duration_s": null,
+   "executed_at": "2026-10-28",
    "expected": "Se activa el flujo de productos no disponibles de B2C-126 para {SKU_STOCK_SOLO_TIENDA_A}.",
    "form_factor": "mobile",
    "id": "TC-B2C189-M-007",
    "name": "Verificar que una nueva dirección con productos no disponibles activa el flujo de no disponibles [Mobile] [Logueado]",
-   "observation": "Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "observation": "Tras confirmar la nueva dirección y completar la validación OTP, no apareció el diálogo de productos no disponibles dentro del tiempo de espera.",
+   "observed": "Tras confirmar la nueva dirección y completar la validación OTP, no apareció el diálogo de productos no disponibles dentro del tiempo de espera.",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
+   "status": "Rechazado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario toca \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario toca el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra un loader mientras verifica la disponibilidad.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida\n{DIRECCION_OTRA_TIENDA} = A. Las Conder 14791, Lo Barnechea\n{MONTO_MINIMO_COMPRA} = 20000\n{SKU_VALID_001} = 000000000000675191-UN\n{UNIDADES_SOBRE_MINIMO} = 11\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com",
    "viewport": "390x844"
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-10-14",
+   "executed_at": "2026-10-28",
    "expected": "El usuario llega al carro de compras sin {SKU_STOCK_SOLO_TIENDA_A}.",
    "form_factor": "mobile",
    "id": "TC-B2C189-M-008",
    "name": "Verificar que tras resolver los productos no disponibles se redirige al carro [Mobile] [Logueado]",
-   "observation": "Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.",
+   "observation": "Tras confirmar la nueva dirección y completar la validación OTP, no apareció el diálogo de productos no disponibles dentro del tiempo de espera.",
    "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en la tienda abastecedora de A. Las Conder 14791, Lo Barnechea\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "status": "Rechazado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario toca \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario toca el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra el flujo de productos no disponibles (B2C-126).\n10. El usuario toca \"Entendido\" en el modal \"Se agotaron\".",
    "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
-   "viewport": "390x844"
+   "viewport": "390x844",
+   "observed": "Tras confirmar la nueva dirección y completar la validación OTP, no apareció el diálogo de productos no disponibles dentro del tiempo de espera.",
+   "duration_s": null
   },
   {
    "browser": "webkit",
@@ -2618,72 +2953,82 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-10-14",
+   "executed_at": "2026-10-28",
    "expected": "Se muestra la pantalla \"Sin horarios disponibles\" con el código de trazabilidad STL-041 legible en pantalla y los botones \"Cambiar dirección\" y \"Volver al inicio\" activos.",
    "form_factor": "mobile",
    "id": "TC-B2C189-M-012",
    "name": "Verificar que una nueva dirección sin horarios muestra la pantalla Sin horarios disponibles [Mobile] [Logueado]",
-   "observation": "Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.",
+   "observation": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudieron comprobar STL-041 ni las acciones indicadas.",
    "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "status": "Rechazado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario toca \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario toca el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección Av Libertador Gral Bernardo O'Higgins 1072, Maipú y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra la pantalla \"Sin horarios disponibles\".\n10. El usuario verifica que el código STL-041 es legible en pantalla.",
    "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, Av Libertador Gral Bernardo O'Higgins 1072, Maipú, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
-   "viewport": "390x844"
+   "viewport": "390x844",
+   "observed": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudieron comprobar STL-041 ni las acciones indicadas.",
+   "duration_s": null
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-10-14",
+   "executed_at": "2026-10-28",
    "expected": "Se abre el Store Locator para seleccionar otra dirección o tienda.",
    "form_factor": "mobile",
    "id": "TC-B2C189-M-013",
    "name": "Verificar que Cambiar dirección en Sin horarios disponibles vuelve a abrir el Store Locator [Mobile] [Logueado]",
-   "observation": "Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.",
+   "observation": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Cambiar dirección”.",
    "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "status": "Rechazado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario toca \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario toca el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección Av Libertador Gral Bernardo O'Higgins 1072, Maipú y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra la pantalla \"Sin horarios disponibles\".\n10. El usuario toca \"Cambiar dirección\".",
    "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, Av Libertador Gral Bernardo O'Higgins 1072, Maipú, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
-   "viewport": "390x844"
+   "viewport": "390x844",
+   "observed": "Tras confirmar la dirección, no apareció la pantalla “Sin horarios disponibles”; no se pudo comprobar la acción “Cambiar dirección”.",
+   "duration_s": null
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-10-14",
+   "executed_at": "2026-10-28",
    "expected": "El usuario es redirigido al Home.",
    "form_factor": "mobile",
    "id": "TC-B2C189-M-014",
    "name": "Verificar que Volver al inicio desde Sin horarios disponibles redirige al Home [Mobile] [Logueado]",
-   "observation": "Causa: {DIRECCION_SIN_SLA} (Av. Libertador Gral. Bernardo O'Higgins 1072, Maipú) no tiene cobertura en DEV: al confirmarla el sitio muestra 'Aún no llegamos a esta dirección' y, al continuar, vuelve al Home con 'Despacho sin cobertura'; nunca llega a 'Sin horarios disponibles' (STL-041). Acción: cargar una dirección con cobertura pero sin ventanas (SLA) disponibles.",
+   "observation": "La navegación a /cart agotó 60 segundos antes de cargar el carro; los pasos del caso no comenzaron.",
    "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "status": "Bloqueado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario toca \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario toca el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección Av Libertador Gral Bernardo O'Higgins 1072, Maipú y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra la pantalla \"Sin horarios disponibles\".\n10. El usuario toca \"Volver al inicio\".",
    "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, Av Libertador Gral Bernardo O'Higgins 1072, Maipú, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
-   "viewport": "390x844"
+   "viewport": "390x844",
+   "observed": "La navegación a /cart agotó 60 segundos antes de cargar el carro; los pasos del caso no comenzaron.",
+   "duration_s": null
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-10-14",
-   "expected": "Mis Envíos muestra Gral. José Artigas 3250, Ñuñoa con sus ventanas recargadas, sin modal de productos no disponibles y con el carro intacto.",
+   "duration_s": null,
+   "executed_at": "2026-10-28",
+   "expected": "Mis Envíos muestra {DIRECCION_MISMA_TIENDA} con sus ventanas recargadas, sin modal de productos no disponibles y con el carro intacto.",
    "form_factor": "mobile",
    "id": "TC-B2C189-M-015",
    "name": "Verificar que una dirección de la misma tienda abastecedora se actualiza sin validar productos [Mobile] [Logueado]",
-   "observation": "Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- Gral. José Artigas 3250, Ñuñoa es atendida por la misma tienda abastecedora que Calle Uno 23, La Florida\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "observation": "Tras seleccionar la dirección de la misma tienda, Mis Envíos siguió mostrando “Calle Uno 23, La Florida” en vez de “Gral. José Artigas 3250”.",
+   "observed": "Tras seleccionar la dirección de la misma tienda, Mis Envíos siguió mostrando “Calle Uno 23, La Florida” en vez de “Gral. José Artigas 3250”.",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Despacho a domicilio configurado con Calle Uno 23, La Florida\n- Gral. José Artigas 3250, Ñuñoa es atendida por la misma tienda abastecedora que Calle Uno 23, La Florida\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
+   "status": "Rechazado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario toca \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario toca el ícono ▾ de la tarjeta de dirección.\n6. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n7. El usuario ingresa la dirección Gral. José Artigas 3250, Ñuñoa y la confirma.\n8. El usuario completa la validación OTP con el código recibido en el correo.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, Gral. José Artigas 3250, Ñuñoa, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida\n{DIRECCION_MISMA_TIENDA} = Gral. José Artigas 3250, Ñuñoa\n{MONTO_MINIMO_COMPRA} = 20000\n{SKU_VALID_001} = 000000000000675191-UN\n{UNIDADES_SOBRE_MINIMO} = 11\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com",
    "viewport": "390x844"
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-10-14",
-   "expected": "Mis Envíos muestra Calle Uno 23, La Florida, la misma ventana seleccionada y el mismo subtotal anotados en el paso 5, sin ningún cambio producido por la interacción parcial en el Store Locator.",
+   "duration_s": null,
+   "executed_at": "2026-10-28",
+   "expected": "Mis Envíos muestra {DIRECCION_DESPACHO_001}, la misma ventana seleccionada y el mismo subtotal anotados en el paso 5, sin ningún cambio producido por la interacción parcial en el Store Locator.",
    "form_factor": "mobile",
    "id": "TC-B2C189-M-016",
    "name": "Verificar que Mis Envíos mantiene su estado mientras el Store Locator completa parcialmente el flujo sin confirmar [Mobile] [Logueado]",
-   "observation": "Causa: el paso 8 ingresa 'una nueva dirección diferente a {DIRECCION_DESPACHO_001}' y la columna Test data no declara cuál. Acción: declarar el token de la dirección a ingresar en la fila del TC.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida",
-   "status": "Bloqueado Data",
+   "observation": "Se escribió “Camino La Fuente 1589 Las Condes” sin confirmar y se cerró el Store Locator con la X; Mis Envíos conservó destino, ventana y subtotal.",
+   "observed": "Se escribió “Camino La Fuente 1589 Las Condes” sin confirmar y se cerró el Store Locator con la X; Mis Envíos conservó destino, ventana y subtotal.",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida",
+   "status": "Aprobado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario toca \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario anota la dirección activa (Calle Uno 23, La Florida), la ventana seleccionada y el subtotal visibles en Mis Envíos.\n6. El usuario toca el ícono ▾ de la tarjeta de dirección.\n7. El sistema abre el Store Locator de despacho a domicilio (B2C-26).\n8. El usuario ingresa una nueva dirección diferente a Calle Uno 23, La Florida en el buscador del Store Locator pero NO la confirma.\n9. El usuario toca la X del Store Locator.\n10. El sistema cierra el Store Locator y vuelve a Mis Envíos.\n11. El usuario verifica la dirección, la ventana seleccionada y el subtotal en Mis Envíos.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida\n{MONTO_MINIMO_COMPRA} = 20000\n{SKU_VALID_001} = 000000000000675191-UN\n{UNIDADES_SOBRE_MINIMO} = 11\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com",
    "viewport": "390x844"
   },
   {
@@ -2702,16 +3047,18 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-10-14",
+   "duration_s": null,
+   "executed_at": "2026-10-28",
    "expected": "Se activa el flujo de productos no disponibles de B2C-126 para {SKU_STOCK_SOLO_TIENDA_A}.",
    "form_factor": "mobile",
    "id": "TC-B2C189-M-018",
    "name": "Verificar que una nueva tienda de retiro con producto no disponible activa el flujo de no disponibles [Mobile] [Logueado]",
-   "observation": "Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU con stock solo en la tienda abastecedora de origen.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Retiro en tienda configurado con Unimarc Las Condes\n- {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en Unimarc Los Trapenses\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
-   "status": "Bloqueado Data",
+   "observation": "Tras cambiar la tienda de retiro y completar la validación OTP, apareció el flujo de productos no disponibles; el artículo se retiró del carro como esperaba el caso.",
+   "observed": "Tras cambiar la tienda de retiro y completar la validación OTP, apareció el flujo de productos no disponibles; el artículo se retiró del carro como esperaba el caso.",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000 y {SKU_STOCK_SOLO_TIENDA_A}\n- Retiro en tienda configurado con Unimarc Las Condes\n- {SKU_STOCK_SOLO_TIENDA_A} no tiene stock en Unimarc Los Trapenses\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
+   "status": "Aprobado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario toca \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario toca el ícono ▾ de la tarjeta de tienda.\n6. El sistema abre el Store Locator de retiro en tienda (B2C-121).\n7. El usuario selecciona la tienda Unimarc Los Trapenses y toca \"Confirmar tienda\".\n8. El usuario completa la validación OTP con el código recibido en el correo.\n9. El sistema muestra un loader mientras verifica la disponibilidad de productos.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, 20000, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN, Unimarc Las Condes, Unimarc Los Trapenses, 11, vhchirinos+comprador@avatar-global.com",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{MONTO_MINIMO_COMPRA} = 20000\n{SKU_VALID_001} = 000000000000675191-UN\n{TIENDA_RETIRO_001} = Unimarc Las Condes\n{TIENDA_RETIRO_002} = Unimarc Los Trapenses\n{UNIDADES_SOBRE_MINIMO} = 11\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com",
    "viewport": "390x844"
   }
  ]

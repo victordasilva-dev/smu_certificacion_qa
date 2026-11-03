@@ -6,7 +6,7 @@
 | Última actualización | 2026-10-14 |
 | Ejecutado por | Victor Chirinos |
 | Ambiente | App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV |
-| Dispositivo Android | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo Android | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-123 APP Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
@@ -35,7 +35,7 @@
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 27.2 s |
 | Spec | tests-app/B2C-123.spec.ts:47 |
 
@@ -90,7 +90,7 @@ Con 'T-551, Futrono' se abre 'Aún no llegamos a esta dirección' con el mensaje
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -131,7 +131,7 @@ Causa: {USER_AUTH_001} es un correo y en la app v1.0.7 el login solo acepta RUT:
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 40.0 s |
 | Spec | tests-app/B2C-123.spec.ts:59 |
 
@@ -192,7 +192,7 @@ Tras 'Continuar con esta dirección' el navbar muestra 'T-551' con 'Despacho sin
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 52.0 s |
 | Spec | tests-app/B2C-123.spec.ts:77 |
 
@@ -252,7 +252,7 @@ Con 'Calle Uno 23, La Florida' activa y el carro con 000000000000675191-UN, al c
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 30.5 s |
 | Spec | tests-app/B2C-123.spec.ts:89 |
 
@@ -306,7 +306,7 @@ El modal "Aún no llegamos a esta dirección" se cierra y se muestra el modal "E
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 33.3 s |
 | Spec | tests-app/B2C-123.spec.ts:99 |
 
@@ -357,7 +357,7 @@ Esperado: desde la PLP, Store Locator → sin cobertura → 'Cambiar método de 
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 48.9 s |
 | Spec | tests-app/B2C-123.spec.ts:120 |
 
@@ -412,7 +412,7 @@ Esperado: toast 'No tenemos cobertura para la dirección actual, seleccione otra
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -449,7 +449,7 @@ Causa: la precondición pide el carro con {SKU_VALID_001} antes de aplicar la di
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -494,7 +494,7 @@ Causa: {USER_AUTH_001} es un correo y en la app v1.0.7 el login solo acepta RUT:
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -533,7 +533,7 @@ Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (vhchirinos+nocobertura@avatar-g
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -570,7 +570,7 @@ Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (vhchirinos+nocobertura@avatar-g
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -608,7 +608,7 @@ Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (vhchirinos+nocobertura@avatar-g
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 38.4 s |
 | Spec | tests-app/B2C-123.spec.ts:141 |
 
@@ -657,7 +657,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
  "header": {
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "devices": {
-   "android": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)"
+   "android": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)"
   },
   "environment": "App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV",
   "executed_by": "Victor Chirinos",
@@ -685,7 +685,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
  },
  "results": [
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 27.2,
    "executed_at": "2026-10-14",
    "expected": "Se muestra el modal \"Aún no llegamos a esta dirección\" con el mensaje \"Revisa que esté correcta, prueba con otra dentro de nuestra zona de cobertura o cambia tu método de entrega a una de nuestras tiendas Unimarc\" y las opciones \"Continuar con esta dirección\" y \"Cambiar método de entrega\".",
@@ -720,7 +720,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, T-551, Futrono"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Se muestra el modal \"Aún no llegamos a esta dirección\" con sus opciones \"Continuar con esta dirección\" y \"Cambiar método de entrega\".",
    "form_factor": "app",
@@ -734,7 +734,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, T-551, Futrono, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 40.0,
    "executed_at": "2026-10-14",
    "expected": "La dirección T-551, Futrono queda seteada y el Store Locator muestra \"Despacho sin cobertura\" debajo, también al navegar a otras páginas.",
@@ -773,7 +773,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, T-551, Futrono, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 52.0,
    "executed_at": "2026-10-14",
    "expected": "Se muestra el modal \"Algunos productos podrían agotarse\" (B2C-126).",
@@ -808,7 +808,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, T-551, Futrono, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 30.5,
    "executed_at": "2026-10-14",
    "expected": "El modal \"Aún no llegamos a esta dirección\" se cierra y se muestra el modal \"Elige tu método de entrega\".",
@@ -839,7 +839,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, T-551, Futrono"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 33.3,
    "executed_at": "2026-10-14",
    "expected": "El modal se cierra, el Store Locator muestra Calle Uno 23, La Florida y el usuario vuelve a la PLP.",
@@ -866,7 +866,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, T-551, Futrono, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 48.9,
    "executed_at": "2026-10-14",
    "expected": "Se muestra el toast de error \"No tenemos cobertura para la dirección actual, seleccione otra dirección\" con X de cierre manual y 000000000000675191-UN no se agrega al carro.",
@@ -905,7 +905,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, T-551, Futrono, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "000000000000675191-UN se muestra marcado como no disponible en el carro.",
    "form_factor": "app",
@@ -919,7 +919,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, T-551, Futrono, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El usuario es redirigido al Home con T-551, Futrono seteada y la etiqueta de sin cobertura.",
    "form_factor": "app",
@@ -933,7 +933,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, T-551, Futrono, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El Store Locator muestra la dirección sin \"Despacho sin cobertura\" y 000000000000675191-UN se agrega al carro con normalidad.",
    "form_factor": "app",
@@ -947,7 +947,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, {COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD}, vhchirinos+nocobertura@avatar-global.com, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El Store Locator mantiene la dirección con la etiqueta \"Despacho sin cobertura\".",
    "form_factor": "app",
@@ -961,7 +961,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, {COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD}, vhchirinos+nocobertura@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El Store Locator mantiene la etiqueta \"Despacho sin cobertura\" sin cambios.",
    "form_factor": "app",
@@ -975,7 +975,7 @@ Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar
    "test_data": "v1.0.7, iOS, {COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD}, vhchirinos+nocobertura@avatar-global.com, {HERRAMIENTA_PROXY_APP}, {JANIS_API_ENDPOINT}"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 38.4,
    "executed_at": "2026-10-14",
    "expected": "Se muestra el modal \"Aún no llegamos a esta dirección\" con el mensaje \"Revisa que esté correcta, prueba con otra dentro de nuestra zona de cobertura o cambia tu método de entrega a una de nuestras tiendas Unimarc\" y las opciones \"Continuar con esta dirección\" y \"Cambiar método de entrega\".",

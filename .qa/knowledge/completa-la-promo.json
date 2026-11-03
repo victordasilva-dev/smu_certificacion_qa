@@ -1,7 +1,7 @@
 {
   "flow": "completa-la-promo",
   "version": 3,
-  "last_updated": "2026-10-15T15:30:00Z",
+  "last_updated": "2026-10-19T21:00:00Z",
   "description": "Promo 'Completa la promo' (B2C-63): toast 'Agrega N y ahorra más' / '¡Completaste la promo!' y barra de progreso al agregar/quitar unidades desde PLP, PDP, modal y Home. Suite 100% Bloqueado Data al 2026-09-28: no se llegó a ver el toast.",
   "source": {
     "suite": "B2C-63",
@@ -46,6 +46,7 @@
     "intercepts_useful": []
   },
   "observations": [
+    "CORRIDA 2026-10-19 (B2C-63 SP1, 14 TC pendientes D/M-020..026): los 14 a Bloqueado Data. Como invitado con 'Calle Uno 23, La Florida' (fijarDireccionComoInvitado, sugerencia por /(?<!\\d)23(?!\\d)/) el SKU 000000000664214001-UN SI se agrega, pero su mecanica es 'Combina la promo' (2 por 1 a $2.550; ya no sale $NaN): con 1 y 2 unidades la shelf solo dice 'En carro N un.', sin barra de progreso, toast ni 'Agrega 1 y ahorra mas'; igual en PLP, PDP y Mobile. Falta un SKU con 'Completa la promo' real. Capturas en .qa/explore63/.",
     "CORRIDA 2026-10-07 (B2C-63 SP1, 10 TC Desktop pendientes): los 10 a Bloqueado Data sin ejecutar. {SKU_PROM_2X1} (= {SKU_PROM_2x1} = 664214001, Lay's artesanas 150 g en despensa_coctel-y-snacks_papas-fritas) sigue con 'Combina la promo' y precio '2 por 1 a $NaN', NO 'Completa la promo'; {SKU_PROM_NxM} (641229002, Lay's Stax 134 g) esta sin stock ('Pronto disponible' + 'Ver similares'). Ademas las filas piden invitado con direccion seleccionada y no declaran direccion. La suite queda 38/38 Bloqueado Data; la HU esta en 'HU TEST CASES OBSERVADOS' y no se movio.",
     "TOKEN MAL ESCRITO: la planilla de B2C-63 declara {SKU_PROM_2X1}; el Excel de data lo tiene como {SKU_PROM_2x1} (x minuscula). El read no lo resuelve (sensible a mayusculas). QA acepto tomarlo como el mismo.",
     "{SKU_PROM_2x1} = 000000000664214001-UN, Papas fritas Lay's artesanas sal de mar 150 g (Despensa > Coctel y snacks > Papas fritas). Tiene mecanica 'Combina la promo' (boton del modal de B2C-74), NO 'Completa la promo'. Su PDP muestra el precio de la promo como '2 por 1 a $NaN' (posible defecto de precio, no cubierto por ningun TC).",

@@ -1,9 +1,10 @@
 import { Page } from '@playwright/test';
-import { test, expect } from './support/fixtures';
+import { test, expect, token } from './support/fixtures';
 import { DESKTOP, MOBILE } from './support/viewports';
 import { HomePage } from './pages/HomePage';
 import { TabsCarrusel } from './pages/TabsCarrusel';
 import { PDPPage } from './pages/PDPPage';
+import { CookieConsentBanner } from './pages/CookieConsentBanner';
 
 /**
  * B2C-77 — Componente Tabs + Carrusel de productos del Home/Landing.
@@ -34,6 +35,8 @@ import { PDPPage } from './pages/PDPPage';
  * - **La UI escribe "Mostrar todo" donde los TC dicen "Ver todos"**, y los Labels de tab vienen
  *   truncados a 12 caracteres. Los locators van tolerantes.
  */
+
+const BD = (m: string) => new Error(`PRECONDICION_NO_DISPONIBLE: ${m}`);
 
 /** El título con el que este ambiente tiene instanciado el componente. */
 const TITULO = /nuestras marcas/i;
@@ -66,6 +69,82 @@ async function contarProductosDeLaPLP(page: Page): Promise<number> {
     actual = await contar();
   }
   return actual;
+}
+
+/** Las PDP (rutas únicas) que lista el carrusel de la tab activa. */
+async function pdpsDelCarrusel(componente: TabsCarrusel): Promise<string[]> {
+  return componente.root.evaluate((sec) => [
+    ...new Set(
+      [...sec.querySelectorAll('.swiper-slide a[href$=".html"]')].map((a) => (a as HTMLAnchorElement).pathname),
+    ),
+  ]);
+}
+
+/**
+ * Abre la colección que la tab tiene configurada (el destino de su "Mostrar todo") en otra
+ * pestaña y comprueba que cada producto del carrusel aparece en ella. Recorre la PLP hasta
+ * encontrarlos todos o hasta que deja de crecer.
+ */
+async function carruselPerteneceALaColeccion(
+  page: Page,
+  componente: TabsCarrusel,
+): Promise<{ destino: string; enCarrusel: number; faltantes: string[] }> {
+  const destino = (await componente.verTodos.getAttribute('href')) ?? '';
+  const enCarrusel = await pdpsDelCarrusel(componente);
+  const plp = await page.context().newPage();
+  try {
+    await plp.goto(new URL(destino, page.url()).toString(), { waitUntil: 'domcontentloaded' });
+    await plp.waitForTimeout(3000);
+    let faltantes = enCarrusel;
+    let previo = -1;
+    let sinCrecer = 0;
+    for (let i = 0; i < 80 && faltantes.length > 0 && sinCrecer < 4; i++) {
+      const enLaPLP = await plp
+        .locator('main a[href$=".html"]')
+        .evaluateAll((as) => [...new Set(as.map((a) => (a as HTMLAnchorElement).pathname))]);
+      faltantes = enCarrusel.filter((u) => !enLaPLP.includes(u));
+      sinCrecer = enLaPLP.length === previo ? sinCrecer + 1 : 0;
+      previo = enLaPLP.length;
+      await plp.keyboard.press('End');
+      await plp.mouse.wheel(0, 6000);
+      await plp.waitForTimeout(1800);
+    }
+    return { destino, enCarrusel: enCarrusel.length, faltantes };
+  } finally {
+    await plp.close();
+  }
+}
+
+/** SKU normalizado ("000000000000613365-UN") a partir de una ruta de PDP o de un productId de la API. */
+const skuDe = (s: string): string => decodeURIComponent(s).match(/(\d{12,}-\w+)/)?.[1] ?? s;
+
+interface TabConfig { n: number; label: string | null; categoria: string }
+interface ComponenteConfig { titulo: string; maxProductos: number; tabInicial: number; tabs: TabConfig[] }
+
+/**
+ * La configuración publicada del componente en Page Designer: viene en el estado precargado de la
+ * página (`__PRELOADED_STATE__`, componente `ux_assets.tabsCarousel`), con una tabN{Label,Category}
+ * por tab. Es la única fuente de las tabs *configuradas*, incluidas las que el componente oculta.
+ */
+async function configDelComponente(page: Page, titulo?: RegExp): Promise<ComponenteConfig | null> {
+  return page.evaluate((tituloSrc) => {
+    const raiz = (window as any).__PRELOADED_STATE__;
+    const hallados: any[] = [];
+    const recorrer = (o: any) => {
+      if (!o || typeof o !== 'object') return;
+      if (o.typeId === 'ux_assets.tabsCarousel' && o.data) hallados.push(o.data);
+      for (const k of Object.keys(o)) recorrer(o[k]);
+    };
+    recorrer(raiz);
+    const re = tituloSrc ? new RegExp(tituloSrc, 'i') : null;
+    const d = hallados.find((h) => !re || re.test(h.title ?? ''));
+    if (!d) return null;
+    const tabs: { n: number; label: string | null; categoria: string }[] = [];
+    for (let n = 1; n <= 20; n++) {
+      if (d[`tab${n}Category`]) tabs.push({ n, label: d[`tab${n}Label`] ? String(d[`tab${n}Label`]).trim() : null, categoria: d[`tab${n}Category`] });
+    }
+    return { titulo: String(d.title ?? '').trim(), maxProductos: Number(d.maxProducts), tabInicial: Number(d.defaultTabIndex), tabs };
+  }, titulo ? titulo.source : null);
 }
 
 test.describe('B2C-77 — Tabs + Carrusel de productos', () => {
@@ -429,6 +508,113 @@ test.describe('B2C-77 — Tabs + Carrusel de productos', () => {
 
       await home.capturarEvidencia(cp);
     });
+
+    test('TC-B2C77-D-012 · Tab inicial configurada explicitamente se muestra activa al cargar la pagina (Desktop)', async ({
+      page,
+    }) => {
+      const cp = 'TC-B2C77-D-012';
+      test.setTimeout(300000);
+
+      // Paso 1 y 2 — el componente, con su tab inicial configurada.
+      const { home, componente } = await abrirComponente(page);
+      const tabs = await componente.nombresDeTabs();
+      expect(tabs.length, 'el componente tiene al menos 2 tabs').toBeGreaterThan(1);
+      await home.capturarEvidencia(cp, 2, 'componente recien cargado', { elemento: componente.root });
+
+      // Paso 3 — la tab activa NO es la primera y su carrusel trae los productos de su colección.
+      const activa = await componente.tabActiva();
+      expect(activa, 'hay una tab activa al cargar').not.toBeNull();
+      expect(activa, `la tab inicial configurada ("${activa}") no es la primera de la lista ("${tabs[0]}")`).not.toBe(tabs[0]);
+      const r = await carruselPerteneceALaColeccion(page, componente);
+      expect(r.enCarrusel, 'el carrusel de la tab inicial trae productos').toBeGreaterThan(0);
+      expect(
+        r.faltantes,
+        `los productos del carrusel de "${activa}" están en su colección (${r.destino})`,
+      ).toEqual([]);
+
+      await home.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C77-D-014 · Cada tab muestra en el carrusel los productos de su colección configurada (Desktop)', async ({
+      page,
+    }) => {
+      const cp = 'TC-B2C77-D-014';
+      test.setTimeout(600000);
+
+      // La colección de cada tab es la categoría que trae configurada en Page Designer (tabNCategory);
+      // el carrusel se alimenta con la búsqueda de esa categoría, que se captura al cargar la página.
+      const busquedas = new Map<string, Set<string>>();
+      page.on('response', async (r) => {
+        if (!/product-search/.test(r.url())) return;
+        const cgid = decodeURIComponent(r.url()).match(/refine=cgid=([^&]+)/)?.[1];
+        const j = await r.json().catch(() => null);
+        if (!cgid || !j?.hits) return;
+        const set = busquedas.get(cgid) ?? new Set<string>();
+        for (const h of j.hits) set.add(skuDe(String(h.productId)));
+        busquedas.set(cgid, set);
+      });
+      const { home, componente } = await abrirComponente(page);
+      const cfg = await configDelComponente(page, TITULO);
+      expect(cfg, 'el componente trae su configuración de Page Designer').toBeTruthy();
+      const tabs = await componente.nombresDeTabs();
+      expect(tabs.length, 'el componente tiene al menos 2 tabs').toBeGreaterThan(1);
+      await home.capturarEvidencia(cp, 2, 'componente con sus tabs', { elemento: componente.root });
+
+      const incumplen: string[] = [];
+      for (const [i, t] of tabs.entries()) {
+        // La tab mostrada se vincula con su configuración por el Label (el DOM lo trunca a 12 caracteres).
+        const conf = cfg!.tabs.find((x) => x.label && x.label.startsWith(t.replace(/…$/, '')));
+        if (!conf) { incumplen.push(`${t}: sin configuración en Page Designer`); continue; }
+        await componente.activarTab(t);
+        await componente.detenerAutoplay();
+        const mostrados = await componente.root.evaluate((sec) => [...new Set([...sec.querySelectorAll('.swiper-slide a[href$=".html"]')].map((a) => (a as HTMLAnchorElement).pathname))]);
+        const skus = mostrados.map(skuDe);
+        const coleccion = busquedas.get(conf.categoria);
+        if (skus.length === 0) incumplen.push(`${t}: carrusel vacio`);
+        else if (!coleccion) incumplen.push(`${t}: no se vio la busqueda de su coleccion (${conf.categoria})`);
+        else {
+          const fuera = skus.filter((x) => !coleccion.has(x));
+          if (fuera.length) incumplen.push(`${t}: ${fuera.length} de ${skus.length} fuera de la coleccion ${conf.categoria}`);
+          if (skus.length > cfg!.maxProductos) incumplen.push(`${t}: ${skus.length} productos, mas del maximo ${cfg!.maxProductos}`);
+        }
+        test.info().annotations.push({ type: `tab ${t}`, description: `coleccion ${conf.categoria} · ${skus.length} en el carrusel` });
+        if (i === 0) await home.capturarEvidencia(cp, 3, `tab "${t}" y su carrusel`, { elemento: componente.root });
+      }
+      expect(incumplen, 'cada tab muestra solo productos de su colección configurada').toEqual([]);
+
+      await home.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C77-D-008 · Tab sin label configurado se oculta automaticamente (Desktop)', async ({ page, testData }) => {
+      const cp = 'TC-B2C77-D-008';
+      test.setTimeout(240000);
+      const url = token(testData, 'LP_COLECCION_URL')!;
+
+      // Paso 1 y 2 — la página de prueba con el componente configurado.
+      await page.goto(url, { waitUntil: 'domcontentloaded' });
+      await new CookieConsentBanner(page).aceptarSiAparece();
+      await page.waitForTimeout(4000);
+      for (let i = 0; i < 12; i++) { await page.mouse.wheel(0, 1200); await page.waitForTimeout(500); }
+      const cfg = await configDelComponente(page);
+      expect(cfg, 'la página trae el componente Tabs + Carrusel configurado').toBeTruthy();
+      const sinLabel = cfg!.tabs.filter((t) => !t.label);
+      const conLabel = cfg!.tabs.filter((t) => t.label);
+      test.info().annotations.push({ type: 'config', description: `tabs configuradas: ${cfg!.tabs.map((t) => `${t.n}:${t.label ?? '(sin Label)'}→${t.categoria}`).join(' | ')}` });
+      if (sinLabel.length === 0) throw BD('la página de prueba no tiene ninguna tab configurada sin Label');
+
+      // Paso 3 — la fila de tabs: la tab sin Label no se muestra.
+      const componente = new TabsCarrusel(page, /./);
+      await page.locator('[role="tab"]').first().scrollIntoViewIfNeeded();
+      await page.waitForTimeout(1000);
+      const visibles = (await page.locator('[role="tab"]').allInnerTexts()).map((t) => t.trim());
+      test.info().annotations.push({ type: 'visibles', description: visibles.join(' | ') });
+      await new HomePage(page).capturarEvidencia(cp, 3, 'fila de tabs de la página de prueba');
+      expect(
+        visibles.length,
+        `las tabs sin Label no se muestran: hay ${sinLabel.length} sin Label ({${sinLabel.map((t) => t.categoria).join(', ')}}) y la fila muestra ${visibles.length} (${visibles.join(', ')})`,
+      ).toBe(conLabel.length);
+      void componente;
+    });
   });
 
   test.describe('Mobile 390x844', () => {
@@ -747,6 +933,113 @@ test.describe('B2C-77 — Tabs + Carrusel de productos', () => {
       ).toBe('');
 
       await home.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C77-M-014 · Tab inicial configurada explicitamente se muestra activa al cargar la pagina (Mobile)', async ({
+      page,
+    }) => {
+      const cp = 'TC-B2C77-M-014';
+      test.setTimeout(300000);
+
+      // Paso 1 y 2 — el componente, con su tab inicial configurada.
+      const { home, componente } = await abrirComponente(page);
+      const tabs = await componente.nombresDeTabs();
+      expect(tabs.length, 'el componente tiene al menos 2 tabs').toBeGreaterThan(1);
+      await home.capturarEvidencia(cp, 2, 'componente recien cargado', { elemento: componente.root });
+
+      // Paso 3 — la tab activa NO es la primera y su carrusel trae los productos de su colección.
+      const activa = await componente.tabActiva();
+      expect(activa, 'hay una tab activa al cargar').not.toBeNull();
+      expect(activa, `la tab inicial configurada ("${activa}") no es la primera de la lista ("${tabs[0]}")`).not.toBe(tabs[0]);
+      const r = await carruselPerteneceALaColeccion(page, componente);
+      expect(r.enCarrusel, 'el carrusel de la tab inicial trae productos').toBeGreaterThan(0);
+      expect(
+        r.faltantes,
+        `los productos del carrusel de "${activa}" están en su colección (${r.destino})`,
+      ).toEqual([]);
+
+      await home.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C77-M-016 · Cada tab muestra en el carrusel los productos de su colección configurada (Mobile)', async ({
+      page,
+    }) => {
+      const cp = 'TC-B2C77-M-016';
+      test.setTimeout(600000);
+
+      // La colección de cada tab es la categoría que trae configurada en Page Designer (tabNCategory);
+      // el carrusel se alimenta con la búsqueda de esa categoría, que se captura al cargar la página.
+      const busquedas = new Map<string, Set<string>>();
+      page.on('response', async (r) => {
+        if (!/product-search/.test(r.url())) return;
+        const cgid = decodeURIComponent(r.url()).match(/refine=cgid=([^&]+)/)?.[1];
+        const j = await r.json().catch(() => null);
+        if (!cgid || !j?.hits) return;
+        const set = busquedas.get(cgid) ?? new Set<string>();
+        for (const h of j.hits) set.add(skuDe(String(h.productId)));
+        busquedas.set(cgid, set);
+      });
+      const { home, componente } = await abrirComponente(page);
+      const cfg = await configDelComponente(page, TITULO);
+      expect(cfg, 'el componente trae su configuración de Page Designer').toBeTruthy();
+      const tabs = await componente.nombresDeTabs();
+      expect(tabs.length, 'el componente tiene al menos 2 tabs').toBeGreaterThan(1);
+      await home.capturarEvidencia(cp, 2, 'componente con sus tabs', { elemento: componente.root });
+
+      const incumplen: string[] = [];
+      for (const [i, t] of tabs.entries()) {
+        // La tab mostrada se vincula con su configuración por el Label (el DOM lo trunca a 12 caracteres).
+        const conf = cfg!.tabs.find((x) => x.label && x.label.startsWith(t.replace(/…$/, '')));
+        if (!conf) { incumplen.push(`${t}: sin configuración en Page Designer`); continue; }
+        await componente.activarTab(t);
+        await componente.detenerAutoplay();
+        const mostrados = await componente.root.evaluate((sec) => [...new Set([...sec.querySelectorAll('.swiper-slide a[href$=".html"]')].map((a) => (a as HTMLAnchorElement).pathname))]);
+        const skus = mostrados.map(skuDe);
+        const coleccion = busquedas.get(conf.categoria);
+        if (skus.length === 0) incumplen.push(`${t}: carrusel vacio`);
+        else if (!coleccion) incumplen.push(`${t}: no se vio la busqueda de su coleccion (${conf.categoria})`);
+        else {
+          const fuera = skus.filter((x) => !coleccion.has(x));
+          if (fuera.length) incumplen.push(`${t}: ${fuera.length} de ${skus.length} fuera de la coleccion ${conf.categoria}`);
+          if (skus.length > cfg!.maxProductos) incumplen.push(`${t}: ${skus.length} productos, mas del maximo ${cfg!.maxProductos}`);
+        }
+        test.info().annotations.push({ type: `tab ${t}`, description: `coleccion ${conf.categoria} · ${skus.length} en el carrusel` });
+        if (i === 0) await home.capturarEvidencia(cp, 3, `tab "${t}" y su carrusel`, { elemento: componente.root });
+      }
+      expect(incumplen, 'cada tab muestra solo productos de su colección configurada').toEqual([]);
+
+      await home.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C77-M-012 · Tab sin label configurado se oculta automaticamente (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C77-M-012';
+      test.setTimeout(240000);
+      const url = token(testData, 'LP_COLECCION_URL')!;
+
+      // Paso 1 y 2 — la página de prueba con el componente configurado.
+      await page.goto(url, { waitUntil: 'domcontentloaded' });
+      await new CookieConsentBanner(page).aceptarSiAparece();
+      await page.waitForTimeout(4000);
+      for (let i = 0; i < 12; i++) { await page.mouse.wheel(0, 1200); await page.waitForTimeout(500); }
+      const cfg = await configDelComponente(page);
+      expect(cfg, 'la página trae el componente Tabs + Carrusel configurado').toBeTruthy();
+      const sinLabel = cfg!.tabs.filter((t) => !t.label);
+      const conLabel = cfg!.tabs.filter((t) => t.label);
+      test.info().annotations.push({ type: 'config', description: `tabs configuradas: ${cfg!.tabs.map((t) => `${t.n}:${t.label ?? '(sin Label)'}→${t.categoria}`).join(' | ')}` });
+      if (sinLabel.length === 0) throw BD('la página de prueba no tiene ninguna tab configurada sin Label');
+
+      // Paso 3 — la fila de tabs: la tab sin Label no se muestra.
+      const componente = new TabsCarrusel(page, /./);
+      await page.locator('[role="tab"]').first().scrollIntoViewIfNeeded();
+      await page.waitForTimeout(1000);
+      const visibles = (await page.locator('[role="tab"]').allInnerTexts()).map((t) => t.trim());
+      test.info().annotations.push({ type: 'visibles', description: visibles.join(' | ') });
+      await new HomePage(page).capturarEvidencia(cp, 3, 'fila de tabs de la página de prueba');
+      expect(
+        visibles.length,
+        `las tabs sin Label no se muestran: hay ${sinLabel.length} sin Label ({${sinLabel.map((t) => t.categoria).join(', ')}}) y la fila muestra ${visibles.length} (${visibles.join(', ')})`,
+      ).toBe(conLabel.length);
+      void componente;
     });
   });
 });

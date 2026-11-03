@@ -105,6 +105,42 @@ async function asegurarCarro(page: Page, testData: LoadedTestData): Promise<void
   }
 }
 
+
+/** Sesión de {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (D/M-010 y 011). No se commitea. */
+const SESION_SIN_COBERTURA = path.resolve('.qa/auth/b123-nocobertura.json');
+
+/** Inicia sesión con la cuenta cuya última dirección quedó sin cobertura; reutiliza su storageState. */
+async function iniciarSesionSinCobertura(page: Page, testData: LoadedTestData): Promise<PaginaHabilitada> {
+  const correo = token(testData, 'COMPRADOR_DIRECCION_SIN_COBERTURA_USER')!.trim();
+  if (fs.existsSync(SESION_SIN_COBERTURA)) {
+    const estado = JSON.parse(fs.readFileSync(SESION_SIN_COBERTURA, 'utf-8'));
+    await page.context().addCookies(estado.cookies ?? []);
+  }
+  const home = await new PaginaHabilitada(page).goto();
+  await home.cookies.aceptarSiAparece();
+  const login = new LoginModal(page);
+  await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
+  if (await login.disparador.isVisible().catch(() => false)) {
+    const desde = marcaOtp();
+    await login.pedirCodigo(correo);
+    await login.ingresarCodigo(await esperarOtp(correo, desde, { digitos: 6 }));
+  }
+  await login.descartarPasskey();
+  fs.mkdirSync(path.dirname(SESION_SIN_COBERTURA), { recursive: true });
+  await page.context().storageState({ path: SESION_SIN_COBERTURA });
+  return home;
+}
+
+/** Lo que el Store Locator del header muestra tras la re-verificación al entrar al sitio. */
+async function storeLocatorTrasEntrar(page: Page): Promise<{ home: PaginaHabilitada; texto: string }> {
+  const home = await new PaginaHabilitada(page).goto();
+  await home.header.storeLocator.waitFor({ state: 'visible', timeout: 30000 });
+  await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
+  await page.waitForTimeout(3000);
+  const texto = ((await home.header.storeLocator.innerText()) ?? '').replace(/\s+/g, ' ').trim();
+  return { home, texto };
+}
+
 const MENSAJE =
   'Revisa que esté correcta, prueba con otra dentro de nuestra zona de cobertura o cambia tu método de entrega a una de nuestras tiendas Unimarc';
 const TOAST = 'No tenemos cobertura para la dirección actual, seleccione otra dirección';
@@ -329,6 +365,35 @@ test.describe('B2C-123 — Sin cobertura', () => {
         await expect(modal.modalSinCobertura.getByRole('button', { name: /^continuar con esta direcci[óo]n$/i })).toBeVisible();
         await expect(modal.modalSinCobertura.getByRole('button', { name: /^cambiar m[ée]todo de entrega$/i })).toBeVisible();
         await modal.capturarModal(cp, undefined, undefined, modal.modalSinCobertura);
+      });
+
+      test(`TC-B2C123-${L}-010 · Al iniciar sesión, una dirección que recuperó cobertura pierde la etiqueta «Despacho sin cobertura» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test.setTimeout(300000);
+        const cp = `TC-B2C123-${L}-010`;
+        // Paso 1 — entrar con la cuenta declarada; paso 2 — el sitio re-verifica la cobertura.
+        await iniciarSesionSinCobertura(page, testData);
+        const { home, texto } = await storeLocatorTrasEntrar(page);
+        await home.capturarEvidencia(cp, 2, `Store Locator tras entrar: ${texto}`, { elemento: home.header.barraDelSitio });
+        test.info().annotations.push({ type: 'store-locator', description: texto });
+        if (/sin cobertura/i.test(texto)) {
+          throw new Error(`PRECONDICION_NO_DISPONIBLE: la dirección activa de la cuenta sigue «Despacho sin cobertura» (${texto}); la zona no recuperó cobertura`);
+        }
+        // Paso 3 — agregar {SKU_VALID_001} desde su PDP.
+        const pdp = await new PDPPage(page).abrir(token(testData, 'SKU_VALID_001')!);
+        await pdp.agregarVisible.click();
+        await expect(pdp.cantidadEnCarro, 'el producto se agrega al carro con normalidad').toBeVisible({ timeout: 20000 });
+        await pdp.capturarEvidencia(cp);
+      });
+
+      test(`TC-B2C123-${L}-011 · Al iniciar sesión, una dirección que sigue sin cobertura mantiene la etiqueta «Despacho sin cobertura» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test.setTimeout(300000);
+        const cp = `TC-B2C123-${L}-011`;
+        await iniciarSesionSinCobertura(page, testData);
+        const { home, texto } = await storeLocatorTrasEntrar(page);
+        test.info().annotations.push({ type: 'store-locator', description: texto });
+        await home.capturarEvidencia(cp, 2, `Store Locator tras entrar: ${texto}`, { elemento: home.header.barraDelSitio });
+        expect(texto, 'el Store Locator mantiene la etiqueta «Despacho sin cobertura»').toMatch(/despacho sin cobertura/i);
+        await home.capturarEvidencia(cp);
       });
 
       test(`TC-B2C123-${L}-009 · Continuar con la dirección sin cobertura desde Mis envíos lleva al Home [Logueado] (${sufijo})`, async ({ page, testData }) => {

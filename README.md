@@ -1,6 +1,6 @@
 # Suite QA — Playwright + mobilewright
 
-Proyecto de automatización generado por el plugin **qa-executor**. La web corre con Playwright (`tests/`); los TC de app nativa (`-APP-`), con mobilewright (`tests-app/`): iOS en Mobile Next Cloud, Android en local o en la nube. Los Test Cases y la data de prueba **no viven aquí**: viven en Excel, en el workspace QA que apunta `QA_WORKSPACE_DIR` del `.env`. Este repositorio guarda el código que ejecuta esos casos.
+Proyecto de automatización generado por el plugin **qa-executor**. La web corre con Playwright (`tests/`); los TC de app nativa (`-APP-`), con mobilewright (`tests-app/`): iOS en Mobile Next Cloud, Android en un dispositivo Samsung o en la nube. Los Test Cases y la data de prueba **no viven aquí**: viven en Excel, en el workspace QA que apunta `QA_WORKSPACE_DIR` del `.env`. Este repositorio guarda el código que ejecuta esos casos.
 
 El flujo completo —leer la planilla, explorar, generar los specs, correr, escribir el veredicto de vuelta, armar el Word de evidencia y abrir los bugs en Jira— lo conduce la skill. Aquí solo está lo que la skill produce y lo que hace falta para correrlo a mano.
 
@@ -24,7 +24,7 @@ cp .env.example .env              # y completar QA_WORKSPACE_DIR (y MOBILENEXT_A
 | `HEADED` | `true` (por defecto) corre con el navegador visible; `false` para CI |
 | `DESKTOP_BROWSER` / `MOBILE_BROWSER` | Motor por form-factor: `chromium`, `firefox`, `webkit`. `MOBILE_BROWSER` no admite firefox |
 | `MOBILENEXT_API_KEY` | Clave de Mobile Next Cloud. Obligatoria para TC de app en iOS (y Android en la nube). Nunca en el Excel |
-| `ANDROID_EN_CLOUD` | `true` manda Android a Mobile Next Cloud; por defecto corre en el emulador/equipo local |
+| `ANDROID_EN_CLOUD` | `true` manda Android a Mobile Next Cloud; por defecto corre en el emulador o en un dispositivo Samsung |
 | `IOS_DEVICE_NAME` / `IOS_OS_VERSION` / `ANDROID_DEVICE_NAME` / `ANDROID_OS_VERSION` | Filtro opcional de dispositivo (regex de modelo; `17`, `26.0` o `>=17 <19`) |
 | `MOBILENEXT_SUBIR_REPORTE` | `on` (por defecto), `on-failure` u `off`: subir el reporte al dashboard de Mobile Next |
 | `APP_ALLOCATION_TIMEOUT` | Espera máxima por un dispositivo de la nube, en ms (15 min por defecto) |
@@ -47,7 +47,7 @@ tests-app/          TC de app nativa (mobilewright)
 │   └── BaseScreen.ts   (del molde del plugin)
 ├── support/        (del molde del plugin) config por plataforma, fixtures, evidencia, explorar.ts
 └── <SUITE>.spec.ts un test() por CP-ID y plataforma, con sufijo (iOS) / (Android)
-mobilewright.config.ts      Android (local, o nube con ANDROID_EN_CLOUD=true)
+mobilewright.config.ts      Android (dispositivo Samsung, o nube con ANDROID_EN_CLOUD=true)
 mobilewright.ios.config.ts  iOS (siempre Mobile Next Cloud)
 .qa/
 ├── knowledge/      lo aprendido de cada flujo, para no re-explorar cada corrida

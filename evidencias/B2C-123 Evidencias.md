@@ -1,29 +1,33 @@
-# B2C-123 - Sin cobertura de despacho - Evidencias QA
+# B2C-123 APP
 
 | Campo | Valor |
 |---|---|
 | Suite | B2C-123 |
-| Última actualización | 2026-10-14 |
-| Ejecutado por | Victor Chirinos |
-| Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
+| Última actualización | 2026-10-27 |
+| Ejecutado por | Daniel Uñuruco |
+| Ambiente | App Unimarc v1.0.1 (DEV) |
 | Navegador Desktop | chromium |
-| Navegador Mobile | webkit |
-| Origen de los TC | Casos de Prueba/Ejecutados/SP2/Unimarc/B2C-123 WEB Test Cases.xlsx |
+| Navegador Mobile | chromium |
+| Dispositivo Android | Pixel 6 · Android 14 (emulador) |
+| Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-123 APP Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
 ## Resumen de resultados
 
 | Estado | Casos |
 |---|---|
-| Aprobado | 12 |
-| Bloqueado Data | 8 |
-| Rechazado | 6 |
-| **Total** | **26** |
+| Aprobado | 16 |
+| Bloqueado Data | 13 |
+| Rechazado | 9 |
+| **Total** | **38** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-10-27 | 12 | TC-B2C123-APP-001, TC-B2C123-APP-002, TC-B2C123-APP-003, TC-B2C123-APP-004, TC-B2C123-APP-005, TC-B2C123-APP-006, TC-B2C123-APP-007, TC-B2C123-APP-009, TC-B2C123-APP-010, TC-B2C123-APP-011, TC-B2C123-APP-012, TC-B2C123-APP-013 |
+| 2026-10-26 | 7 | TC-B2C123-APP-001, TC-B2C123-APP-003, TC-B2C123-APP-004, TC-B2C123-APP-005, TC-B2C123-APP-006, TC-B2C123-APP-007, TC-B2C123-APP-013 |
+| 2026-10-19 | 4 | TC-B2C123-M-008, TC-B2C123-M-010, TC-B2C123-M-011, TC-B2C123-M-012 |
 | 2026-10-14 | 26 | TC-B2C123-D-001, TC-B2C123-D-002, TC-B2C123-D-003, TC-B2C123-D-004, TC-B2C123-D-005, TC-B2C123-D-006, TC-B2C123-D-007, TC-B2C123-D-008, TC-B2C123-D-009, TC-B2C123-D-010, TC-B2C123-D-011, TC-B2C123-D-012, TC-B2C123-D-013, TC-B2C123-M-001, TC-B2C123-M-002, TC-B2C123-M-003, TC-B2C123-M-004, TC-B2C123-M-005, TC-B2C123-M-006, TC-B2C123-M-007, TC-B2C123-M-008, TC-B2C123-M-009, TC-B2C123-M-010, TC-B2C123-M-011, TC-B2C123-M-012, TC-B2C123-M-013 |
 
 ## Detalle por caso de prueba
@@ -1103,35 +1107,46 @@ Esperado: toast 'No tenemos cobertura para la dirección actual, seleccione otra
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-10-19 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | webkit |
+| Navegador | chromium |
+| Spec | tests/B2C-123.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
-- El carro contenía 000000000000675191-UN antes de continuar con la dirección sin cobertura
-- La dirección T-551, Futrono está activa con la etiqueta "Despacho sin cobertura"
+- El carro contenía {SKU_VALID_001} antes de continuar con la dirección sin cobertura
+- La dirección {DIRECCION_SIN_COBERTURA} está activa con la etiqueta "Despacho sin cobertura"
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, T-551, Futrono, 000000000000675191-UN
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{DIRECCION_SIN_COBERTURA} = T-551, Futrono
+
+{SKU_VALID_001} = 000000000000675191-UN
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.
+1. El usuario ingresa a {CART_URL}.
 2. El sistema carga el carrito.
 
 **Resultado esperado**
 
-000000000000675191-UN se muestra marcado como no disponible en el carro.
+{SKU_VALID_001} se muestra marcado como no disponible en el carro.
+
+**Resultado obtenido**
+
+Causa: la precondición pide el carro con {SKU_VALID_001} antes de aplicar la dirección sin cobertura, y un invitado sin dirección no puede agregar ('Agregar' abre 'Elige tu método de entrega'); con {DIRECCION_SIN_COBERTURA} activa el agregado se bloquea con un toast. Hace falta una dirección con cobertura que la fila no declara. Acción: declarar en la fila la dirección con cobertura con la que se arma el carro antes de pasar a la dirección sin cobertura.
 
 **Observación**
 
-Causa: la precondición pide el carro con {SKU_VALID_001} antes de aplicar la dirección sin cobertura, y un invitado sin dirección no puede agregar (re-verificado 2026-10-14: 'Agregar' abre 'Elige tu método de entrega'). Acción: declarar en la fila la dirección con cobertura con la que se arma el carro.
+Causa: la precondición pide el carro con {SKU_VALID_001} antes de aplicar la dirección sin cobertura, y un invitado sin dirección no puede agregar ('Agregar' abre 'Elige tu método de entrega'); con {DIRECCION_SIN_COBERTURA} activa el agregado se bloquea con un toast. Hace falta una dirección con cobertura que la fila no declara. Acción: declarar en la fila la dirección con cobertura con la que se arma el carro antes de pasar a la dirección sin cobertura.
 
 ---
 
@@ -1203,37 +1218,54 @@ Desde Mis Envíos (ícono ▾ de la tarjeta), con 'T-551, Futrono': 'Aún no lle
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-10-19 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | webkit |
+| Navegador | chromium |
+| Spec | tests/B2C-123.spec.ts |
 
 **Precondiciones**
 
 - User type: Logueado
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+nocobertura@avatar-global.com
+- Sesión iniciada con la cuenta {COMPRADOR_DIRECCION_SIN_COBERTURA_USER}
 - La última dirección activa del perfil fue marcada sin cobertura en una sesión anterior
 - La zona de esa dirección ya tiene cobertura en Janis
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, {COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD}, vhchirinos+nocobertura@avatar-global.com, 000000000000675191-UN
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD} = (contraseña de la cuenta)
+
+{COMPRADOR_DIRECCION_SIN_COBERTURA_USER} = daunuruco+nocobertura@avatar-global.com
+
+{SKU_VALID_001} = 000000000000675191-UN
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.
+1. El usuario ingresa a {BASE_URL}.
 2. El sistema re-verifica la cobertura de la dirección guardada.
-3. El usuario ingresa a la PDP de 000000000000675191-UN y lo agrega al carro.
+3. El usuario ingresa a la PDP de {SKU_VALID_001} y lo agrega al carro.
 
 **Resultado esperado**
 
-El Store Locator muestra la dirección sin "Despacho sin cobertura" y 000000000000675191-UN se agrega al carro con normalidad.
+El Store Locator muestra la dirección sin "Despacho sin cobertura" y {SKU_VALID_001} se agrega al carro con normalidad.
+
+**Resultado obtenido**
+
+Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta' (re-verificado 2026-10-19). Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el caso. Además la precondición exige que la zona haya recuperado cobertura en Janis.
 
 **Observación**
 
-Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (vhchirinos+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta'. Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el TC, o declarar una cuenta existente. Además, la dirección debe haber estado sin cobertura y hoy tenerla en Janis.
+Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta' (re-verificado 2026-10-19). Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el caso. Además la precondición exige que la zona haya recuperado cobertura en Janis.
+
+**Evidencia**
+
+![El sitio abre 'Crear cuenta' para la cuenta declarada](<B2C-123 Evidencias/TC-B2C123-M-010.png>)
 
 ---
 
@@ -1242,35 +1274,50 @@ Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (vhchirinos+nocobertura@avatar-g
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-10-19 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | webkit |
+| Navegador | chromium |
+| Spec | tests/B2C-123.spec.ts |
 
 **Precondiciones**
 
 - User type: Logueado
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+nocobertura@avatar-global.com
+- Sesión iniciada con la cuenta {COMPRADOR_DIRECCION_SIN_COBERTURA_USER}
 - La última dirección activa del perfil está sin cobertura y Janis sigue sin cobertura para esas coordenadas
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, {COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD}, vhchirinos+nocobertura@avatar-global.com
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD} = (contraseña de la cuenta)
+
+{COMPRADOR_DIRECCION_SIN_COBERTURA_USER} = daunuruco+nocobertura@avatar-global.com
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.
+1. El usuario ingresa a {BASE_URL}.
 2. El sistema re-verifica la cobertura de la dirección guardada.
 
 **Resultado esperado**
 
 El Store Locator mantiene la dirección con la etiqueta "Despacho sin cobertura".
 
+**Resultado obtenido**
+
+Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta' (re-verificado 2026-10-19). Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el caso.
+
 **Observación**
 
-Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (vhchirinos+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta'. Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el TC, o declarar una cuenta existente. (En la ejecución anterior se aprobó con otra cuenta, vhchirinos+comprador, que era el valor previo del token.)
+Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta' (re-verificado 2026-10-19). Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el caso.
+
+**Evidencia**
+
+![El sitio abre 'Crear cuenta' para la cuenta declarada](<B2C-123 Evidencias/TC-B2C123-M-011.png>)
 
 ---
 
@@ -1279,36 +1326,49 @@ Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (vhchirinos+nocobertura@avatar-g
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-10-19 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | webkit |
+| Navegador | chromium |
+| Spec | tests/B2C-123.spec.ts |
 
 **Precondiciones**
 
 - User type: Logueado
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta vhchirinos+nocobertura@avatar-global.com
+- Sesión iniciada con la cuenta {COMPRADOR_DIRECCION_SIN_COBERTURA_USER}
 - La última dirección activa del perfil está sin cobertura
 - DevTools abierto con bloqueo de la request {JANIS_API_ENDPOINT} (Network request blocking)
 
 **Data utilizada**
 
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, {COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD}, vhchirinos+nocobertura@avatar-global.com, {JANIS_API_ENDPOINT}
+{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+
+{COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD} = (contraseña de la cuenta)
+
+{COMPRADOR_DIRECCION_SIN_COBERTURA_USER} = daunuruco+nocobertura@avatar-global.com
+
+{JANIS_API_ENDPOINT} = None
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.
+1. El usuario ingresa a {BASE_URL}.
 2. El sistema intenta re-verificar la cobertura y la llamada falla.
 
 **Resultado esperado**
 
 El Store Locator mantiene la etiqueta "Despacho sin cobertura" sin cambios.
 
+**Resultado obtenido**
+
+Causa: {JANIS_API_ENDPOINT} está en TBD en el Excel de data, y la cuenta {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} no está registrada en DEV. Acción: cargar el endpoint de Janis y registrar la cuenta.
+
 **Observación**
 
-Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (vhchirinos+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta'. Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el TC, o declarar una cuenta existente. Además, {JANIS_API_ENDPOINT} está en TBD en el Excel de data.
+Causa: {JANIS_API_ENDPOINT} está en TBD en el Excel de data, y la cuenta {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} no está registrada en DEV. Acción: cargar el endpoint de Janis y registrar la cuenta.
 
 ---
 
@@ -1370,20 +1430,577 @@ Esperado: mensaje 'Revisa que esté correcta, prueba con otra dentro de nuestra 
 
 ---
 
+### TC-B2C123-APP-001 - Verificar que una dirección nueva fuera de zona muestra el modal Aún no llegamos con sus opciones
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | (sin spec: el caso queda bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: App iOS/Android
+- Ubicacion: Home de la App
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- T-551, Futrono = TBD
+
+**Pasos ejecutados**
+
+1. El usuario abre la App v1.0.1.
+2. El sistema carga el Home.
+3. El usuario toca el Store Locator del navbar.
+4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
+5. El usuario ingresa la dirección T-551, Futrono, la selecciona de las sugerencias y toca "Confirmar dirección".
+6. El sistema muestra el modal "Aún no llegamos a esta dirección".
+
+**Resultado esperado**
+
+Se muestra el modal "Aún no llegamos a esta dirección" con el mensaje "Revisa que esté correcta, prueba con otra dentro de nuestra zona de cobertura o cambia tu método de entrega a una de nuestras tiendas Unimarc" y las opciones "Continuar con esta dirección" y "Cambiar método de entrega".
+
+**Resultado obtenido**
+
+Con 'T-551, Futrono' se abre 'Aún no llegamos a esta dirección' con el mensaje 'Revisa que esté correcta, prueba con otra dentro de nuestra zona de cobertura o cambia tu método de entrega a una de nuestras tiendas Unimarc.' (la app agrega el punto final), 'Continuar con esta dirección' y 'Cambiar método de entrega'. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+
+---
+
+### TC-B2C123-APP-002 - Verificar que una dirección guardada sin cobertura muestra el modal tras validar OTP
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | (sin spec: el caso queda bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Logueado
+- Viewport: App iOS/Android
+- Ubicacion: Home de la App
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
+- La cuenta tiene guardada la dirección T-551, Futrono
+- Acceso a la casilla de correo de la cuenta para leer el código OTP
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- T-551, Futrono = TBD
+- daunuruco+comprador@avatar-global.com = girolamo_coppo@hotmail.com
+
+**Pasos ejecutados**
+
+1. El usuario abre la App v1.0.1.
+2. El sistema carga el Home.
+3. El usuario toca el Store Locator del navbar.
+4. El usuario selecciona la dirección guardada T-551, Futrono.
+5. El usuario completa la validación OTP con el código recibido.
+
+**Resultado esperado**
+
+Se muestra el modal "Aún no llegamos a esta dirección" con sus opciones "Continuar con esta dirección" y "Cambiar método de entrega".
+
+**Resultado obtenido**
+
+Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: la precondición exige que la cuenta tenga guardada la dirección {DIRECCION_SIN_COBERTURA} (T-551, Futrono); en el Store Locator, con las direcciones guardadas recorridas hasta el final (Casa, Avenida Las Condes, Calle Uno 23 y sus copias hasta (9), Camino La Fuente, Libertador General Bernardo O'Higgins, Otra Casa y «Sin cobertura» —Mechique, Los Lagos—), no figura T-551, Futrono. La cuenta sí guarda otra dirección sin cobertura («Sin cobertura»), pero no es la declarada y el caso no autoriza sustituirla. Acción: guardar T-551, Futrono en la cuenta o declarar que se use «Sin cobertura».
+
+**Evidencia**
+
+![Android · Paso 2 — store locator con las direcciones guardadas](<B2C-123 Evidencias/TC-B2C123-APP-002-android-p02-store-locator-con-las-direcciones-guardadas.png>)
+
+![Android · Paso 4 — final de las direcciones guardadas](<B2C-123 Evidencias/TC-B2C123-APP-002-android-p04-final-de-las-direcciones-guardadas.png>)
+
+---
+
+### TC-B2C123-APP-003 - Verificar que continuar sin carro setea la dirección con la etiqueta Despacho sin cobertura
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | (sin spec: el caso queda bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: App iOS/Android
+- Ubicacion: Home de la App
+- El carro está vacío
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno
+- T-551, Futrono = TBD
+
+**Pasos ejecutados**
+
+1. El usuario abre la App v1.0.1.
+2. El sistema carga el Home.
+3. El usuario toca el Store Locator del navbar.
+4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
+5. El usuario ingresa la dirección T-551, Futrono, la selecciona de las sugerencias y toca "Confirmar dirección".
+6. El sistema muestra el modal "Aún no llegamos a esta dirección".
+7. El usuario toca "Continuar con esta dirección".
+8. El sistema muestra un loader.
+9. El usuario navega a otra página del sitio.
+
+**Resultado esperado**
+
+La dirección T-551, Futrono queda seteada y el Store Locator muestra "Despacho sin cobertura" debajo, también al navegar a otras páginas.
+
+**Resultado obtenido**
+
+Tras 'Continuar con esta dirección' el navbar muestra 'T-551' con 'Despacho sin cobertura' y se mantiene al pasar por Categorías y volver al Home. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+
+---
+
+### TC-B2C123-APP-004 - Verificar que continuar con carro y otra tienda abastecedora muestra el modal No se te escapen
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | (sin spec: el caso queda bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: App iOS/Android
+- Ubicacion: Home de la App
+- La dirección activa es Calle Uno 23, La Florida
+- El carro contiene 000000000000675191-UN
+- La tienda por defecto de T-551, Futrono es distinta a la de Calle Uno 23, La Florida
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- T-551, Futrono = TBD
+- 000000000000675191-UN = 000000000000675191-UN
+- Calle Uno 23, La Florida = Casa
+
+**Pasos ejecutados**
+
+1. El usuario abre la App v1.0.1.
+2. El sistema carga el Home.
+3. El usuario toca el Store Locator del navbar.
+4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
+5. El usuario ingresa la dirección T-551, Futrono, la selecciona de las sugerencias y toca "Confirmar dirección".
+6. El sistema muestra el modal "Aún no llegamos a esta dirección".
+7. El usuario toca "Continuar con esta dirección".
+8. El sistema muestra un loader y verifica la disponibilidad de productos.
+
+**Resultado esperado**
+
+Se muestra el modal "Algunos productos podrían agotarse" (B2C-126).
+
+**Resultado obtenido**
+
+Con 'Calle Uno 23, La Florida' activa y el carro con 000000000000675191-UN, al confirmar 'T-551, Futrono' y continuar aparece 'Algunos productos podrían agotarse' (B2C-126). Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+
+---
+
+### TC-B2C123-APP-005 - Verificar que Cambiar método de entrega vuelve al modal Elige tu método de entrega
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | (sin spec: el caso queda bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: App iOS/Android
+- Ubicacion: Home de la App
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- T-551, Futrono = TBD
+
+**Pasos ejecutados**
+
+1. El usuario abre la App v1.0.1.
+2. El sistema carga el Home.
+3. El usuario toca el Store Locator del navbar.
+4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
+5. El usuario ingresa la dirección T-551, Futrono, la selecciona de las sugerencias y toca "Confirmar dirección".
+6. El sistema muestra el modal "Aún no llegamos a esta dirección".
+7. El usuario toca "Cambiar método de entrega".
+
+**Resultado esperado**
+
+El modal "Aún no llegamos a esta dirección" se cierra y se muestra el modal "Elige tu método de entrega".
+
+**Resultado obtenido**
+
+'Cambiar método de entrega' cierra 'Aún no llegamos a esta dirección' y vuelve 'Elige tu método de entrega'. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+
+---
+
+### TC-B2C123-APP-006 - Verificar que una nueva dirección con cobertura se setea y vuelve a la página de origen
+
+| Campo | Valor |
+|---|---|
+| Estado | Rechazado |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | (sin spec: el caso queda bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: App iOS/Android
+- Ubicacion: PLP
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno
+- T-551, Futrono = TBD
+- Calle Uno 23, La Florida = Casa
+
+**Pasos ejecutados**
+
+1. El usuario abre la App y navega a una PLP.
+2. El usuario toca el Store Locator del navbar.
+3. El usuario ingresa T-551, Futrono y la confirma.
+4. El sistema muestra el modal "Aún no llegamos a esta dirección".
+5. El usuario toca "Cambiar método de entrega".
+6. El usuario ingresa Calle Uno 23, La Florida y la confirma.
+
+**Resultado esperado**
+
+El modal se cierra, el Store Locator muestra Calle Uno 23, La Florida y el usuario vuelve a la PLP.
+
+**Resultado obtenido**
+
+Esperado: desde la PLP, Store Locator → sin cobertura → 'Cambiar método de entrega' → Calle Uno 23, La Florida y volver a la PLP. Obtenido: la PLP de la app (listado de 'Mostrar todo' de 'Los más vendidos'; {PLP_URL} es de la web) no muestra el Store Locator, así que el flujo no puede empezar desde ahí. Es lo reportado en B2C-1165 (DESCARTADO); no se abre bug nuevo. tests-app/B2C-123.spec.ts:99. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+
+---
+
+### TC-B2C123-APP-007 - Verificar que con dirección sin cobertura agregar un producto se bloquea con un toast
+
+| Campo | Valor |
+|---|---|
+| Estado | Rechazado |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | (sin spec: el caso queda bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: App iOS/Android
+- Ubicacion: Home de la App
+- La dirección T-551, Futrono está activa con la etiqueta "Despacho sin cobertura"
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- T-551, Futrono = TBD
+- 000000000000675191-UN = 000000000000675191-UN
+
+**Pasos ejecutados**
+
+1. El usuario abre la App v1.0.1.
+2. El sistema carga el Home con la etiqueta "Despacho sin cobertura".
+3. El usuario busca 000000000000675191-UN en la App y lo agrega al carro.
+
+**Resultado esperado**
+
+Se muestra el toast de error "No tenemos cobertura para la dirección actual, seleccione otra dirección" con X de cierre manual y 000000000000675191-UN no se agrega al carro.
+
+**Resultado obtenido**
+
+Esperado: toast 'No tenemos cobertura para la dirección actual, seleccione otra dirección' con X. Obtenido: 'Cambia tu dirección de despacho para poder agregar productos.'. La X y el bloqueo sí se cumplen (el SKU no se agrega). Bug: B2C-1205. tests-app/B2C-123.spec.ts:120. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+
+---
+
+### TC-B2C123-APP-009 - Verificar que continuar con la dirección sin cobertura desde Mis envíos lleva al Home
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | (sin spec: el caso queda bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Logueado
+- Viewport: App iOS/Android
+- Ubicacion: Carrito
+- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com
+- El carro contiene 000000000000675191-UN
+- Método de entrega activo con cobertura
+- Acceso a la casilla de correo de la cuenta para leer el código OTP
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- T-551, Futrono = TBD
+- 000000000000675191-UN = 000000000000675191-UN
+- daunuruco+comprador@avatar-global.com = girolamo_coppo@hotmail.com
+
+**Pasos ejecutados**
+
+1. El usuario abre la App v1.0.1 y toca el ícono del carro.
+2. El sistema carga el carrito.
+3. El usuario toca "Continuar con la entrega" y luego "Continuar" en el modal de sugeridos si aparece.
+4. El sistema carga la página "Datos de entrega" (Mis Envíos).
+5. El usuario toca la tarjeta de dirección e ingresa T-551, Futrono.
+6. El usuario completa la validación OTP.
+7. El sistema muestra el modal "Aún no llegamos a esta dirección".
+8. El usuario toca "Continuar con esta dirección".
+
+**Resultado esperado**
+
+El usuario es redirigido al Home con T-551, Futrono seteada y la etiqueta de sin cobertura.
+
+**Resultado obtenido**
+
+Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: el caso exige un carro con 000000000000675191-UN y, además, la dirección T-551, Futrono, que la cuenta no tiene guardada; con la cuenta de prueba (tienda activa Las Condes) 000000000000675191-UN figura 'Pronto disponible' con 'Ver similares' (sin stock) y no se puede agregar. Acción: reponer el stock de {SKU_VALID_001} y guardar T-551, Futrono en la cuenta (o declarar otra dirección sin cobertura).
+
+**Evidencia**
+
+![Android · Paso 2 — sku pronto disponible con sesion](<B2C-123 Evidencias/TC-B2C123-APP-009-android-p02-sku-pronto-disponible-con-sesion.png>)
+
+---
+
+### TC-B2C123-APP-013 - Verificar que seleccionar una tienda de retiro sin cobertura de despacho muestra el modal Aún no llegamos
+
+| Campo | Valor |
+|---|---|
+| Estado | Rechazado |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | (sin spec: el caso queda bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: App iOS/Android
+- Ubicacion: Home de la App
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- Unimarc Los Lagos II = TBD
+
+**Pasos ejecutados**
+
+1. El usuario abre la App v1.0.1.
+2. El sistema carga el Home.
+3. El usuario toca el Store Locator del navbar.
+4. El sistema abre el modal "Elige tu método de entrega".
+5. El usuario selecciona la pestaña "Retiro en tienda".
+6. El usuario selecciona la tienda Unimarc Los Lagos II.
+7. El sistema verifica cobertura de despacho y detecta que la tienda no está dentro de la zona.
+
+**Resultado esperado**
+
+Se muestra el modal "Aún no llegamos a esta dirección" con el mensaje "Revisa que esté correcta, prueba con otra dentro de nuestra zona de cobertura o cambia tu método de entrega a una de nuestras tiendas Unimarc" y las opciones "Continuar con esta dirección" y "Cambiar método de entrega".
+
+**Resultado obtenido**
+
+Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar con esta dirección' / 'Cambiar método de entrega'. Obtenido con 'Unimarc Los Lagos II': 'Esta tienda aún no está disponible para retiro', 'Prueba con otra tienda dentro de nuestra zona de cobertura o cambia tu método de entrega a despacho a domicilio.' y 'Continuar con esta tienda' / 'Cambiar método de entrega'. Bug: B2C-1206. tests-app/B2C-123.spec.ts:141. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+
+---
+
+### TC-B2C123-APP-010 - Verificar que al iniciar sesión una dirección que recuperó cobertura pierde la etiqueta
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | tests-app/B2C-144-123-pendientes.spec.ts |
+
+**Precondiciones**
+
+- User type: Logueado
+- Viewport: App iOS/Android
+- Ubicacion: Home de la App
+- Sesión iniciada con la cuenta daunuruco+nocobertura@avatar-global.com
+- La última dirección activa del perfil fue marcada sin cobertura en una sesión anterior
+- La zona de esa dirección ya tiene cobertura en Janis
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- 000000000000675191-UN = 000000000000675191-UN
+- daunuruco+nocobertura@avatar-global.com = TBD
+
+**Pasos ejecutados**
+
+1. El usuario abre la App v1.0.1.
+2. El sistema re-verifica la cobertura de la dirección guardada.
+3. El usuario busca 000000000000675191-UN en la App y lo agrega al carro.
+
+**Resultado esperado**
+
+El Store Locator muestra la dirección sin "Despacho sin cobertura" y 000000000000675191-UN se agrega al carro con normalidad.
+
+**Resultado obtenido**
+
+Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no está registrada en DEV: al ingresar su correo en «Iniciar sesión» la app abre «Crear cuenta» (paso 1/2, pide nombre, apellido, RUT y teléfono) en vez de enviar el OTP, y no se inventan datos personales para registrarla. Acción: registrar la cuenta y dejar su última dirección activa marcada «Despacho sin cobertura» con la zona ya cubierta en Janis.
+
+**Evidencia**
+
+![Android · Paso 2 — pantalla tras ingresar el correo de la cuenta sin cobertura](<B2C-123 Evidencias/TC-B2C123-APP-010-android-p02-pantalla-tras-ingresar-el-correo-de-la-cuenta-sin-cobertura.png>)
+
+![Android · Estado final](<B2C-123 Evidencias/TC-B2C123-APP-010-android.png>)
+
+---
+
+### TC-B2C123-APP-011 - Verificar que al iniciar sesión una dirección que sigue sin cobertura mantiene la etiqueta
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | (sin spec: el caso queda bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Logueado
+- Viewport: App iOS/Android
+- Ubicacion: Home de la App
+- Sesión iniciada con la cuenta daunuruco+nocobertura@avatar-global.com
+- La última dirección activa del perfil está sin cobertura y Janis sigue sin cobertura para esas coordenadas
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- daunuruco+nocobertura@avatar-global.com = TBD
+
+**Pasos ejecutados**
+
+1. El usuario abre la App v1.0.1.
+2. El sistema re-verifica la cobertura de la dirección guardada.
+
+**Resultado esperado**
+
+El Store Locator mantiene la dirección con la etiqueta "Despacho sin cobertura".
+
+**Resultado obtenido**
+
+Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no está registrada en DEV: al ingresar su correo en «Iniciar sesión» la app abre «Crear cuenta» (paso 1/2, pide nombre, apellido, RUT y teléfono) en vez de enviar el OTP, y no se inventan datos personales para registrarla. Acción: registrar la cuenta y dejar su última dirección activa «Despacho sin cobertura» con Janis sin cobertura para esas coordenadas.
+
+**Evidencia**
+
+![Android · Paso 2 — pantalla tras ingresar el correo de la cuenta sin cobertura](<B2C-123 Evidencias/TC-B2C123-APP-011-android-p02-pantalla-tras-ingresar-el-correo-de-la-cuenta-sin-cobertura.png>)
+
+---
+
+### TC-B2C123-APP-012 - Verificar que si la re-verificación falla se mantiene el último estado sin cobertura
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-10-27 |
+| Form factor | app |
+| Plataforma | Android |
+| Dispositivo | Pixel 6 · Android 14 (emulador) |
+| Spec | (sin spec: el caso queda bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Logueado
+- Viewport: App iOS/Android
+- Ubicacion: Home de la App
+- Sesión iniciada con la cuenta daunuruco+nocobertura@avatar-global.com
+- La última dirección activa del perfil está sin cobertura
+- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {JANIS_API_ENDPOINT}
+
+**Data utilizada**
+
+- v1.0.1 = TBD
+- Android = iOS
+- {JANIS_API_ENDPOINT} = TBD
+- {HERRAMIENTA_PROXY_APP} = TBD
+- daunuruco+nocobertura@avatar-global.com = TBD
+
+**Pasos ejecutados**
+
+1. El usuario abre la App v1.0.1.
+2. El sistema intenta re-verificar la cobertura y la llamada falla.
+
+**Resultado esperado**
+
+El Store Locator mantiene la etiqueta "Despacho sin cobertura" sin cambios.
+
+**Resultado obtenido**
+
+Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no está registrada en DEV: al ingresar su correo en «Iniciar sesión» la app abre «Crear cuenta» (paso 1/2, pide nombre, apellido, RUT y teléfono) en vez de enviar el OTP, y no se inventan datos personales para registrarla. Además {HERRAMIENTA_PROXY_APP} y {JANIS_API_ENDPOINT} no tienen valor en la data. Acción: registrar la cuenta y declarar la herramienta de proxy y el endpoint de Janis.
+
+**Evidencia**
+
+![Android · Paso 2 — pantalla tras ingresar el correo de la cuenta sin cobertura](<B2C-123 Evidencias/TC-B2C123-APP-012-android-p02-pantalla-tras-ingresar-el-correo-de-la-cuenta-sin-cobertura.png>)
+
+---
+
 <!-- qa-evidence-state
 {
  "header": {
   "browsers": {
    "desktop": "chromium",
-   "mobile": "webkit"
+   "mobile": "chromium"
   },
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
-  "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
-  "executed_by": "Victor Chirinos",
+  "devices": {
+   "android": "Pixel 6 · Android 14 (emulador)"
+  },
+  "environment": "App Unimarc v1.0.1 (DEV)",
+  "executed_by": "Daniel Uñuruco",
   "suite": "B2C-123",
-  "tc_file": "Casos de Prueba/Ejecutados/SP2/Unimarc/B2C-123 WEB Test Cases.xlsx",
-  "title": "B2C-123 - Sin cobertura de despacho - Evidencias QA",
-  "updated_at": "2026-10-14"
+  "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-123 APP Test Cases.xlsx",
+  "title": "B2C-123 APP",
+  "updated_at": "2026-10-27"
  },
  "history": {
   "2026-10-14": [
@@ -1413,6 +2030,35 @@ Esperado: mensaje 'Revisa que esté correcta, prueba con otra dentro de nuestra 
    "TC-B2C123-M-011",
    "TC-B2C123-M-012",
    "TC-B2C123-M-013"
+  ],
+  "2026-10-19": [
+   "TC-B2C123-M-008",
+   "TC-B2C123-M-010",
+   "TC-B2C123-M-011",
+   "TC-B2C123-M-012"
+  ],
+  "2026-10-26": [
+   "TC-B2C123-APP-001",
+   "TC-B2C123-APP-003",
+   "TC-B2C123-APP-004",
+   "TC-B2C123-APP-005",
+   "TC-B2C123-APP-006",
+   "TC-B2C123-APP-007",
+   "TC-B2C123-APP-013"
+  ],
+  "2026-10-27": [
+   "TC-B2C123-APP-001",
+   "TC-B2C123-APP-002",
+   "TC-B2C123-APP-003",
+   "TC-B2C123-APP-004",
+   "TC-B2C123-APP-005",
+   "TC-B2C123-APP-006",
+   "TC-B2C123-APP-007",
+   "TC-B2C123-APP-009",
+   "TC-B2C123-APP-010",
+   "TC-B2C123-APP-011",
+   "TC-B2C123-APP-012",
+   "TC-B2C123-APP-013"
   ]
  },
  "results": [
@@ -2057,17 +2703,19 @@ Esperado: mensaje 'Revisa que esté correcta, prueba con otra dentro de nuestra 
    "viewport": "390x844"
   },
   {
-   "browser": "webkit",
-   "executed_at": "2026-10-14",
-   "expected": "000000000000675191-UN se muestra marcado como no disponible en el carro.",
+   "browser": "chromium",
+   "executed_at": "2026-10-19",
+   "expected": "{SKU_VALID_001} se muestra marcado como no disponible en el carro.",
    "form_factor": "mobile",
    "id": "TC-B2C123-M-008",
    "name": "Verificar que con dirección sin cobertura los productos del carro quedan no disponibles [Mobile] [Guest]",
-   "observation": "Causa: la precondición pide el carro con {SKU_VALID_001} antes de aplicar la dirección sin cobertura, y un invitado sin dirección no puede agregar (re-verificado 2026-10-14: 'Agregar' abre 'Elige tu método de entrega'). Acción: declarar en la fila la dirección con cobertura con la que se arma el carro.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- El carro contenía 000000000000675191-UN antes de continuar con la dirección sin cobertura\n- La dirección T-551, Futrono está activa con la etiqueta \"Despacho sin cobertura\"",
+   "observation": "Causa: la precondición pide el carro con {SKU_VALID_001} antes de aplicar la dirección sin cobertura, y un invitado sin dirección no puede agregar ('Agregar' abre 'Elige tu método de entrega'); con {DIRECCION_SIN_COBERTURA} activa el agregado se bloquea con un toast. Hace falta una dirección con cobertura que la fila no declara. Acción: declarar en la fila la dirección con cobertura con la que se arma el carro antes de pasar a la dirección sin cobertura.",
+   "observed": "Causa: la precondición pide el carro con {SKU_VALID_001} antes de aplicar la dirección sin cobertura, y un invitado sin dirección no puede agregar ('Agregar' abre 'Elige tu método de entrega'); con {DIRECCION_SIN_COBERTURA} activa el agregado se bloquea con un toast. Hace falta una dirección con cobertura que la fila no declara. Acción: declarar en la fila la dirección con cobertura con la que se arma el carro antes de pasar a la dirección sin cobertura.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- El carro contenía {SKU_VALID_001} antes de continuar con la dirección sin cobertura\n- La dirección {DIRECCION_SIN_COBERTURA} está activa con la etiqueta \"Despacho sin cobertura\"",
+   "spec": "tests/B2C-123.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, T-551, Futrono, 000000000000675191-UN",
+   "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{DIRECCION_SIN_COBERTURA} = T-551, Futrono\n{SKU_VALID_001} = 000000000000675191-UN",
    "viewport": "390x844"
   },
   {
@@ -2110,45 +2758,63 @@ Esperado: mensaje 'Revisa que esté correcta, prueba con otra dentro de nuestra 
    "viewport": "390x844"
   },
   {
-   "browser": "webkit",
-   "executed_at": "2026-10-14",
-   "expected": "El Store Locator muestra la dirección sin \"Despacho sin cobertura\" y 000000000000675191-UN se agrega al carro con normalidad.",
+   "browser": "chromium",
+   "executed_at": "2026-10-19",
+   "expected": "El Store Locator muestra la dirección sin \"Despacho sin cobertura\" y {SKU_VALID_001} se agrega al carro con normalidad.",
    "form_factor": "mobile",
    "id": "TC-B2C123-M-010",
    "name": "Verificar que al iniciar sesión una dirección que recuperó cobertura pierde la etiqueta [Mobile] [Logueado]",
-   "observation": "Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (vhchirinos+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta'. Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el TC, o declarar una cuenta existente. Además, la dirección debe haber estado sin cobertura y hoy tenerla en Janis.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+nocobertura@avatar-global.com\n- La última dirección activa del perfil fue marcada sin cobertura en una sesión anterior\n- La zona de esa dirección ya tiene cobertura en Janis",
+   "observation": "Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta' (re-verificado 2026-10-19). Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el caso. Además la precondición exige que la zona haya recuperado cobertura en Janis.",
+   "observed": "Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta' (re-verificado 2026-10-19). Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el caso. Además la precondición exige que la zona haya recuperado cobertura en Janis.",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta {COMPRADOR_DIRECCION_SIN_COBERTURA_USER}\n- La última dirección activa del perfil fue marcada sin cobertura en una sesión anterior\n- La zona de esa dirección ya tiene cobertura en Janis",
+   "screenshots": [
+    {
+     "caption": "El sitio abre 'Crear cuenta' para la cuenta declarada",
+     "file": "TC-B2C123-M-010.png"
+    }
+   ],
+   "spec": "tests/B2C-123.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema re-verifica la cobertura de la dirección guardada.\n3. El usuario ingresa a la PDP de 000000000000675191-UN y lo agrega al carro.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, {COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD}, vhchirinos+nocobertura@avatar-global.com, 000000000000675191-UN",
+   "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema re-verifica la cobertura de la dirección guardada.\n3. El usuario ingresa a la PDP de {SKU_VALID_001} y lo agrega al carro.",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD} = (contraseña de la cuenta)\n{COMPRADOR_DIRECCION_SIN_COBERTURA_USER} = daunuruco+nocobertura@avatar-global.com\n{SKU_VALID_001} = 000000000000675191-UN",
    "viewport": "390x844"
   },
   {
-   "browser": "webkit",
-   "executed_at": "2026-10-14",
+   "browser": "chromium",
+   "executed_at": "2026-10-19",
    "expected": "El Store Locator mantiene la dirección con la etiqueta \"Despacho sin cobertura\".",
    "form_factor": "mobile",
    "id": "TC-B2C123-M-011",
    "name": "Verificar que al iniciar sesión una dirección que sigue sin cobertura mantiene la etiqueta [Mobile] [Logueado]",
-   "observation": "Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (vhchirinos+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta'. Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el TC, o declarar una cuenta existente. (En la ejecución anterior se aprobó con otra cuenta, vhchirinos+comprador, que era el valor previo del token.)",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+nocobertura@avatar-global.com\n- La última dirección activa del perfil está sin cobertura y Janis sigue sin cobertura para esas coordenadas",
+   "observation": "Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta' (re-verificado 2026-10-19). Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el caso.",
+   "observed": "Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta' (re-verificado 2026-10-19). Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el caso.",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta {COMPRADOR_DIRECCION_SIN_COBERTURA_USER}\n- La última dirección activa del perfil está sin cobertura y Janis sigue sin cobertura para esas coordenadas",
+   "screenshots": [
+    {
+     "caption": "El sitio abre 'Crear cuenta' para la cuenta declarada",
+     "file": "TC-B2C123-M-011.png"
+    }
+   ],
+   "spec": "tests/B2C-123.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema re-verifica la cobertura de la dirección guardada.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, {COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD}, vhchirinos+nocobertura@avatar-global.com",
+   "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema re-verifica la cobertura de la dirección guardada.",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD} = (contraseña de la cuenta)\n{COMPRADOR_DIRECCION_SIN_COBERTURA_USER} = daunuruco+nocobertura@avatar-global.com",
    "viewport": "390x844"
   },
   {
-   "browser": "webkit",
-   "executed_at": "2026-10-14",
+   "browser": "chromium",
+   "executed_at": "2026-10-19",
    "expected": "El Store Locator mantiene la etiqueta \"Despacho sin cobertura\" sin cambios.",
    "form_factor": "mobile",
    "id": "TC-B2C123-M-012",
    "name": "Verificar que si la re-verificación falla se mantiene el último estado sin cobertura [Mobile] [Logueado]",
-   "observation": "Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (vhchirinos+nocobertura@avatar-global.com) no es una cuenta registrada en DEV: al pedir el código de acceso el sitio abre 'Crear cuenta'. Acción: registrar la cuenta y dejar su última dirección activa en el estado que pide el TC, o declarar una cuenta existente. Además, {JANIS_API_ENDPOINT} está en TBD en el Excel de data.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+nocobertura@avatar-global.com\n- La última dirección activa del perfil está sin cobertura\n- DevTools abierto con bloqueo de la request {JANIS_API_ENDPOINT} (Network request blocking)",
+   "observation": "Causa: {JANIS_API_ENDPOINT} está en TBD en el Excel de data, y la cuenta {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} no está registrada en DEV. Acción: cargar el endpoint de Janis y registrar la cuenta.",
+   "observed": "Causa: {JANIS_API_ENDPOINT} está en TBD en el Excel de data, y la cuenta {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} no está registrada en DEV. Acción: cargar el endpoint de Janis y registrar la cuenta.",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta {COMPRADOR_DIRECCION_SIN_COBERTURA_USER}\n- La última dirección activa del perfil está sin cobertura\n- DevTools abierto con bloqueo de la request {JANIS_API_ENDPOINT} (Network request blocking)",
+   "spec": "tests/B2C-123.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema intenta re-verificar la cobertura y la llamada falla.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, {COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD}, vhchirinos+nocobertura@avatar-global.com, {JANIS_API_ENDPOINT}",
+   "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema intenta re-verificar la cobertura y la llamada falla.",
+   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{COMPRADOR_DIRECCION_SIN_COBERTURA_PASSWORD} = (contraseña de la cuenta)\n{COMPRADOR_DIRECCION_SIN_COBERTURA_USER} = daunuruco+nocobertura@avatar-global.com\n{JANIS_API_ENDPOINT} = None",
    "viewport": "390x844"
   },
   {
@@ -2189,6 +2855,224 @@ Esperado: mensaje 'Revisa que esté correcta, prueba con otra dentro de nuestra 
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\".\n5. El usuario selecciona la pestaña \"Retiro en tienda\".\n6. El usuario selecciona la tienda Unimarc Los Lagos II.\n7. El sistema verifica cobertura de despacho y detecta que la tienda no está dentro de la zona.",
    "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, Unimarc Los Lagos II",
    "viewport": "390x844"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "Se muestra el modal \"Aún no llegamos a esta dirección\" con el mensaje \"Revisa que esté correcta, prueba con otra dentro de nuestra zona de cobertura o cambia tu método de entrega a una de nuestras tiendas Unimarc\" y las opciones \"Continuar con esta dirección\" y \"Cambiar método de entrega\".",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-001",
+   "name": "Verificar que una dirección nueva fuera de zona muestra el modal Aún no llegamos con sus opciones",
+   "observed": "Con 'T-551, Futrono' se abre 'Aún no llegamos a esta dirección' con el mensaje 'Revisa que esté correcta, prueba con otra dentro de nuestra zona de cobertura o cambia tu método de entrega a una de nuestras tiendas Unimarc.' (la app agrega el punto final), 'Continuar con esta dirección' y 'Cambiar método de entrega'. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "platform": "Android",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App",
+   "spec": "(sin spec: el caso queda bloqueado antes de ejecutarse)",
+   "status": "Aprobado",
+   "steps": "1. El usuario abre la App v1.0.1.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección T-551, Futrono, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Aún no llegamos a esta dirección\".",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- T-551, Futrono = TBD"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "Se muestra el modal \"Aún no llegamos a esta dirección\" con sus opciones \"Continuar con esta dirección\" y \"Cambiar método de entrega\".",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-002",
+   "name": "Verificar que una dirección guardada sin cobertura muestra el modal tras validar OTP",
+   "observed": "Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: la precondición exige que la cuenta tenga guardada la dirección {DIRECCION_SIN_COBERTURA} (T-551, Futrono); en el Store Locator, con las direcciones guardadas recorridas hasta el final (Casa, Avenida Las Condes, Calle Uno 23 y sus copias hasta (9), Camino La Fuente, Libertador General Bernardo O'Higgins, Otra Casa y «Sin cobertura» —Mechique, Los Lagos—), no figura T-551, Futrono. La cuenta sí guarda otra dirección sin cobertura («Sin cobertura»), pero no es la declarada y el caso no autoriza sustituirla. Acción: guardar T-551, Futrono en la cuenta o declarar que se use «Sin cobertura».",
+   "platform": "Android",
+   "preconditions": "- User type: Logueado\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- La cuenta tiene guardada la dirección T-551, Futrono\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
+   "screenshots": [
+    {
+     "caption": "Android · Paso 2 — store locator con las direcciones guardadas",
+     "file": "TC-B2C123-APP-002-android-p02-store-locator-con-las-direcciones-guardadas.png"
+    },
+    {
+     "caption": "Android · Paso 4 — final de las direcciones guardadas",
+     "file": "TC-B2C123-APP-002-android-p04-final-de-las-direcciones-guardadas.png"
+    }
+   ],
+   "spec": "(sin spec: el caso queda bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario abre la App v1.0.1.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El usuario selecciona la dirección guardada T-551, Futrono.\n5. El usuario completa la validación OTP con el código recibido.",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- T-551, Futrono = TBD\n- daunuruco+comprador@avatar-global.com = girolamo_coppo@hotmail.com"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "La dirección T-551, Futrono queda seteada y el Store Locator muestra \"Despacho sin cobertura\" debajo, también al navegar a otras páginas.",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-003",
+   "name": "Verificar que continuar sin carro setea la dirección con la etiqueta Despacho sin cobertura",
+   "observed": "Tras 'Continuar con esta dirección' el navbar muestra 'T-551' con 'Despacho sin cobertura' y se mantiene al pasar por Categorías y volver al Home. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "platform": "Android",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- El carro está vacío",
+   "spec": "(sin spec: el caso queda bloqueado antes de ejecutarse)",
+   "status": "Aprobado",
+   "steps": "1. El usuario abre la App v1.0.1.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección T-551, Futrono, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Aún no llegamos a esta dirección\".\n7. El usuario toca \"Continuar con esta dirección\".\n8. El sistema muestra un loader.\n9. El usuario navega a otra página del sitio.",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno\n- T-551, Futrono = TBD"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "Se muestra el modal \"Algunos productos podrían agotarse\" (B2C-126).",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-004",
+   "name": "Verificar que continuar con carro y otra tienda abastecedora muestra el modal No se te escapen",
+   "observed": "Con 'Calle Uno 23, La Florida' activa y el carro con 000000000000675191-UN, al confirmar 'T-551, Futrono' y continuar aparece 'Algunos productos podrían agotarse' (B2C-126). Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "platform": "Android",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección activa es Calle Uno 23, La Florida\n- El carro contiene 000000000000675191-UN\n- La tienda por defecto de T-551, Futrono es distinta a la de Calle Uno 23, La Florida",
+   "spec": "(sin spec: el caso queda bloqueado antes de ejecutarse)",
+   "status": "Aprobado",
+   "steps": "1. El usuario abre la App v1.0.1.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección T-551, Futrono, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Aún no llegamos a esta dirección\".\n7. El usuario toca \"Continuar con esta dirección\".\n8. El sistema muestra un loader y verifica la disponibilidad de productos.",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- T-551, Futrono = TBD\n- 000000000000675191-UN = 000000000000675191-UN\n- Calle Uno 23, La Florida = Casa"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "El modal \"Aún no llegamos a esta dirección\" se cierra y se muestra el modal \"Elige tu método de entrega\".",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-005",
+   "name": "Verificar que Cambiar método de entrega vuelve al modal Elige tu método de entrega",
+   "observed": "'Cambiar método de entrega' cierra 'Aún no llegamos a esta dirección' y vuelve 'Elige tu método de entrega'. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "platform": "Android",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App",
+   "spec": "(sin spec: el caso queda bloqueado antes de ejecutarse)",
+   "status": "Aprobado",
+   "steps": "1. El usuario abre la App v1.0.1.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección T-551, Futrono, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Aún no llegamos a esta dirección\".\n7. El usuario toca \"Cambiar método de entrega\".",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- T-551, Futrono = TBD"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "El modal se cierra, el Store Locator muestra Calle Uno 23, La Florida y el usuario vuelve a la PLP.",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-006",
+   "name": "Verificar que una nueva dirección con cobertura se setea y vuelve a la página de origen",
+   "observed": "Esperado: desde la PLP, Store Locator → sin cobertura → 'Cambiar método de entrega' → Calle Uno 23, La Florida y volver a la PLP. Obtenido: la PLP de la app (listado de 'Mostrar todo' de 'Los más vendidos'; {PLP_URL} es de la web) no muestra el Store Locator, así que el flujo no puede empezar desde ahí. Es lo reportado en B2C-1165 (DESCARTADO); no se abre bug nuevo. tests-app/B2C-123.spec.ts:99. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "platform": "Android",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: PLP",
+   "spec": "(sin spec: el caso queda bloqueado antes de ejecutarse)",
+   "status": "Rechazado",
+   "steps": "1. El usuario abre la App y navega a una PLP.\n2. El usuario toca el Store Locator del navbar.\n3. El usuario ingresa T-551, Futrono y la confirma.\n4. El sistema muestra el modal \"Aún no llegamos a esta dirección\".\n5. El usuario toca \"Cambiar método de entrega\".\n6. El usuario ingresa Calle Uno 23, La Florida y la confirma.",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno\n- T-551, Futrono = TBD\n- Calle Uno 23, La Florida = Casa"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "Se muestra el toast de error \"No tenemos cobertura para la dirección actual, seleccione otra dirección\" con X de cierre manual y 000000000000675191-UN no se agrega al carro.",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-007",
+   "name": "Verificar que con dirección sin cobertura agregar un producto se bloquea con un toast",
+   "observed": "Esperado: toast 'No tenemos cobertura para la dirección actual, seleccione otra dirección' con X. Obtenido: 'Cambia tu dirección de despacho para poder agregar productos.'. La X y el bloqueo sí se cumplen (el SKU no se agrega). Bug: B2C-1205. tests-app/B2C-123.spec.ts:120. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "platform": "Android",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección T-551, Futrono está activa con la etiqueta \"Despacho sin cobertura\"",
+   "spec": "(sin spec: el caso queda bloqueado antes de ejecutarse)",
+   "status": "Rechazado",
+   "steps": "1. El usuario abre la App v1.0.1.\n2. El sistema carga el Home con la etiqueta \"Despacho sin cobertura\".\n3. El usuario busca 000000000000675191-UN en la App y lo agrega al carro.",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- T-551, Futrono = TBD\n- 000000000000675191-UN = 000000000000675191-UN"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "El usuario es redirigido al Home con T-551, Futrono seteada y la etiqueta de sin cobertura.",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-009",
+   "name": "Verificar que continuar con la dirección sin cobertura desde Mis envíos lleva al Home",
+   "observed": "Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: el caso exige un carro con 000000000000675191-UN y, además, la dirección T-551, Futrono, que la cuenta no tiene guardada; con la cuenta de prueba (tienda activa Las Condes) 000000000000675191-UN figura 'Pronto disponible' con 'Ver similares' (sin stock) y no se puede agregar. Acción: reponer el stock de {SKU_VALID_001} y guardar T-551, Futrono en la cuenta (o declarar otra dirección sin cobertura).",
+   "platform": "Android",
+   "preconditions": "- User type: Logueado\n- Viewport: App iOS/Android\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta daunuruco+comprador@avatar-global.com\n- El carro contiene 000000000000675191-UN\n- Método de entrega activo con cobertura\n- Acceso a la casilla de correo de la cuenta para leer el código OTP",
+   "screenshots": [
+    {
+     "caption": "Android · Paso 2 — sku pronto disponible con sesion",
+     "file": "TC-B2C123-APP-009-android-p02-sku-pronto-disponible-con-sesion.png"
+    }
+   ],
+   "spec": "(sin spec: el caso queda bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario abre la App v1.0.1 y toca el ícono del carro.\n2. El sistema carga el carrito.\n3. El usuario toca \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario toca la tarjeta de dirección e ingresa T-551, Futrono.\n6. El usuario completa la validación OTP.\n7. El sistema muestra el modal \"Aún no llegamos a esta dirección\".\n8. El usuario toca \"Continuar con esta dirección\".",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- T-551, Futrono = TBD\n- 000000000000675191-UN = 000000000000675191-UN\n- daunuruco+comprador@avatar-global.com = girolamo_coppo@hotmail.com"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "Se muestra el modal \"Aún no llegamos a esta dirección\" con el mensaje \"Revisa que esté correcta, prueba con otra dentro de nuestra zona de cobertura o cambia tu método de entrega a una de nuestras tiendas Unimarc\" y las opciones \"Continuar con esta dirección\" y \"Cambiar método de entrega\".",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-013",
+   "name": "Verificar que seleccionar una tienda de retiro sin cobertura de despacho muestra el modal Aún no llegamos",
+   "observed": "Esperado: modal 'Aún no llegamos a esta dirección' con su mensaje y 'Continuar con esta dirección' / 'Cambiar método de entrega'. Obtenido con 'Unimarc Los Lagos II': 'Esta tienda aún no está disponible para retiro', 'Prueba con otra tienda dentro de nuestra zona de cobertura o cambia tu método de entrega a despacho a domicilio.' y 'Continuar con esta tienda' / 'Cambiar método de entrega'. Bug: B2C-1206. tests-app/B2C-123.spec.ts:141. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "platform": "Android",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App",
+   "spec": "(sin spec: el caso queda bloqueado antes de ejecutarse)",
+   "status": "Rechazado",
+   "steps": "1. El usuario abre la App v1.0.1.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\".\n5. El usuario selecciona la pestaña \"Retiro en tienda\".\n6. El usuario selecciona la tienda Unimarc Los Lagos II.\n7. El sistema verifica cobertura de despacho y detecta que la tienda no está dentro de la zona.",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- Unimarc Los Lagos II = TBD"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "El Store Locator muestra la dirección sin \"Despacho sin cobertura\" y 000000000000675191-UN se agrega al carro con normalidad.",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-010",
+   "name": "Verificar que al iniciar sesión una dirección que recuperó cobertura pierde la etiqueta",
+   "observed": "Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no está registrada en DEV: al ingresar su correo en «Iniciar sesión» la app abre «Crear cuenta» (paso 1/2, pide nombre, apellido, RUT y teléfono) en vez de enviar el OTP, y no se inventan datos personales para registrarla. Acción: registrar la cuenta y dejar su última dirección activa marcada «Despacho sin cobertura» con la zona ya cubierta en Janis.",
+   "platform": "Android",
+   "preconditions": "- User type: Logueado\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sesión iniciada con la cuenta daunuruco+nocobertura@avatar-global.com\n- La última dirección activa del perfil fue marcada sin cobertura en una sesión anterior\n- La zona de esa dirección ya tiene cobertura en Janis",
+   "screenshots": [
+    {
+     "caption": "Android · Paso 2 — pantalla tras ingresar el correo de la cuenta sin cobertura",
+     "file": "TC-B2C123-APP-010-android-p02-pantalla-tras-ingresar-el-correo-de-la-cuenta-sin-cobertura.png"
+    },
+    {
+     "caption": "Android · Estado final",
+     "file": "TC-B2C123-APP-010-android.png"
+    }
+   ],
+   "spec": "tests-app/B2C-144-123-pendientes.spec.ts",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario abre la App v1.0.1.\n2. El sistema re-verifica la cobertura de la dirección guardada.\n3. El usuario busca 000000000000675191-UN en la App y lo agrega al carro.",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- 000000000000675191-UN = 000000000000675191-UN\n- daunuruco+nocobertura@avatar-global.com = TBD"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "El Store Locator mantiene la dirección con la etiqueta \"Despacho sin cobertura\".",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-011",
+   "name": "Verificar que al iniciar sesión una dirección que sigue sin cobertura mantiene la etiqueta",
+   "observed": "Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no está registrada en DEV: al ingresar su correo en «Iniciar sesión» la app abre «Crear cuenta» (paso 1/2, pide nombre, apellido, RUT y teléfono) en vez de enviar el OTP, y no se inventan datos personales para registrarla. Acción: registrar la cuenta y dejar su última dirección activa «Despacho sin cobertura» con Janis sin cobertura para esas coordenadas.",
+   "platform": "Android",
+   "preconditions": "- User type: Logueado\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sesión iniciada con la cuenta daunuruco+nocobertura@avatar-global.com\n- La última dirección activa del perfil está sin cobertura y Janis sigue sin cobertura para esas coordenadas",
+   "screenshots": [
+    {
+     "caption": "Android · Paso 2 — pantalla tras ingresar el correo de la cuenta sin cobertura",
+     "file": "TC-B2C123-APP-011-android-p02-pantalla-tras-ingresar-el-correo-de-la-cuenta-sin-cobertura.png"
+    }
+   ],
+   "spec": "(sin spec: el caso queda bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario abre la App v1.0.1.\n2. El sistema re-verifica la cobertura de la dirección guardada.",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- daunuruco+nocobertura@avatar-global.com = TBD"
+  },
+  {
+   "device": "Pixel 6 · Android 14 (emulador)",
+   "executed_at": "2026-10-27",
+   "expected": "El Store Locator mantiene la etiqueta \"Despacho sin cobertura\" sin cambios.",
+   "form_factor": "app",
+   "id": "TC-B2C123-APP-012",
+   "name": "Verificar que si la re-verificación falla se mantiene el último estado sin cobertura",
+   "observed": "Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: {COMPRADOR_DIRECCION_SIN_COBERTURA_USER} (daunuruco+nocobertura@avatar-global.com) no está registrada en DEV: al ingresar su correo en «Iniciar sesión» la app abre «Crear cuenta» (paso 1/2, pide nombre, apellido, RUT y teléfono) en vez de enviar el OTP, y no se inventan datos personales para registrarla. Además {HERRAMIENTA_PROXY_APP} y {JANIS_API_ENDPOINT} no tienen valor en la data. Acción: registrar la cuenta y declarar la herramienta de proxy y el endpoint de Janis.",
+   "platform": "Android",
+   "preconditions": "- User type: Logueado\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sesión iniciada con la cuenta daunuruco+nocobertura@avatar-global.com\n- La última dirección activa del perfil está sin cobertura\n- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {JANIS_API_ENDPOINT}",
+   "screenshots": [
+    {
+     "caption": "Android · Paso 2 — pantalla tras ingresar el correo de la cuenta sin cobertura",
+     "file": "TC-B2C123-APP-012-android-p02-pantalla-tras-ingresar-el-correo-de-la-cuenta-sin-cobertura.png"
+    }
+   ],
+   "spec": "(sin spec: el caso queda bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario abre la App v1.0.1.\n2. El sistema intenta re-verificar la cobertura y la llamada falla.",
+   "test_data": "- v1.0.1 = TBD\n- Android = iOS\n- {JANIS_API_ENDPOINT} = TBD\n- {HERRAMIENTA_PROXY_APP} = TBD\n- daunuruco+nocobertura@avatar-global.com = TBD"
   }
  ]
 }

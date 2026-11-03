@@ -1,27 +1,28 @@
-# B2C-122 APP - Modal de productos que podrían agotarse - Evidencias QA
+# B2C-122 (app Android) - Cambio de dirección con carro (productos no disponibles) - Evidencias QA
 
 | Campo | Valor |
 |---|---|
 | Suite | B2C-122 APP |
-| Última actualización | 2026-10-14 |
-| Ejecutado por | Victor Chirinos |
-| Ambiente | App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV |
-| Dispositivo Android | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
-| Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-122 APP Test Cases.xlsx |
+| Última actualización | 2026-11-03 |
+| Ejecutado por | Daniel Uñuruco |
+| Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
+| Dispositivo Android | dispositivo por ADB |
+| Origen de los TC | Casos de Prueba/Ejecutados/SP2/Unimarc/B2C-122 APP Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
 ## Resumen de resultados
 
 | Estado | Casos |
 |---|---|
-| Bloqueado Data | 7 |
-| Aprobado | 6 |
+| Aprobado | 7 |
+| Bloqueado Data | 6 |
 | **Total** | **13** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-03 | 5 | TC-B2C122-APP-002, TC-B2C122-APP-005, TC-B2C122-APP-006, TC-B2C122-APP-008, TC-B2C122-APP-013 |
 | 2026-10-14 | 13 | TC-B2C122-APP-001, TC-B2C122-APP-002, TC-B2C122-APP-003, TC-B2C122-APP-004, TC-B2C122-APP-005, TC-B2C122-APP-006, TC-B2C122-APP-007, TC-B2C122-APP-008, TC-B2C122-APP-009, TC-B2C122-APP-010, TC-B2C122-APP-011, TC-B2C122-APP-012, TC-B2C122-APP-013 |
 
 ## Detalle por caso de prueba
@@ -34,7 +35,7 @@
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 52.2 s |
 | Spec | tests-app/B2C-122.spec.ts:133 |
 
@@ -88,49 +89,48 @@ Al confirmar Avenida Las Condes 14791, Lo Barnechea (sugerencia de Google para A
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-03 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | dispositivo por ADB |
+| Spec | tests-app/B2C-122.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: App iOS/Android
 - Ubicacion: Home de la App
-- La dirección activa es Calle Uno 23, La Florida (tienda abastecedora A)
-- El carro contiene 000000000000675191-UN
-- Gral. José Artigas 3250, Ñuñoa es atendida por la misma tienda abastecedora que Calle Uno 23, La Florida
+- La dirección activa es {DIRECCION_DESPACHO_001} (tienda abastecedora A)
+- El carro contiene {SKU_VALID_001}
+- {DIRECCION_MISMA_TIENDA} es atendida por la misma tienda abastecedora que {DIRECCION_DESPACHO_001}
 
 **Data utilizada**
 
-v1.0.7, iOS, Calle Uno 23, La Florida, Gral. José Artigas 3250, Ñuñoa, 000000000000675191-UN
+- {APP_BUILD} = TBD
+- {APP_PLATFORM} = iOS
+- {DIRECCION_DESPACHO_001} = Casa
+- {DIRECCION_MISMA_TIENDA} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App {APP_BUILD}.
 2. El sistema carga el Home.
 3. El usuario toca el Store Locator del navbar.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
-5. El usuario ingresa la dirección Gral. José Artigas 3250, Ñuñoa, la selecciona de las sugerencias y toca "Confirmar dirección".
+5. El usuario ingresa la dirección {DIRECCION_MISMA_TIENDA}, la selecciona de las sugerencias y toca "Confirmar dirección".
 
 **Resultado esperado**
 
-No se muestra el modal y el Store Locator queda con Gral. José Artigas 3250, Ñuñoa.
+No se muestra el modal y el Store Locator queda con {DIRECCION_MISMA_TIENDA}.
 
 **Observación**
 
-Causa: con {DIRECCION_MISMA_TIENDA} (Gral. José Artigas 3250, Ñuñoa) la app igual muestra 'Algunos productos podrían agotarse', y desde la app no se puede comprobar que la atienda la misma tienda abastecedora que {DIRECCION_DESPACHO_001} (Calle Uno 23, La Florida). Acción: confirmar o reemplazar {DIRECCION_MISMA_TIENDA} por una dirección verificada de la misma tienda abastecedora. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Android (dispositivo por ADB, v1.0.1, invitado con {DIRECCION_DESPACHO_001}): la precondición pide que {DIRECCION_MISMA_TIENDA} sea atendida por la misma tienda abastecedora que la base; con el carro de {SKU_VALID_001} el app mostró «Algunos productos podrían agotarse» al confirmarla, lo que indica una tienda distinta (igual que en B2C-189 TC-015). Falta una dirección de la misma tienda abastecedora (lo carga el equipo de data).
 
 **Evidencia**
 
-![Android · Paso 2 — home con direccion y carro](<B2C-122 APP Evidencias/TC-B2C122-APP-002-android-p02-home-con-direccion-y-carro.png>)
-
-![Android · Paso 5 — detalles de la direccion de la misma tienda](<B2C-122 APP Evidencias/TC-B2C122-APP-002-android-p05-detalles-de-la-direccion-de-la-misma-tienda.png>)
-
-![Android · Paso 5 — modal de agotarse inesperado](<B2C-122 APP Evidencias/TC-B2C122-APP-002-android-p05-modal-de-agotarse-inesperado.png>)
-
-![Modal que aparece con la dirección de la "misma tienda"](<B2C-122 APP Evidencias/TC-B2C122-APP-002-android.png>)
+![TC B2C122 APP 002 android tras confirmar](<B2C-122 APP Evidencias/TC-B2C122-APP-002-android-tras-confirmar.png>)
 
 ---
 
@@ -142,7 +142,7 @@ Causa: con {DIRECCION_MISMA_TIENDA} (Gral. José Artigas 3250, Ñuñoa) la app i
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 60.7 s |
 | Spec | tests-app/B2C-122.spec.ts:162 |
 
@@ -202,7 +202,7 @@ El modal se cierra, la dirección activa sigue siendo Calle Uno 23, La Florida y
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 59.7 s |
 | Spec | tests-app/B2C-122.spec.ts:162 |
 
@@ -259,31 +259,37 @@ La X cierra el modal; al volver al Home el navbar sigue en Calle Uno 23 y el Flo
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-03 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | dispositivo por ADB |
+| Spec | tests-app/B2C-122.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: App iOS/Android
 - Ubicacion: Home de la App
-- La dirección activa es Calle Uno 23, La Florida (tienda abastecedora A)
-- El carro contiene 000000000000675191-UN
+- La dirección activa es {DIRECCION_DESPACHO_001} (tienda abastecedora A)
+- El carro contiene {SKU_VALID_001}
 - {HERRAMIENTA_PROXY_APP} configurado con throttling de red lenta
 
 **Data utilizada**
 
-v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, {HERRAMIENTA_PROXY_APP}, 000000000000675191-UN
+- {APP_BUILD} = TBD
+- {APP_PLATFORM} = iOS
+- {DIRECCION_DESPACHO_001} = Casa
+- {DIRECCION_OTRA_TIENDA} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+- {HERRAMIENTA_PROXY_APP} = TBD
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App {APP_BUILD}.
 2. El sistema carga el Home.
 3. El usuario toca el Store Locator del navbar.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
-5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y toca "Confirmar dirección".
+5. El usuario ingresa la dirección {DIRECCION_OTRA_TIENDA}, la selecciona de las sugerencias y toca "Confirmar dirección".
 6. El sistema muestra el modal "Algunos productos podrían agotarse".
 7. El usuario toca "Sí, continuar".
 
@@ -293,7 +299,7 @@ El botón "Sí, continuar" se reemplaza por un spinner de carga mientras se proc
 
 **Observación**
 
-Causa: {HERRAMIENTA_PROXY_APP} está en TBD en el Excel de data. Acción: cargar la herramienta de proxy para simular red lenta. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Android (dispositivo por ADB, v1.0.1, invitado con {DIRECCION_DESPACHO_001}): el TC declara el token {HERRAMIENTA_PROXY_APP} (proxy de red para provocar throttling o errores) sin valor en el Excel de data. Falta configurar esa herramienta (la provee el equipo de data/herramientas).
 
 ---
 
@@ -302,31 +308,38 @@ Causa: {HERRAMIENTA_PROXY_APP} está en TBD en el Excel de data. Acción: cargar
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-03 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | dispositivo por ADB |
+| Spec | tests-app/B2C-122.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: App iOS/Android
 - Ubicacion: Home de la App
-- La dirección activa es Calle Uno 23, La Florida (tienda abastecedora A)
-- El carro contiene 000000000000675191-UN
+- La dirección activa es {DIRECCION_DESPACHO_001} (tienda abastecedora A)
+- El carro contiene {SKU_VALID_001}
 - {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {SETEO_ENTREGA_API_ENDPOINT}
 
 **Data utilizada**
 
-v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, {HERRAMIENTA_PROXY_APP}, {SETEO_ENTREGA_API_ENDPOINT}, 000000000000675191-UN
+- {APP_BUILD} = TBD
+- {APP_PLATFORM} = iOS
+- {SETEO_ENTREGA_API_ENDPOINT} = TBD
+- {DIRECCION_DESPACHO_001} = Casa
+- {DIRECCION_OTRA_TIENDA} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+- {HERRAMIENTA_PROXY_APP} = TBD
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App {APP_BUILD}.
 2. El sistema carga el Home.
 3. El usuario toca el Store Locator del navbar.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
-5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y toca "Confirmar dirección".
+5. El usuario ingresa la dirección {DIRECCION_OTRA_TIENDA}, la selecciona de las sugerencias y toca "Confirmar dirección".
 6. El sistema muestra el modal "Algunos productos podrían agotarse".
 7. El usuario toca "Sí, continuar".
 
@@ -336,7 +349,7 @@ Se muestra el toast "Lo sentimos, no pudimos procesar tu solicitud. Inténtalo n
 
 **Observación**
 
-Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en el Excel de data. Acción: cargar el proxy y el endpoint a forzar con error. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Android (dispositivo por ADB, v1.0.1, invitado con {DIRECCION_DESPACHO_001}): el TC declara el token {HERRAMIENTA_PROXY_APP} (proxy de red para provocar throttling o errores) sin valor en el Excel de data. Falta configurar esa herramienta (la provee el equipo de data/herramientas).
 
 ---
 
@@ -348,7 +361,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 57.4 s |
 | Spec | tests-app/B2C-122.spec.ts:177 |
 
@@ -406,32 +419,38 @@ Tras 'Sí, continuar' el modal se cierra y el navbar muestra Avenida Las Condes 
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Estado | Aprobado |
+| Ejecutado | 2026-11-03 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | dispositivo por ADB |
+| Spec | tests-app/B2C-122.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: App iOS/Android
 - Ubicacion: Home de la App
-- La dirección activa es Calle Uno 23, La Florida (tienda abastecedora A)
-- El carro contiene 000000000000675191-UN
-- El carro también contiene {SKU_STOCK_SOLO_TIENDA_A}, sin stock en la tienda de A. Las Conder 14791, Lo Barnechea
+- La dirección activa es {DIRECCION_DESPACHO_001} (tienda abastecedora A)
+- El carro contiene {SKU_VALID_001}
+- El carro también contiene {SKU_STOCK_SOLO_TIENDA_A}, sin stock en la tienda de {DIRECCION_OTRA_TIENDA}
 
 **Data utilizada**
 
-v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN
+- {APP_BUILD} = TBD
+- {APP_PLATFORM} = iOS
+- {DIRECCION_DESPACHO_001} = Casa
+- {DIRECCION_OTRA_TIENDA} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+- {SKU_STOCK_SOLO_TIENDA_A} = TBD
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App {APP_BUILD}.
 2. El sistema carga el Home.
 3. El usuario toca el Store Locator del navbar.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
-5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y toca "Confirmar dirección".
+5. El usuario ingresa la dirección {DIRECCION_OTRA_TIENDA}, la selecciona de las sugerencias y toca "Confirmar dirección".
 6. El sistema muestra el modal "Algunos productos podrían agotarse".
 7. El usuario toca "Sí, continuar".
 
@@ -441,7 +460,13 @@ Se activa el flujo de productos no disponibles de B2C-126 para {SKU_STOCK_SOLO_T
 
 **Observación**
 
-Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU sin stock en la tienda de {DIRECCION_OTRA_TIENDA}. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Android (dispositivo por ADB, v1.0.1, invitado con {DIRECCION_DESPACHO_001}): Con {SKU_VALID_001} y {SKU_STOCK_SOLO_TIENDA_A} en el carro, al confirmar {DIRECCION_OTRA_TIENDA} aparece «Algunos productos podrían agotarse»; al tocar «Sí, continuar» el app cambia la dirección y muestra «Algunos de los productos ya no están disponibles · Revisar» (flujo de no disponibles).
+
+**Evidencia**
+
+![TC B2C122 APP 008 android aviso](<B2C-122 APP Evidencias/TC-B2C122-APP-008-android-aviso.png>)
+
+![TC B2C122 APP 008 android tras si continuar](<B2C-122 APP Evidencias/TC-B2C122-APP-008-android-tras-si-continuar.png>)
 
 ---
 
@@ -453,7 +478,7 @@ Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: carg
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 59.6 s |
 | Spec | tests-app/B2C-122.spec.ts:195 |
 
@@ -515,7 +540,7 @@ Tras 'Sí, continuar' aparece 'Iniciar sesión o registrarse'; al cerrarlo el na
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -560,7 +585,7 @@ Causa: {USER_AUTH_001} es un correo y en la app v1.0.7 el login solo acepta RUT:
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -604,7 +629,7 @@ Causa: {USER_AUTH_001} es un correo y en la app v1.0.7 el login solo acepta RUT:
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Duración | 80.8 s |
 | Spec | tests-app/B2C-122.spec.ts:212 |
 
@@ -667,47 +692,54 @@ Con 'No, gracias' y con la X el modal se cierra y queda abierta 'Detalles de la 
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-03 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | dispositivo por ADB |
+| Spec | tests-app/B2C-122.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: App iOS/Android
 - Ubicacion: Home de la App
-- La dirección activa es Calle Uno 23, La Florida (tienda abastecedora A)
-- El carro contiene 000000000000675191-UN
+- La dirección activa es {DIRECCION_DESPACHO_001} (tienda abastecedora A)
+- El carro contiene {SKU_VALID_001}
 - {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {SETEO_ENTREGA_API_ENDPOINT}
 
 **Data utilizada**
 
-v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, {HERRAMIENTA_PROXY_APP}, {SETEO_ENTREGA_API_ENDPOINT}, 000000000000675191-UN
+- {APP_BUILD} = TBD
+- {APP_PLATFORM} = iOS
+- {SETEO_ENTREGA_API_ENDPOINT} = TBD
+- {DIRECCION_DESPACHO_001} = Casa
+- {DIRECCION_OTRA_TIENDA} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+- {HERRAMIENTA_PROXY_APP} = TBD
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App {APP_BUILD}.
 2. El sistema carga el Home.
 3. El usuario toca el Store Locator del navbar.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
-5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y toca "Confirmar dirección".
+5. El usuario ingresa la dirección {DIRECCION_OTRA_TIENDA}, la selecciona de las sugerencias y toca "Confirmar dirección".
 6. El sistema muestra el modal "Algunos productos podrían agotarse".
 7. El usuario toca "Sí, continuar".
 8. El sistema muestra el toast de error y restaura los botones del modal.
 9. El usuario toca "No, gracias".
 10. Verificar que el modal "No se te escapen" se cierra.
-11. Verificar que la dirección activa en el navbar sigue siendo Calle Uno 23, La Florida.
-12. Verificar que el carro mantiene 000000000000675191-UN sin modificaciones.
+11. Verificar que la dirección activa en el navbar sigue siendo {DIRECCION_DESPACHO_001}.
+12. Verificar que el carro mantiene {SKU_VALID_001} sin modificaciones.
 13. Verificar que no se aplica ningún cambio de tienda abastecedora.
 
 **Resultado esperado**
 
-El modal se cierra. La dirección activa sigue siendo Calle Uno 23, La Florida. El carro mantiene 000000000000675191-UN intacto. El cliente regresa a la pantalla anterior sin ningún cambio de dirección aplicado.
+El modal se cierra. La dirección activa sigue siendo {DIRECCION_DESPACHO_001}. El carro mantiene {SKU_VALID_001} intacto. El cliente regresa a la pantalla anterior sin ningún cambio de dirección aplicado.
 
 **Observación**
 
-Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en el Excel de data. Acción: cargar el proxy y el endpoint a forzar con error. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Android (dispositivo por ADB, v1.0.1, invitado con {DIRECCION_DESPACHO_001}): el TC declara el token {HERRAMIENTA_PROXY_APP} (proxy de red para provocar throttling o errores) sin valor en el Excel de data. Falta configurar esa herramienta (la provee el equipo de data/herramientas).
 
 ---
 
@@ -716,14 +748,14 @@ Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en e
  "header": {
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "devices": {
-   "android": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)"
+   "android": "dispositivo por ADB"
   },
-  "environment": "App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV",
-  "executed_by": "Victor Chirinos",
+  "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
+  "executed_by": "Daniel Uñuruco",
   "suite": "B2C-122 APP",
-  "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-122 APP Test Cases.xlsx",
-  "title": "B2C-122 APP - Modal de productos que podrían agotarse - Evidencias QA",
-  "updated_at": "2026-10-14"
+  "tc_file": "Casos de Prueba/Ejecutados/SP2/Unimarc/B2C-122 APP Test Cases.xlsx",
+  "title": "B2C-122 (app Android) - Cambio de dirección con carro (productos no disponibles) - Evidencias QA",
+  "updated_at": "2026-11-03"
  },
  "history": {
   "2026-10-14": [
@@ -740,11 +772,18 @@ Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en e
    "TC-B2C122-APP-011",
    "TC-B2C122-APP-012",
    "TC-B2C122-APP-013"
+  ],
+  "2026-11-03": [
+   "TC-B2C122-APP-002",
+   "TC-B2C122-APP-005",
+   "TC-B2C122-APP-006",
+   "TC-B2C122-APP-008",
+   "TC-B2C122-APP-013"
   ]
  },
  "results": [
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 52.2,
    "executed_at": "2026-10-14",
    "expected": "Se muestra el modal \"Algunos productos podrían agotarse\" con el texto \"Al cambiar la dirección o tipo de despacho, puede que algunos productos no se encuentren en esta ubicación o tienda. ¿Deseas continuar?\", los botones \"Sí, continuar\" y \"No, gracias\" y el ícono X.",
@@ -779,39 +818,28 @@ Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
-   "executed_at": "2026-10-14",
-   "expected": "No se muestra el modal y el Store Locator queda con Gral. José Artigas 3250, Ñuñoa.",
+   "device": "dispositivo por ADB",
+   "executed_at": "2026-11-03",
+   "expected": "No se muestra el modal y el Store Locator queda con {DIRECCION_MISMA_TIENDA}.",
    "form_factor": "app",
    "id": "TC-B2C122-APP-002",
    "name": "Verificar que si la nueva dirección usa la misma tienda abastecedora el cambio se aplica sin modal [App] [Guest]",
-   "observation": "Causa: con {DIRECCION_MISMA_TIENDA} (Gral. José Artigas 3250, Ñuñoa) la app igual muestra 'Algunos productos podrían agotarse', y desde la app no se puede comprobar que la atienda la misma tienda abastecedora que {DIRECCION_DESPACHO_001} (Calle Uno 23, La Florida). Acción: confirmar o reemplazar {DIRECCION_MISMA_TIENDA} por una dirección verificada de la misma tienda abastecedora. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "observation": "Android (dispositivo por ADB, v1.0.1, invitado con {DIRECCION_DESPACHO_001}): la precondición pide que {DIRECCION_MISMA_TIENDA} sea atendida por la misma tienda abastecedora que la base; con el carro de {SKU_VALID_001} el app mostró «Algunos productos podrían agotarse» al confirmarla, lo que indica una tienda distinta (igual que en B2C-189 TC-015). Falta una dirección de la misma tienda abastecedora (lo carga el equipo de data).",
    "platform": "Android",
-   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección activa es Calle Uno 23, La Florida (tienda abastecedora A)\n- El carro contiene 000000000000675191-UN\n- Gral. José Artigas 3250, Ñuñoa es atendida por la misma tienda abastecedora que Calle Uno 23, La Florida",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección activa es {DIRECCION_DESPACHO_001} (tienda abastecedora A)\n- El carro contiene {SKU_VALID_001}\n- {DIRECCION_MISMA_TIENDA} es atendida por la misma tienda abastecedora que {DIRECCION_DESPACHO_001}",
    "screenshots": [
     {
-     "caption": "Android · Paso 2 — home con direccion y carro",
-     "file": "TC-B2C122-APP-002-android-p02-home-con-direccion-y-carro.png"
-    },
-    {
-     "caption": "Android · Paso 5 — detalles de la direccion de la misma tienda",
-     "file": "TC-B2C122-APP-002-android-p05-detalles-de-la-direccion-de-la-misma-tienda.png"
-    },
-    {
-     "caption": "Android · Paso 5 — modal de agotarse inesperado",
-     "file": "TC-B2C122-APP-002-android-p05-modal-de-agotarse-inesperado.png"
-    },
-    {
-     "caption": "Modal que aparece con la dirección de la \"misma tienda\"",
-     "file": "TC-B2C122-APP-002-android.png"
+     "caption": "TC B2C122 APP 002 android tras confirmar",
+     "file": "TC-B2C122-APP-002-android-tras-confirmar.png"
     }
    ],
+   "spec": "tests-app/B2C-122.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección Gral. José Artigas 3250, Ñuñoa, la selecciona de las sugerencias y toca \"Confirmar dirección\".",
-   "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, Gral. José Artigas 3250, Ñuñoa, 000000000000675191-UN"
+   "steps": "1. El usuario abre la App {APP_BUILD}.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección {DIRECCION_MISMA_TIENDA}, la selecciona de las sugerencias y toca \"Confirmar dirección\".",
+   "test_data": "- {APP_BUILD} = TBD\n- {APP_PLATFORM} = iOS\n- {DIRECCION_DESPACHO_001} = Casa\n- {DIRECCION_MISMA_TIENDA} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 60.7,
    "executed_at": "2026-10-14",
    "expected": "El modal se cierra, la dirección activa sigue siendo Calle Uno 23, La Florida y el carro mantiene 000000000000675191-UN.",
@@ -850,7 +878,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 59.7,
    "executed_at": "2026-10-14",
    "expected": "El modal se cierra, la dirección activa sigue siendo Calle Uno 23, La Florida y el carro no cambia.",
@@ -889,35 +917,37 @@ Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
-   "executed_at": "2026-10-14",
+   "device": "dispositivo por ADB",
+   "executed_at": "2026-11-03",
    "expected": "El botón \"Sí, continuar\" se reemplaza por un spinner de carga mientras se procesa el cambio.",
    "form_factor": "app",
    "id": "TC-B2C122-APP-005",
    "name": "Verificar que Sí, continuar reemplaza el botón por un spinner mientras procesa [App] [Guest]",
-   "observation": "Causa: {HERRAMIENTA_PROXY_APP} está en TBD en el Excel de data. Acción: cargar la herramienta de proxy para simular red lenta. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "observation": "Android (dispositivo por ADB, v1.0.1, invitado con {DIRECCION_DESPACHO_001}): el TC declara el token {HERRAMIENTA_PROXY_APP} (proxy de red para provocar throttling o errores) sin valor en el Excel de data. Falta configurar esa herramienta (la provee el equipo de data/herramientas).",
    "platform": "Android",
-   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección activa es Calle Uno 23, La Florida (tienda abastecedora A)\n- El carro contiene 000000000000675191-UN\n- {HERRAMIENTA_PROXY_APP} configurado con throttling de red lenta",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección activa es {DIRECCION_DESPACHO_001} (tienda abastecedora A)\n- El carro contiene {SKU_VALID_001}\n- {HERRAMIENTA_PROXY_APP} configurado con throttling de red lenta",
+   "spec": "tests-app/B2C-122.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\".\n7. El usuario toca \"Sí, continuar\".",
-   "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, {HERRAMIENTA_PROXY_APP}, 000000000000675191-UN"
+   "steps": "1. El usuario abre la App {APP_BUILD}.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección {DIRECCION_OTRA_TIENDA}, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\".\n7. El usuario toca \"Sí, continuar\".",
+   "test_data": "- {APP_BUILD} = TBD\n- {APP_PLATFORM} = iOS\n- {DIRECCION_DESPACHO_001} = Casa\n- {DIRECCION_OTRA_TIENDA} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN\n- {HERRAMIENTA_PROXY_APP} = TBD"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
-   "executed_at": "2026-10-14",
+   "device": "dispositivo por ADB",
+   "executed_at": "2026-11-03",
    "expected": "Se muestra el toast \"Lo sentimos, no pudimos procesar tu solicitud. Inténtalo nuevamente.\" con X; el modal sigue abierto con \"Sí, continuar\" y \"No, gracias\" disponibles.",
    "form_factor": "app",
    "id": "TC-B2C122-APP-006",
    "name": "Verificar que un error al procesar muestra el toast y el modal sigue abierto para reintentar [App] [Guest]",
-   "observation": "Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en el Excel de data. Acción: cargar el proxy y el endpoint a forzar con error. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "observation": "Android (dispositivo por ADB, v1.0.1, invitado con {DIRECCION_DESPACHO_001}): el TC declara el token {HERRAMIENTA_PROXY_APP} (proxy de red para provocar throttling o errores) sin valor en el Excel de data. Falta configurar esa herramienta (la provee el equipo de data/herramientas).",
    "platform": "Android",
-   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección activa es Calle Uno 23, La Florida (tienda abastecedora A)\n- El carro contiene 000000000000675191-UN\n- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {SETEO_ENTREGA_API_ENDPOINT}",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección activa es {DIRECCION_DESPACHO_001} (tienda abastecedora A)\n- El carro contiene {SKU_VALID_001}\n- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {SETEO_ENTREGA_API_ENDPOINT}",
+   "spec": "tests-app/B2C-122.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\".\n7. El usuario toca \"Sí, continuar\".",
-   "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, {HERRAMIENTA_PROXY_APP}, {SETEO_ENTREGA_API_ENDPOINT}, 000000000000675191-UN"
+   "steps": "1. El usuario abre la App {APP_BUILD}.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección {DIRECCION_OTRA_TIENDA}, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\".\n7. El usuario toca \"Sí, continuar\".",
+   "test_data": "- {APP_BUILD} = TBD\n- {APP_PLATFORM} = iOS\n- {SETEO_ENTREGA_API_ENDPOINT} = TBD\n- {DIRECCION_DESPACHO_001} = Casa\n- {DIRECCION_OTRA_TIENDA} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN\n- {HERRAMIENTA_PROXY_APP} = TBD"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 57.4,
    "executed_at": "2026-10-14",
    "expected": "El modal se cierra, el Store Locator del header muestra A. Las Conder 14791, Lo Barnechea y el usuario permanece en la página desde donde abrió el modal.",
@@ -956,21 +986,32 @@ Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
-   "executed_at": "2026-10-14",
+   "device": "dispositivo por ADB",
+   "executed_at": "2026-11-03",
    "expected": "Se activa el flujo de productos no disponibles de B2C-126 para {SKU_STOCK_SOLO_TIENDA_A}.",
    "form_factor": "app",
    "id": "TC-B2C122-APP-008",
    "name": "Verificar que si hay productos no disponibles en la nueva tienda se activa ese flujo [App] [Guest]",
-   "observation": "Causa: {SKU_STOCK_SOLO_TIENDA_A} está en TBD en el Excel de data. Acción: cargar un SKU sin stock en la tienda de {DIRECCION_OTRA_TIENDA}. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "observation": "Android (dispositivo por ADB, v1.0.1, invitado con {DIRECCION_DESPACHO_001}): Con {SKU_VALID_001} y {SKU_STOCK_SOLO_TIENDA_A} en el carro, al confirmar {DIRECCION_OTRA_TIENDA} aparece «Algunos productos podrían agotarse»; al tocar «Sí, continuar» el app cambia la dirección y muestra «Algunos de los productos ya no están disponibles · Revisar» (flujo de no disponibles).",
    "platform": "Android",
-   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección activa es Calle Uno 23, La Florida (tienda abastecedora A)\n- El carro contiene 000000000000675191-UN\n- El carro también contiene {SKU_STOCK_SOLO_TIENDA_A}, sin stock en la tienda de A. Las Conder 14791, Lo Barnechea",
-   "status": "Bloqueado Data",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\".\n7. El usuario toca \"Sí, continuar\".",
-   "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, {SKU_STOCK_SOLO_TIENDA_A}, 000000000000675191-UN"
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección activa es {DIRECCION_DESPACHO_001} (tienda abastecedora A)\n- El carro contiene {SKU_VALID_001}\n- El carro también contiene {SKU_STOCK_SOLO_TIENDA_A}, sin stock en la tienda de {DIRECCION_OTRA_TIENDA}",
+   "screenshots": [
+    {
+     "caption": "TC B2C122 APP 008 android aviso",
+     "file": "TC-B2C122-APP-008-android-aviso.png"
+    },
+    {
+     "caption": "TC B2C122 APP 008 android tras si continuar",
+     "file": "TC-B2C122-APP-008-android-tras-si-continuar.png"
+    }
+   ],
+   "spec": "tests-app/B2C-122.spec.ts",
+   "status": "Aprobado",
+   "steps": "1. El usuario abre la App {APP_BUILD}.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección {DIRECCION_OTRA_TIENDA}, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\".\n7. El usuario toca \"Sí, continuar\".",
+   "test_data": "- {APP_BUILD} = TBD\n- {APP_PLATFORM} = iOS\n- {DIRECCION_DESPACHO_001} = Casa\n- {DIRECCION_OTRA_TIENDA} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN\n- {SKU_STOCK_SOLO_TIENDA_A} = TBD"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 59.6,
    "executed_at": "2026-10-14",
    "expected": "Se muestra el prompt de inicio de sesión y, al cerrarlo, el usuario sigue como invitado con A. Las Conder 14791, Lo Barnechea seteada.",
@@ -1009,7 +1050,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Se activa la transición invitado → logueado (B2C-124): se solicita OTP para confirmar la dirección heredada.",
    "form_factor": "app",
@@ -1023,7 +1064,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Se muestra el modal \"Algunos productos podrían agotarse\" antes de aplicar el cambio de tienda de retiro.",
    "form_factor": "app",
@@ -1037,7 +1078,7 @@ Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, 000000000000675191-UN, Unimarc Las Condes, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "duration_s": 80.8,
    "executed_at": "2026-10-14",
    "expected": "Al cerrar con «No, gracias» o X: el modal \"No se te escapen\" se cierra, el Store Locator permanece abierto en el estado previo (pantalla anterior), la dirección activa en el navbar sigue siendo Calle Uno 23, La Florida y el carro mantiene 000000000000675191-UN sin modificaciones.",
@@ -1080,18 +1121,19 @@ Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
-   "executed_at": "2026-10-14",
-   "expected": "El modal se cierra. La dirección activa sigue siendo Calle Uno 23, La Florida. El carro mantiene 000000000000675191-UN intacto. El cliente regresa a la pantalla anterior sin ningún cambio de dirección aplicado.",
+   "device": "dispositivo por ADB",
+   "executed_at": "2026-11-03",
+   "expected": "El modal se cierra. La dirección activa sigue siendo {DIRECCION_DESPACHO_001}. El carro mantiene {SKU_VALID_001} intacto. El cliente regresa a la pantalla anterior sin ningún cambio de dirección aplicado.",
    "form_factor": "app",
    "id": "TC-B2C122-APP-013",
    "name": "Verificar que «No, gracias» tras un error cierra el modal sin aplicar el cambio [App] [Guest]",
-   "observation": "Causa: {HERRAMIENTA_PROXY_APP} y {SETEO_ENTREGA_API_ENDPOINT} están en TBD en el Excel de data. Acción: cargar el proxy y el endpoint a forzar con error. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "observation": "Android (dispositivo por ADB, v1.0.1, invitado con {DIRECCION_DESPACHO_001}): el TC declara el token {HERRAMIENTA_PROXY_APP} (proxy de red para provocar throttling o errores) sin valor en el Excel de data. Falta configurar esa herramienta (la provee el equipo de data/herramientas).",
    "platform": "Android",
-   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección activa es Calle Uno 23, La Florida (tienda abastecedora A)\n- El carro contiene 000000000000675191-UN\n- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {SETEO_ENTREGA_API_ENDPOINT}",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- La dirección activa es {DIRECCION_DESPACHO_001} (tienda abastecedora A)\n- El carro contiene {SKU_VALID_001}\n- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {SETEO_ENTREGA_API_ENDPOINT}",
+   "spec": "tests-app/B2C-122.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\".\n7. El usuario toca \"Sí, continuar\".\n8. El sistema muestra el toast de error y restaura los botones del modal.\n9. El usuario toca \"No, gracias\".\n10. Verificar que el modal \"No se te escapen\" se cierra.\n11. Verificar que la dirección activa en el navbar sigue siendo Calle Uno 23, La Florida.\n12. Verificar que el carro mantiene 000000000000675191-UN sin modificaciones.\n13. Verificar que no se aplica ningún cambio de tienda abastecedora.",
-   "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, A. Las Conder 14791, Lo Barnechea, {HERRAMIENTA_PROXY_APP}, {SETEO_ENTREGA_API_ENDPOINT}, 000000000000675191-UN"
+   "steps": "1. El usuario abre la App {APP_BUILD}.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del navbar.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección {DIRECCION_OTRA_TIENDA}, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\".\n7. El usuario toca \"Sí, continuar\".\n8. El sistema muestra el toast de error y restaura los botones del modal.\n9. El usuario toca \"No, gracias\".\n10. Verificar que el modal \"No se te escapen\" se cierra.\n11. Verificar que la dirección activa en el navbar sigue siendo {DIRECCION_DESPACHO_001}.\n12. Verificar que el carro mantiene {SKU_VALID_001} sin modificaciones.\n13. Verificar que no se aplica ningún cambio de tienda abastecedora.",
+   "test_data": "- {APP_BUILD} = TBD\n- {APP_PLATFORM} = iOS\n- {SETEO_ENTREGA_API_ENDPOINT} = TBD\n- {DIRECCION_DESPACHO_001} = Casa\n- {DIRECCION_OTRA_TIENDA} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN\n- {HERRAMIENTA_PROXY_APP} = TBD"
   }
  ]
 }

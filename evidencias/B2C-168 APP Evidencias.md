@@ -6,7 +6,7 @@
 | Última actualización | 2026-10-14 |
 | Ejecutado por | Victor Chirinos |
 | Ambiente | App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV |
-| Dispositivo Android | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo Android | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Origen de los TC | Casos de Prueba/Ejecutados/SP2/Unimarc/B2C-168 APP Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
@@ -34,7 +34,7 @@
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Spec | tests-app/B2C-168.spec.ts:25 |
 
 **Precondiciones**
@@ -84,7 +84,7 @@ Esperado: 'Inicia sesión o regístrate' en el carro abre el modal de inicio de 
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -126,7 +126,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -165,7 +165,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -204,7 +204,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -243,7 +243,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -283,7 +283,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -322,7 +322,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -361,7 +361,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -400,7 +400,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -440,7 +440,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -480,7 +480,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -520,7 +520,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -560,7 +560,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -599,7 +599,7 @@ Causa: {EMAIL_NUEVO_REGISTRO} no tiene fila en el Excel de data. Acción: cargar
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -636,7 +636,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
  "header": {
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "devices": {
-   "android": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)"
+   "android": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)"
   },
   "environment": "App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV",
   "executed_by": "Victor Chirinos",
@@ -666,7 +666,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
  },
  "results": [
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Se muestra el modal de inicio de sesión (o registro) y no se avanza al checkout.",
    "form_factor": "app",
@@ -696,7 +696,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Tras la fusión se muestra el modal \"¡Que no se te olviden!\" y al presionar \"Continuar\" se muestra la página \"Datos de entrega\".",
    "form_factor": "app",
@@ -710,7 +710,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El carro logueado contiene 000000000000675191-UN x 2 y 000000000400254005-UN x 1, igual al carro invitado.",
    "form_factor": "app",
@@ -724,7 +724,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 000000000401693004-UN, 000000000000038061-UN, 000000000400254005-UN, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El carro logueado mantiene 000000000000038061-UN x 2 y 000000000401693004-UN x 1 sin cambios.",
    "form_factor": "app",
@@ -738,7 +738,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 000000000401693004-UN, 000000000000038061-UN, 000000000400254005-UN, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El carro queda vacío y se muestra el estado de carro vacío.",
    "form_factor": "app",
@@ -752,7 +752,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 000000000401693004-UN, 000000000000038061-UN, 000000000400254005-UN, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El carro contiene 000000000000675191-UN x 1, 000000000400254005-UN x 2, 000000000000038061-UN x 1 y 000000000401693004-UN x 3.",
    "form_factor": "app",
@@ -766,7 +766,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 000000000401693004-UN, 000000000000038061-UN, 000000000400254005-UN, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El Store Locator muestra la próxima ventana horaria vigente para la dirección Calle Uno 23, La Florida de la sesión de invitado.",
    "form_factor": "app",
@@ -780,7 +780,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, 000000000401693004-UN, 000000000000038061-UN, 000000000400254005-UN, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "000000000000675191-UN queda con cantidad 2 (la del invitado), no 5 ni 7.",
    "form_factor": "app",
@@ -794,7 +794,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 000000000401693004-UN, 000000000000038061-UN, 000000000400254005-UN, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El carro queda con 000000000000675191-UN x 2, 000000000400254005-UN x 1, 000000000000038061-UN x 3 y 000000000401693004-UN x 2.",
    "form_factor": "app",
@@ -808,7 +808,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 000000000401693004-UN, 000000000000038061-UN, 000000000400254005-UN, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "000000000400254005-UN aparece en la sección de no disponibles del carro fusionado y 000000000000675191-UN en disponibles.",
    "form_factor": "app",
@@ -822,7 +822,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 000000000400254005-UN, 000000000000675191-UN, Unimarc Los leones, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "000000000400254005-UN permanece como no disponible y 000000000000038061-UN y 000000000000675191-UN quedan disponibles.",
    "form_factor": "app",
@@ -836,7 +836,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 000000000000038061-UN, 000000000400254005-UN, 000000000000675191-UN, Unimarc Los leones, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Cada producto muestra el precio de su promoción vigente y el total y el \"Subtotal con Unipay\" se calculan sobre todos los productos fusionados.",
    "form_factor": "app",
@@ -850,7 +850,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, {SKU_UNIPAY_001}, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Ambos canales muestran el mismo carro fusionado y la unidad agregada en el otro canal se refleja aquí.",
    "form_factor": "app",
@@ -864,7 +864,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, 000000000401693004-UN, 000000000000038061-UN, 000000000400254005-UN, 000000000000675191-UN, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El carro de la nueva cuenta contiene 000000000000675191-UN x 1 y 000000000400254005-UN x 2.",
    "form_factor": "app",
@@ -878,7 +878,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, {EMAIL_NUEVO_REGISTRO}, 000000000400254005-UN, 000000000000675191-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "El carro muestra el resultado de la fusión (000000000000675191-UN x 2 y 000000000000038061-UN x 1) sin necesidad de recargar.",
    "form_factor": "app",

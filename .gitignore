@@ -14,3 +14,8 @@ __pycache__/
 *.ipa
 .qa/tmp/
 .qa/otp/
+.qa/secrets/
+
+# Artefactos pesados de Playwright (no se suben a GitHub: pasan el límite de 100 MB)
+evidencias/**/trace.zip
+evidencias/**/*.webm

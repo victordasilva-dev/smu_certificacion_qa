@@ -2,7 +2,7 @@ import { Page } from '@playwright/test';
 import { test, expect, token } from './support/fixtures';
 import { DESKTOP, MOBILE } from './support/viewports';
 import { PDPPage } from './pages/PDPPage';
-import { LoginModal } from './pages/LoginModal';
+import { loginConOtp } from './support/loginOtp';
 
 /**
  * B2C-51 — Bloque de precios (PDP y tarjeta de producto).
@@ -60,10 +60,8 @@ function ordenDePrecios(bloque: Bloque, oferta: Oferta): { texto: string; y: num
 /** Sesión con la cuenta de membresía declarada y la PDP del SKU. */
 async function pdpConMembresia(page: Page, testData: Parameters<typeof token>[0], sku: string): Promise<PDPPage> {
   const pdp = await new PDPPage(page).abrir(sku);
-  await new LoginModal(page).iniciarSesion(
-    tokenExigido(testData, 'COMPRADOR_MEMBRESIA_USER'),
-    tokenExigido(testData, 'COMPRADOR_MEMBRESIA_PASSWORD'),
-  );
+  // El modal pide solo correo + OTP desde el 2026-10-12.
+  await loginConOtp(page, tokenExigido(testData, 'COMPRADOR_MEMBRESIA_USER'));
   return pdp.abrir(sku);
 }
 

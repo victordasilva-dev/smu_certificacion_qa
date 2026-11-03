@@ -612,29 +612,91 @@ export class PDPPage extends BasePage {
       .last();
   }
 
+  /**
+   * La ficha de un producto sin marca: no hay enlace `/search?q=…` donde anclar (p. ej. "Agua
+   * saborizada Más manzana", B2C-37 M-047). Es el primer bloque, en orden del documento, con precio
+   * y "Agregar" que no contiene los tabs: las tarjetas de "Productos similares" vienen después.
+   */
+  get fichaSinMarca(): Locator {
+    return this.core
+      .locator('div')
+      .filter({ has: this.page.locator('p').filter({ hasText: /^\$[\d.]+/ }) })
+      .filter({ has: this.page.getByRole('button', { name: /^(agregar|aumentar cantidad)$/i }) })
+      .filter({ hasNot: this.page.getByRole('tablist') })
+      .first();
+  }
+
+  /** "N un." de una ficha. */
+  private cantidadEn(ficha: Locator): Locator {
+    return ficha.getByText(/^en carro$/i).first().locator('xpath=following-sibling::*[1]');
+  }
+
   /** "N un." de la ficha. */
   get cantidadEnFicha(): Locator {
-    return this.ficha.getByText(/^en carro$/i).first().locator('xpath=following-sibling::*[1]');
+    return this.cantidadEn(this.ficha);
   }
 
   /** Deja exactamente `n` unidades del producto en el carro, desde el stepper de la ficha. */
   async fijarCantidad(n: number): Promise<void> {
+    await this.core.getByRole('button', { name: /^(agregar|aumentar cantidad)$/i }).locator('visible=true').first().waitFor({ state: 'visible', timeout: 20000 });
+    const ficha = (await this.ficha.count()) > 0 ? this.ficha : this.fichaSinMarca;
+    const cantidad = this.cantidadEn(ficha);
     const enCarro = async () =>
-      (await this.cantidadEnFicha.isVisible().catch(() => false))
-        ? Number(((await this.cantidadEnFicha.innerText()).match(/\d+/) ?? ['0'])[0])
+      (await cantidad.isVisible().catch(() => false))
+        ? Number(((await cantidad.innerText()).match(/\d+/) ?? ['0'])[0])
         : 0;
     if ((await enCarro()) === 0 && n > 0) {
-      await this.ficha.getByRole('button', { name: 'Agregar', exact: true }).locator('visible=true').first().click({ timeout: 20000 });
-      await this.cantidadEnFicha.waitFor({ state: 'visible', timeout: 15000 });
+      await ficha.getByRole('button', { name: 'Agregar', exact: true }).locator('visible=true').first().click({ timeout: 20000 });
+      await cantidad.waitFor({ state: 'visible', timeout: 15000 });
     }
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < Math.max(20, n + 5); i++) {
       const v = await enCarro();
       if (v === n) return;
       const boton = v < n ? /^aumentar cantidad$/i : /^(disminuir cantidad|quitar del carro)$/i;
-      await this.ficha.getByRole('button', { name: boton }).locator('visible=true').first().click({ timeout: 20000 });
+      await ficha.getByRole('button', { name: boton }).locator('visible=true').first().click({ timeout: 20000 });
       await this.page.waitForTimeout(2000);
     }
     throw new Error(`No se pudo dejar ${n} unidades en el carro (quedaron ${await enCarro()})`);
+  }
+
+  // ---------------------------------------------------------------- pills de Información y cucarda (B2C-31 M-022/032/033/034/040)
+
+  /** Cucardas de la ficha: texto corto con posición absoluta sobre la imagen (fuera de tabs y carruseles). */
+  async cucardasDeLaFicha(): Promise<string[]> {
+    return this.core.evaluate((core) => {
+      const fuera = core.querySelectorAll('[role="tabpanel"], [role="tablist"]');
+      return [...core.querySelectorAll('*')]
+        .filter((e) => e.children.length === 0 && getComputedStyle(e.parentElement ?? e).position === 'absolute')
+        .filter((e) => ![...fuera].some((f) => f.contains(e)))
+        .map((e) => (e.textContent ?? '').trim())
+        .filter((t) => t && t.length < 25 && !/guardar en listas/i.test(t));
+    });
+  }
+
+  /** Pill de sección del tab Información, por nombre. */
+  pill(nombre: RegExp): Locator {
+    return this.panelActivo.getByRole('button', { name: nombre }).first();
+  }
+
+  /** Textos de las pills y cuál está activa (`aria-current`), leídos de la barra bajo los tabs. */
+  async pillsDeInformacion(): Promise<{ texto: string; activa: boolean }[]> {
+    return this.page.evaluate(() => {
+      const panel = document.querySelector('[role="tabpanel"]:not([hidden])')!;
+      const sec = panel.querySelector('[data-spy-id]')!;
+      const barra = sec.parentElement!.previousElementSibling!.querySelectorAll('button');
+      return [...barra].map((b) => ({ texto: (b.textContent ?? '').trim(), activa: b.getAttribute('aria-current') === 'true' }));
+    });
+  }
+
+  /** Posición vertical, en el viewport, del borde inferior de la barra de pills y del inicio de una sección. */
+  async posicionPillsYSeccion(spyId: string): Promise<{ pillsTop: number; pillsBottom: number; secTop: number; y: number }> {
+    return this.page.evaluate((id) => {
+      const panel = document.querySelector('[role="tabpanel"]:not([hidden])')!;
+      const barra = panel.querySelector('[data-spy-id]')!.parentElement!.previousElementSibling as HTMLElement;
+      const b = barra.getBoundingClientRect();
+      const s = panel.querySelector(`[data-spy-id="${id}"]`)!.getBoundingClientRect();
+      return { pillsTop: Math.round(b.top), pillsBottom: Math.round(b.bottom), secTop: Math.round(s.top), y: Math.round(scrollY) };
+    }, spyId);
   }
 
   /** Nombre del producto tal como lo nombra el carro ("Eliminar <nombre>"): el título de la página. */

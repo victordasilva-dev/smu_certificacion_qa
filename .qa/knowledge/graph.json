@@ -268,12 +268,13 @@
     {
       "id": "store-locator",
       "file": "store-locator.json",
-      "description": "Store Locator del header: boton selector de forma de entrega y su drawer (despacho a domicilio / retiro en tienda) · B2C-26: drawer por dentro (Google, manual, guardadas, error, permisos).",
+      "description": "Store Locator del header: boton selector de forma de entrega y su drawer (despacho a domicilio / retiro en tienda) · B2C-26: drawer por dentro (Google, manual, guardadas, error, permisos). · B2C-99: confirmacion con PIN (Agregar nueva direccion / Detalles de la direccion), ConfirmacionPinModal.",
       "entry_url": "/",
       "auth_required": false,
       "suites": [
         "B2C-70",
-        "B2C-26"
+        "B2C-26",
+        "B2C-99"
       ],
       "depends_on": [
         "header-storefront",
@@ -762,6 +763,22 @@
       "estado": "2026-10-14: 6 Aprobado, 24 Bloqueado Data, APP fuera de alcance"
     },
     {
+      "id": "carro-sugeridos",
+      "file": "carro-sugeridos.json",
+      "description": "Modal '¡Que no se te olviden!' al continuar con la entrega desde el carro (Imperdibles, Lo que más compro, Mis favoritos)",
+      "entry_url": "/cart",
+      "auth_required": true,
+      "suites": [
+        "B2C-41"
+      ],
+      "depends_on": [
+        "carro-membresia"
+      ],
+      "leads_to": [
+        "checkout-datos-entrega"
+      ]
+    },
+    {
       "id": "carro-promo-avance",
       "file": "carro-promo-avance.json",
       "depends_on": [
@@ -773,5 +790,5 @@
       ]
     }
   ],
-  "last_updated": "2026-10-10T00:10:00Z"
+  "last_updated": "2026-10-26T15:00:00Z"
 }

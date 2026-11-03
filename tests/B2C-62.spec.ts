@@ -248,6 +248,31 @@ function casosConSkuDeclarado(ff: 'D' | 'M', etiqueta: 'Desktop' | 'Mobile'): vo
     await plp.capturarEvidencia(cp);
   });
 
+  test(`TC-B2C62-${ff}-015 · Renderizar promo MdP % dcto como precio fijo (${etiqueta})`, async ({ page, testData }) => {
+    const cp = `TC-B2C62-${ff}-015`;
+    test.setTimeout(180000);
+    const sku = tokenExigido(testData, 'SKU_PRECIO_BE');
+    // {PLP_URL} (carnes_vacuno) no contiene el SKU declarado: el producto vive en su categoría por defecto.
+    tokenExigido(testData, 'PLP_URL');
+    const { plp, bloque, ruta } = await shelfDelSku(page, sku);
+    const precios = await bloque.leerPrecios();
+    test.info().annotations.push({ type: 'bloque', description: `${ruta} | ${await bloque.resumen()} | label ${(await bloque.labelMedioDePago.allInnerTexts()).join(',')}` });
+    await plp.capturarEvidencia(cp, 2, 'shelf con promo de medio de pago', { elemento: bloque.shelf });
+
+    // Paso 3 — el precio MdP es un importe fijo en CLP, no un pill de %.
+    const mdp = precios.find((p) => !p.tachado && !p.deSocio);
+    expect(mdp, 'el shelf muestra un precio fijo').toBeTruthy();
+    expect(mdp!.texto, 'precio MdP como importe fijo en CLP').toMatch(/^\$\d{1,3}(\.\d{3})*/);
+    await expect(bloque.badgeDeDescuento, 'sin pill de %').toHaveCount(0);
+    // Paso 5 — el label del MdP (Unipay / Banco Estado) visible junto al precio.
+    await expect(bloque.labelMedioDePago.first(), 'label del medio de pago (Unipay / Banco Estado)').toBeVisible();
+    // Paso 4 — el precio mostrado es el efectivo post-descuento (menor que el de referencia).
+    const referencia = precios.find((p) => p !== mdp && !p.deSocio);
+    expect(referencia, 'hay un precio de referencia contra el cual el MdP es el efectivo post-descuento').toBeTruthy();
+    expect(mdp!.importe, 'el precio MdP es menor que el regular').toBeLessThan(referencia!.importe);
+    await plp.capturarEvidencia(cp);
+  });
+
   test(`TC-B2C62-${ff}-022 · Tres precios simultaneos: oferta + lista + membresia (${etiqueta})`, async ({ page, testData }) => {
     const cp = `TC-B2C62-${ff}-022`;
     test.setTimeout(240000);

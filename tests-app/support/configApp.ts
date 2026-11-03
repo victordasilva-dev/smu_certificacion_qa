@@ -50,7 +50,9 @@ export function configApp(plataforma: Plataforma): MobilewrightConfig {
     bundleId,
     // El binario se sube e instala en cada dispositivo asignado. Relativo a la raíz del proyecto
     // si el Excel lo trae relativo.
-    installApps: build ? path.resolve(process.cwd(), build) : undefined,
+    // APP_YA_INSTALADA=1 salta la reinstalación del APK en cada test (130 MB: en un emulador lento
+    // supera el timeout de 60 s de `installApp`). Solo vale si el build correcto ya está instalado.
+    installApps: build && !process.env.APP_YA_INSTALADA ? path.resolve(process.cwd(), build) : undefined,
     reporter: [
       ['list'],
       // Un JSON y un JUnit por plataforma: correr iOS después de Android no puede pisar los

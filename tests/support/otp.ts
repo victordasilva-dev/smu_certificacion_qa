@@ -86,7 +86,9 @@ export async function esperarOtp(correo: string, desde: Date, opciones: Opciones
   try {
     while (Date.now() < limite) {
       const codigo = await fs.promises.readFile(respuesta, 'utf-8').catch(() => '');
-      if (codigo.trim()) return codigo.trim();
+      const limpio = codigo.trim();
+      if (/^\d{6}$/.test(limpio)) return limpio;
+      if (limpio) throw new Error(`OTP_RESPUESTA_INVALIDA: la respuesta del pedido ${id} no tiene 6 dígitos`);
       await new Promise((r) => setTimeout(r, 1000));
     }
   } finally {

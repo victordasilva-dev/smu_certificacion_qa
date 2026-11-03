@@ -6,7 +6,7 @@
 | Última actualización | 2026-10-14 |
 | Ejecutado por | Victor Chirinos |
 | Ambiente | App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV |
-| Dispositivo Android | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo Android | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 | Origen de los TC | Casos de Prueba/Ejecutados/SP2/Unimarc/B2C-148 APP Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
@@ -33,7 +33,7 @@
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -74,7 +74,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -116,7 +116,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -158,7 +158,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -199,7 +199,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -241,7 +241,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
 | Ejecutado | 2026-10-14 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
 
 **Precondiciones**
 
@@ -280,7 +280,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
  "header": {
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "devices": {
-   "android": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)"
+   "android": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)"
   },
   "environment": "App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV",
   "executed_by": "Victor Chirinos",
@@ -301,7 +301,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
  },
  "results": [
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Se muestran los horarios de la nueva fecha con uno destacado por defecto; no hay loader, \"Fecha de entrega\" y el subtotal no cambian e \"Ir a pagar\" sigue habilitado.",
    "form_factor": "app",
@@ -315,7 +315,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "\"Fecha de entrega\" muestra el nuevo día y horario, el subtotal refleja el costo de la ventana elegida, aparece el toast \"La fecha de despacho ha sido actualizada correctamente.\" (4 s + X) e \"Ir a pagar\" sigue habilitado.",
    "form_factor": "app",
@@ -329,7 +329,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Se muestra el toast \"Lo sentimos, no pudimos cambiar tu fecha de entrega. Inténtalo nuevamente. Error: ME-035\" hasta cerrarlo con la X y \"Fecha de entrega\" mantiene la ventana anterior.",
    "form_factor": "app",
@@ -343,7 +343,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida, {HERRAMIENTA_PROXY_APP}, 20000, 000000000000675191-UN, 11, vhchirinos+comprador@avatar-global.com, {VENTANA_API_ENDPOINT}"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Se muestran los horarios de la nueva fecha con uno destacado por defecto; no hay loader, \"Fecha de retiro\" no cambia e \"Ir a pagar\" sigue habilitado.",
    "form_factor": "app",
@@ -357,7 +357,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 20000, 000000000000675191-UN, Unimarc Las Condes, 11, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "\"Fecha de retiro\" muestra el nuevo día y horario, aparece el toast \"La fecha de retiro ha sido actualizada correctamente.\" (4 s + X) e \"Ir a pagar\" sigue habilitado.",
    "form_factor": "app",
@@ -371,7 +371,7 @@ Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y e
    "test_data": "v1.0.7, iOS, 20000, 000000000000675191-UN, Unimarc Las Condes, 11, vhchirinos+comprador@avatar-global.com"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
+   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
    "executed_at": "2026-10-14",
    "expected": "Se muestra el toast \"Lo sentimos, no pudimos cambiar tu fecha de entrega. Inténtalo nuevamente. Error: ME-035\" hasta cerrarlo con la X y \"Fecha de retiro\" mantiene la ventana anterior.",
    "form_factor": "app",

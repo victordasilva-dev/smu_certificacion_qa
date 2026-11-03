@@ -1,0 +1,1407 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: B2C-26.spec.ts >> B2C-26 pendientes · Desktop >> TC-B2C26-D-013 · La dirección del header respeta historial y dirección seteada en sesión [Desktop] (Desktop)
+- Location: tests/B2C-26.spec.ts:1085:7
+
+# Error details
+
+```
+Test timeout of 720000ms exceeded.
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=f2e1]:
+  - generic [ref=f2e4]:
+    - link "Skip to Content" [ref=f2e5] [cursor=pointer]:
+      - /url: "#chakra-skip-nav"
+    - banner [ref=f2e8]:
+      - generic [ref=f2e10]:
+        - generic [ref=f2e11]:
+          - button "Unimarc" [ref=f2e12] [cursor=pointer]:
+            - img "Unimarc" [ref=f2e14]
+          - button "Categorías" [ref=f2e23] [cursor=pointer]
+        - textbox "¿Qué estás buscando?" [ref=f2e30]
+        - generic [ref=f2e31]:
+          - button "Hola, Karl Paul Fin" [ref=f2e32] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f2e33]: KP
+          - 'button "Mi carrito, número de artículos: 1" [ref=f2e35] [cursor=pointer]':
+            - generic [ref=f2e38]: "1"
+      - generic [ref=f2e41]:
+        - button [ref=f2e43] [cursor=pointer]:
+          - generic [ref=f2e54]:
+            - paragraph [ref=f2e55]: Camino La Fuente 15…
+            - generic [ref=f2e56]:
+              - paragraph [ref=f2e57]: "Desde: Jue 29/10, 09:00 hrs."
+              - paragraph [ref=f2e59]: $2.990
+        - generic [ref=f2e63]:
+          - list [ref=f2e66]:
+            - listitem [ref=f2e67]:
+              - link "Ofertas" [ref=f2e68] [cursor=pointer]:
+                - /url: /ofertas
+            - listitem [ref=f2e69]:
+              - link "Marketplace" [ref=f2e70] [cursor=pointer]:
+                - /url: /marketplace
+            - listitem [ref=f2e71]:
+              - link "Locales y horarios" [ref=f2e72] [cursor=pointer]:
+                - /url: /locales
+          - button "Suscríbete a Unimarc" [ref=f2e73] [cursor=pointer]:
+            - generic [ref=f2e74]:
+              - paragraph [ref=f2e75]: Suscríbete a
+              - img "UNIMARC" [ref=f2e76]
+    - main [ref=f2e85]:
+      - generic [ref=f2e91]:
+        - generic [ref=f2e95]:
+          - generic [ref=f2e97]:
+            - link [ref=f2e102] [cursor=pointer]:
+              - /url: /category/bebidas-y-licores
+              - img "Ramazzotti Aperitivo" [ref=f2e104]
+            - link [ref=f2e109] [cursor=pointer]:
+              - /url: /category/carnes
+              - img "Asaíto" [ref=f2e111]
+            - link [ref=f2e116] [cursor=pointer]:
+              - /url: /category/lacteos-huevos-y-refrigerados
+              - img "Lácteos" [ref=f2e118]
+          - button "Anterior" [ref=f2e121] [cursor=pointer]
+          - button "Siguiente" [ref=f2e124] [cursor=pointer]
+        - generic [ref=f2e129]:
+          - generic [ref=f2e134]:
+            - generic [ref=f2e136]:
+              - heading "Los más vendidos" [level=3] [ref=f2e138]
+              - link "Mostrar todo" [ref=f2e140] [cursor=pointer]:
+                - /url: /category/carnes
+            - generic [ref=f2e141]:
+              - generic [ref=f2e143]:
+                - generic [ref=f2e145]:
+                  - generic [ref=f2e146]:
+                    - link "Chuletas de cordero Simunovic 600 g" [ref=f2e147] [cursor=pointer]:
+                      - /url: /chuletas-de-cordero-simunovic-600-g/000000000000653082-UN.html
+                      - img "Chuletas de cordero Simunovic 600 g" [ref=f2e148]
+                    - button "Guardar en favoritos" [ref=f2e149] [cursor=pointer]
+                  - generic [ref=f2e152]:
+                    - generic [ref=f2e154]:
+                      - paragraph [ref=f2e155]: $18.990
+                      - paragraph [ref=f2e156]: ($31.650 x kg)
+                    - generic [ref=f2e157]:
+                      - link "Simunovic | Chuletas de cordero Simunovic 600 g" [ref=f2e158] [cursor=pointer]:
+                        - /url: /chuletas-de-cordero-simunovic-600-g/000000000000653082-UN.html
+                      - generic [ref=f2e160]: 600 g
+                  - button "Agregar" [ref=f2e163] [cursor=pointer]
+                - generic [ref=f2e165]:
+                  - generic [ref=f2e166]:
+                    - link "Abastero vacuno Nacional al vacío 1.8 Kg" [ref=f2e167] [cursor=pointer]:
+                      - /url: /abastero-vacuno-nacional-al-vacio-1.8-kg/000000000000028594-KGV.html
+                      - img "Abastero vacuno Nacional al vacío 1.8 Kg" [ref=f2e168]
+                    - button "Guardar en favoritos" [ref=f2e169] [cursor=pointer]
+                  - generic [ref=f2e172]:
+                    - generic [ref=f2e174]:
+                      - paragraph [ref=f2e175]: $11.190
+                      - paragraph [ref=f2e176]: ($6.217 x kg)
+                    - generic [ref=f2e177]:
+                      - link "Nacional | Abastero vacuno Nacional al vacío 1.8 Kg" [ref=f2e178] [cursor=pointer]:
+                        - /url: /abastero-vacuno-nacional-al-vacio-1.8-kg/000000000000028594-KGV.html
+                      - generic [ref=f2e180]: 1.8 kg
+                  - button "Agregar" [ref=f2e183] [cursor=pointer]
+                - generic [ref=f2e185]:
+                  - generic [ref=f2e186]:
+                    - link "Albondigas Super Pollo espaciales congeladas 300 g" [ref=f2e187] [cursor=pointer]:
+                      - /url: /albondigas-super-pollo-espaciales-congeladas-300-g/000000000000675191-UN.html
+                      - img "Albondigas Super Pollo espaciales congeladas 300 g" [ref=f2e188]
+                    - button "Guardar en favoritos" [ref=f2e189] [cursor=pointer]
+                  - generic [ref=f2e192]:
+                    - generic [ref=f2e194]:
+                      - paragraph [ref=f2e195]: $2.490
+                      - paragraph [ref=f2e196]: ($8.300 x kg)
+                    - generic [ref=f2e197]: Pronto disponible
+                    - generic [ref=f2e199]:
+                      - link "Super Pollo | Albondigas Super Pollo espaciales congeladas 3…" [ref=f2e200] [cursor=pointer]:
+                        - /url: /albondigas-super-pollo-espaciales-congeladas-300-g/000000000000675191-UN.html
+                      - generic [ref=f2e202]: 300 g
+                  - button "Ver similares" [ref=f2e205] [cursor=pointer]
+                - generic [ref=f2e207]:
+                  - generic [ref=f2e208]:
+                    - link "Alitas trutro de pollo Super Pollo congelado 800 g" [ref=f2e209] [cursor=pointer]:
+                      - /url: /alitas-trutro-de-pollo-super-pollo-congelado-800-g/000000000000748600-UN.html
+                      - img "Alitas trutro de pollo Super Pollo congelado 800 g" [ref=f2e210]
+                    - button "Guardar en favoritos" [ref=f2e211] [cursor=pointer]
+                  - generic [ref=f2e214]:
+                    - generic [ref=f2e216]:
+                      - paragraph [ref=f2e217]: $4.390
+                      - paragraph [ref=f2e218]: ($5.488 x kg)
+                    - generic [ref=f2e219]:
+                      - link "Super Pollo | Alitas trutro de pollo Super Pollo congelado 8…" [ref=f2e220] [cursor=pointer]:
+                        - /url: /alitas-trutro-de-pollo-super-pollo-congelado-800-g/000000000000748600-UN.html
+                      - generic [ref=f2e222]: 800 g
+                  - button "Agregar" [ref=f2e225] [cursor=pointer]
+                - generic [ref=f2e227]:
+                  - generic [ref=f2e228]:
+                    - link "Carne molida 4% grasa tártaro Fundo Río Alegre 250 g" [ref=f2e229] [cursor=pointer]:
+                      - /url: /carne-molida-4-grasa-tartaro-fundo-rio-alegre-250-g/000000000000662457-UN.html
+                      - img "Carne molida 4% grasa tártaro Fundo Río Alegre 250 g" [ref=f2e230]
+                    - button "Quitar de favoritos" [pressed] [ref=f2e231] [cursor=pointer]
+                  - generic [ref=f2e234]:
+                    - generic [ref=f2e235]:
+                      - generic [ref=f2e236]:
+                        - generic [ref=f2e237]:
+                          - generic [aria-hidden] [ref=f2e238]: 💎
+                          - paragraph [ref=f2e239]: $2.897
+                        - paragraph [ref=f2e240]: ($11.588 x kg)
+                      - generic [ref=f2e241]:
+                        - paragraph [ref=f2e242]: $3.890
+                        - paragraph [ref=f2e243]: ($15.560 x kg)
+                    - generic [ref=f2e244]:
+                      - link "Fundo Rio Alegre | Carne molida 4% grasa tártaro Fundo Río A…" [ref=f2e245] [cursor=pointer]:
+                        - /url: /carne-molida-4-grasa-tartaro-fundo-rio-alegre-250-g/000000000000662457-UN.html
+                      - generic [ref=f2e247]: 250 g
+                  - button "Agregar" [ref=f2e250] [cursor=pointer]
+                - generic [ref=f2e252]:
+                  - generic [ref=f2e253]:
+                    - link "Carne molida 4% grasa vacuno Fundo Río Alegre tártaro 250 g" [ref=f2e254] [cursor=pointer]:
+                      - /url: /carne-molida-4-grasa-vacuno-fundo-rio-alegre-tartaro-250-g/000000000000652051-UN.html
+                      - img "Carne molida 4% grasa vacuno Fundo Río Alegre tártaro 250 g" [ref=f2e255]
+                    - button "Guardar en favoritos" [ref=f2e256] [cursor=pointer]
+                  - generic [ref=f2e259]:
+                    - generic [ref=f2e260]:
+                      - generic [ref=f2e261]:
+                        - generic [ref=f2e262]:
+                          - generic [aria-hidden] [ref=f2e263]: 💎
+                          - paragraph [ref=f2e264]: $2.897
+                        - paragraph [ref=f2e265]: ($11.588 x kg)
+                      - generic [ref=f2e266]:
+                        - paragraph [ref=f2e267]: $3.890
+                        - paragraph [ref=f2e268]: ($15.560 x kg)
+                    - generic [ref=f2e269]:
+                      - link "Fundo Rio Alegre | Carne molida 4% grasa vacuno Fundo Río Al…" [ref=f2e270] [cursor=pointer]:
+                        - /url: /carne-molida-4-grasa-vacuno-fundo-rio-alegre-tartaro-250-g/000000000000652051-UN.html
+                      - generic [ref=f2e272]: 250 g
+                  - button "Agregar" [ref=f2e275] [cursor=pointer]
+                - generic [ref=f2e277]:
+                  - generic [ref=f2e278]:
+                    - link "Carne molida fundo rio alegre tartaro 4% grasa 500g" [ref=f2e279] [cursor=pointer]:
+                      - /url: /carne-molida-fundo-rio-alegre-tartaro-4-grasa-500g/000000000000666200-UN.html
+                      - img "Carne molida fundo rio alegre tartaro 4% grasa 500g" [ref=f2e280]
+                    - generic [ref=f2e281]: Promoción Lleva 2 unidades por Monto
+                    - button "Quitar de favoritos" [pressed] [ref=f2e282] [cursor=pointer]
+                  - generic [ref=f2e285]:
+                    - generic [ref=f2e286]:
+                      - generic [ref=f2e287]:
+                        - generic [ref=f2e288]:
+                          - generic [aria-hidden] [ref=f2e289]: 💎
+                          - paragraph [ref=f2e290]: Lleva 2 por $10.866
+                        - paragraph [ref=f2e291]: ($10.866 x kg)
+                      - generic [ref=f2e292]:
+                        - generic [ref=f2e293]: Lleva 2 por $12.490
+                        - paragraph [ref=f2e294]: ($12.490 x kg)
+                      - generic [ref=f2e295]:
+                        - paragraph [ref=f2e296]: $7.690 c/u
+                        - paragraph [ref=f2e297]: ($15.380 x kg)
+                    - generic [ref=f2e298]:
+                      - link "Fundo Rio Alegre | Carne molida fundo rio alegre tartaro 4% …" [ref=f2e299] [cursor=pointer]:
+                        - /url: /carne-molida-fundo-rio-alegre-tartaro-4-grasa-500g/000000000000666200-UN.html
+                      - generic [ref=f2e301]: 500 g
+                  - generic [ref=f2e303]:
+                    - button [ref=f2e304] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=f2e305]: 😎
+                      - paragraph [ref=f2e306]: Combina la promo
+                      - img "chevron-right" [ref=f2e307]
+                    - button "Agregar" [ref=f2e308] [cursor=pointer]
+                - generic [ref=f2e310]:
+                  - generic [ref=f2e311]:
+                    - link "Carne molida tartaro fundo río alegre 4% grasa 500g" [ref=f2e312] [cursor=pointer]:
+                      - /url: /carne-molida-tartaro-fundo-rio-alegre-4-grasa-500g/000000000000666285-UN.html
+                      - img "Carne molida tartaro fundo río alegre 4% grasa 500g" [ref=f2e313]
+                    - generic [ref=f2e314]: Promoción Lleva 2 unidades por Monto
+                    - button "Quitar de favoritos" [pressed] [ref=f2e315] [cursor=pointer]
+                  - generic [ref=f2e318]:
+                    - generic [ref=f2e319]:
+                      - generic [ref=f2e320]:
+                        - generic [ref=f2e321]:
+                          - generic [aria-hidden] [ref=f2e322]: 💎
+                          - paragraph [ref=f2e323]: Lleva 2 por $10.866
+                        - paragraph [ref=f2e324]: ($10.866 x kg)
+                      - generic [ref=f2e325]:
+                        - generic [ref=f2e326]: Lleva 2 por $12.490
+                        - paragraph [ref=f2e327]: ($12.490 x kg)
+                      - generic [ref=f2e328]:
+                        - paragraph [ref=f2e329]: $7.690 c/u
+                        - paragraph [ref=f2e330]: ($15.380 x kg)
+                    - generic [ref=f2e331]:
+                      - link "Fundo Rio Alegre | Carne molida tartaro fundo río alegre 4% …" [ref=f2e332] [cursor=pointer]:
+                        - /url: /carne-molida-tartaro-fundo-rio-alegre-4-grasa-500g/000000000000666285-UN.html
+                      - generic [ref=f2e334]: 500 g
+                  - generic [ref=f2e336]:
+                    - button [ref=f2e337] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=f2e338]: 😎
+                      - paragraph [ref=f2e339]: Combina la promo
+                      - img "chevron-right" [ref=f2e340]
+                    - button "Agregar" [ref=f2e341] [cursor=pointer]
+                - generic [ref=f2e343]:
+                  - generic [ref=f2e344]:
+                    - link "Choclillo vacuno Nacional al vacío 1.3 Kg" [ref=f2e345] [cursor=pointer]:
+                      - /url: /choclillo-vacuno-nacional-al-vacio-1.3-kg/000000000000028597-KGV.html
+                      - img "Choclillo vacuno Nacional al vacío 1.3 Kg" [ref=f2e346]
+                    - button "Guardar en favoritos" [ref=f2e347] [cursor=pointer]
+                  - generic [ref=f2e350]:
+                    - generic [ref=f2e352]:
+                      - paragraph [ref=f2e353]: $11.990
+                      - paragraph [ref=f2e354]: ($9.223 x kg)
+                    - generic [ref=f2e355]:
+                      - link "Nacional | Choclillo vacuno Nacional al vacío 1.3 Kg" [ref=f2e356] [cursor=pointer]:
+                        - /url: /choclillo-vacuno-nacional-al-vacio-1.3-kg/000000000000028597-KGV.html
+                      - generic [ref=f2e358]: 1.3 kg
+                  - button "Agregar" [ref=f2e361] [cursor=pointer]
+                - generic [ref=f2e363]:
+                  - generic [ref=f2e364]:
+                    - link "Chuleta centro de cerdo Super Cerdo bandeja 550 g" [ref=f2e365] [cursor=pointer]:
+                      - /url: /chuleta-centro-de-cerdo-super-cerdo-bandeja-550-g/000000000000626717-UN.html
+                      - img "Chuleta centro de cerdo Super Cerdo bandeja 550 g" [ref=f2e366]
+                    - button "Guardar en favoritos" [ref=f2e367] [cursor=pointer]
+                  - generic [ref=f2e370]:
+                    - generic [ref=f2e372]:
+                      - paragraph [ref=f2e373]: $4.890
+                      - paragraph [ref=f2e374]: ($8.891 x kg)
+                    - generic [ref=f2e375]:
+                      - link "Super Cerdo | Chuleta centro de cerdo Super Cerdo bandeja 55…" [ref=f2e376] [cursor=pointer]:
+                        - /url: /chuleta-centro-de-cerdo-super-cerdo-bandeja-550-g/000000000000626717-UN.html
+                      - generic [ref=f2e378]: 550 g
+                  - button "Agregar" [ref=f2e381] [cursor=pointer]
+                - generic [ref=f2e383]:
+                  - generic [ref=f2e384]:
+                    - link "Chuleta centro de cerdo Super Cerdo congelado 750 g" [ref=f2e385] [cursor=pointer]:
+                      - /url: /chuleta-centro-de-cerdo-super-cerdo-congelado-750-g/000000000000627635-UN.html
+                      - img "Chuleta centro de cerdo Super Cerdo congelado 750 g" [ref=f2e386]
+                    - button "Guardar en favoritos" [ref=f2e387] [cursor=pointer]
+                  - generic [ref=f2e390]:
+                    - generic [ref=f2e391]:
+                      - generic [ref=f2e392]:
+                        - generic [ref=f2e393]:
+                          - generic [aria-hidden] [ref=f2e394]: 💎
+                          - paragraph [ref=f2e395]: $6.291
+                        - paragraph [ref=f2e396]: ($8.388 x kg)
+                      - generic [ref=f2e397]:
+                        - generic [ref=f2e398]: 10%
+                        - paragraph [ref=f2e399]: $6.291
+                        - paragraph [ref=f2e400]: ($8.388 x kg)
+                      - paragraph [ref=f2e401]: "Antes: $6.990"
+                    - generic [ref=f2e402]:
+                      - link "Super Cerdo | Chuleta centro de cerdo Super Cerdo congelado …" [ref=f2e403] [cursor=pointer]:
+                        - /url: /chuleta-centro-de-cerdo-super-cerdo-congelado-750-g/000000000000627635-UN.html
+                      - generic [ref=f2e405]: 750 g
+                  - button "Agregar" [ref=f2e408] [cursor=pointer]
+                - generic [ref=f2e410]:
+                  - generic [ref=f2e411]:
+                    - link "Chuleta parrillera de cordero congelado caja 1.5 Kg" [ref=f2e412] [cursor=pointer]:
+                      - /url: /chuleta-parrillera-de-cordero-congelado-caja-1.5-kg/000000000000219902-UN.html
+                      - img "Chuleta parrillera de cordero congelado caja 1.5 Kg" [ref=f2e413]
+                    - button "Guardar en favoritos" [ref=f2e414] [cursor=pointer]
+                  - generic [ref=f2e417]:
+                    - paragraph [ref=f2e420]: $43.990
+                    - generic [ref=f2e421]:
+                      - link "Chuleta parrillera de cordero congelado caja 1.5 Kg" [ref=f2e422] [cursor=pointer]:
+                        - /url: /chuleta-parrillera-de-cordero-congelado-caja-1.5-kg/000000000000219902-UN.html
+                      - generic [ref=f2e423]: 1.5 kg
+                  - button "Agregar" [ref=f2e426] [cursor=pointer]
+              - button "Anterior" [ref=f2e429] [cursor=pointer]
+              - button "Siguiente" [ref=f2e432] [cursor=pointer]
+          - generic [ref=f2e439]:
+            - generic [ref=f2e440]:
+              - link [ref=f2e442] [cursor=pointer]:
+                - /url: /category/frutas-y-verduras
+                - img "Logo" [ref=f2e443]
+              - generic [ref=f2e445]:
+                - generic [ref=f2e446]:
+                  - paragraph [ref=f2e448]: "45"
+                  - paragraph [ref=f2e449]: días
+                - paragraph [ref=f2e451]: ":"
+                - generic [ref=f2e452]:
+                  - paragraph [ref=f2e454]: "07"
+                  - paragraph [ref=f2e455]: horas
+                - paragraph [ref=f2e457]: ":"
+                - generic [ref=f2e458]:
+                  - paragraph [ref=f2e460]: "06"
+                  - paragraph [ref=f2e461]: minutos
+                - paragraph [ref=f2e463]: ":"
+                - generic [ref=f2e464]:
+                  - paragraph [ref=f2e466]: "33"
+                  - paragraph [ref=f2e467]: segundos
+            - generic [ref=f2e468]:
+              - generic [ref=f2e471]:
+                - generic [ref=f2e473]:
+                  - generic [ref=f2e474]:
+                    - link "Agua saborizada Más manzana 1.6 L" [ref=f2e475] [cursor=pointer]:
+                      - /url: /agua-saborizada-mas-manzana-1.6-l/000000000000615251-UN.html
+                      - img "Agua saborizada Más manzana 1.6 L" [ref=f2e476]
+                    - button "Guardar en favoritos" [ref=f2e477] [cursor=pointer]
+                  - generic [ref=f2e480]:
+                    - paragraph [ref=f2e483]: $1.290
+                    - generic [ref=f2e484]:
+                      - link "Agua saborizada Más manzana 1.6 L" [ref=f2e485] [cursor=pointer]:
+                        - /url: /agua-saborizada-mas-manzana-1.6-l/000000000000615251-UN.html
+                      - generic [ref=f2e486]: 1.6 l
+                  - button "Agregar" [ref=f2e489] [cursor=pointer]
+                - generic [ref=f2e491]:
+                  - generic [ref=f2e492]:
+                    - link "Choclo bandeja 2 un" [ref=f2e493] [cursor=pointer]:
+                      - /url: /choclo-bandeja-2-un/000000000000028462-UN.html
+                      - img "Choclo bandeja 2 un" [ref=f2e494]
+                    - button "Guardar en favoritos" [ref=f2e495] [cursor=pointer]
+                  - generic [ref=f2e498]:
+                    - generic [ref=f2e500]:
+                      - paragraph [ref=f2e501]: $2.550
+                      - paragraph [ref=f2e502]: ($1.275 x unidad)
+                    - generic [ref=f2e503]: Pronto disponible
+                    - generic [ref=f2e505]:
+                      - link "Frutas y Verduras | Choclo bandeja 2 un" [ref=f2e506] [cursor=pointer]:
+                        - /url: /choclo-bandeja-2-un/000000000000028462-UN.html
+                      - generic [ref=f2e508]: 2 un
+                  - button "Ver similares" [ref=f2e511] [cursor=pointer]
+                - generic [ref=f2e513]:
+                  - generic [ref=f2e514]:
+                    - link "Choclo cocida Proverde bolsa 500 gr" [ref=f2e515] [cursor=pointer]:
+                      - /url: /choclo-cocida-proverde-bolsa-500-gr/000000000000712102-UN.html
+                      - img "Choclo cocida Proverde bolsa 500 gr" [ref=f2e516]
+                    - button "Guardar en favoritos" [ref=f2e517] [cursor=pointer]
+                  - generic [ref=f2e520]:
+                    - generic:
+                      - generic:
+                        - paragraph
+                    - generic [ref=f2e521]: Pronto disponible
+                    - link "Proverde | Choclo cocida Proverde bolsa 500 gr" [ref=f2e524] [cursor=pointer]:
+                      - /url: /choclo-cocida-proverde-bolsa-500-gr/000000000000712102-UN.html
+                  - button "Ver similares" [ref=f2e527] [cursor=pointer]
+                - generic [ref=f2e529]:
+                  - generic [ref=f2e530]:
+                    - link "Clementina malla 1 Kg" [ref=f2e531] [cursor=pointer]:
+                      - /url: /clementina-malla-1-kg/000000000000037966-UN.html
+                      - img "Clementina malla 1 Kg" [ref=f2e532]
+                    - button "Guardar en favoritos" [ref=f2e533] [cursor=pointer]
+                  - generic [ref=f2e536]:
+                    - paragraph [ref=f2e539]: $2.490
+                    - generic [ref=f2e540]:
+                      - link "Frutas y Verduras | Clementina malla 1 Kg" [ref=f2e541] [cursor=pointer]:
+                        - /url: /clementina-malla-1-kg/000000000000037966-UN.html
+                      - generic [ref=f2e543]: 1 kg
+                  - button "Agregar" [ref=f2e546] [cursor=pointer]
+                - generic [ref=f2e548]:
+                  - generic [ref=f2e549]:
+                    - link "Clementina malla 1 Kg" [ref=f2e550] [cursor=pointer]:
+                      - /url: /clementina-malla-1-kg/000000000010037966-UN.html
+                      - img "Clementina malla 1 Kg" [ref=f2e551]
+                    - button "Guardar en favoritos" [ref=f2e552] [cursor=pointer]
+                  - generic [ref=f2e555]:
+                    - paragraph [ref=f2e558]: $1.999
+                    - generic [ref=f2e559]:
+                      - link "Frutas y Verduras | Clementina malla 1 Kg" [ref=f2e560] [cursor=pointer]:
+                        - /url: /clementina-malla-1-kg/000000000010037966-UN.html
+                      - generic [ref=f2e562]: 1 kg
+                  - button "Agregar" [ref=f2e565] [cursor=pointer]
+                - generic [ref=f2e567]:
+                  - generic [ref=f2e568]:
+                    - link "Clementinas granel 500 g" [ref=f2e569] [cursor=pointer]:
+                      - /url: /clementinas-granel-500-g/000000000000037969-KG.html
+                      - img "Clementinas granel 500 g" [ref=f2e570]
+                    - button "Guardar en favoritos" [ref=f2e571] [cursor=pointer]
+                  - generic [ref=f2e574]:
+                    - generic [ref=f2e576]:
+                      - paragraph [ref=f2e577]: $1.375
+                      - paragraph [ref=f2e578]: ($2.750 x kg)
+                    - generic [ref=f2e579]:
+                      - link "Frutas y Verduras | Clementinas granel 500 g" [ref=f2e580] [cursor=pointer]:
+                        - /url: /clementinas-granel-500-g/000000000000037969-KG.html
+                      - generic [ref=f2e582]: 500 g
+                  - button "Agregar" [ref=f2e585] [cursor=pointer]
+                - generic [ref=f2e587]:
+                  - generic [ref=f2e588]:
+                    - link "Clementinas granel 500 g" [ref=f2e589] [cursor=pointer]:
+                      - /url: /clementinas-granel-500-g/000000000010037969-KG.html
+                      - img "Clementinas granel 500 g" [ref=f2e590]
+                    - button "Guardar en favoritos" [ref=f2e591] [cursor=pointer]
+                  - generic [ref=f2e594]:
+                    - generic [ref=f2e596]:
+                      - paragraph [ref=f2e597]: $1.999
+                      - paragraph [ref=f2e598]: ($3.998 x kg)
+                    - generic [ref=f2e599]:
+                      - link "Frutas y Verduras | Clementinas granel 500 g" [ref=f2e600] [cursor=pointer]:
+                        - /url: /clementinas-granel-500-g/000000000010037969-KG.html
+                      - generic [ref=f2e602]: 500 g
+                  - button "Agregar" [ref=f2e605] [cursor=pointer]
+                - generic [ref=f2e607]:
+                  - generic [ref=f2e608]:
+                    - link "Kiwi bolsa 1 Kg" [ref=f2e609] [cursor=pointer]:
+                      - /url: /kiwi-bolsa-1-kg/000000000000062644-UN.html
+                      - img "Kiwi bolsa 1 Kg" [ref=f2e610]
+                    - generic [ref=f2e611]: Promoción % Unipay
+                    - button "Guardar en favoritos" [ref=f2e612] [cursor=pointer]
+                  - generic [ref=f2e615]:
+                    - generic [ref=f2e616]:
+                      - generic [ref=f2e618]:
+                        - generic [aria-hidden] [ref=f2e619]: 💎
+                        - paragraph [ref=f2e620]: $2.601
+                      - generic [ref=f2e621]:
+                        - generic [ref=f2e622]: 10%
+                        - paragraph [ref=f2e623]: $2.601
+                      - paragraph [ref=f2e624]: "Antes: $2.890"
+                    - generic [ref=f2e625]:
+                      - link "Frutas y Verduras | Kiwi bolsa 1 Kg" [ref=f2e626] [cursor=pointer]:
+                        - /url: /kiwi-bolsa-1-kg/000000000000062644-UN.html
+                      - generic [ref=f2e628]: 1 kg
+                  - button "Agregar" [ref=f2e631] [cursor=pointer]
+                - generic [ref=f2e633]:
+                  - generic [ref=f2e634]:
+                    - link "Kiwi bolsa 1 Kg" [ref=f2e635] [cursor=pointer]:
+                      - /url: /kiwi-bolsa-1-kg/000000000010062644-UN.html
+                      - img "Kiwi bolsa 1 Kg" [ref=f2e636]
+                    - button "Guardar en favoritos" [ref=f2e637] [cursor=pointer]
+                  - generic [ref=f2e640]:
+                    - paragraph [ref=f2e643]: $1.999
+                    - generic [ref=f2e644]:
+                      - link "Frutas y Verduras | Kiwi bolsa 1 Kg" [ref=f2e645] [cursor=pointer]:
+                        - /url: /kiwi-bolsa-1-kg/000000000010062644-UN.html
+                      - generic [ref=f2e647]: 1 kg
+                  - button "Agregar" [ref=f2e650] [cursor=pointer]
+                - generic [ref=f2e652]:
+                  - generic [ref=f2e653]:
+                    - link "Limón granel 500 g" [ref=f2e654] [cursor=pointer]:
+                      - /url: /limon-granel-500-g/000000000000553212-KG.html
+                      - img "Limón granel 500 g" [ref=f2e655]
+                    - button "Guardar en favoritos" [ref=f2e656] [cursor=pointer]
+                  - generic [ref=f2e659]:
+                    - generic [ref=f2e661]:
+                      - paragraph [ref=f2e662]: $995
+                      - paragraph [ref=f2e663]: ($1.990 x l)
+                    - generic [ref=f2e664]:
+                      - link "Frutas y Verduras | Limón granel 500 g" [ref=f2e665] [cursor=pointer]:
+                        - /url: /limon-granel-500-g/000000000000553212-KG.html
+                      - generic [ref=f2e667]: 500 g
+                  - button "Agregar" [ref=f2e670] [cursor=pointer]
+                - generic [ref=f2e672]:
+                  - generic [ref=f2e673]:
+                    - link "Limón granel 500 g" [ref=f2e674] [cursor=pointer]:
+                      - /url: /limon-granel-500-g/000000000010553212-KG.html
+                      - img "Limón granel 500 g" [ref=f2e675]
+                    - button "Guardar en favoritos" [ref=f2e676] [cursor=pointer]
+                  - generic [ref=f2e679]:
+                    - generic [ref=f2e681]:
+                      - paragraph [ref=f2e682]: $1.999
+                      - paragraph [ref=f2e683]: ($3.998 x l)
+                    - generic [ref=f2e684]:
+                      - link "Frutas y Verduras | Limón granel 500 g" [ref=f2e685] [cursor=pointer]:
+                        - /url: /limon-granel-500-g/000000000010553212-KG.html
+                      - generic [ref=f2e687]: 500 g
+                  - button "Agregar" [ref=f2e690] [cursor=pointer]
+                - generic [ref=f2e692]:
+                  - generic [ref=f2e693]:
+                    - link "Mangos granel 500 g" [ref=f2e694] [cursor=pointer]:
+                      - /url: /mangos-granel-500-g/000000000000037972-KG.html
+                      - img "Mangos granel 500 g" [ref=f2e695]
+                    - button "Guardar en favoritos" [ref=f2e696] [cursor=pointer]
+                  - generic [ref=f2e699]:
+                    - generic [ref=f2e701]:
+                      - paragraph [ref=f2e702]: $2.790
+                      - paragraph [ref=f2e703]: ($5.580 x kg)
+                    - generic [ref=f2e704]:
+                      - link "Frutas Y Verduras | Mangos granel 500 g" [ref=f2e705] [cursor=pointer]:
+                        - /url: /mangos-granel-500-g/000000000000037972-KG.html
+                      - generic [ref=f2e707]: 500 g
+                  - button "Agregar" [ref=f2e710] [cursor=pointer]
+              - generic:
+                - link:
+                  - /url: /category/frutas-y-verduras
+          - generic [ref=f2e715]:
+            - heading "Categorías destacadas" [level=2] [ref=f2e716]
+            - generic [ref=f2e718]:
+              - link [ref=f2e722] [cursor=pointer]:
+                - /url: /category/frutas-y-verduras
+                - generic [ref=f2e723]:
+                  - img "Orgánico" [ref=f2e725]
+                  - paragraph [ref=f2e726]: Orgánico
+              - link [ref=f2e730] [cursor=pointer]:
+                - /url: /category/congelados
+                - generic [ref=f2e731]:
+                  - img "Comida en casa" [ref=f2e733]
+                  - paragraph [ref=f2e734]: Comida en casa
+              - link [ref=f2e738] [cursor=pointer]:
+                - /url: /category/panaderia-y-pasteleria
+                - generic [ref=f2e739]:
+                  - img "Panadería" [ref=f2e741]
+                  - paragraph [ref=f2e742]: Panadería
+              - link [ref=f2e746] [cursor=pointer]:
+                - /url: /category/panaderia-y-pasteleria
+                - generic [ref=f2e747]:
+                  - img "Pastelería" [ref=f2e749]
+                  - paragraph [ref=f2e750]: Pastelería
+              - link [ref=f2e754] [cursor=pointer]:
+                - /url: /category/bebidas-y-licores
+                - generic [ref=f2e755]:
+                  - img "Celebraciones" [ref=f2e757]
+                  - paragraph [ref=f2e758]: Celebraciones
+              - link [ref=f2e762] [cursor=pointer]:
+                - /url: /category/limpieza
+                - generic [ref=f2e763]:
+                  - img "Higiene personal" [ref=f2e765]
+                  - paragraph [ref=f2e766]: Higiene personal
+              - link [ref=f2e770] [cursor=pointer]:
+                - /url: /category/limpieza
+                - generic [ref=f2e771]:
+                  - img "Limpieza" [ref=f2e773]
+                  - paragraph [ref=f2e774]: Limpieza
+          - generic [ref=f2e777]:
+            - generic [ref=f2e778]:
+              - generic [ref=f2e779]:
+                - heading "Cada día, una ocasión" [level=3] [ref=f2e780]
+                - link "Mostrar todo" [ref=f2e781] [cursor=pointer]:
+                  - /url: /search?q=ofertas
+              - paragraph [ref=f2e782]: Encuentra aquí todo lo que necesitas y más
+            - generic [ref=f2e783]:
+              - generic [ref=f2e785]:
+                - link [ref=f2e789] [cursor=pointer]:
+                  - /url: /category/carnes
+                  - generic [ref=f2e790]:
+                    - img "Asaíto" [ref=f2e793]
+                    - paragraph [ref=f2e795]: Asaíto
+                - link [ref=f2e799] [cursor=pointer]:
+                  - /url: /category/despensa
+                  - generic [ref=f2e800]:
+                    - img "Picoteo" [ref=f2e803]
+                    - paragraph [ref=f2e805]: Picoteo
+                - link [ref=f2e809] [cursor=pointer]:
+                  - /url: /category/frutas-y-verduras
+                  - generic [ref=f2e810]:
+                    - img "Orgánico" [ref=f2e813]
+                    - paragraph [ref=f2e815]: Orgánico
+                - link [ref=f2e819] [cursor=pointer]:
+                  - /url: /category/desayuno-y-dulces
+                  - generic [ref=f2e820]:
+                    - img "Colaciones" [ref=f2e823]
+                    - paragraph [ref=f2e825]: Colaciones
+              - button "Anterior" [disabled] [ref=f2e828] [cursor=pointer]
+              - button "Siguiente" [ref=f2e831] [cursor=pointer]
+          - generic [ref=f2e839]:
+            - link [ref=f2e840] [cursor=pointer]:
+              - /url: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/frutas-y-verduras_frutas
+              - img "OFERTA" [ref=f2e842]
+              - paragraph [ref=f2e844]: OFERTA
+              - generic:
+                - generic:
+                  - paragraph: Mecadito Unimarc
+                  - generic:
+                    - paragraph: "40"
+                    - generic:
+                      - paragraph: "%"
+                      - paragraph: dcto
+            - generic [ref=f2e845]:
+              - generic [ref=f2e847]:
+                - generic [ref=f2e848]:
+                  - heading "Frescura y calidad" [level=3] [ref=f2e849]
+                  - link "Mostrar todo" [ref=f2e850] [cursor=pointer]:
+                    - /url: /category/frutas-y-verduras
+                - paragraph [ref=f2e851]: Frutas y verduras
+              - generic [ref=f2e852]:
+                - generic [ref=f2e854]:
+                  - generic [ref=f2e856]:
+                    - generic [ref=f2e857]:
+                      - link "Agua saborizada Más manzana 1.6 L" [ref=f2e858] [cursor=pointer]:
+                        - /url: /agua-saborizada-mas-manzana-1.6-l/000000000000615251-UN.html
+                        - img "Agua saborizada Más manzana 1.6 L" [ref=f2e859]
+                      - button "Guardar en favoritos" [ref=f2e860] [cursor=pointer]
+                    - generic [ref=f2e863]:
+                      - paragraph [ref=f2e866]: $1.290
+                      - generic [ref=f2e867]:
+                        - link "Agua saborizada Más manzana 1.6 L" [ref=f2e868] [cursor=pointer]:
+                          - /url: /agua-saborizada-mas-manzana-1.6-l/000000000000615251-UN.html
+                        - generic [ref=f2e869]: 1.6 l
+                    - button "Agregar" [ref=f2e872] [cursor=pointer]
+                  - generic [ref=f2e874]:
+                    - generic [ref=f2e875]:
+                      - link "Choclo bandeja 2 un" [ref=f2e876] [cursor=pointer]:
+                        - /url: /choclo-bandeja-2-un/000000000000028462-UN.html
+                        - img "Choclo bandeja 2 un" [ref=f2e877]
+                      - button "Guardar en favoritos" [ref=f2e878] [cursor=pointer]
+                    - generic [ref=f2e881]:
+                      - generic [ref=f2e883]:
+                        - paragraph [ref=f2e884]: $2.550
+                        - paragraph [ref=f2e885]: ($1.275 x unidad)
+                      - generic [ref=f2e886]: Pronto disponible
+                      - generic [ref=f2e888]:
+                        - link "Frutas y Verduras | Choclo bandeja 2 un" [ref=f2e889] [cursor=pointer]:
+                          - /url: /choclo-bandeja-2-un/000000000000028462-UN.html
+                        - generic [ref=f2e891]: 2 un
+                    - button "Ver similares" [ref=f2e894] [cursor=pointer]
+                  - generic [ref=f2e896]:
+                    - generic [ref=f2e897]:
+                      - link "Choclo cocida Proverde bolsa 500 gr" [ref=f2e898] [cursor=pointer]:
+                        - /url: /choclo-cocida-proverde-bolsa-500-gr/000000000000712102-UN.html
+                        - img "Choclo cocida Proverde bolsa 500 gr" [ref=f2e899]
+                      - button "Guardar en favoritos" [ref=f2e900] [cursor=pointer]
+                    - generic [ref=f2e903]:
+                      - generic:
+                        - generic:
+                          - paragraph
+                      - generic [ref=f2e904]: Pronto disponible
+                      - link "Proverde | Choclo cocida Proverde bolsa 500 gr" [ref=f2e907] [cursor=pointer]:
+                        - /url: /choclo-cocida-proverde-bolsa-500-gr/000000000000712102-UN.html
+                    - button "Ver similares" [ref=f2e910] [cursor=pointer]
+                  - generic [ref=f2e912]:
+                    - generic [ref=f2e913]:
+                      - link "Clementina malla 1 Kg" [ref=f2e914] [cursor=pointer]:
+                        - /url: /clementina-malla-1-kg/000000000000037966-UN.html
+                        - img "Clementina malla 1 Kg" [ref=f2e915]
+                      - button "Guardar en favoritos" [ref=f2e916] [cursor=pointer]
+                    - generic [ref=f2e919]:
+                      - paragraph [ref=f2e922]: $2.490
+                      - generic [ref=f2e923]:
+                        - link "Frutas y Verduras | Clementina malla 1 Kg" [ref=f2e924] [cursor=pointer]:
+                          - /url: /clementina-malla-1-kg/000000000000037966-UN.html
+                        - generic [ref=f2e926]: 1 kg
+                    - button "Agregar" [ref=f2e929] [cursor=pointer]
+                  - generic [ref=f2e931]:
+                    - generic [ref=f2e932]:
+                      - link "Clementina malla 1 Kg" [ref=f2e933] [cursor=pointer]:
+                        - /url: /clementina-malla-1-kg/000000000010037966-UN.html
+                        - img "Clementina malla 1 Kg" [ref=f2e934]
+                      - button "Guardar en favoritos" [ref=f2e935] [cursor=pointer]
+                    - generic [ref=f2e938]:
+                      - paragraph [ref=f2e941]: $1.999
+                      - generic [ref=f2e942]:
+                        - link "Frutas y Verduras | Clementina malla 1 Kg" [ref=f2e943] [cursor=pointer]:
+                          - /url: /clementina-malla-1-kg/000000000010037966-UN.html
+                        - generic [ref=f2e945]: 1 kg
+                    - button "Agregar" [ref=f2e948] [cursor=pointer]
+                  - generic [ref=f2e950]:
+                    - generic [ref=f2e951]:
+                      - link "Clementinas granel 500 g" [ref=f2e952] [cursor=pointer]:
+                        - /url: /clementinas-granel-500-g/000000000000037969-KG.html
+                        - img "Clementinas granel 500 g" [ref=f2e953]
+                      - button "Guardar en favoritos" [ref=f2e954] [cursor=pointer]
+                    - generic [ref=f2e957]:
+                      - generic [ref=f2e959]:
+                        - paragraph [ref=f2e960]: $1.375
+                        - paragraph [ref=f2e961]: ($2.750 x kg)
+                      - generic [ref=f2e962]:
+                        - link "Frutas y Verduras | Clementinas granel 500 g" [ref=f2e963] [cursor=pointer]:
+                          - /url: /clementinas-granel-500-g/000000000000037969-KG.html
+                        - generic [ref=f2e965]: 500 g
+                    - button "Agregar" [ref=f2e968] [cursor=pointer]
+                  - generic [ref=f2e970]:
+                    - generic [ref=f2e971]:
+                      - link "Clementinas granel 500 g" [ref=f2e972] [cursor=pointer]:
+                        - /url: /clementinas-granel-500-g/000000000010037969-KG.html
+                        - img "Clementinas granel 500 g" [ref=f2e973]
+                      - button "Guardar en favoritos" [ref=f2e974] [cursor=pointer]
+                    - generic [ref=f2e977]:
+                      - generic [ref=f2e979]:
+                        - paragraph [ref=f2e980]: $1.999
+                        - paragraph [ref=f2e981]: ($3.998 x kg)
+                      - generic [ref=f2e982]:
+                        - link "Frutas y Verduras | Clementinas granel 500 g" [ref=f2e983] [cursor=pointer]:
+                          - /url: /clementinas-granel-500-g/000000000010037969-KG.html
+                        - generic [ref=f2e985]: 500 g
+                    - button "Agregar" [ref=f2e988] [cursor=pointer]
+                  - generic [ref=f2e990]:
+                    - generic [ref=f2e991]:
+                      - link "Kiwi bolsa 1 Kg" [ref=f2e992] [cursor=pointer]:
+                        - /url: /kiwi-bolsa-1-kg/000000000000062644-UN.html
+                        - img "Kiwi bolsa 1 Kg" [ref=f2e993]
+                      - generic [ref=f2e994]: Promoción % Unipay
+                      - button "Guardar en favoritos" [ref=f2e995] [cursor=pointer]
+                    - generic [ref=f2e998]:
+                      - generic [ref=f2e999]:
+                        - generic [ref=f2e1001]:
+                          - generic [aria-hidden] [ref=f2e1002]: 💎
+                          - paragraph [ref=f2e1003]: $2.601
+                        - generic [ref=f2e1004]:
+                          - generic [ref=f2e1005]: 10%
+                          - paragraph [ref=f2e1006]: $2.601
+                        - paragraph [ref=f2e1007]: "Antes: $2.890"
+                      - generic [ref=f2e1008]:
+                        - link "Frutas y Verduras | Kiwi bolsa 1 Kg" [ref=f2e1009] [cursor=pointer]:
+                          - /url: /kiwi-bolsa-1-kg/000000000000062644-UN.html
+                        - generic [ref=f2e1011]: 1 kg
+                    - button "Agregar" [ref=f2e1014] [cursor=pointer]
+                - button "Anterior" [ref=f2e1017] [cursor=pointer]
+                - button "Siguiente" [ref=f2e1020] [cursor=pointer]
+          - generic [ref=f2e1026]:
+            - generic [ref=f2e1027]:
+              - generic [ref=f2e1028]:
+                - heading "Prende la parrilla" [level=3] [ref=f2e1029]
+                - link "Mostrar todo" [ref=f2e1030] [cursor=pointer]:
+                  - /url: /search?q=parrilla
+              - paragraph [ref=f2e1031]: Disfruta de un rico Asaito
+            - generic [ref=f2e1033]:
+              - link [ref=f2e1038] [cursor=pointer]:
+                - /url: /search?q=parrilla
+                - img "Parrilla — banner principal" [ref=f2e1040]
+              - link [ref=f2e1045] [cursor=pointer]:
+                - /url: /category/carnes
+                - img "Choripanes a la parrilla" [ref=f2e1047]
+              - link [ref=f2e1052] [cursor=pointer]:
+                - /url: /search?q=guarniciones
+                - img "Guarniciones" [ref=f2e1054]
+              - link [ref=f2e1059] [cursor=pointer]:
+                - /url: /category/carnes
+                - img "Cortes premium" [ref=f2e1061]
+              - link [ref=f2e1066] [cursor=pointer]:
+                - /url: /search?q=picoteo
+                - img "Tabla y picoteo" [ref=f2e1068]
+          - generic [ref=f2e1074]:
+            - link [ref=f2e1075] [cursor=pointer]:
+              - /url: /category/panaderia-y-pasteleria
+              - paragraph [ref=f2e1078]: 40% dcto
+              - generic:
+                - generic:
+                  - paragraph: Chocolates Milka Variedades
+                  - generic:
+                    - paragraph: "40"
+                    - generic:
+                      - paragraph: "%"
+                      - paragraph: dcto
+            - generic [ref=f2e1079]:
+              - generic [ref=f2e1081]:
+                - generic [ref=f2e1082]:
+                  - heading "Chocolates Milka" [level=3] [ref=f2e1083]
+                  - link "Mostrar todo" [ref=f2e1084] [cursor=pointer]:
+                    - /url: /category/panaderia-y-pasteleria
+                - paragraph [ref=f2e1085]: Endulza tu día
+              - generic [ref=f2e1086]:
+                - generic [ref=f2e1088]:
+                  - generic [ref=f2e1090]:
+                    - generic [ref=f2e1091]:
+                      - link "Galleta Alteza bocado 140 g" [ref=f2e1092] [cursor=pointer]:
+                        - /url: /galleta-alteza-bocado-140-g/000000000400218001-UN.html
+                        - img "Galleta Alteza bocado 140 g" [ref=f2e1093]
+                      - button "Guardar en favoritos" [ref=f2e1094] [cursor=pointer]
+                    - generic [ref=f2e1097]:
+                      - paragraph [ref=f2e1100]: $1.180
+                      - generic [ref=f2e1101]:
+                        - link "Galleta Alteza bocado 140 g" [ref=f2e1102] [cursor=pointer]:
+                          - /url: /galleta-alteza-bocado-140-g/000000000400218001-UN.html
+                        - generic [ref=f2e1103]: 140 g
+                    - button "Agregar" [ref=f2e1106] [cursor=pointer]
+                  - generic [ref=f2e1108]:
+                    - generic [ref=f2e1109]:
+                      - link "Galleta mini Dos en Uno chocolate 35 g" [ref=f2e1110] [cursor=pointer]:
+                        - /url: /galleta-mini-dos-en-uno-chocolate-35-g/000000000000780174-UN.html
+                        - img "Galleta mini Dos en Uno chocolate 35 g" [ref=f2e1111]
+                      - button "Guardar en favoritos" [ref=f2e1112] [cursor=pointer]
+                    - generic [ref=f2e1115]:
+                      - paragraph [ref=f2e1118]: $280
+                      - generic [ref=f2e1119]:
+                        - link "Galleta mini Dos en Uno chocolate 35 g" [ref=f2e1120] [cursor=pointer]:
+                          - /url: /galleta-mini-dos-en-uno-chocolate-35-g/000000000000780174-UN.html
+                        - generic [ref=f2e1121]: 35 g
+                    - button "Agregar" [ref=f2e1124] [cursor=pointer]
+                  - generic [ref=f2e1126]:
+                    - generic [ref=f2e1127]:
+                      - link "Galleta Oreo clásica vainilla 108 g" [ref=f2e1128] [cursor=pointer]:
+                        - /url: /galleta-oreo-clasica-vainilla-108-g/000000000000642688-UN.html
+                        - img "Galleta Oreo clásica vainilla 108 g" [ref=f2e1129]
+                      - button "Guardar en favoritos" [ref=f2e1130] [cursor=pointer]
+                    - generic [ref=f2e1133]:
+                      - generic [ref=f2e1134]:
+                        - generic [ref=f2e1135]:
+                          - generic [ref=f2e1136]: Unipay $757
+                          - paragraph [ref=f2e1137]: ($6.882 x kg)
+                        - generic [ref=f2e1138]:
+                          - paragraph [ref=f2e1139]: $890
+                          - paragraph [ref=f2e1140]: ($8.091 x kg)
+                      - generic [ref=f2e1141]:
+                        - link "Oreo | Galleta Oreo clásica vainilla 108 g" [ref=f2e1142] [cursor=pointer]:
+                          - /url: /galleta-oreo-clasica-vainilla-108-g/000000000000642688-UN.html
+                        - generic [ref=f2e1144]: 108 g
+                    - button "Agregar" [ref=f2e1147] [cursor=pointer]
+                  - generic [ref=f2e1149]:
+                    - generic [ref=f2e1150]:
+                      - link "Galletas con mermelada La Galleteria 300 g" [ref=f2e1151] [cursor=pointer]:
+                        - /url: /galletas-con-mermelada-la-galleteria-300-g/000000000000027332-UN.html
+                        - img "Galletas con mermelada La Galleteria 300 g" [ref=f2e1152]
+                      - button "Quitar de favoritos" [pressed] [ref=f2e1153] [cursor=pointer]
+                    - generic [ref=f2e1156]:
+                      - paragraph [ref=f2e1159]: $4.990
+                      - generic [ref=f2e1160]:
+                        - link "Galletas con mermelada La Galleteria 300 g" [ref=f2e1161] [cursor=pointer]:
+                          - /url: /galletas-con-mermelada-la-galleteria-300-g/000000000000027332-UN.html
+                        - generic [ref=f2e1162]: 300 g
+                    - button "Agregar" [ref=f2e1165] [cursor=pointer]
+                  - generic [ref=f2e1167]:
+                    - generic [ref=f2e1168]:
+                      - link "Pan baguette plus Crandon 1 un" [ref=f2e1169] [cursor=pointer]:
+                        - /url: /pan-baguette-plus-crandon-1-un/000000000000627587-UN.html
+                        - img "Pan baguette plus Crandon 1 un" [ref=f2e1170]
+                      - button "Guardar en favoritos" [ref=f2e1171] [cursor=pointer]
+                    - generic [ref=f2e1174]:
+                      - generic [ref=f2e1176]:
+                        - paragraph [ref=f2e1177]: $1.290
+                        - paragraph [ref=f2e1178]: ($4.607 x kg)
+                      - generic [ref=f2e1179]:
+                        - link "Europastry | Pan baguette plus Crandon 1 un" [ref=f2e1180] [cursor=pointer]:
+                          - /url: /pan-baguette-plus-crandon-1-un/000000000000627587-UN.html
+                        - generic [ref=f2e1182]: 1 un
+                    - button "Agregar" [ref=f2e1185] [cursor=pointer]
+                  - generic [ref=f2e1187]:
+                    - generic [ref=f2e1188]:
+                      - link "Pan ciabatta granel Amada Masa 500 g" [ref=f2e1189] [cursor=pointer]:
+                        - /url: /pan-ciabatta-granel-amada-masa-500-g/000000000000638771-KG.html
+                        - img "Pan ciabatta granel Amada Masa 500 g" [ref=f2e1190]
+                      - button "Guardar en favoritos" [ref=f2e1191] [cursor=pointer]
+                    - generic [ref=f2e1194]:
+                      - generic [ref=f2e1196]:
+                        - paragraph [ref=f2e1197]: $1.495
+                        - paragraph [ref=f2e1198]: ($2.990 x kg)
+                      - generic [ref=f2e1199]:
+                        - link "Amada Masa | Pan ciabatta granel Amada Masa 500 g" [ref=f2e1200] [cursor=pointer]:
+                          - /url: /pan-ciabatta-granel-amada-masa-500-g/000000000000638771-KG.html
+                        - generic [ref=f2e1202]: 500 g
+                    - button "Agregar" [ref=f2e1205] [cursor=pointer]
+                  - generic [ref=f2e1207]:
+                    - generic [ref=f2e1208]:
+                      - link "Pan hot dog granel Amada Masa 500 g" [ref=f2e1209] [cursor=pointer]:
+                        - /url: /pan-hot-dog-granel-amada-masa-500-g/000000000000966671-KG.html
+                        - img "Pan hot dog granel Amada Masa 500 g" [ref=f2e1210]
+                      - button "Guardar en favoritos" [ref=f2e1211] [cursor=pointer]
+                    - generic [ref=f2e1214]:
+                      - generic [ref=f2e1216]:
+                        - paragraph [ref=f2e1217]: $2.990
+                        - paragraph [ref=f2e1218]: ($5.980 x kg)
+                      - generic [ref=f2e1219]:
+                        - link "Amada Masa | Pan hot dog granel Amada Masa 500 g" [ref=f2e1220] [cursor=pointer]:
+                          - /url: /pan-hot-dog-granel-amada-masa-500-g/000000000000966671-KG.html
+                        - generic [ref=f2e1222]: 500 g
+                    - button "Agregar" [ref=f2e1225] [cursor=pointer]
+                  - generic [ref=f2e1227]:
+                    - generic [ref=f2e1228]:
+                      - link "Pan marraqueta granel Amada Masa 500 g" [ref=f2e1229] [cursor=pointer]:
+                        - /url: /pan-marraqueta-granel-amada-masa-500-g/000000000000966669-KG.html
+                        - img "Pan marraqueta granel Amada Masa 500 g" [ref=f2e1230]
+                      - button "Guardar en favoritos" [ref=f2e1231] [cursor=pointer]
+                    - generic [ref=f2e1234]:
+                      - paragraph [ref=f2e1237]: $1.095
+                      - generic [ref=f2e1238]:
+                        - link "Pan marraqueta granel Amada Masa 500 g" [ref=f2e1239] [cursor=pointer]:
+                          - /url: /pan-marraqueta-granel-amada-masa-500-g/000000000000966669-KG.html
+                        - generic [ref=f2e1240]: 500 g
+                    - button "Agregar" [ref=f2e1243] [cursor=pointer]
+                - button "Anterior" [ref=f2e1246] [cursor=pointer]
+                - button "Siguiente" [ref=f2e1249] [cursor=pointer]
+        - link [ref=f2e1259] [cursor=pointer]:
+          - /url: /search?q=despensa
+          - img "Abarrotes y despensa" [ref=f2e1261]
+        - generic [ref=f2e1265]:
+          - generic [ref=f2e1266]:
+            - heading "Nuestras marcas" [level=2] [ref=f2e1267]
+            - link "Mostrar todo" [ref=f2e1268] [cursor=pointer]:
+              - /url: /category/panaderia-y-pasteleria
+          - generic [ref=f2e1269]:
+            - tab "Amada masa" [selected] [ref=f2e1270] [cursor=pointer]
+            - tab "Azul" [ref=f2e1271] [cursor=pointer]
+            - tab "Como en casa" [ref=f2e1272] [cursor=pointer]
+            - tab "D-kora" [ref=f2e1273] [cursor=pointer]
+            - tab "Fundo Río al" [ref=f2e1274] [cursor=pointer]
+            - tab "Nubelín" [ref=f2e1275] [cursor=pointer]
+            - tab "Nuestra coci" [ref=f2e1276] [cursor=pointer]
+            - tab "Smart Clean" [ref=f2e1277] [cursor=pointer]
+            - tab "Tento" [ref=f2e1278] [cursor=pointer]
+          - generic [ref=f2e1281]:
+            - generic [ref=f2e1283]:
+              - generic [ref=f2e1285]:
+                - generic [ref=f2e1286]:
+                  - link "Galleta Alteza bocado 140 g" [ref=f2e1287] [cursor=pointer]:
+                    - /url: /galleta-alteza-bocado-140-g/000000000400218001-UN.html
+                    - img "Galleta Alteza bocado 140 g" [ref=f2e1288]
+                  - button "Guardar en favoritos" [ref=f2e1289] [cursor=pointer]
+                - generic [ref=f2e1292]:
+                  - paragraph [ref=f2e1295]: $1.180
+                  - generic [ref=f2e1296]:
+                    - link "Galleta Alteza bocado 140 g" [ref=f2e1297] [cursor=pointer]:
+                      - /url: /galleta-alteza-bocado-140-g/000000000400218001-UN.html
+                    - generic [ref=f2e1298]: 140 g
+                - button "Agregar" [ref=f2e1301] [cursor=pointer]
+              - generic [ref=f2e1303]:
+                - generic [ref=f2e1304]:
+                  - link "Galleta mini Dos en Uno chocolate 35 g" [ref=f2e1305] [cursor=pointer]:
+                    - /url: /galleta-mini-dos-en-uno-chocolate-35-g/000000000000780174-UN.html
+                    - img "Galleta mini Dos en Uno chocolate 35 g" [ref=f2e1306]
+                  - button "Guardar en favoritos" [ref=f2e1307] [cursor=pointer]
+                - generic [ref=f2e1310]:
+                  - paragraph [ref=f2e1313]: $280
+                  - generic [ref=f2e1314]:
+                    - link "Galleta mini Dos en Uno chocolate 35 g" [ref=f2e1315] [cursor=pointer]:
+                      - /url: /galleta-mini-dos-en-uno-chocolate-35-g/000000000000780174-UN.html
+                    - generic [ref=f2e1316]: 35 g
+                - button "Agregar" [ref=f2e1319] [cursor=pointer]
+              - generic [ref=f2e1321]:
+                - generic [ref=f2e1322]:
+                  - link "Galleta Oreo clásica vainilla 108 g" [ref=f2e1323] [cursor=pointer]:
+                    - /url: /galleta-oreo-clasica-vainilla-108-g/000000000000642688-UN.html
+                    - img "Galleta Oreo clásica vainilla 108 g" [ref=f2e1324]
+                  - button "Guardar en favoritos" [ref=f2e1325] [cursor=pointer]
+                - generic [ref=f2e1328]:
+                  - generic [ref=f2e1329]:
+                    - generic [ref=f2e1330]:
+                      - generic [ref=f2e1331]: Unipay $757
+                      - paragraph [ref=f2e1332]: ($6.882 x kg)
+                    - generic [ref=f2e1333]:
+                      - paragraph [ref=f2e1334]: $890
+                      - paragraph [ref=f2e1335]: ($8.091 x kg)
+                  - generic [ref=f2e1336]:
+                    - link "Oreo | Galleta Oreo clásica vainilla 108 g" [ref=f2e1337] [cursor=pointer]:
+                      - /url: /galleta-oreo-clasica-vainilla-108-g/000000000000642688-UN.html
+                    - generic [ref=f2e1339]: 108 g
+                - button "Agregar" [ref=f2e1342] [cursor=pointer]
+              - generic [ref=f2e1344]:
+                - generic [ref=f2e1345]:
+                  - link "Galletas con mermelada La Galleteria 300 g" [ref=f2e1346] [cursor=pointer]:
+                    - /url: /galletas-con-mermelada-la-galleteria-300-g/000000000000027332-UN.html
+                    - img "Galletas con mermelada La Galleteria 300 g" [ref=f2e1347]
+                  - button "Quitar de favoritos" [pressed] [ref=f2e1348] [cursor=pointer]
+                - generic [ref=f2e1351]:
+                  - paragraph [ref=f2e1354]: $4.990
+                  - generic [ref=f2e1355]:
+                    - link "Galletas con mermelada La Galleteria 300 g" [ref=f2e1356] [cursor=pointer]:
+                      - /url: /galletas-con-mermelada-la-galleteria-300-g/000000000000027332-UN.html
+                    - generic [ref=f2e1357]: 300 g
+                - button "Agregar" [ref=f2e1360] [cursor=pointer]
+              - generic [ref=f2e1362]:
+                - generic [ref=f2e1363]:
+                  - link "Pan baguette plus Crandon 1 un" [ref=f2e1364] [cursor=pointer]:
+                    - /url: /pan-baguette-plus-crandon-1-un/000000000000627587-UN.html
+                    - img "Pan baguette plus Crandon 1 un" [ref=f2e1365]
+                  - button "Guardar en favoritos" [ref=f2e1366] [cursor=pointer]
+                - generic [ref=f2e1369]:
+                  - generic [ref=f2e1371]:
+                    - paragraph [ref=f2e1372]: $1.290
+                    - paragraph [ref=f2e1373]: ($4.607 x kg)
+                  - generic [ref=f2e1374]:
+                    - link "Europastry | Pan baguette plus Crandon 1 un" [ref=f2e1375] [cursor=pointer]:
+                      - /url: /pan-baguette-plus-crandon-1-un/000000000000627587-UN.html
+                    - generic [ref=f2e1377]: 1 un
+                - button "Agregar" [ref=f2e1380] [cursor=pointer]
+              - generic [ref=f2e1382]:
+                - generic [ref=f2e1383]:
+                  - link "Pan ciabatta granel Amada Masa 500 g" [ref=f2e1384] [cursor=pointer]:
+                    - /url: /pan-ciabatta-granel-amada-masa-500-g/000000000000638771-KG.html
+                    - img "Pan ciabatta granel Amada Masa 500 g" [ref=f2e1385]
+                  - button "Guardar en favoritos" [ref=f2e1386] [cursor=pointer]
+                - generic [ref=f2e1389]:
+                  - generic [ref=f2e1391]:
+                    - paragraph [ref=f2e1392]: $1.495
+                    - paragraph [ref=f2e1393]: ($2.990 x kg)
+                  - generic [ref=f2e1394]:
+                    - link "Amada Masa | Pan ciabatta granel Amada Masa 500 g" [ref=f2e1395] [cursor=pointer]:
+                      - /url: /pan-ciabatta-granel-amada-masa-500-g/000000000000638771-KG.html
+                    - generic [ref=f2e1397]: 500 g
+                - button "Agregar" [ref=f2e1400] [cursor=pointer]
+              - generic [ref=f2e1402]:
+                - generic [ref=f2e1403]:
+                  - link "Pan hot dog granel Amada Masa 500 g" [ref=f2e1404] [cursor=pointer]:
+                    - /url: /pan-hot-dog-granel-amada-masa-500-g/000000000000966671-KG.html
+                    - img "Pan hot dog granel Amada Masa 500 g" [ref=f2e1405]
+                  - button "Guardar en favoritos" [ref=f2e1406] [cursor=pointer]
+                - generic [ref=f2e1409]:
+                  - generic [ref=f2e1411]:
+                    - paragraph [ref=f2e1412]: $2.990
+                    - paragraph [ref=f2e1413]: ($5.980 x kg)
+                  - generic [ref=f2e1414]:
+                    - link "Amada Masa | Pan hot dog granel Amada Masa 500 g" [ref=f2e1415] [cursor=pointer]:
+                      - /url: /pan-hot-dog-granel-amada-masa-500-g/000000000000966671-KG.html
+                    - generic [ref=f2e1417]: 500 g
+                - button "Agregar" [ref=f2e1420] [cursor=pointer]
+              - generic [ref=f2e1422]:
+                - generic [ref=f2e1423]:
+                  - link "Pan marraqueta granel Amada Masa 500 g" [ref=f2e1424] [cursor=pointer]:
+                    - /url: /pan-marraqueta-granel-amada-masa-500-g/000000000000966669-KG.html
+                    - img "Pan marraqueta granel Amada Masa 500 g" [ref=f2e1425]
+                  - button "Guardar en favoritos" [ref=f2e1426] [cursor=pointer]
+                - generic [ref=f2e1429]:
+                  - paragraph [ref=f2e1432]: $1.095
+                  - generic [ref=f2e1433]:
+                    - link "Pan marraqueta granel Amada Masa 500 g" [ref=f2e1434] [cursor=pointer]:
+                      - /url: /pan-marraqueta-granel-amada-masa-500-g/000000000000966669-KG.html
+                    - generic [ref=f2e1435]: 500 g
+                - button "Agregar" [ref=f2e1438] [cursor=pointer]
+              - generic [ref=f2e1440]:
+                - generic [ref=f2e1441]:
+                  - link "Pan marraqueta Prosepan 500 g" [ref=f2e1442] [cursor=pointer]:
+                    - /url: /pan-marraqueta-prosepan-500-g/000000000000030202-KG.html
+                    - img "Pan marraqueta Prosepan 500 g" [ref=f2e1443]
+                  - button "Guardar en favoritos" [ref=f2e1444] [cursor=pointer]
+                - generic [ref=f2e1447]:
+                  - generic [ref=f2e1449]:
+                    - paragraph [ref=f2e1450]: $1.095
+                    - paragraph [ref=f2e1451]: ($2.190 x kg)
+                  - generic [ref=f2e1452]:
+                    - link "Pan marraqueta Prosepan 500 g" [ref=f2e1453] [cursor=pointer]:
+                      - /url: /pan-marraqueta-prosepan-500-g/000000000000030202-KG.html
+                    - generic [ref=f2e1454]: 500 g
+                - button "Agregar" [ref=f2e1457] [cursor=pointer]
+              - generic [ref=f2e1459]:
+                - generic [ref=f2e1460]:
+                  - link "Pan pita integral granel Amada Masa 500 g" [ref=f2e1461] [cursor=pointer]:
+                    - /url: /pan-pita-integral-granel-amada-masa-500-g/000000000000614468-KG.html
+                    - img "Pan pita integral granel Amada Masa 500 g" [ref=f2e1462]
+                  - button "Guardar en favoritos" [ref=f2e1463] [cursor=pointer]
+                - generic [ref=f2e1466]:
+                  - paragraph [ref=f2e1469]: $2.890
+                  - generic [ref=f2e1470]:
+                    - link "Pan pita integral granel Amada Masa 500 g" [ref=f2e1471] [cursor=pointer]:
+                      - /url: /pan-pita-integral-granel-amada-masa-500-g/000000000000614468-KG.html
+                    - generic [ref=f2e1472]: 500 g
+                - button "Agregar" [ref=f2e1475] [cursor=pointer]
+            - button "Anterior" [ref=f2e1478] [cursor=pointer]
+            - button "Siguiente" [ref=f2e1481] [cursor=pointer]
+        - generic [ref=f2e1486]:
+          - generic [ref=f2e1492]:
+            - link [ref=f2e1493] [cursor=pointer]:
+              - /url: /category/bebidas-y-licores
+              - img "Banner" [ref=f2e1495]
+              - generic:
+                - generic:
+                  - paragraph: Productos Not Variedades
+                  - generic:
+                    - paragraph: "30"
+                    - generic:
+                      - paragraph: "%"
+                      - paragraph: dcto
+            - generic [ref=f2e1496]:
+              - generic [ref=f2e1498]:
+                - generic [ref=f2e1499]:
+                  - heading "Especial Bebidas" [level=3] [ref=f2e1500]
+                  - link "Mostrar todo" [ref=f2e1501] [cursor=pointer]:
+                    - /url: /category/bebidas-y-licores
+                - paragraph [ref=f2e1502]: Bebidas vegetales y más
+              - generic [ref=f2e1503]:
+                - generic [ref=f2e1505]:
+                  - generic [ref=f2e1507]:
+                    - generic [ref=f2e1508]:
+                      - link "Cerveza Austral lager lata 470 cc" [ref=f2e1509] [cursor=pointer]:
+                        - /url: /cerveza-austral-lager-lata-470-cc/000000000000694333-UN.html
+                        - img "Cerveza Austral lager lata 470 cc" [ref=f2e1510]
+                      - button "Guardar en favoritos" [ref=f2e1511] [cursor=pointer]
+                    - generic [ref=f2e1514]:
+                      - generic [ref=f2e1516]:
+                        - paragraph [ref=f2e1517]: $2.090
+                        - paragraph [ref=f2e1518]: ($4.447 x L)
+                      - generic [ref=f2e1519]:
+                        - link "Austral | Cerveza Austral lager lata 470 cc" [ref=f2e1520] [cursor=pointer]:
+                          - /url: /cerveza-austral-lager-lata-470-cc/000000000000694333-UN.html
+                        - generic [ref=f2e1522]: 470 cc
+                    - button "Agregar" [ref=f2e1525] [cursor=pointer]
+                  - generic [ref=f2e1527]:
+                    - generic [ref=f2e1528]:
+                      - link "Cerveza Budweiser zero botella 6 un de 330 cc" [ref=f2e1529] [cursor=pointer]:
+                        - /url: /cerveza-budweiser-zero-botella-6-un-de-330-cc/000000000000663675-UN.html
+                        - img "Cerveza Budweiser zero botella 6 un de 330 cc" [ref=f2e1530]
+                      - button "Guardar en favoritos" [ref=f2e1531] [cursor=pointer]
+                    - generic [ref=f2e1534]:
+                      - generic [ref=f2e1536]:
+                        - paragraph [ref=f2e1537]: $7.790
+                        - paragraph [ref=f2e1538]: ($23.606 x L)
+                      - generic [ref=f2e1539]:
+                        - link "Budweiser | Cerveza Budweiser zero botella 6 un de 330 cc" [ref=f2e1540] [cursor=pointer]:
+                          - /url: /cerveza-budweiser-zero-botella-6-un-de-330-cc/000000000000663675-UN.html
+                        - generic [ref=f2e1542]: 6 un
+                    - button "Agregar" [ref=f2e1545] [cursor=pointer]
+                  - generic [ref=f2e1547]:
+                    - generic [ref=f2e1548]:
+                      - link "Cerveza Corona extra lata 6 un de 473 cc" [ref=f2e1549] [cursor=pointer]:
+                        - /url: /cerveza-corona-extra-lata-6-un-de-473-cc/000000000000686446-UN.html
+                        - img "Cerveza Corona extra lata 6 un de 473 cc" [ref=f2e1550]
+                      - button "Guardar en favoritos" [ref=f2e1551] [cursor=pointer]
+                    - generic [ref=f2e1554]:
+                      - generic [ref=f2e1556]:
+                        - paragraph [ref=f2e1557]: $6.890
+                        - paragraph [ref=f2e1558]: ($14.567 x L)
+                      - generic [ref=f2e1559]:
+                        - link "Corona | Cerveza Corona extra lata 6 un de 473 cc" [ref=f2e1560] [cursor=pointer]:
+                          - /url: /cerveza-corona-extra-lata-6-un-de-473-cc/000000000000686446-UN.html
+                        - generic [ref=f2e1562]: 6 un
+                    - button "Agregar" [ref=f2e1565] [cursor=pointer]
+                  - generic [ref=f2e1567]:
+                    - generic [ref=f2e1568]:
+                      - link "Cerveza Cristal lager botella 650 cc" [ref=f2e1569] [cursor=pointer]:
+                        - /url: /cerveza-cristal-lager-botella-650-cc/000000000000686452-UN.html
+                        - img "Cerveza Cristal lager botella 650 cc" [ref=f2e1570]
+                      - button "Guardar en favoritos" [ref=f2e1571] [cursor=pointer]
+                    - generic [ref=f2e1574]:
+                      - generic [ref=f2e1576]:
+                        - paragraph [ref=f2e1577]: $1.350
+                        - paragraph [ref=f2e1578]: ($2.077 x L)
+                      - generic [ref=f2e1579]:
+                        - link "Cristal Cerveza | Cerveza Cristal lager botella 650 cc" [ref=f2e1580] [cursor=pointer]:
+                          - /url: /cerveza-cristal-lager-botella-650-cc/000000000000686452-UN.html
+                        - generic [ref=f2e1582]: 650 cc
+                    - button "Agregar" [ref=f2e1585] [cursor=pointer]
+                  - generic [ref=f2e1587]:
+                    - generic [ref=f2e1588]:
+                      - link "Cerveza Duvel moorgat botella 330 cc" [ref=f2e1589] [cursor=pointer]:
+                        - /url: /cerveza-duvel-moorgat-botella-330-cc/000000000000536215-UN.html
+                        - img "Cerveza Duvel moorgat botella 330 cc" [ref=f2e1590]
+                      - button "Guardar en favoritos" [ref=f2e1591] [cursor=pointer]
+                    - generic [ref=f2e1594]:
+                      - paragraph [ref=f2e1597]: $3.550
+                      - generic [ref=f2e1598]:
+                        - link "Cerveza Duvel moorgat botella 330 cc" [ref=f2e1599] [cursor=pointer]:
+                          - /url: /cerveza-duvel-moorgat-botella-330-cc/000000000000536215-UN.html
+                        - generic [ref=f2e1600]: 330 cc
+                    - button "Agregar" [ref=f2e1603] [cursor=pointer]
+                  - generic [ref=f2e1605]:
+                    - generic [ref=f2e1606]:
+                      - link "Cerveza Royal golden lager lata 6 un de 470 cc" [ref=f2e1607] [cursor=pointer]:
+                        - /url: /cerveza-royal-golden-lager-lata-6-un-de-470-cc/000000000000674841-DIS.html
+                        - img "Cerveza Royal golden lager lata 6 un de 470 cc" [ref=f2e1608]
+                      - button "Guardar en favoritos" [ref=f2e1609] [cursor=pointer]
+                    - generic [ref=f2e1612]:
+                      - generic [ref=f2e1614]:
+                        - paragraph [ref=f2e1615]: $7.290
+                        - paragraph [ref=f2e1616]: ($15.511 x L)
+                      - generic [ref=f2e1617]:
+                        - link "Royal Guard | Cerveza Royal golden lager lata 6 un de 470 cc" [ref=f2e1618] [cursor=pointer]:
+                          - /url: /cerveza-royal-golden-lager-lata-6-un-de-470-cc/000000000000674841-DIS.html
+                        - generic [ref=f2e1620]: 6 un
+                    - button "Agregar" [ref=f2e1623] [cursor=pointer]
+                  - generic [ref=f2e1625]:
+                    - generic [ref=f2e1626]:
+                      - link "Cerveza sabor sandía Stones 350ml" [ref=f2e1627] [cursor=pointer]:
+                        - /url: /cerveza-sabor-sandia-stones-350ml/000000000000689879-UN.html
+                        - img "Cerveza sabor sandía Stones 350ml" [ref=f2e1628]
+                      - button "Guardar en favoritos" [ref=f2e1629] [cursor=pointer]
+                    - generic [ref=f2e1632]:
+                      - generic [ref=f2e1634]:
+                        - paragraph [ref=f2e1635]: $6.590
+                        - paragraph [ref=f2e1636]: ($18.829 x L)
+                      - generic [ref=f2e1637]:
+                        - link "Stones | Cerveza sabor sandía Stones 350ml" [ref=f2e1638] [cursor=pointer]:
+                          - /url: /cerveza-sabor-sandia-stones-350ml/000000000000689879-UN.html
+                        - generic [ref=f2e1640]: 350 ml
+                    - button "Agregar" [ref=f2e1643] [cursor=pointer]
+                  - generic [ref=f2e1645]:
+                    - generic [ref=f2e1646]:
+                      - link "Cerveza Stones berries lata 6 un de 350 ml" [ref=f2e1647] [cursor=pointer]:
+                        - /url: /cerveza-stones-berries-lata-6-un-de-350-ml/000000000000671971-UN.html
+                        - img "Cerveza Stones berries lata 6 un de 350 ml" [ref=f2e1648]
+                      - button "Guardar en favoritos" [ref=f2e1649] [cursor=pointer]
+                    - generic [ref=f2e1652]:
+                      - generic [ref=f2e1654]:
+                        - paragraph [ref=f2e1655]: $6.590
+                        - paragraph [ref=f2e1656]: ($18.829 x L)
+                      - generic [ref=f2e1657]:
+                        - link "Stones | Cerveza Stones berries lata 6 un de 350 ml" [ref=f2e1658] [cursor=pointer]:
+                          - /url: /cerveza-stones-berries-lata-6-un-de-350-ml/000000000000671971-UN.html
+                        - generic [ref=f2e1660]: 6 un
+                    - button "Agregar" [ref=f2e1663] [cursor=pointer]
+                - button "Anterior" [ref=f2e1666] [cursor=pointer]
+                - button "Siguiente" [ref=f2e1669] [cursor=pointer]
+          - generic [ref=f2e1675]:
+            - heading "Tus productos mas comprados" [level=2] [ref=f2e1676]
+            - link "Ver todos" [ref=f2e1678] [cursor=pointer]:
+              - /url: /account/my-usuals
+            - generic [ref=f2e1679]:
+              - generic [ref=f2e1680]:
+                - generic [ref=f2e1682]:
+                  - generic [ref=f2e1683]:
+                    - link "Galletas con mermelada La Galleteria 300 g" [ref=f2e1684] [cursor=pointer]:
+                      - /url: /galletas-con-mermelada-la-galleteria-300-g/000000000000027332-UN.html
+                      - img "Galletas con mermelada La Galleteria 300 g" [ref=f2e1685]
+                    - button "Quitar de favoritos" [pressed] [ref=f2e1686] [cursor=pointer]
+                  - generic [ref=f2e1689]:
+                    - paragraph [ref=f2e1692]: $4.990
+                    - generic [ref=f2e1693]:
+                      - link "Galletas con mermelada La Galleteria 300 g" [ref=f2e1694] [cursor=pointer]:
+                        - /url: /galletas-con-mermelada-la-galleteria-300-g/000000000000027332-UN.html
+                      - generic [ref=f2e1695]: 300 g
+                  - button "Agregar" [ref=f2e1698] [cursor=pointer]
+                - generic [ref=f2e1700]:
+                  - generic [ref=f2e1701]:
+                    - link "Carne molida 4% grasa tártaro Fundo Río Alegre 250 g" [ref=f2e1702] [cursor=pointer]:
+                      - /url: /carne-molida-4-grasa-tartaro-fundo-rio-alegre-250-g/000000000000662457-UN.html
+                      - img "Carne molida 4% grasa tártaro Fundo Río Alegre 250 g" [ref=f2e1703]
+                    - button "Quitar de favoritos" [pressed] [ref=f2e1704] [cursor=pointer]
+                  - generic [ref=f2e1707]:
+                    - generic [ref=f2e1708]:
+                      - generic [ref=f2e1709]:
+                        - generic [ref=f2e1710]:
+                          - generic [aria-hidden] [ref=f2e1711]: 💎
+                          - paragraph [ref=f2e1712]: $2.897
+                        - paragraph [ref=f2e1713]: ($11.588 x kg)
+                      - generic [ref=f2e1714]:
+                        - paragraph [ref=f2e1715]: $3.890
+                        - paragraph [ref=f2e1716]: ($15.560 x kg)
+                    - generic [ref=f2e1717]:
+                      - link "Fundo Rio Alegre | Carne molida 4% grasa tártaro Fundo Río A…" [ref=f2e1718] [cursor=pointer]:
+                        - /url: /carne-molida-4-grasa-tartaro-fundo-rio-alegre-250-g/000000000000662457-UN.html
+                      - generic [ref=f2e1720]: 250 g
+                  - button "Agregar" [ref=f2e1723] [cursor=pointer]
+                - generic [ref=f2e1725]:
+                  - generic [ref=f2e1726]:
+                    - link "Tapapecho vacuno al vacío 2.2 Kg" [ref=f2e1727] [cursor=pointer]:
+                      - /url: /tapapecho-vacuno-al-vacio-2.2-kg/000000000000029403-KG.html
+                      - img "Tapapecho vacuno al vacío 2.2 Kg" [ref=f2e1728]
+                    - generic [ref=f2e1729]: Promoción en Carnes
+                    - button "Quitar de favoritos" [pressed] [ref=f2e1730] [cursor=pointer]
+                  - generic [ref=f2e1733]:
+                    - generic [ref=f2e1734]:
+                      - generic [ref=f2e1735]:
+                        - generic [ref=f2e1736]:
+                          - generic [aria-hidden] [ref=f2e1737]: 💎
+                          - paragraph [ref=f2e1738]: $9.490
+                        - paragraph [ref=f2e1739]: ($4.314 x kg)
+                      - generic [ref=f2e1740]:
+                        - generic [ref=f2e1741]: 5%
+                        - paragraph [ref=f2e1742]: $9.490
+                        - paragraph [ref=f2e1743]: ($4.314 x kg)
+                      - paragraph [ref=f2e1744]: "Antes: $9.990"
+                    - generic [ref=f2e1745]: Pronto disponible
+                    - generic [ref=f2e1747]:
+                      - link "Brasil Paraguay | Tapapecho vacuno al vacío 2.2 Kg" [ref=f2e1748] [cursor=pointer]:
+                        - /url: /tapapecho-vacuno-al-vacio-2.2-kg/000000000000029403-KG.html
+                      - generic [ref=f2e1750]: 2.2 kg
+                  - button "Ver similares" [ref=f2e1753] [cursor=pointer]
+                - generic [ref=f2e1755]:
+                  - generic [ref=f2e1756]:
+                    - link "Carne molida fundo rio alegre tartaro 4% grasa 500g" [ref=f2e1757] [cursor=pointer]:
+                      - /url: /carne-molida-fundo-rio-alegre-tartaro-4-grasa-500g/000000000000666200-UN.html
+                      - img "Carne molida fundo rio alegre tartaro 4% grasa 500g" [ref=f2e1758]
+                    - generic [ref=f2e1759]: Promoción Lleva 2 unidades por Monto
+                    - button "Quitar de favoritos" [pressed] [ref=f2e1760] [cursor=pointer]
+                  - generic [ref=f2e1763]:
+                    - generic [ref=f2e1764]:
+                      - generic [ref=f2e1765]:
+                        - generic [ref=f2e1766]:
+                          - generic [aria-hidden] [ref=f2e1767]: 💎
+                          - paragraph [ref=f2e1768]: Lleva 2 por $10.866
+                        - paragraph [ref=f2e1769]: ($10.866 x kg)
+                      - generic [ref=f2e1770]:
+                        - generic [ref=f2e1771]: Lleva 2 por $12.490
+                        - paragraph [ref=f2e1772]: ($12.490 x kg)
+                      - generic [ref=f2e1773]:
+                        - paragraph [ref=f2e1774]: $7.690 c/u
+                        - paragraph [ref=f2e1775]: ($15.380 x kg)
+                    - generic [ref=f2e1776]:
+                      - link "Fundo Rio Alegre | Carne molida fundo rio alegre tartaro 4% …" [ref=f2e1777] [cursor=pointer]:
+                        - /url: /carne-molida-fundo-rio-alegre-tartaro-4-grasa-500g/000000000000666200-UN.html
+                      - generic [ref=f2e1779]: 500 g
+                  - generic [ref=f2e1781]:
+                    - button [ref=f2e1782] [cursor=pointer]:
+                      - generic [aria-hidden] [ref=f2e1783]: 😎
+                      - paragraph [ref=f2e1784]: Combina la promo
+                      - img "chevron-right" [ref=f2e1785]
+                    - button "Agregar" [ref=f2e1786] [cursor=pointer]
+                - generic [ref=f2e1788]:
+                  - generic [ref=f2e1789]:
+                    - link "Trapero húmedo Nova desinfectante 10 un" [ref=f2e1790] [cursor=pointer]:
+                      - /url: /trapero-humedo-nova-desinfectante-10-un/000000000000666306-UN.html
+                      - img "Trapero húmedo Nova desinfectante 10 un" [ref=f2e1791]
+                    - button "Guardar en favoritos" [ref=f2e1792] [cursor=pointer]
+                  - generic [ref=f2e1795]:
+                    - generic [ref=f2e1797]:
+                      - paragraph [ref=f2e1798]: $3.890
+                      - paragraph [ref=f2e1799]: ($389 x unidad)
+                    - generic [ref=f2e1800]:
+                      - link "Nova | Trapero húmedo Nova desinfectante 10 un" [ref=f2e1801] [cursor=pointer]:
+                        - /url: /trapero-humedo-nova-desinfectante-10-un/000000000000666306-UN.html
+                      - generic [ref=f2e1803]: 10 un
+                  - button "Agregar" [ref=f2e1806] [cursor=pointer]
+              - button "Ver productos anteriores" [ref=f2e1807] [cursor=pointer]
+              - button "Ver más productos" [ref=f2e1810] [cursor=pointer]
+        - generic [ref=f2e1817]:
+          - generic [ref=f2e1818]:
+            - paragraph [ref=f2e1819]: Contrata la membresía
+            - paragraph [ref=f2e1820]: Obtén despachos gratis y ilimitados por compras sobre $20.000 y descuentos exclusivos
+            - link "Comienza tus 15 días gratis" [ref=f2e1821] [cursor=pointer]:
+              - /url: /membresia
+          - button "Pausar video" [ref=f2e1824] [cursor=pointer]
+        - generic [ref=f2e1831]:
+          - generic [ref=f2e1832]:
+            - heading "TÉRMINOS Y CONDICIONES UNIMARC" [level=2] [ref=f2e1833]
+            - paragraph [ref=f2e1834]: El acceso y uso del sitio web www.unimarc.cl y de la aplicación móvil Unimarc (ambos indistintamente “Unimarc.cl”) por u
+          - generic [ref=f2e1835]:
+            - generic [ref=f2e1836]:
+              - button "1. Registro del Cliente" [expanded] [ref=f2e1837] [cursor=pointer]
+              - region "1. Registro del Cliente" [ref=f2e1841]:
+                - paragraph [ref=f2e1843]: Será requisito para la adquisición de productos y servicios ofrecidos en Unimarc.cl, estar registrado en éste, ser mayor de 18 años, y al momento de la compra aceptar estos T&C y su Política de Privacidad. El acceso y registro será gratuito.
+            - button "2. Clave de acceso secreta" [ref=f2e1845] [cursor=pointer]
+            - button "3. Derechos del Cliente" [ref=f2e1851] [cursor=pointer]
+            - button "4. Procedimiento para hacer uso de Unima" [ref=f2e1857] [cursor=pointer]
+    - contentinfo [ref=f2e1862]:
+      - generic [ref=f2e1863]:
+        - generic [ref=f2e1864]:
+          - generic [ref=f2e1865]:
+            - link [ref=f2e1866] [cursor=pointer]:
+              - /url: /centro-de-ayuda
+              - generic [ref=f2e1873]:
+                - paragraph [ref=f2e1874]: Centro de ayuda
+                - paragraph [ref=f2e1875]: Aquí encontrarás preguntas frecuentes y mucho más
+            - link [ref=f2e1876] [cursor=pointer]:
+              - /url: /seguimiento-de-compra
+              - generic [ref=f2e1882]:
+                - paragraph [ref=f2e1883]: Seguimiento de compra
+                - paragraph [ref=f2e1884]: Revisa el estado y detalle de tu compra
+            - link [ref=f2e1885] [cursor=pointer]:
+              - /url: https://wa.me/56958701477
+              - generic [ref=f2e1891]:
+                - paragraph [ref=f2e1892]: Whatsapp clientes
+                - paragraph [ref=f2e1893]: Escríbenos de 9:00 a 20:00 horas
+          - generic [ref=f2e1894]:
+            - generic [ref=f2e1895]:
+              - button [ref=f2e1896] [cursor=pointer]:
+                - paragraph [ref=f2e1899]: Contáctanos
+              - generic [ref=f2e1901]:
+                - generic [ref=f2e1902]:
+                  - paragraph [ref=f2e1903]: Unimarc - Servicio al cliente
+                  - link "600 600 0025" [ref=f2e1908] [cursor=pointer]:
+                    - /url: tel:6006000025
+                  - paragraph [ref=f2e1909]: Llámanos de 9:00 a 20:00 horas
+                - generic [ref=f2e1910]:
+                  - paragraph [ref=f2e1911]: Compras online
+                  - link "Crea una solicitud" [ref=f2e1919] [cursor=pointer]:
+                    - /url: /contacto/compras-online
+                  - link "despachosunimarc@unimarc.cl" [ref=f2e1925] [cursor=pointer]:
+                    - /url: mailto:despachosunimarc@unimarc.cl
+                - generic [ref=f2e1926]:
+                  - paragraph [ref=f2e1927]: Tarjeta Unipay - Servicio al cliente
+                  - link "600 390 9000" [ref=f2e1932] [cursor=pointer]:
+                    - /url: tel:6003909000
+                  - paragraph [ref=f2e1933]: Llámanos de 9:00 a 20:00 horas
+                - generic [ref=f2e1934]:
+                  - paragraph [ref=f2e1935]: Compras en tienda
+                  - link "Crea una solicitud" [ref=f2e1943] [cursor=pointer]:
+                    - /url: /contacto/compras-tienda
+                  - link "contacto.unimarc@unimarc.cl" [ref=f2e1949] [cursor=pointer]:
+                    - /url: mailto:contacto.unimarc@unimarc.cl
+            - button [ref=f2e1951] [cursor=pointer]:
+              - paragraph [ref=f2e1955]: Servicio al cliente
+            - button [ref=f2e1957] [cursor=pointer]:
+              - paragraph [ref=f2e1961]: Nuestros programas
+            - button [ref=f2e1963] [cursor=pointer]:
+              - paragraph [ref=f2e1967]: Nuestra empresa
+        - separator [ref=f2e1968]
+        - generic [ref=f2e1969]:
+          - list [ref=f2e1971]:
+            - listitem [ref=f2e1972]:
+              - link "Políticas de Cookies" [ref=f2e1973] [cursor=pointer]:
+                - /url: /legales/cookies
+          - generic [ref=f2e1974]:
+            - paragraph [ref=f2e1975]: Síguenos
+            - generic [ref=f2e1976]:
+              - link "Facebook" [ref=f2e1977] [cursor=pointer]:
+                - /url: https://www.facebook.com/unimarc
+              - link "Instagram" [ref=f2e1980] [cursor=pointer]:
+                - /url: https://www.instagram.com/unimarc
+              - link "X" [ref=f2e1985] [cursor=pointer]:
+                - /url: https://x.com/unimarc
+              - link "YouTube" [ref=f2e1988] [cursor=pointer]:
+                - /url: https://www.youtube.com/unimarc
+  - generic:
+    - region
+    - region
+    - region
+    - region
+    - region
+    - region
+```

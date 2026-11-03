@@ -1,0 +1,64 @@
+{
+  "flow": "carro-sugeridos",
+  "last_updated": "2026-10-16T22:04:23Z",
+  "version": 1,
+  "description": "Modal '¡Que no se te olviden!' que abre 'Continuar con la entrega' del carro cuando la cuenta tiene sugerencias: pestañas, grilla de tarjetas, 'Agregar' y CTA 'Continuar' fijo.",
+  "source": {
+    "suite": "B2C-41",
+    "hu": "B2C-41",
+    "test_cases": [
+      "TC-B2C41-D-001..010",
+      "TC-B2C41-M-001..012"
+    ]
+  },
+  "navigation": {
+    "entry_url": "/cart",
+    "next_step": "/checkout/entrega ('Mis Envíos')",
+    "precondicion": "sesión por correo + OTP de 6 dígitos; carro con {SKU_VALID_001} × {UNIDADES_SOBRE_MINIMO} y subtotal ≥ {MONTO_MINIMO_COMPRA}; método de entrega activo"
+  },
+  "selectors": {
+    "preferred": [
+      {
+        "description": "Modal",
+        "selector": "getByRole('dialog').filter({ hasText: /que no se te olviden/i })"
+      },
+      {
+        "description": "Cerrar",
+        "selector": "getByRole('button', { name: /cerrar los productos sugeridos/i })"
+      },
+      {
+        "description": "Pestañas",
+        "selector": "getByRole('tab', { name })  — 'Imperdibles' (B2C-308, fuera de alcance), 'Lo que más compro', 'Mis favoritos'"
+      },
+      {
+        "description": "Pestaña activa",
+        "selector": "getByRole('tab', { selected: true })"
+      },
+      {
+        "description": "Tarjeta",
+        "selector": "botón 'Guardar en favoritos'/'Quitar de favoritos' (uno por tarjeta) y su ancestro div con un solo botón de favoritos"
+      },
+      {
+        "description": "Agregar",
+        "selector": "getByRole('button', { name: 'Agregar', exact: true })"
+      },
+      {
+        "description": "Tarjeta ya en carro",
+        "selector": "texto 'En carro' + 'N un.' con botones 'Disminuir cantidad' / 'Aumentar cantidad'"
+      },
+      {
+        "description": "Continuar fijo",
+        "selector": "getByRole('button', { name: /^continuar$/i }) dentro del dialog"
+      }
+    ]
+  },
+  "observations": [
+    "Al abrir, la pestaña seleccionada es 'Imperdibles', no 'Lo que más compro'.",
+    "'Lo que más compro' de la cuenta compradora muestra 4 My Usuals en 2 columnas; 'Mis favoritos' muestra los favoritos de la cuenta.",
+    "Agregar suma el producto: la tarjeta pasa a 'En carro 1 un.', el carro de fondo sube sus unidades y el modal sigue abierto.",
+    "'Continuar' cierra el modal y navega a /checkout/entrega.",
+    "En Mobile el banner de cookies puede tapar 'Continuar con la entrega' hasta aceptarlo.",
+    "Login: correo -> 'Autenticación requerida' con seis casillas 'Dígito N de 6' -> oferta de passkey ('Ahora no')."
+  ],
+  "history": []
+}
