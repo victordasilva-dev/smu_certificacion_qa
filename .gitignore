@@ -20,7 +20,6 @@ __pycache__/
 
 # Locales, sensibles o temporales (no se suben a GitHub)
 tools/
-scripts/
 .qa/respaldo/
 .qa/gmail-venv/
 .qa/explore*/
