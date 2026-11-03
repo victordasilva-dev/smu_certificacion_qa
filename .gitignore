@@ -17,8 +17,6 @@ __pycache__/
 .qa/secrets/
 
 # Artefactos pesados de Playwright (no se suben a GitHub: pasan el límite de 100 MB)
-evidencias/**/trace.zip
-evidencias/**/*.webm
 
 # Locales, sensibles o temporales (no se suben a GitHub)
 tools/
@@ -29,6 +27,6 @@ scripts/
 .qa/*.png
 .qa/*.txt
 
-# Trazas y videos de Playwright: son de depuracion y pesan demasiado para GitHub (no se suben)
-evidencias/**/trace.zip
-evidencias/**/*.webm
+
+# Traza de B2C-26 D-013 (193,7 MB): supera el limite de GitHub; se sube partida en evidencias/.../trace.zip.parte-*
+evidencias/B2C-26 Evidencias/TC-B2C26-D-013-run-1/trace.zip

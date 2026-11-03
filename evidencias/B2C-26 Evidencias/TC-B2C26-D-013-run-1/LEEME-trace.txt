@@ -1,0 +1,7 @@
+trace.zip (193,7 MB) supera el límite de 100 MB de GitHub, por eso se sube partido en 2 pedazos.
+
+Para volver a armarlo (en esta misma carpeta):
+    cat trace.zip.parte-* > trace.zip
+    sha256sum -c trace.zip.sha256      # debe decir: trace.zip: OK
+
+Se abre con:  npx playwright show-trace trace.zip
