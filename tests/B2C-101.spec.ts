@@ -31,9 +31,16 @@ import { SRPPage } from './pages/SRPPage';
  *   papilla y cúrcuma; los cortes de parrilla empiezan en la posición 8.
  */
 
-/** El término que el paso 3 de cada TC manda escribir. */
+/**
+ * El término que el paso 3 de cada TC manda escribir.
+ *
+ * Re-corrida 2026-11-03: DEV ya tiene panes de molde ("paan de molde" trae 103), así que
+ * D-002/M-002 tienen `test()`. D-005/M-005 siguen sin él: "leche entera" trae 9 productos y
+ * ninguno se llama exactamente así.
+ */
 const TERMINOS = {
   '001': 'lechhe',
+  '002': 'paan de molde',
   '003': 'tomatee',
   '004': 'leche',
   '006': 'pastel de choclo',
@@ -117,6 +124,19 @@ test.describe('B2C-101 — Tolerancia del buscador', () => {
         const nombres = await srp.nombresDeProductos();
         const conLeche = nombres.filter((n) => /leche/i.test(n));
         expect(conLeche.length, `nombres: ${nombres.join(' · ')}`).toBeGreaterThan(nombres.length / 2);
+        await srp.capturarEvidencia(cp);
+      });
+
+      test(`TC-B2C-101-${letra}-002 · Error tipográfico en término compuesto muestra productos del término corregido ${sufijo}`, async ({
+        page,
+      }) => {
+        const cp = `TC-B2C-101-${letra}-002`;
+        const srp = await buscarDesdeElHome(page, formFactor, cp, TERMINOS['002']);
+
+        await esperarConResultados(srp);
+        const nombres = await srp.nombresDeProductos();
+        const panDeMolde = nombres.filter((n) => /pan (de )?molde/i.test(n));
+        expect(panDeMolde.length, `nombres: ${nombres.join(' · ')}`).toBeGreaterThan(nombres.length / 2);
         await srp.capturarEvidencia(cp);
       });
 

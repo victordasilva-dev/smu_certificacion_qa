@@ -127,6 +127,19 @@ export class LoginModal {
     await this.descartarPasskey();
   }
 
+  /**
+   * Cierra con "Cerrar" el "¡Hola, ingresa aquí!" que se le ofrece al invitado al confirmar una
+   * tienda de retiro; si no aparece, no hace nada. Mientras está abierto el header queda
+   * `aria-hidden` y ningún locator por rol lo encuentra (B2C-70, B2C-18).
+   */
+  async cerrarSiAparece(timeout = 15000): Promise<void> {
+    const dialogo = this.dialogo.locator('visible=true').first();
+    if (await dialogo.waitFor({ state: 'visible', timeout }).then(() => true, () => false)) {
+      await dialogo.getByRole('button', { name: /^cerrar$/i }).click();
+      await dialogo.waitFor({ state: 'hidden', timeout: 10000 });
+    }
+  }
+
   /** Cierra la oferta de passkey con "Ahora no" si aparece; si no aparece, no hace nada. */
   async descartarPasskey(): Promise<void> {
     const ahoraNo = this.ofertaPasskey.getByRole('button', { name: /^ahora no$/i });

@@ -288,15 +288,104 @@ export class SRPPage extends BasePage {
   // ------------------------------------------------------------- paginación
 
   /**
-   * El componente de paginación que la SRP monta cuando hay más de una página de resultados.
+   * El componente de paginación que la SRP monta en Desktop cuando hay más de una página.
    *
-   * Se ancla en la flecha de "siguiente" y en los números de página, que es lo que el TC nombra.
+   * Es un `<nav aria-label="Paginación">` con un botón por página (`aria-label="Página N"`, la
+   * activa con `aria-current="page"`) y las flechas "Página anterior" / "Página siguiente", que
+   * no llevan texto: solo el ícono. En Mobile no se monta; ahí el listado crece por scroll.
    */
   get paginacion(): Locator {
-    return this.page
-      .locator('main nav, main ul, main div')
-      .filter({ has: this.page.getByRole('button', { name: /^(2|›|siguiente)$/i }) })
-      .last();
+    return this.page.locator('main nav[aria-label="Paginación"]');
+  }
+
+  botonDePagina(numero: number): Locator {
+    return this.paginacion.getByRole('button', { name: `Página ${numero}`, exact: true });
+  }
+
+  get flechaSiguiente(): Locator {
+    return this.paginacion.getByRole('button', { name: /^p[áa]gina siguiente$/i });
+  }
+
+  /**
+   * Empieza a registrar si aparece un indicador de carga en la grilla: un skeleton, un spinner o
+   * un `aria-busy`. El bloque siguiente del scroll infinito llega en un segundo; una aserción de
+   * visibilidad después del scroll llega tarde, así que se observa el DOM desde antes.
+   */
+  async observarIndicadorDeCarga(): Promise<void> {
+    await this.page.evaluate(() => {
+      const w = window as unknown as { __qaIndicador: string[] };
+      w.__qaIndicador = [];
+      const revisar = (n: Node) => {
+        if (!(n instanceof Element)) return;
+        for (const el of [n, ...Array.from(n.querySelectorAll('*'))]) {
+          const clase = typeof el.className === 'string' ? el.className : el.getAttribute('class') ?? '';
+          if (/skeleton|spinner|loader|loading/i.test(clase)) w.__qaIndicador.push(clase);
+          if (el.getAttribute('aria-busy') === 'true') w.__qaIndicador.push('aria-busy');
+          if (/^\s*cargando/i.test(el.textContent ?? '') && el.children.length === 0) w.__qaIndicador.push('texto');
+        }
+      };
+      new MutationObserver((ms) =>
+        ms.forEach((m) => {
+          m.addedNodes.forEach(revisar);
+          if (m.type === 'attributes') revisar(m.target);
+        }),
+      ).observe(document.querySelector('main') ?? document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'aria-busy'],
+      });
+    });
+  }
+
+  async indicadoresObservados(): Promise<string[]> {
+    return this.page.evaluate(() => (window as unknown as { __qaIndicador?: string[] }).__qaIndicador ?? []);
+  }
+
+  /** Retrasa solo la petición del bloque siguiente (`offset` > 0) del listado. */
+  async retrasarBloqueSiguiente(ms: number): Promise<void> {
+    await this.page.route(/product-search.*[?&]offset=[1-9]/, async (route) => {
+      await new Promise((r) => setTimeout(r, ms));
+      await route.continue();
+    });
+  }
+
+  // ------------------------------------------------------- disponibilidad
+
+  /**
+   * Cómo rinde cada shelf su disponibilidad: `agregar` (comprable), `similares` (sin stock para
+   * el método de entrega vigente, con "Ver similares") u `otro`. Es la huella que cambia cuando
+   * la SRP se resuelve contra el stock de una tienda en vez del catálogo general.
+   */
+  async disponibilidad(): Promise<Record<string, 'agregar' | 'similares' | 'otro'>> {
+    return this.shelves.evaluateAll((shelves) => {
+      const mapa: Record<string, 'agregar' | 'similares' | 'otro'> = {};
+      for (const s of shelves) {
+        const href = s.querySelector('a[href$=".html"]')?.getAttribute('href') ?? '';
+        const botones = Array.from(s.querySelectorAll('button')).map((b) => (b as HTMLElement).innerText.trim());
+        mapa[href] = botones.some((t) => /^agregar$/i.test(t))
+          ? 'agregar'
+          : botones.some((t) => /ver similares/i.test(t))
+            ? 'similares'
+            : 'otro';
+      }
+      return mapa;
+    });
+  }
+
+  // ------------------------------------------------------- monetización
+
+  /**
+   * Los Sponsor Banner que interrumpen la grilla: un anchor con la imagen de campaña
+   * (`banners-sponsor/…`), su título `h2` y la marca "Patrocinado" con el logo del patrocinador.
+   */
+  get sponsorBanners(): Locator {
+    return this.page.locator('main a:has(img[src*="banners-sponsor"])').filter({ hasText: /patrocinado/i });
+  }
+
+  /** Si la imagen principal de un banner llegó a pintarse (`naturalWidth` > 0). */
+  async imagenCargada(banner: Locator): Promise<boolean> {
+    return banner.locator('img').first().evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0);
   }
 
   // ------------------------------------------------------ estados de la SRP

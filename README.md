@@ -6,7 +6,7 @@ El flujo completo —leer la planilla, explorar, generar los specs, correr, escr
 
 ## Puesta en marcha
 
-Si estás leyendo esto en un clon nuevo:
+Si estás leyendo esto en un clon nuevo (requiere **Node ≥ 22.18**: mobilewright pide ≥ 22.12 y `app:explorar` ejecuta `.ts` sin transpilar):
 
 ```bash
 npm install                       # Playwright + mobilewright + los tres motores (via postinstall)
