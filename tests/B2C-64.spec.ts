@@ -150,6 +150,53 @@ test.describe('B2C-64 — Shelf simplificada', () => {
       expect(m.colorTexto, 'el texto lleva el color configurado para la cucarda (#000000)').toBe('rgb(0, 0, 0)');
       await home.capturarEvidencia(cp);
     });
+
+    test('TC-64-D-003 · Galería de imágenes en la shelf simplificada: imagen principal y navegación hasta 5 imágenes (Desktop)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-64-D-003';
+      test.setTimeout(180000);
+      const termino = token(testData, 'SEARCH_MULTI_IMAGEN');
+      if (!termino) throw new Error('Falta {SEARCH_MULTI_IMAGEN} en el Excel de data: el TC lo declara');
+
+      // Paso 1 — modal de buscador con el término que devuelve el producto de varias imágenes.
+      const home = new HomePage(page);
+      await home.goto();
+      const buscador = new BuscadorModal(page, 'desktop');
+      await buscador.abrir();
+      await buscador.escribir(termino);
+      const shelves = new ShelfSimplificada(page, buscador);
+      await expect(shelves.todas.first(), `el modal devuelve productos para "${termino}"`).toBeVisible({ timeout: 30000 });
+      await page.waitForTimeout(2000);
+
+      // Paso 2 — la shelf simplificada del primer resultado.
+      const item = shelves.enIndice(0);
+      await home.capturarEvidencia(cp, 2, `shelf simplificada de ${termino}`, { elemento: item.root });
+
+      // Paso 3 — imagen principal visible.
+      await expect(item.imagen.first(), 'la shelf muestra la imagen principal del producto').toBeVisible();
+      const principal = (await item.imagen.first().getAttribute('src')) ?? '';
+
+      // Paso 5 — como máximo 5 imágenes en la galería.
+      const cantidad = await item.imagen.count();
+      expect(cantidad, 'la shelf muestra como máximo 5 imágenes').toBeLessThanOrEqual(5);
+
+      // Paso 4 — navegar entre imágenes: indicadores (dots/flechas) o rotación al pasar el mouse.
+      const indicadores = await item.root
+        .locator('[role="tab"], [class*="dot" i], [class*="indicator" i], button[aria-label*="siguiente" i], button[aria-label*="anterior" i]')
+        .count();
+      await item.imagen.first().hover();
+      await page.waitForTimeout(3000);
+      const tras = (await item.imagen.first().getAttribute('src')) ?? '';
+      test.info().annotations.push({ type: 'galeria', description: JSON.stringify({ termino, cantidad, indicadores, rota: principal !== tras }) });
+      await home.capturarEvidencia(cp, 4, 'shelf tras pasar el mouse sobre la imagen', { elemento: item.root });
+      expect(
+        indicadores > 0 || principal !== tras || cantidad > 1,
+        `se pueden navegar las imágenes adicionales: el producto tiene 8 imágenes en su PDP y la shelf muestra ${cantidad} imagen(es), ${indicadores} indicador(es) y la imagen no cambia al pasar el mouse`,
+      ).toBe(true);
+      await home.capturarEvidencia(cp);
+    });
   });
 
   test.describe('Mobile 390x844', () => {

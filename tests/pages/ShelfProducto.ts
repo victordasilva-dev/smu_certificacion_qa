@@ -325,6 +325,55 @@ export class ShelfProducto {
   }
 
   /**
+   * Cómo se muestra el texto de la cucarda frente al ancho que tiene: el texto del DOM, cuánto mide
+   * sin recortar, cuánto mide la cucarda y si el recorte lleva puntos suspensivos (por
+   * `text-overflow: ellipsis` o porque el texto ya trae "..." / "…").
+   */
+  async truncadoDeLaCucarda(): Promise<{
+    textoDom: string;
+    anchoDelTexto: number;
+    anchoDeLaCucarda: number;
+    textOverflow: string;
+    recortado: boolean;
+    conElipsis: boolean;
+    desborda: boolean;
+  } | null> {
+    return this.root.evaluate((shelf) => {
+      const img = shelf.querySelector('img') ?? shelf.querySelector('[role="img"]');
+      if (!img) return null;
+      const ri = img.getBoundingClientRect();
+      const el = [...shelf.querySelectorAll('div,span,p')].find((e) => {
+        const r = e.getBoundingClientRect();
+        return (
+          getComputedStyle(e).position === 'absolute' &&
+          (e.textContent ?? '').trim() !== '' &&
+          !e.querySelector('button') &&
+          r.top >= ri.top - 2 &&
+          r.bottom <= ri.bottom + 2 &&
+          r.left >= ri.left - 2 &&
+          r.left <= ri.right
+        );
+      });
+      if (!el) return null;
+      const rango = document.createRange();
+      rango.selectNodeContents(el);
+      const ancho = rango.getBoundingClientRect().width;
+      const caja = el.getBoundingClientRect();
+      const cs = getComputedStyle(el);
+      const texto = (el.textContent ?? '').trim();
+      return {
+        textoDom: texto,
+        anchoDelTexto: Math.round(ancho),
+        anchoDeLaCucarda: Math.round(caja.width),
+        textOverflow: cs.textOverflow,
+        recortado: ancho > el.clientWidth + 1 || el.scrollWidth > el.clientWidth + 1,
+        conElipsis: cs.textOverflow === 'ellipsis' || /\.\.\.|…/.test(texto),
+        desborda: caja.right > ri.right + 1 || caja.left < ri.left - 1,
+      };
+    });
+  }
+
+  /**
    * El shelf de un SKU concreto.
    *
    * El shelf no expone el `productId` en ningún atributo: el único rastro del SKU en el DOM es el
@@ -350,8 +399,8 @@ export class ShelfProducto {
    *
    * No se ancla en la clase (`css-9q7wso`): la genera chakra y cambia con cada build.
    */
-  async cucardasDetalladas(): Promise<CucardaRenderizada[]> {
-    return this.root.evaluate((shelf) => {
+  async cucardasDetalladas(tolerarDesborde = false): Promise<CucardaRenderizada[]> {
+    return this.root.evaluate((shelf, tolerar) => {
       const img = shelf.querySelector('img') ?? shelf.querySelector('[role="img"]');
       if (!img) return [];
       const ri = img.getBoundingClientRect();
@@ -366,7 +415,7 @@ export class ShelfProducto {
             r.top >= ri.top - 2 &&
             r.bottom <= ri.bottom + 2 &&
             r.left >= ri.left - 2 &&
-            r.right <= ri.right + 2
+            (tolerar ? r.left <= ri.right : r.right <= ri.right + 2)
           );
         })
         .map((e) => {
@@ -388,7 +437,7 @@ export class ShelfProducto {
               : !(r.right <= fav.left || r.left >= fav.right || r.bottom <= fav.top || r.top >= fav.bottom),
           };
         });
-    });
+    }, tolerarDesborde);
   }
 
   /**

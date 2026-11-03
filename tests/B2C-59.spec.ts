@@ -5,6 +5,7 @@ import { PLPCategoriaPage } from './pages/PLPCategoriaPage';
 import { PLPCategoriaN1Page } from './pages/PLPCategoriaN1Page';
 import { PDPPage } from './pages/PDPPage';
 import { ShelfProducto } from './pages/ShelfProducto';
+import { ListadoDelSku } from './pages/ListadoDelSku';
 
 /**
  * B2C-59 — Shelf (tarjeta) de producto en PLP y SRP.
@@ -165,6 +166,47 @@ async function articulosEnCarrito(page: Page): Promise<number> {
   const label = await page.locator('header button[aria-label^="Mi carrito"]').first().getAttribute('aria-label');
   const m = (label ?? '').match(/(\d+)\s*$/);
   return m ? Number(m[1]) : -1;
+}
+
+/**
+ * Falla con un mensaje que empieza por `PRECONDICION_NO_DISPONIBLE` cuando la PLP declarada no ofrece el
+ * producto que la precondición del TC pide. No es un defecto del shelf: la corrida lo lee como
+ * `Bloqueado Data` (falta la data que declare el producto), nunca como `Rechazado`.
+ */
+function sinProducto(que: string): never {
+  throw new Error(`PRECONDICION_NO_DISPONIBLE: la PLP declarada no ofrece ${que}`);
+}
+
+/** Abre el listado del SKU multi-imagen declarado y devuelve su shelf. */
+async function shelfMultiImagen(page: Page, testData: Parameters<typeof token>[0]) {
+  const sku = token(testData, 'SKU_MULTI_IMAGEN');
+  if (!sku) throw new Error('Falta {SKU_MULTI_IMAGEN} en el Excel de data: el TC lo declara');
+  const listado = new ListadoDelSku(page, sku);
+  await listado.abrirPlp();
+  const shelf = listado.shelf;
+  await expect(shelf.root, `el shelf de {SKU_MULTI_IMAGEN} (${sku}) está en su listado`).toBeVisible({ timeout: 60000 });
+  await shelf.root.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(1500);
+  return { listado, shelf, sku };
+}
+
+/** Orden de los slots del shelf (TC B2C59-x-001). */
+async function verificarOrdenDeSlots(shelf: ShelfProducto) {
+  const o = await shelf.ordenDeSlots();
+  const cucardas = await shelf.cucardas();
+  const imagen = await shelf.caja(shelf.imagen.first());
+  const fav = await shelf.caja(shelf.favoritos);
+  expect(cucardas.length, 'hay cucarda').toBeGreaterThan(0);
+  expect(cucardas[0].dx, 'cucarda en la mitad izquierda de la imagen').toBeLessThan(imagen.width / 2);
+  expect(cucardas[0].dy, 'cucarda en la mitad superior de la imagen').toBeLessThan(imagen.height / 2);
+  expect(fav.left - imagen.left, 'favoritos en la mitad derecha de la imagen').toBeGreaterThan(imagen.width / 2);
+  expect(fav.top - imagen.top, 'favoritos en la mitad superior de la imagen').toBeLessThan(imagen.height / 2);
+  expect(o.precios!, 'precios debajo de la galería').toBeGreaterThan(o.imagen! + imagen.height - 4);
+  expect(o.nombre!, 'marca+nombre debajo de los precios').toBeGreaterThan(o.precios!);
+  if (o.formato !== null) expect(o.formato, 'formato debajo del nombre').toBeGreaterThanOrEqual(o.nombre!);
+  expect(o.combina, 'existe "Combina la promo"').not.toBeNull();
+  expect(o.combina!, '"Combina la promo" debajo del nombre').toBeGreaterThan(o.nombre!);
+  expect(o.agregar!, '"Agregar" después de "Combina la promo"').toBeGreaterThan(o.combina!);
 }
 
 test.describe('B2C-59 — Shelf de producto en PLP y SRP', () => {
@@ -535,6 +577,56 @@ test.describe('B2C-59 — Shelf de producto en PLP y SRP', () => {
       expect(patro.top, '"Patrocinado" aparece debajo del nombre').toBeGreaterThanOrEqual(nombre.top);
       await plp.capturarEvidencia(cp);
     });
+
+    test('TC-B2C59-D-001 · Verificar orden de slots en el shelf (Desktop)', async ({ page, testData }) => {
+      const cp = 'TC-B2C59-D-001';
+      test.setTimeout(180000);
+      const plp = await abrirPLP(page, testData);
+      const shelf = await primerShelf(page, async (s) => (await conCucarda(s)) && (await conPromo(s)));
+      if (!shelf) {
+        await plp.capturarEvidencia(cp, 2, 'PLP declarada: ningun shelf con cucarda y promo NxM a la vez', { fullPage: true });
+        await plp.capturarEvidencia(cp);
+        sinProducto('un producto con cucarda y "Combina la promo" a la vez');
+      }
+      await plp.capturarEvidencia(cp, 2, 'shelf con cucarda y promocion', { elemento: shelf!.root });
+      await verificarOrdenDeSlots(shelf!);
+      await plp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C59-D-007 · Galeria: hover rota la imagen cuando N>1 (Desktop)', async ({ page, testData }) => {
+      const cp = 'TC-B2C59-D-007';
+      test.setTimeout(240000);
+      const { listado, shelf } = await shelfMultiImagen(page, testData);
+      await listado.capturarEvidencia(cp, 1, 'shelf del producto con 3 imagenes en su listado', { elemento: shelf.root });
+      const antes = await shelf.srcDeLaImagen();
+      expect(await shelf.controlesDeGaleria.count(), 'sin flechas ni dots de navegacion antes de interactuar').toBe(0);
+      await shelf.hover();
+      await listado.capturarEvidencia(cp, 3, 'shelf durante el hover', { elemento: shelf.root });
+      await expect
+        .poll(() => shelf.srcDeLaImagen(), { timeout: 8000, message: 'con el hover la imagen rota a la siguiente disponible' })
+        .not.toBe(antes);
+      expect(await shelf.controlesDeGaleria.count(), 'no se muestran flechas ni dots de navegacion').toBe(0);
+      await listado.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C59-D-020 · Estructura base del shelf con todos los slots opcionales ausentes (Desktop)', async ({ page, testData }) => {
+      const cp = 'TC-B2C59-D-020';
+      test.setTimeout(180000);
+      const plp = await abrirPLP(page, testData);
+      const shelf = await primerShelf(
+        page,
+        async (s) => (await sinCucarda(s)) && (await sinPromo(s)) && (await sinFormato(s)) && (await s.patrocinado.count()) === 0,
+      );
+      if (!shelf) {
+        await plp.capturarEvidencia(cp, 2, 'PLP declarada: ningun shelf sin cucarda, sin formato, sin promo y sin Patrocinado', { fullPage: true });
+        await plp.capturarEvidencia(cp);
+        sinProducto('un producto sin cucarda, sin Patrocinado, no pesable y sin promocion vigente');
+      }
+      await plp.capturarEvidencia(cp, 2, 'shelf solo con slots obligatorios', { elemento: shelf!.root });
+      expect(await shelf!.cucardas(), 'sin cucarda').toEqual([]);
+      expect(await shelf!.placeholdersVaciosBajoElNombre(), 'sin espacios vacios en los slots ausentes').toBe(0);
+      await plp.capturarEvidencia(cp);
+    });
   });
 
   // ===================================================================== MOBILE
@@ -782,6 +874,43 @@ test.describe('B2C-59 — Shelf de producto en PLP y SRP', () => {
       const patro = await shelf.caja(shelf.patrocinado.first());
       expect(patro.top, '"Patrocinado" aparece debajo del nombre').toBeGreaterThanOrEqual(nombre.top);
       await plp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C59-M-001 · Verificar orden de slots en el shelf (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C59-M-001';
+      test.setTimeout(180000);
+      const plp = await abrirPLP(page, testData);
+      const shelf = await primerShelf(page, async (s) => (await conCucarda(s)) && (await conPromo(s)));
+      if (!shelf) {
+        await plp.capturarEvidencia(cp, 2, 'PLP declarada: ningun shelf con cucarda y promo NxM a la vez', { fullPage: true });
+        await plp.capturarEvidencia(cp);
+        sinProducto('un producto con cucarda y "Combina la promo" a la vez');
+      }
+      await plp.capturarEvidencia(cp, 2, 'shelf con cucarda y promocion', { elemento: shelf!.root });
+      await verificarOrdenDeSlots(shelf!);
+      await plp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C59-M-007 · Galeria: scroll horizontal cuando N>1 (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C59-M-007';
+      test.setTimeout(240000);
+      const { listado, shelf } = await shelfMultiImagen(page, testData);
+      await listado.capturarEvidencia(cp, 1, 'shelf del producto con 3 imagenes en su listado', { elemento: shelf.root });
+      const antes = await shelf.srcDeLaImagen();
+      expect(await shelf.controlesDeGaleria.count(), 'sin flechas ni dots de navegacion antes de interactuar').toBe(0);
+      expect(await shelf.imagen.count(), 'se muestra una imagen a la vez').toBe(1);
+      const caja = await shelf.caja(shelf.imagen.first());
+      await page.mouse.move(caja.left + caja.width * 0.8, caja.top + caja.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(caja.left + caja.width * 0.1, caja.top + caja.height / 2, { steps: 10 });
+      await page.mouse.up();
+      await page.waitForTimeout(1500);
+      await listado.capturarEvidencia(cp, 3, 'shelf tras el gesto de desplazamiento horizontal', { elemento: shelf.root });
+      const g = await shelf.galeriaDesplazable();
+      expect(g.scrollWidth, 'la galeria tiene contenido desplazable horizontalmente (mas de una imagen)').toBeGreaterThan(g.clientWidth + 5);
+      expect(await shelf.srcDeLaImagen(), 'con el scroll horizontal la imagen avanza a la siguiente').not.toBe(antes);
+      expect(await shelf.controlesDeGaleria.count(), 'no se muestran flechas ni dots de navegacion').toBe(0);
+      await listado.capturarEvidencia(cp);
     });
   });
 });

@@ -1,0 +1,119 @@
+import { Locator, Page } from '@playwright/test';
+
+/**
+ * Modal "¡Que no se te olviden!" que abre "Continuar con la entrega" del carro cuando la cuenta
+ * tiene sugerencias (B2C-41).
+ *
+ * Es un componente, no una página: no extiende `BasePage`. Tiene tres pestañas —"Imperdibles"
+ * (B2C-308, fuera del alcance de B2C-41), "Lo que más compro" (My Usuals) y "Mis favoritos—, una
+ * grilla de tarjetas de producto y el CTA "Continuar" fijo al pie.
+ */
+export class SugeridosModal {
+  constructor(private readonly page: Page) {}
+
+  get root(): Locator {
+    return this.page.getByRole('dialog').filter({ hasText: /que no se te olviden/i });
+  }
+
+  get cerrar(): Locator {
+    return this.root.getByRole('button', { name: /cerrar los productos sugeridos/i });
+  }
+
+  get pestanas(): Locator {
+    return this.root.getByRole('tab');
+  }
+
+  pestana(nombre: RegExp | string): Locator {
+    return this.root.getByRole('tab', { name: nombre });
+  }
+
+  get pestanaActiva(): Locator {
+    return this.root.getByRole('tab', { selected: true });
+  }
+
+  get loQueMasCompro(): Locator {
+    return this.pestana(/^lo que m[áa]s compro$/i);
+  }
+
+  get misFavoritos(): Locator {
+    return this.pestana(/^mis favoritos$/i);
+  }
+
+  /** Nombres de las pestañas, en el orden en que se ven. */
+  async nombresDePestanas(): Promise<string[]> {
+    return (await this.pestanas.allInnerTexts()).map((t) => t.trim());
+  }
+
+  /** "Continuar": el CTA fijo del modal (no el "Continuar con la entrega" del carro). */
+  get continuar(): Locator {
+    return this.root.getByRole('button', { name: /^continuar$/i });
+  }
+
+  /** Un botón de favoritos por tarjeta: sirve para contarlas. */
+  get botonesFavorito(): Locator {
+    return this.root.getByRole('button', { name: /(guardar en|quitar de) favoritos/i });
+  }
+
+  get tarjetas(): Locator {
+    return this.botonesFavorito.locator(
+      'xpath=ancestor::div[count(.//button[contains(@aria-label,"avoritos")])=1][last()]',
+    );
+  }
+
+  async cantidadDeTarjetas(): Promise<number> {
+    return this.botonesFavorito.count();
+  }
+
+  get botonesAgregar(): Locator {
+    return this.root.getByRole('button', { name: 'Agregar', exact: true });
+  }
+
+  /** El "Agregar" de la primera tarjeta que todavía no está en el carro. */
+  get primerAgregar(): Locator {
+    return this.botonesAgregar.first();
+  }
+
+  /** La tarjeta (contenedor) del primer "Agregar". */
+  get tarjetaDelPrimerAgregar(): Locator {
+    return this.primerAgregar.locator(
+      'xpath=ancestor::div[count(.//button[contains(@aria-label,"avoritos")])=1][last()]',
+    );
+  }
+
+  /** "En carro" con la cantidad que muestra una tarjeta tras agregarla. */
+  get enCarro(): Locator {
+    return this.root.getByText(/^en carro$/i);
+  }
+
+  /** Cajas de las tarjetas visibles: su posición dice cuántas columnas tiene la grilla. */
+  async cajasDeTarjetas(): Promise<{ x: number; y: number; width: number; height: number }[]> {
+    const cajas: { x: number; y: number; width: number; height: number }[] = [];
+    const n = await this.botonesFavorito.count();
+    for (let i = 0; i < n; i++) {
+      const caja = await this.tarjetas.nth(i).boundingBox();
+      if (caja) cajas.push(caja);
+    }
+    return cajas;
+  }
+
+  /** Coordenadas X distintas de las tarjetas (redondeadas): una por columna. */
+  async columnas(): Promise<number[]> {
+    const xs = (await this.cajasDeTarjetas()).map((c) => Math.round(c.x / 10) * 10);
+    return [...new Set(xs)].sort((a, b) => a - b);
+  }
+
+  /** Marca de carga dentro de una tarjeta mientras se procesa un "Agregar". */
+  cargaEn(tarjeta: Locator): Locator {
+    return tarjeta.locator(
+      '[aria-busy="true"], [role="progressbar"], [role="status"], [class*="loading" i], [class*="spinner" i], [class*="skeleton" i], [class*="loader" i]',
+    );
+  }
+
+  /** Desplaza con la rueda el contenido del modal, con el puntero sobre la grilla. */
+  async desplazar(dy: number): Promise<void> {
+    const caja = await this.tarjetas.first().boundingBox();
+    if (caja) await this.page.mouse.move(caja.x + caja.width / 2, caja.y + caja.height / 2);
+    await this.page.mouse.wheel(0, dy);
+    await this.page.waitForTimeout(600);
+  }
+}

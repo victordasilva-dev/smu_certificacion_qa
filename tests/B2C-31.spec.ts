@@ -1044,6 +1044,139 @@ test.describe('B2C-31 — Pagina de detalle de producto', () => {
       await pdp.capturarEvidencia(cp, 4, 'modal Agregar como lista desplegado desde abajo');
       await pdp.capturarEvidencia(cp);
     });
+
+    test('TC-B2C31-M-022 · Verificar que un producto con label muestra una sola cucarda sin bloquear la compra (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-022';
+      test.setTimeout(120000);
+      const sku = tokenExigido(testData, 'SKU_CUCARDA');
+
+      // Pasos 1 y 2 — PDP de {SKU_CUCARDA}.
+      const pdp = await new PDPPage(page).abrir(sku);
+      const cucardas = await pdp.cucardasDeLaFicha();
+      test.info().annotations.push({ type: 'cucardas', description: cucardas.join(', ') });
+      await pdp.capturarEvidencia(cp, 2, 'PDP con la cucarda del producto', { elemento: pdp.core });
+      expect(cucardas.length, `una sola cucarda (vio: ${cucardas.join(', ') || 'ninguna'})`).toBe(1);
+      await expect(pdp.agregar, 'el botón Agregar sigue disponible').toBeVisible();
+      await expect(pdp.agregar).toBeEnabled();
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-032 · Verificar que el tab Información muestra pills solo para las secciones con contenido (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-032';
+      test.setTimeout(120000);
+      const sku = tokenExigido(testData, 'SKU_INFO_COMPLETA');
+
+      const pdp = await new PDPPage(page).abrir(sku);
+      await pdp.irATabs();
+      await page.getByRole('tab', { name: /informaci[óo]n/i }).click();
+      await expect(pdp.panelActivo).toContainText(/descripci[óo]n/i);
+      const pills = await pdp.pillsDeInformacion();
+      test.info().annotations.push({ type: 'pills', description: pills.map((p) => p.texto + (p.activa ? '*' : '')).join(' | ') });
+      await pdp.capturarEvidencia(cp, 4, 'pills de las secciones con contenido', { elemento: pdp.panelActivo.locator('xpath=(.//button)[1]/ancestor::div[2]') });
+
+      // Solo las secciones con contenido: cada pill tiene su sección, y cada sección su pill.
+      const secciones = await pdp.panelActivo.locator('[data-spy-id]').count();
+      expect(pills.length, 'una pill por sección con contenido').toBe(secciones);
+      expect(pills[0].texto, 'la primera pill es Descripción').toMatch(/descripci[óo]n/i);
+      expect(pills.find((p) => p.activa)?.texto, '"Descripción" está activa').toMatch(/descripci[óo]n/i);
+      const permitidas = /descripci[óo]n|ingredientes|estilos de alimentaci[óo]n|sellos|tabla nutricional|datos de nutrici[óo]n|acerca de/i;
+      for (const p of pills) expect(p.texto, 'pill de una sección esperada').toMatch(permitidas);
+
+      // Pasos 5 y 6 — desliza las pills horizontalmente sin romper el layout.
+      const desliza = (a: number) =>
+        page.evaluate((x) => {
+          const btn = [...document.querySelectorAll('[role="tabpanel"]:not([hidden]) button')].find((b) => /descripci/i.test(b.textContent ?? ''))!;
+          let e: HTMLElement | null = btn.parentElement;
+          while (e && e.scrollWidth <= e.clientWidth) e = e.parentElement;
+          if (!e) return { desplazable: false, sl: 0, pw: document.documentElement.scrollWidth, vw: innerWidth };
+          e.scrollLeft = x < 0 ? e.scrollWidth : x;
+          return { desplazable: true, sl: Math.round(e.scrollLeft), pw: document.documentElement.scrollWidth, vw: innerWidth };
+        }, a);
+      const antes = await desliza(0);
+      await page.waitForTimeout(500);
+      const despues = await desliza(-1);
+      await page.waitForTimeout(500);
+      test.info().annotations.push({ type: 'scroll-pills', description: JSON.stringify({ antes, despues }) });
+      expect(despues.desplazable, 'las pills no caben en el ancho y se pueden desplazar').toBe(true);
+      expect(despues.sl, 'las pills se desplazan horizontalmente').toBeGreaterThan(antes.sl);
+      expect(despues.pw, 'el desplazamiento no genera scroll horizontal de la página').toBeLessThanOrEqual(despues.vw);
+      await pdp.capturarEvidencia(cp, 6, 'pills desplazadas', { elemento: pdp.panelActivo.locator('xpath=(.//button)[1]/ancestor::div[2]') });
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-033 · Verificar que tocar una pill ancla el scroll a su sección y la marca como activa (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-033';
+      test.setTimeout(120000);
+      const sku = tokenExigido(testData, 'SKU_INFO_COMPLETA');
+
+      const pdp = await new PDPPage(page).abrir(sku);
+      await pdp.irATabs();
+      await page.getByRole('tab', { name: /informaci[óo]n/i }).click();
+      const pills = await pdp.pillsDeInformacion();
+      const nutri = pills.find((p) => /tabla nutricional|datos de nutrici[óo]n/i.test(p.texto));
+      expect(nutri, 'existe la pill de la tabla nutricional').toBeTruthy();
+      test.info().annotations.push({ type: 'pill', description: `texto real de la pill: "${nutri!.texto}"` });
+      await pdp.capturarEvidencia(cp, 3, 'tab Información con sus pills');
+      await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+      await page.waitForTimeout(3000);
+      await pdp.pill(new RegExp(nutri!.texto, 'i')).click();
+      await page.waitForTimeout(3000);
+
+      const pos = await pdp.posicionPillsYSeccion('nutricion');
+      test.info().annotations.push({ type: 'posicion', description: JSON.stringify(pos) });
+      expect(Math.abs(pos.secTop - pos.pillsBottom), 'la sección queda al inicio, justo bajo las pills').toBeLessThanOrEqual(15);
+      const activa = (await pdp.pillsDeInformacion()).find((p) => p.activa);
+      expect(activa?.texto, 'la pill tocada queda activa').toBe(nutri!.texto);
+      const color = await pdp.pill(new RegExp(nutri!.texto, 'i')).evaluate((el) => getComputedStyle(el).color);
+      const colorOtra = await pdp.pill(/descripci[óo]n/i).evaluate((el) => getComputedStyle(el).color);
+      expect(color, 'la pill activa cambia de color').not.toBe(colorOtra);
+      await pdp.capturarEvidencia(cp, 4, 'sección al inicio con su pill activa');
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-034 · Verificar que las pills de información quedan fijas bajo los tabs al hacer scroll (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-034';
+      test.setTimeout(120000);
+      const sku = tokenExigido(testData, 'SKU_INFO_COMPLETA');
+
+      const pdp = await new PDPPage(page).abrir(sku);
+      await pdp.irATabs();
+      await page.getByRole('tab', { name: /informaci[óo]n/i }).click();
+      await pdp.capturarEvidencia(cp, 3, 'tab Información antes del scroll');
+      const tops: number[] = [];
+      for (let i = 0; i < 4; i += 1) {
+        await page.evaluate(() => window.scrollBy(0, 350));
+        await page.waitForTimeout(700);
+        const p = await pdp.posicionPillsYSeccion('descripcion');
+        tops.push(p.pillsTop);
+      }
+      test.info().annotations.push({ type: 'pillsTop', description: tops.join(', ') });
+      const bajoTabs = tops.slice(1);
+      expect(Math.max(...bajoTabs) - Math.min(...bajoTabs), 'las pills mantienen la misma posición mientras se hace scroll').toBeLessThanOrEqual(2);
+      for (const t of bajoTabs) expect(t, 'las pills siguen visibles en el viewport').toBeGreaterThanOrEqual(0);
+      await pdp.capturarEvidencia(cp, 4, 'pills fijas durante el scroll');
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-040 · Verificar que la sección "Acerca de" muestra el contenido inspiracional configurado (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-040';
+      test.setTimeout(120000);
+      const sku = tokenExigido(testData, 'SKU_INFO_COMPLETA');
+
+      const pdp = await new PDPPage(page).abrir(sku);
+      await pdp.irATabs();
+      await page.getByRole('tab', { name: /informaci[óo]n/i }).click();
+      const pills = (await pdp.pillsDeInformacion()).map((p) => p.texto);
+      test.info().annotations.push({ type: 'pills', description: pills.join(' | ') });
+      await pdp.capturarEvidencia(cp, 3, 'pills del producto');
+      if (!pills.some((t) => /acerca de/i.test(t))) {
+        await pdp.capturarEvidencia(cp);
+        test.skip(true, `{SKU_INFO_COMPLETA} no tiene contenido en acercaDe: sus pills son ${pills.join(', ')}`);
+      }
+      await pdp.pill(/acerca de/i).click({ timeout: 5000 });
+      await pdp.capturarEvidencia(cp, 4, 'sección Acerca de');
+      await pdp.capturarEvidencia(cp);
+    });
   });
 });
 

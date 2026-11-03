@@ -5,6 +5,7 @@ import { DESKTOP, MOBILE } from './support/viewports';
 import { PaginaHabilitada } from './pages/PaginaHabilitada';
 import { LoginModal } from './pages/LoginModal';
 import { MenuCuenta } from './pages/MenuCuenta';
+import { loginConOtp } from './support/loginOtp';
 
 /**
  * B2C-69 — Header: área SSO, saludo, botón de membresía, minicarrito y menú Mi Cuenta.
@@ -34,10 +35,9 @@ async function homeComoInvitado(page: Page, cp: string): Promise<PaginaHabilitad
 async function homeLogueado(page: Page, testData: LoadedTestData, cuenta: Cuenta) {
   const home = new PaginaHabilitada(page);
   await home.goto();
-  const perfil = await new LoginModal(page).iniciarSesionConPerfil(
-    token(testData, `${cuenta}_USER`)!,
-    token(testData, `${cuenta}_PASSWORD`)!,
-  );
+  // El modal pide solo correo + OTP desde el 2026-10-12; el perfil ya no viene de la respuesta del login.
+  await loginConOtp(page, token(testData, `${cuenta}_USER`)!);
+  const perfil = { firstName: '', lastName: '' };
   const menu = new MenuCuenta(page);
   await expect(menu.disparador).toBeVisible({ timeout: 30000 });
   // El disparador se pinta primero con un marcador ("?") y después con las iniciales.

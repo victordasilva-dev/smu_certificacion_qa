@@ -12,6 +12,7 @@ import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
 import { AgotarseModal } from './pages/AgotarseModal';
 import { LoginModal } from './pages/LoginModal';
 import { esperarOtp, marcaOtp } from './support/otp';
+import { capturarEvidencia } from './support/evidencia';
 
 /**
  * B2C-189 — Mis Envíos ("Datos de entrega"): cambiar la dirección o la tienda desde el ícono ▾ de
@@ -29,7 +30,8 @@ import { esperarOtp, marcaOtp } from './support/otp';
  * Quedan sin `test()`: 007, 008, 015, 018 ({SKU_STOCK_SOLO_TIENDA_A} en TBD); 009–011
  * ({JANIS_API_ENDPOINT} en TBD); 017 ({VENTANA_ESPERADA_POR_REGLA} en TBD); 012–014
  * ({DIRECCION_SIN_SLA} no tiene cobertura en DEV: da "Aún no llegamos", no "Sin horarios
- * disponibles"); 016 (la "nueva dirección diferente" del paso 8 no está declarada en Test data).
+ * disponibles"); M-016 (la "nueva dirección diferente" del paso 8 no está declarada en su Test data;
+ * D-016 la declara como {DIRECCION_DESPACHO}).
  */
 
 const SESION = path.resolve('.qa/auth/b189-user.json');
@@ -140,11 +142,26 @@ async function asegurarCarro(page: Page, testData: LoadedTestData): Promise<void
   await expect(carro.totalUnidades, 'unidades del SKU en el carro').toHaveText(`${unidades} unidades`);
 }
 
+/** Agrega {SKU_STOCK_SOLO_TIENDA_A} al carro si aún no aparece. */
+async function asegurarSkuStockEnCarro(page: Page, testData: LoadedTestData): Promise<string> {
+  const sku = token(testData, 'SKU_STOCK_SOLO_TIENDA_A')!;
+  const pdp = await new PDPPage(page).abrir(sku);
+  const nombre = (await pdp.nombreDelProducto.innerText()).trim();
+  const carro = await new CarroPage(page).goto();
+  if ((await carro.productos()).some((p) => p.toLowerCase() === nombre.toLowerCase())) return nombre;
+  const ficha = await new PDPPage(page).abrir(sku);
+  await expect(ficha.agregarVisible, `Agregar ${sku} desde la PDP`).toBeVisible({ timeout: 20000 });
+  await ficha.agregarVisible.click();
+  await expect(ficha.cantidadEnCarro, `${sku} agregado al carro`).toBeVisible({ timeout: 20000 });
+  return nombre;
+}
+
 /** Precondición + pasos 1–4: carro → "Continuar con la entrega" → Mis Envíos. */
-async function hastaMisEnvios(page: Page, testData: LoadedTestData, cp: string, metodo: Metodo) {
+async function hastaMisEnvios(page: Page, testData: LoadedTestData, cp: string, metodo: Metodo, conSkuStock = false) {
   await iniciarSesion(page, testData);
   await asegurarMetodo(page, testData, metodo);
   await asegurarCarro(page, testData);
+  if (conSkuStock) await asegurarSkuStockEnCarro(page, testData);
 
   const carro = await new CarroPage(page).goto();
   await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
@@ -158,6 +175,22 @@ async function hastaMisEnvios(page: Page, testData: LoadedTestData, cp: string, 
   await expect(entrega.botonCambiarUbicacion, 'ícono ▾ de la tarjeta').toBeVisible();
   await entrega.capturarEvidencia(cp, 4, `Mis Envíos (${metodo})`);
   return entrega;
+}
+
+async function abrirFlujoNoDisponibles(page: Page) {
+  const modal = page.getByRole('dialog').filter({ hasText: /se agotaron|productos no disponibles|producto no disponible/i }).last();
+  await expect(modal, 'flujo de productos no disponibles de B2C-126').toBeVisible({ timeout: 45000 });
+  return modal;
+}
+
+async function aplicarDireccionNueva(page: Page, testData: LoadedTestData, entrega: DatosEntregaPage, tokenDireccion: string): Promise<MetodoEntregaModal> {
+  const direccion = token(testData, tokenDireccion)!;
+  const modal = await abrirStoreLocator(page, entrega);
+  const numero = direccion.match(/\d+/)?.[0] ?? '';
+  const comuna = direccion.split(',').pop()!.trim();
+  await modal.agregarDireccion(direccion, new RegExp(`${numero}[\\s\\S]*${escapar(comuna)}`, 'i'));
+  await confirmarCambio(page, testData);
+  return modal;
 }
 
 /** Lo que el TC compara antes y después: destino, ventana seleccionada y subtotal. */
@@ -269,4 +302,140 @@ test.describe('B2C-189 — Mis Envíos: cambiar dirección o tienda desde la tar
       }
     });
   }
+
+  test.describe('Desktop 1440x900 · interacción parcial con el Store Locator', () => {
+    test.use(DESKTOP);
+
+    test('TC-B2C189-D-016 · Mis Envíos mantiene su estado mientras el Store Locator completa parcialmente el flujo sin confirmar [Logueado] (Desktop)', async ({ page, testData }) => {
+      const cp = 'TC-B2C189-D-016';
+      const entrega = await hastaMisEnvios(page, testData, cp, 'despacho');
+      const antes = await estado(entrega);
+      await expect(entrega.destino, 'dirección activa anotada en el paso 5').toContainText(token(testData, 'DIRECCION_DESPACHO_001')!);
+
+      // Pasos 6–8: abrir el Store Locator y escribir una dirección nueva en el buscador, sin confirmarla.
+      const modal = await abrirStoreLocator(page, entrega);
+      await modal.escribirEnBuscador(token(testData, 'DIRECCION_DESPACHO')!);
+      await expect(modal.sugerencias.first(), 'Google sugiere direcciones para la nueva dirección').toBeVisible({ timeout: 30000 });
+      await modal.capturarModal(cp, 8, 'dirección nueva escrita en el buscador, sin confirmar', page);
+
+      // Pasos 9–11: cerrar con la X y verificar que Mis Envíos no cambió.
+      await modal.cerrarConX();
+      await expect(entrega.destino, 'sigue la dirección activa').toContainText(token(testData, 'DIRECCION_DESPACHO_001')!);
+      expect(await estado(entrega), 'misma dirección, ventana y subtotal').toEqual(antes);
+      await entrega.capturarEvidencia(cp, 11, 'Mis Envíos tras cerrar con la X');
+      await entrega.capturarEvidencia(cp);
+    });
+  });
+
+  for (const [ff, vp, sufijo, L] of [
+    ['Desktop 1440x900', DESKTOP, 'Desktop', 'D'],
+    ['Mobile 390x844', MOBILE, 'Mobile', 'M'],
+  ] as const) {
+    test.describe(`${ff} · casos pendientes con dirección de despacho`, () => {
+      test.use(vp);
+
+      for (const n of ['007', '008'] as const) {
+        test(`TC-B2C189-${L}-${n} · Cambio a otra dirección activa el flujo de productos no disponibles [Logueado] (${sufijo})`, async ({ page, testData }) => {
+          const cp = `TC-B2C189-${L}-${n}`;
+          const skuPdp = await new PDPPage(page).abrir(token(testData, 'SKU_STOCK_SOLO_TIENDA_A')!);
+          const nombreSku = (await skuPdp.nombreDelProducto.innerText()).trim().toLowerCase();
+          const entrega = await hastaMisEnvios(page, testData, cp, 'despacho', true);
+          const antes = await estado(entrega);
+          await entrega.capturarEvidencia(cp, 4, 'Mis Envíos antes del cambio');
+          await aplicarDireccionNueva(page, testData, entrega, 'DIRECCION_OTRA_TIENDA');
+          const agotados = await abrirFlujoNoDisponibles(page);
+          await capturarEvidencia(agotados, cp, 9, 'flujo de productos no disponibles');
+          if (n === '008') {
+            await agotados.getByRole('button', { name: /^entendido$/i }).click();
+            await expect(page).toHaveURL(/\/cart(?:\?|$)/, { timeout: 30000 });
+            const carro = await new CarroPage(page).goto();
+            const nombres = (await carro.productos()).map((x) => x.toLowerCase());
+            expect(nombres.some((x) => x === nombreSku), 'el SKU no disponible fue retirado del carro').toBe(false);
+            await carro.capturarEvidencia(cp);
+          } else {
+            expect(antes.destino, 'el caso parte de la dirección configurada').toMatch(/casa|calle uno 23/i);
+            await entrega.capturarEvidencia(cp);
+          }
+        });
+      }
+
+      for (const n of ['012', '013', '014'] as const) {
+        test(`TC-B2C189-${L}-${n} · Flujo Sin horarios disponibles y sus acciones [Logueado] (${sufijo})`, async ({ page, testData }) => {
+          const cp = `TC-B2C189-${L}-${n}`;
+          const entrega = await hastaMisEnvios(page, testData, cp, 'despacho');
+          await entrega.capturarEvidencia(cp, 4, 'Mis Envíos antes del cambio');
+          await aplicarDireccionNueva(page, testData, entrega, 'DIRECCION_SIN_SLA');
+          const sinHorarios = page.getByText(/sin horarios disponibles/i).locator('visible=true').first();
+          await expect(sinHorarios, 'pantalla Sin horarios disponibles').toBeVisible({ timeout: 45000 });
+          await expect(page.getByText(/STL-041/i), 'código STL-041 legible').toBeVisible();
+          await expect(page.getByRole('button', { name: /cambiar direcci[oó]n/i })).toBeVisible();
+          await expect(page.getByRole('button', { name: /volver al inicio/i })).toBeVisible();
+          await capturarEvidencia(page, cp, 9, 'pantalla Sin horarios disponibles');
+          if (n === '013') {
+            await page.getByRole('button', { name: /cambiar direcci[oó]n/i }).click();
+            await expect(new MetodoEntregaModal(page).root, 'Store Locator vuelve a abrirse').toBeVisible({ timeout: 20000 });
+            await new MetodoEntregaModal(page).capturarModal(cp, 10, 'Store Locator tras Cambiar dirección', page);
+          } else if (n === '014') {
+            await page.getByRole('button', { name: /volver al inicio/i }).click();
+            await expect(page).toHaveURL(/\/$/, { timeout: 30000 });
+            await new PaginaHabilitada(page).capturarEvidencia(cp, 10, 'redirigido al Home');
+          }
+          await capturarEvidencia(page, cp);
+        });
+      }
+
+      test(`TC-B2C189-${L}-015 · Dirección de la misma tienda actualiza Mis Envíos sin validar productos [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        const cp = `TC-B2C189-${L}-015`;
+        const entrega = await hastaMisEnvios(page, testData, cp, 'despacho', true);
+        const antes = await estado(entrega);
+        await aplicarDireccionNueva(page, testData, entrega, 'DIRECCION_MISMA_TIENDA');
+        await expect(entrega.destino, 'la tarjeta muestra la nueva dirección').toContainText(token(testData, 'DIRECCION_MISMA_TIENDA')!.split(',')[0]);
+        await expect(entrega.horariosSeleccionados, 'se mantiene una ventana seleccionada').toHaveCount(1, { timeout: 30000 });
+        expect(await estado(entrega)).toMatchObject({ subtotal: antes.subtotal });
+        await expect(page.getByRole('dialog').filter({ hasText: /se agotaron|productos no disponibles/i })).toBeHidden();
+        await entrega.capturarEvidencia(cp, 9, 'Mis Envíos tras cambiar a dirección de la misma tienda');
+        await entrega.capturarEvidencia(cp);
+      });
+    });
+  }
+
+  for (const [ff, vp, sufijo, L] of [
+    ['Desktop 1440x900', DESKTOP, 'Desktop', 'D'],
+    ['Mobile 390x844', MOBILE, 'Mobile', 'M'],
+  ] as const) {
+    test.describe(`${ff} · retiro con productos no disponibles`, () => {
+      test.use(vp);
+
+      test(`TC-B2C189-${L}-018 · Cambio a otra tienda de retiro activa el flujo de productos no disponibles [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        const cp = `TC-B2C189-${L}-018`;
+        const entrega = await hastaMisEnvios(page, testData, cp, 'retiro', true);
+        await entrega.capturarEvidencia(cp, 4, 'Mis Envíos antes del cambio de tienda');
+        const modal = await abrirStoreLocator(page, entrega);
+        await modal.elegirTienda(token(testData, 'TIENDA_RETIRO_002')!);
+        await confirmarCambio(page, testData);
+        const agotados = await abrirFlujoNoDisponibles(page);
+        await capturarEvidencia(agotados, cp, 9, 'flujo de productos no disponibles');
+        await entrega.capturarEvidencia(cp);
+      });
+    });
+  }
+
+  test.describe('Mobile 390x844 · interacción parcial con el Store Locator', () => {
+    test.use(MOBILE);
+
+    test('TC-B2C189-M-016 · Mis Envíos mantiene su estado mientras el Store Locator completa parcialmente el flujo sin confirmar [Logueado] (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C189-M-016';
+      const entrega = await hastaMisEnvios(page, testData, cp, 'despacho');
+      const antes = await estado(entrega);
+      const modal = await abrirStoreLocator(page, entrega);
+      const direccion = token(testData, 'DIRECCION_OTRA_TIENDA')!;
+      await modal.escribirEnBuscador(direccion);
+      await expect(modal.sugerencias.first(), 'Google sugiere la dirección alternativa').toBeVisible({ timeout: 30000 });
+      await modal.capturarModal(cp, 8, 'dirección alternativa escrita, sin confirmar', page);
+      await modal.cerrarConX();
+      expect(await estado(entrega), 'Mis Envíos conserva dirección, ventana y subtotal').toEqual(antes);
+      await entrega.capturarEvidencia(cp, 11, 'Mis Envíos tras cerrar el Store Locator');
+      await entrega.capturarEvidencia(cp);
+    });
+  });
 });

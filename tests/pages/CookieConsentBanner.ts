@@ -157,8 +157,18 @@ export class CookieConsentBanner {
     } catch {
       return false;
     }
-    await this.aceptar.click();
-    await this.root.waitFor({ state: 'detached', timeout: 10000 });
+    // En Mobile/webkit el sitio puede quedar sin responder decenas de segundos mientras carga
+    // imágenes lentas: el clic se procesa tarde y el banner tarda en cerrarse. Por eso solo se
+    // vuelve a pulsar si el banner SIGUE visible, cada clic lleva su propio tiempo límite (sin
+    // él, un segundo clic sobre un banner que ya se cerró esperaba para siempre) y se espera con
+    // holgura. `hidden` y no `detached`: el banner puede quedar en el DOM sin verse.
+    for (let intento = 1; intento <= 4; intento++) {
+      if (!(await this.root.isVisible().catch(() => false))) return true;
+      await this.aceptar.click({ timeout: 5000 }).catch(() => {});
+      const cerrado = await this.root.waitFor({ state: 'hidden', timeout: 15000 }).then(() => true, () => false);
+      if (cerrado) return true;
+    }
+    await this.root.waitFor({ state: 'hidden', timeout: 5000 });
     return true;
   }
 }

@@ -61,6 +61,16 @@ export class ListadoScreen extends BaseScreen {
     throw new Error('La landing no muestra ninguna subcategoría después de "Todo".');
   }
 
+  /** La tarjeta del producto en el listado (testID `product-<sku>`). */
+  tarjeta(sku: string): Locator {
+    return this.screen.getByTestId(`product-${sku}`);
+  }
+
+  /** El texto "Patrocinado" del shelf, si algún producto del listado lo muestra. */
+  get patrocinado(): Locator {
+    return this.screen.getByText('Patrocinado', { exact: true });
+  }
+
   /** Botón de filtros y ordenamiento (PLP y SRP). */
   get iconoFiltros(): Locator {
     return this.screen.getByRole('button', { name: 'Abrir filtros y ordenamiento' });

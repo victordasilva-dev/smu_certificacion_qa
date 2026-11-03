@@ -68,9 +68,12 @@ export async function invitadoConDireccion(screen: Screen, device: any, bundleId
   const nav = new NavBar(screen, p);
   for (let intento = 1; ; intento++) {
     const tabs = await arrancarInvitado(screen, device, bundleId, p);
-    const detalle = await elegirDireccion(screen, p, direccion, new RegExp(`^${calle(direccion)}`, 'i'));
+    // La app normaliza el nombre de la calle ("Gral." → "General"): se compara por número y comuna.
+    const numero = direccion.match(/\d+/)?.[0] ?? '';
+    const comuna = direccion.split(',').pop()!.trim();
+    const detalle = await elegirDireccion(screen, p, direccion, new RegExp(`${numero}.*${comuna}`, 'i'));
     await tolerante(() => detalle.botonConfirmar.tap());
-    if (await visibleEn(nav.metodoDeEntrega.filter({ hasText: calle(direccion) }), 45000)) return tabs;
+    if (await visibleEn(nav.metodoDeEntrega.filter({ hasText: new RegExp(`(?<!\\d)${numero}(?!\\d)`) }), 45000)) return tabs;
     if (intento >= 3) throw new Error(`precondición: no se pudo fijar ${direccion} en ${intento} intentos`);
   }
 }

@@ -96,7 +96,9 @@ export class LoginModal {
     return this.page
       .getByRole('dialog')
       .filter({ has: this.page.getByRole('textbox', { name: /d[íi]gito 1 de/i }) })
-      .getByRole('button', { name: /^continuar$/i });
+      .getByRole('button', { name: /^(?:continuar|validar)$/i })
+      .locator('visible=true')
+      .first();
   }
 
   /** "Ingresa con rostro o huella": aparece tras iniciar sesión y tapa el header. */
@@ -115,9 +117,16 @@ export class LoginModal {
 
   /** Escribe el código (las casillas avanzan solas) y confirma. Sirve también para "Autenticación requerida". */
   async escribirCodigo(codigo: string): Promise<void> {
-    await this.primerDigito.click();
-    await this.page.keyboard.type(codigo, { delay: 80 });
-    await this.botonContinuarCodigo.click();
+    if (!/^\d{6}$/.test(codigo)) throw new Error('OTP inválido: se esperaba un código de 6 dígitos');
+    await this.primerDigito.waitFor({ state: 'visible', timeout: 30000 });
+    // El control del OTP es un único input maxlength=6 con seis casillas visuales. En mobile,
+    // teclado.type podía dejar solo el primer carácter en el input y el resto se perdía al
+    // avanzar el foco; fill() escribe el valor completo de forma estable en ambos viewports.
+    await this.primerDigito.fill(codigo);
+    const boton = this.botonContinuarCodigo;
+    await boton.waitFor({ state: 'visible', timeout: 15000 });
+    await boton.click();
+    await this.primerDigito.waitFor({ state: 'hidden', timeout: 30000 });
   }
 
   /** Completa el login con el código y espera a que el header lo refleje. */

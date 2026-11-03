@@ -4,6 +4,11 @@ import { LoadedTestData, token } from './support/testData';
 import { DESKTOP, MOBILE } from './support/viewports';
 import { HomePage, MyUsualsPage } from './pages/HomePage';
 import { ShelfProducto } from './pages/ShelfProducto';
+import { HomeSkeletonCarga } from './pages/HomeSkeletonCarga';
+import * as fs from 'fs';
+import { esperarOtp, marcaOtp } from './support/otp';
+import { LoginModal } from './pages/LoginModal';
+import { PaginaHabilitada } from './pages/PaginaHabilitada';
 
 /**
  * B2C-29 — Home configurable desde Page Designer.
@@ -201,6 +206,52 @@ test.describe('B2C-29 — Home configurable desde Page Designer', () => {
       await home.capturarEvidencia(cp, 4, 'coleccion completa de productos frecuentes');
       await home.capturarEvidencia(cp);
     });
+
+    test('TC-B2C29-D-016 · Mientras carga la Home se muestra el skeleton y luego se reemplaza por los componentes (Desktop)', async ({ page, browserName }) => {
+      const cp = 'TC-B2C29-D-016';
+      test.setTimeout(240000);
+      test.skip(browserName !== 'chromium', 'El throttling Slow 3G se emula por CDP, solo Chromium');
+
+      // Precondición — red "Slow 3G" (equivalente al preset de DevTools).
+      const carga = new HomeSkeletonCarga(page);
+      await carga.registrar();
+      await carga.activarSlow3G();
+
+      // Paso 1 — ingresar a la Home sin esperar a que termine.
+      const home = new HomePage(page);
+      await page.goto('/', { waitUntil: 'commit', timeout: 120000 });
+
+      // Paso 2 — observar mientras carga: deben verse placeholders tipo skeleton.
+      await expect
+        .poll(async () => (await carga.registro()).max, {
+          message: 'skeletons (bloques grises) visibles mientras la Home carga',
+          timeout: 60000,
+          intervals: [100],
+        })
+        .toBeGreaterThan(0);
+      await home.capturarEvidencia(cp, 2, 'Home cargando con skeletons');
+      expect((await carga.registro()).max, 'máximo de skeletons vistos').toBeGreaterThan(0);
+
+      // Paso 3 — esperar el fin de la carga: los skeletons se reemplazan por los componentes reales.
+      await expect(home.header.logo, 'header cargado').toBeVisible({ timeout: 180000 });
+      await expect
+        .poll(() => carga.skeletonsAhora(), {
+          message: 'skeletons que quedan cuando termina la carga',
+          timeout: 180000,
+          intervals: [500],
+        })
+        .toBe(0);
+      await carga.desactivarThrottling();
+      await home.recorrerCompleto();
+      await expect(
+        home.encabezadosDeComponentes.first(),
+        'componentes reales de la Home tras la carga',
+      ).toBeVisible();
+      expect(await home.encabezadosDeComponentes.count(), 'componentes visibles').toBeGreaterThan(0);
+      await expect(carga.textoDeError, 'mensajes de error en la Home').toHaveCount(0);
+      await home.capturarEvidencia(cp, 3, 'Home cargada con sus componentes reales');
+      await home.capturarEvidencia(cp);
+    });
   });
 
   test.describe('Mobile 390x844', () => {
@@ -374,5 +425,113 @@ test.describe('B2C-29 — Home configurable desde Page Designer', () => {
       await sinCarrusel(home);
       await home.capturarEvidencia(cp);
     });
+
+    test('TC-B2C29-M-018 · Mientras carga la Home se muestra el skeleton y luego se reemplaza por los componentes (Mobile)', async ({ page, browserName }) => {
+      const cp = 'TC-B2C29-M-018';
+      test.setTimeout(240000);
+      test.skip(browserName !== 'chromium', 'El throttling Slow 3G se emula por CDP, solo Chromium');
+
+      // Precondición — red "Slow 3G" (equivalente al preset de DevTools).
+      const carga = new HomeSkeletonCarga(page);
+      await carga.registrar();
+      await carga.activarSlow3G();
+
+      // Paso 1 — ingresar a la Home sin esperar a que termine.
+      const home = new HomePage(page);
+      await page.goto('/', { waitUntil: 'commit', timeout: 120000 });
+
+      // Paso 2 — observar mientras carga: deben verse placeholders tipo skeleton.
+      await expect
+        .poll(async () => (await carga.registro()).max, {
+          message: 'skeletons (bloques grises) visibles mientras la Home carga',
+          timeout: 60000,
+          intervals: [100],
+        })
+        .toBeGreaterThan(0);
+      await home.capturarEvidencia(cp, 2, 'Home cargando con skeletons');
+      expect((await carga.registro()).max, 'máximo de skeletons vistos').toBeGreaterThan(0);
+
+      // Paso 3 — esperar el fin de la carga: los skeletons se reemplazan por los componentes reales.
+      await expect(home.header.logo, 'header cargado').toBeVisible({ timeout: 180000 });
+      await expect
+        .poll(() => carga.skeletonsAhora(), {
+          message: 'skeletons que quedan cuando termina la carga',
+          timeout: 180000,
+          intervals: [500],
+        })
+        .toBe(0);
+      await carga.desactivarThrottling();
+      await home.recorrerCompleto();
+      await expect(
+        home.encabezadosDeComponentes.first(),
+        'componentes reales de la Home tras la carga',
+      ).toBeVisible();
+      expect(await home.encabezadosDeComponentes.count(), 'componentes visibles').toBeGreaterThan(0);
+      await expect(carga.textoDeError, 'mensajes de error en la Home').toHaveCount(0);
+      await home.capturarEvidencia(cp, 3, 'Home cargada con sus componentes reales');
+      await home.capturarEvidencia(cp);
+    });
+  });
+});
+
+/**
+ * Re-corrida 2026-10-22 (M-008 y M-009): {COMPONENTE_SEGMENTADO} es el nombre del componente en Page
+ * Designer ('Bienvenida_Diamante'), no un texto visible. Se identifica comparando lo que ve cada
+ * cuenta en el Home móvil: lo que ve la cuenta del segmento y no la de fuera del segmento es el
+ * componente segmentado. M-008 deja la lista de la cuenta del segmento en un archivo y M-009 la usa.
+ */
+const SEG29 = '.qa/run/seg29.json';
+
+async function entrarConCodigo(page: Page, correo: string): Promise<void> {
+  const home = await new PaginaHabilitada(page).goto();
+  await home.cookies.aceptarSiAparece();
+  const login = new LoginModal(page);
+  await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
+  const desde = marcaOtp();
+  await login.pedirCodigo(correo);
+  await login.ingresarCodigo(await esperarOtp(correo, desde, { digitos: 6 }));
+  await login.descartarPasskey();
+  await page.goto('/');
+  await page.waitForLoadState('networkidle', { timeout: 45000 }).catch(() => {});
+  await page.waitForTimeout(5000);
+}
+
+/** Encabezados y textos de bloque visibles del Home, para comparar entre cuentas. */
+async function bloquesDelHome(page: Page): Promise<string[]> {
+  return page.evaluate(() => {
+    const vis = (e: Element) => !!((e as HTMLElement).offsetWidth || (e as HTMLElement).offsetHeight);
+    const t = [...document.querySelectorAll('h1,h2,h3,h4,[role=heading],img[alt]')].filter(vis)
+      .map((e) => ((e as HTMLElement).innerText || e.getAttribute('alt') || '').trim().replace(/\s+/g, ' ').slice(0, 70)).filter(Boolean);
+    return [...new Set(t)];
+  });
+}
+
+test.describe('B2C-29 — Componentes segmentados (Mobile, 2026-10-22)', () => {
+  test.use(MOBILE);
+  test.describe.configure({ timeout: 420000 });
+
+  test('TC-B2C29-M-008 · Un usuario del segmento configurado ve el componente segmentado [Logueado] (Mobile)', async ({ page, testData }) => {
+    const cp = 'TC-B2C29-M-008';
+    const correo = token(testData, 'COMPRADOR_SEGMENTO_USER')!;
+    await entrarConCodigo(page, correo);
+    const bloques = await bloquesDelHome(page);
+    fs.mkdirSync('.qa/run', { recursive: true });
+    fs.writeFileSync(SEG29, JSON.stringify({ segmento: bloques }));
+    test.info().annotations.push({ type: 'bloques del segmento', description: bloques.join(' | ') });
+    await new HomePage(page).capturarEvidencia(cp);
+  });
+
+  test('TC-B2C29-M-009 · Un usuario fuera del segmento no ve el componente y no queda espacio reservado [Logueado] (Mobile)', async ({ page, testData }) => {
+    const cp = 'TC-B2C29-M-009';
+    const correo = token(testData, 'COMPRADOR_FUERA_SEGMENTO_USER')!;
+    await entrarConCodigo(page, correo);
+    const fuera = await bloquesDelHome(page);
+    const seg: string[] = fs.existsSync(SEG29) ? JSON.parse(fs.readFileSync(SEG29, 'utf-8')).segmento : [];
+    const extras = seg.filter((b) => !fuera.includes(b));
+    test.info().annotations.push({ type: 'bloques fuera del segmento', description: fuera.join(' | ') });
+    test.info().annotations.push({ type: 'solo los ve el segmento', description: extras.join(' | ') || '(ninguno)' });
+    await new HomePage(page).capturarEvidencia(cp);
+    expect(seg.length, 'hay una lectura de la cuenta del segmento (M-008)').toBeGreaterThan(0);
+    expect(extras.some((b) => /diamante|bienvenid/i.test(b)), `la cuenta del segmento ve un bloque «Bienvenida Diamante» que la cuenta fuera del segmento no ve (diferencias: ${extras.join(', ') || 'ninguna'})`).toBe(true);
   });
 });

@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { Page } from '@playwright/test';
 import { test, expect, token } from './support/fixtures';
 import type { LoadedTestData } from './support/testData';
@@ -5,6 +7,8 @@ import { DESKTOP, MOBILE } from './support/viewports';
 import { PaginaHabilitada } from './pages/PaginaHabilitada';
 import { LoginModal } from './pages/LoginModal';
 import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
+import { AgotarseModal } from './pages/AgotarseModal';
+import { esperarOtp, marcaOtp } from './support/otp';
 
 /**
  * B2C-70 — Store Locator del header: qué muestra según el método de entrega.
@@ -27,6 +31,104 @@ import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
  * El caso que sí corre no necesita nada de eso: el estado inicial del storefront ya es "sin método
  * de entrega seleccionado", así que la precondición se cumple sola al abrir la página.
  */
+
+
+// --- Cuenta con sesión (D-002 no la usa; M-006 a M-008 sí) -------------------------------------
+
+const SESION = path.resolve('.qa/auth/b70-user.json');
+
+function correo(testData: LoadedTestData): string {
+  return token(testData, 'USER_AUTH_001')!.split('/')[0].trim();
+}
+
+/** Inicia sesión con {USER_AUTH_001} reutilizando su storageState; si no sirve, por correo + OTP. */
+async function iniciarSesion(page: Page, testData: LoadedTestData, cuenta?: { correo: string; sesion: string }): Promise<PaginaHabilitada> {
+  const SESION_C = cuenta?.sesion ?? SESION;
+  const CORREO = cuenta?.correo ?? correo(testData);
+  if (fs.existsSync(SESION_C)) {
+    const estado = JSON.parse(fs.readFileSync(SESION_C, 'utf-8'));
+    await page.context().addCookies(estado.cookies ?? []);
+    const origen = (estado.origins ?? [])[0];
+    if (origen?.localStorage?.length) {
+      await page.addInitScript((items: { name: string; value: string }[]) => {
+        if (sessionStorage.getItem('__b70_ls')) return;
+        for (const { name, value } of items) localStorage.setItem(name, value);
+        sessionStorage.setItem('__b70_ls', '1');
+      }, origen.localStorage);
+    }
+  }
+  const home = await new PaginaHabilitada(page).goto();
+  await home.cookies.aceptarSiAparece();
+  await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
+  const login = new LoginModal(page);
+  const conSesion = await home.header.saludo.waitFor({ state: 'visible', timeout: 20000 }).then(() => true, () => false);
+  if (!conSesion) {
+    const desde = marcaOtp();
+    await login.pedirCodigo(CORREO);
+    await login.ingresarCodigo(await esperarOtp(CORREO, desde, { digitos: 6 }));
+  }
+  await login.descartarPasskey();
+  fs.mkdirSync(path.dirname(SESION_C), { recursive: true });
+  await page.context().storageState({ path: SESION_C });
+  return home;
+}
+
+/** "Algunos productos podrían agotarse" → "Sí, continuar" y, si aparece, el OTP de "Autenticación requerida". */
+async function confirmarCambio(page: Page, testData: LoadedTestData, correoOtp?: string): Promise<void> {
+  const agotarse = new AgotarseModal(page);
+  const desde = marcaOtp();
+  if (await agotarse.root.waitFor({ state: 'visible', timeout: 15000 }).then(() => true, () => false)) {
+    await agotarse.botonSi.click();
+  }
+  const modal = new MetodoEntregaModal(page);
+  if (await modal.modalOtp.waitFor({ state: 'visible', timeout: 15000 }).then(() => true, () => false)) {
+    await new LoginModal(page).escribirCodigo(await esperarOtp(correoOtp ?? correo(testData), desde, { digitos: 6 }));
+    await modal.modalOtp.waitFor({ state: 'hidden', timeout: 30000 });
+  }
+  await page.waitForTimeout(3000);
+}
+
+/**
+ * Deja activa, con sesión iniciada, la dirección guardada que coincide con `patron`. Si la cuenta
+ * no la tiene guardada, el caso no puede armar su precondición: error `PRECONDICION`.
+ */
+async function activarDireccionGuardada(page: Page, testData: LoadedTestData, patron: RegExp, descripcion: string, cuenta?: { correo: string; sesion: string }): Promise<PaginaHabilitada> {
+  const home = await iniciarSesion(page, testData, cuenta);
+  await home.header.storeLocator.waitFor({ state: 'visible', timeout: 30000 });
+  await page.waitForTimeout(3000);
+  await home.header.storeLocator.click();
+  const modal = await new MetodoEntregaModal(page).esperarAbierto();
+  await modal.tabDespachoDomicilio.click();
+  const guardada = modal.root.getByRole('button').filter({ hasText: patron }).first();
+  if (!(await guardada.waitFor({ state: 'visible', timeout: 15000 }).then(() => true, () => false))) {
+    throw new Error(`PRECONDICION: la cuenta no tiene guardada la dirección ${descripcion}.`);
+  }
+  await guardada.click();
+  await confirmarCambio(page, testData, cuenta?.correo);
+  return home;
+}
+
+/** Devuelve la cuenta a {DIRECCION_DESPACHO_001} ("Casa") para no dejar su estado cambiado. Mejor esfuerzo. */
+async function restaurarCasa(page: Page, testData: LoadedTestData): Promise<void> {
+  try {
+    const destino = token(testData, 'DIRECCION_DESPACHO_001')!;
+    const home = await new PaginaHabilitada(page).goto();
+    await home.header.storeLocator.waitFor({ state: 'visible', timeout: 30000 });
+    if (/calle uno 23|^casa\b/i.test((await home.header.direccionDelStoreLocator()).trim())) return;
+    await home.header.storeLocator.click();
+    const modal = await new MetodoEntregaModal(page).esperarAbierto();
+    await modal.tabDespachoDomicilio.click();
+    await modal.root.getByRole('button').filter({ hasText: destino }).first().click();
+    await confirmarCambio(page, testData);
+  } catch { /* la limpieza no cambia el veredicto */ }
+}
+
+/** Lo que el Store Locator muestra en su primera línea, con la dirección ya cargada de la cuenta. */
+async function direccionMostrada(home: PaginaHabilitada, page: Page): Promise<string> {
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await home.waitUntilReady();
+  return home.header.esperarDireccionEnStoreLocator(45000);
+}
 
 test.describe('B2C-70 — Store Locator del header', () => {
   test.describe('Desktop 1440x900', () => {
@@ -75,6 +177,37 @@ test.describe('B2C-70 — Store Locator del header', () => {
       await pagina.capturarEvidencia('TC-B2C70-D-001', undefined, undefined, {
         elemento: pagina.header.root,
       });
+    });
+
+    test('TC-B2C70-D-002 · Con un método de entrega activo, el Store Locator muestra el ícono del método, la dirección y el label de precio al navegar (Desktop)', async ({ page, testData }) => {
+      const cp = 'TC-B2C70-D-002';
+      const direccion = token(testData, 'DIRECCION_DESPACHO_001')!;
+      const calle = direccion.split(',')[0].trim();
+      const home = new PaginaHabilitada(page);
+      await home.goto();
+      await home.cookies.aceptarSiAparece();
+      // Paso 1 — configurar un método de entrega con dirección ({DIRECCION_DESPACHO_001}).
+      await home.header.storeLocator.click();
+      const modal = await new MetodoEntregaModal(page).esperarAbierto();
+      await modal.fijarDireccionComoInvitado(direccion, new RegExp(calle, 'i'));
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await home.waitUntilReady();
+
+      // Paso 2 — navegar a distintas páginas y verificar el Store Locator en cada una: Home y, desde un producto, su PDP.
+      const verificar = async (pagina: PaginaHabilitada, nombre: string, paso: number) => {
+        await expect(pagina.header.storeLocator, `dirección en el Store Locator (${nombre})`).toContainText(calle, { timeout: 30000 });
+        expect(await iconoActivo(pagina), `ícono de Despacho a domicilio activo (${nombre})`).toBe('despacho');
+        expect(await pagina.header.direccionDelStoreLocator(), `dirección (${nombre})`).toBe(calle);
+        await expect(labelDePrecio(pagina), `label de precio (${nombre})`).toHaveText(/^\$\s?[\d.]+$|^gratis$/i);
+        await pagina.capturarEvidencia(cp, paso, `Store Locator en ${nombre}`, { elemento: pagina.header.barraDelSitio });
+      };
+      await verificar(home, 'Home', 2);
+      await page.locator('a[href$=".html"]').locator('visible=true').first().click();
+      await page.waitForLoadState('domcontentloaded');
+      const pdp = new PaginaHabilitada(page, new URL(page.url()).pathname.replace(/^\//, ''), 'PDP');
+      await pdp.waitUntilReady();
+      await verificar(pdp, 'la PDP', 4);
+      await pdp.capturarEvidencia(cp);
     });
   });
 
@@ -193,6 +326,119 @@ test.describe('B2C-70 — Store Locator del header', () => {
       await home.capturarEvidencia(cp);
     });
   });
+
+  test.describe('Mobile 390x844 · cuenta con sesión', () => {
+    test.use(MOBILE);
+    test.describe.configure({ timeout: 480000 });
+
+    test.afterEach(async ({ page, testData }, testInfo) => {
+      if (/M-00[678]/.test(testInfo.title)) await restaurarCasa(page, testData);
+    });
+
+    test('TC-B2C70-M-006 · Verificar que el Store Locator trunca a 42 caracteres con "…" una dirección larga [Logueado] (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C70-M-006';
+      const larga = token(testData, 'DIRECCION_LARGA_001')!;
+      const home = await activarDireccionGuardada(page, testData, /avenida libertador general bernardo o.higgins/i, larga);
+      const mostrada = await direccionMostrada(home, page);
+      await home.capturarEvidencia(cp, 2, 'Store Locator con la dirección larga', { elemento: home.header.barraDelSitio });
+      expect(mostrada, `los primeros 42 caracteres de «${larga}» + "…"`).toBe(larga.slice(0, 42) + '…');
+      await home.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C70-M-007 · Verificar que el Store Locator muestra completa sin "…" una dirección de 42 caracteres [Logueado] (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C70-M-007';
+      const exacta = token(testData, 'DIRECCION_42_CHARS')!;
+      expect(exacta.length, 'la dirección declarada tiene 42 caracteres').toBe(42);
+      const home = await activarDireccionGuardada(page, testData, /av libertador gral bernardo o.higgins/i, exacta);
+      const mostrada = await direccionMostrada(home, page);
+      await home.capturarEvidencia(cp, 2, 'Store Locator con la dirección de 42 caracteres', { elemento: home.header.barraDelSitio });
+      expect(mostrada, `«${exacta}» completa y sin "…"`).toBe(exacta);
+      await home.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C70-M-008 · Verificar que el Store Locator trunca a 42 caracteres con "…" una tienda de nombre largo [Logueado] (Mobile)', async ({ page, testData }) => {
+      const tienda = token(testData, 'TIENDA_NOMBRE_LARGO_001')!;
+      // Precondición: la tienda debe tener un nombre de más de 42 caracteres para que haya truncamiento.
+      if (tienda.length <= 42) {
+        throw new Error(`PRECONDICION: {TIENDA_NOMBRE_LARGO_001} («${tienda}») tiene ${tienda.length} caracteres: no supera los 42, así que el nombre no se trunca.`);
+      }
+      const cp = 'TC-B2C70-M-008';
+      const home = await iniciarSesion(page, testData);
+      await home.header.storeLocator.click();
+      const modal = await new MetodoEntregaModal(page).esperarAbierto();
+      await modal.tabRetiroEnTienda.click();
+      await modal.elegirTienda(tienda);
+      await confirmarCambio(page, testData);
+      const mostrada = await direccionMostrada(home, page);
+      await home.capturarEvidencia(cp, 2, 'Store Locator con la tienda de nombre largo', { elemento: home.header.barraDelSitio });
+      expect(mostrada, `los primeros 42 caracteres de «${tienda}» + "…"`).toBe(tienda.slice(0, 42) + '…');
+      await home.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C70-M-005 · Verificar que el Store Locator mantiene método, dirección y label de precio al navegar [Mobile] [Logueado] (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C70-M-005';
+      const cuenta = { correo: token(testData, 'COMPRADOR_CON_DIRECCION_USER')!.split('/')[0].trim(), sesion: path.resolve('.qa/auth/b70-condireccion.json') };
+      const home = await iniciarSesion(page, testData, cuenta);
+      const enHome = await direccionMostrada(home, page);
+      await home.capturarEvidencia(cp, 2, 'Home: Store Locator con método, dirección y label', { elemento: home.header.barraDelSitio });
+      expect(await iconoActivo(home), 'Home: ícono de Despacho activo').toBe('despacho');
+      await expect(labelDePrecio(home), 'Home: label de precio').toHaveText(/^\$\s?[\d.]+$|^gratis$/i);
+      const labelHome = (await labelDePrecio(home).innerText()).trim();
+      for (const [nombre, url] of [['PLP', token(testData, 'PLP_URL')!], ['búsqueda', token(testData, 'SRP_URL')!]] as const) {
+        await page.goto(url, { waitUntil: 'domcontentloaded' });
+        await home.header.storeLocator.waitFor({ state: 'visible', timeout: 45000 });
+        const dir = await home.header.esperarDireccionEnStoreLocator(45000);
+        await home.capturarEvidencia(cp, nombre === 'PLP' ? 3 : 4, `${nombre}: Store Locator`, { elemento: home.header.barraDelSitio });
+        expect(dir, `${nombre}: misma dirección que en el Home`).toBe(enHome);
+        expect(await iconoActivo(home), `${nombre}: mismo ícono de Despacho`).toBe('despacho');
+        await expect(labelDePrecio(home), `${nombre}: label de precio`).toHaveText(labelHome);
+      }
+      await home.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C70-M-015 · Verificar que el header muestra una dirección con el caracter especial "+" sin alterarlo [Mobile] [Logueado] (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C70-M-015';
+      const direccion = token(testData, 'DIRECCION_CARACTERES_ESPECIALES')!;
+      const cuenta = { correo: token(testData, 'COMPRADOR_CON_DIRECCION_USER')!.split('/')[0].trim(), sesion: path.resolve('.qa/auth/b70-condireccion.json') };
+      const home = await activarDireccionGuardada(page, testData, new RegExp(direccion.split('/')[0].trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), direccion, cuenta);
+      const enHome = await direccionMostrada(home, page);
+      await home.capturarEvidencia(cp, 2, 'Home: dirección con «+»', { elemento: home.header.barraDelSitio });
+      expect(enHome, 'Home: el «+» se muestra literal').toContain('+');
+      expect(enHome, 'Home: sin «%2B» ni «&#43;»').not.toMatch(/%2b|&#43;/i);
+      await page.goto(token(testData, 'PLP_URL')!, { waitUntil: 'domcontentloaded' });
+      await home.waitUntilReady();
+      const enPlp = await home.header.esperarDireccionEnStoreLocator(45000);
+      await home.capturarEvidencia(cp, 3, 'PLP: dirección con «+»', { elemento: home.header.barraDelSitio });
+      expect(enPlp, 'PLP: misma dirección').toBe(enHome);
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await home.waitUntilReady();
+      const trasRecarga = await home.header.esperarDireccionEnStoreLocator(45000);
+      expect(trasRecarga, 'tras recargar: misma dirección con «+»').toBe(enHome);
+      await home.capturarEvidencia(cp);
+    });
+  });
+
+  test.describe('Desktop 1440x900 y Mobile 390x844 · cuenta con sesión', () => {
+    test.use(DESKTOP);
+    test.describe.configure({ timeout: 480000 });
+
+    test.afterEach(async ({ page, testData }) => { await restaurarCasa(page, testData); });
+
+    test('TC-B2C70-D-003 · La direccion o tienda mostrada se trunca a 53 caracteres en Desktop y 42 en Mobile, agregando puntos suspensivos (Desktop)', async ({ page, testData }) => {
+      const cp = 'TC-B2C70-D-003';
+      const larga = token(testData, 'DIRECCION_LARGA_001')!;
+      const home = await activarDireccionGuardada(page, testData, /avenida libertador general bernardo o.higgins/i, larga);
+      const enDesktop = await direccionMostrada(home, page);
+      await home.capturarEvidencia(cp, 2, 'Desktop: Store Locator con la dirección larga', { elemento: home.header.barraDelSitio });
+      await page.setViewportSize({ width: 390, height: 844 });
+      const enMobile = await direccionMostrada(home, page);
+      await home.capturarEvidencia(cp, 3, 'Mobile: Store Locator con la dirección larga', { elemento: home.header.barraDelSitio });
+      expect.soft(enDesktop, `Desktop: los primeros 53 caracteres de «${larga}» + "…"`).toBe(larga.slice(0, 53) + '…');
+      expect.soft(enMobile, `Mobile: los primeros 42 caracteres de «${larga}» + "…"`).toBe(larga.slice(0, 42) + '…');
+      await home.capturarEvidencia(cp);
+    });
+  });
+
 });
 
 /**
