@@ -4,6 +4,9 @@ import { DESKTOP, MOBILE } from './support/viewports';
 import { PLPCategoriaPage } from './pages/PLPCategoriaPage';
 import { HomePage } from './pages/HomePage';
 import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
+import { HeaderFull } from './pages/HeaderFull';
+import { AgotarseModal } from './pages/AgotarseModal';
+import { LoginModal } from './pages/LoginModal';
 
 /**
  * B2C-35 — Listado de productos por categoría (PLP N2/N3).
@@ -51,6 +54,95 @@ function tokenExigido(testData: Parameters<typeof token>[0], nombre: string): st
 
 const rutaDe = (url: string) => new URL(url).pathname.slice(1);
 const slugDe = (url: string) => new URL(url).pathname.split('/').pop()!;
+
+// --- Método de entrega (corrida 2026-11-03) ---------------------------------------------------
+
+async function abrirMetodoDeEntrega(page: Page): Promise<MetodoEntregaModal> {
+  await new HeaderFull(page).storeLocator.click();
+  return new MetodoEntregaModal(page).esperarAbierto();
+}
+
+/**
+ * Deja "Retiro en tienda" con `tienda` desde el modal abierto. "Algunos productos podrían agotarse"
+ * aparece al cambiar de método y se acepta; al invitado se le ofrece después el login, que tapa el
+ * header (B2C-70, B2C-18) y se cierra.
+ */
+async function fijarRetiro(page: Page, modal: MetodoEntregaModal, tienda: string): Promise<void> {
+  await modal.tabRetiroEnTienda.click();
+  await modal.elegirTienda(tienda);
+  const agotarse = new AgotarseModal(page);
+  if (await agotarse.root.waitFor({ state: 'visible', timeout: 8000 }).then(() => true, () => false)) {
+    await agotarse.botonSi.click();
+  }
+  await new LoginModal(page).cerrarSiAparece();
+  await expect(new HeaderFull(page).storeLocator).toContainText(tienda, { timeout: 45000 });
+}
+
+/** Deja "Despacho a domicilio" con `direccion` como invitado, desde el Home. */
+async function fijarDespacho(page: Page, direccion: string): Promise<void> {
+  const home = await new HomePage(page).goto();
+  await home.header.storeLocator.click();
+  const modal = await new MetodoEntregaModal(page).esperarAbierto();
+  // La sugerencia escribe la calle y el número tal cual y agrega la comuna a su modo.
+  const calleYNumero = direccion.match(/^(.*?\d+)/)![1];
+  await modal.fijarDireccionComoInvitado(direccion, new RegExp(calleYNumero.replace(/\s+/g, '\\s+'), 'i'));
+}
+
+/** El contador de la PLP, esperado hasta que se estabiliza (dos lecturas iguales seguidas). */
+async function contadorEstable(page: Page, plp: PLPCategoriaPage): Promise<number> {
+  let anterior = -1;
+  for (let i = 0; i < 20; i += 1) {
+    const actual = (await plp.productosDeclarados()) ?? -1;
+    if (actual >= 0 && actual === anterior) return actual;
+    anterior = actual;
+    await page.waitForTimeout(1500);
+  }
+  return anterior;
+}
+
+/**
+ * El id del componente de Page Designer del Home que se llama como el token (`Home_Banner`,
+ * `Carrusel_Banner`): el nombre solo viaja en el JSON de la página, el DOM lleva el id.
+ */
+async function idDeComponenteDelHome(page: Page, nombre: string): Promise<string> {
+  const html = await page.content();
+  const id = html.match(new RegExp(`"id":"([^"]+)","localized":(?:true|false),"name":"${nombre}"`))?.[1];
+  if (!id) throw new Error(`El Home no tiene un componente llamado "${nombre}"`);
+  return id;
+}
+
+/** Los destinos `/category/...` de un componente del Home; las N2/N3 llevan "_" en el slug. */
+async function categoriasDelComponente(page: Page, id: string): Promise<string[]> {
+  return page.locator(`[id="${id}"] a[href*="/category/"]`).evaluateAll((as) => [
+    ...new Set(as.map((a) => new URL(a.getAttribute('href')!, location.origin).pathname)),
+  ]);
+}
+
+/**
+ * Hace clic en el enlace de un carrusel del Home cuando su slide está en pantalla: el carrusel
+ * avanza solo, y un clic sobre una slide fuera de vista desplazaría el carrusel en vez de navegar.
+ */
+async function clicEnSlide(page: Page, id: string, destino: string): Promise<void> {
+  const enlaces = page.locator(`[id="${id}"] a[href$="${destino}"]`);
+  const ancho = page.viewportSize()!.width;
+  let indice = -1;
+  await expect
+    .poll(
+      async () => {
+        for (let i = 0; i < (await enlaces.count()); i += 1) {
+          const caja = await enlaces.nth(i).boundingBox();
+          if (caja && caja.width > 0 && caja.x >= -2 && caja.x + caja.width <= ancho + 2) {
+            indice = i;
+            return true;
+          }
+        }
+        return false;
+      },
+      { timeout: 60000, message: `la slide que enlaza a ${destino} entra en pantalla` },
+    )
+    .toBe(true);
+  await enlaces.nth(indice).click();
+}
 
 test.describe('B2C-35 — Listado de productos por categoria', () => {
   test.describe('Desktop 1440x900', () => {
@@ -360,6 +452,185 @@ test.describe('B2C-35 — Listado de productos por categoria', () => {
       const dentroDelViewport =
         caja !== null && caja.y - scrollRestaurado >= 0 && caja.y - scrollRestaurado < alturaViewport;
       expect(dentroDelViewport, 'la tarjeta desde la que se navegó queda visible').toBe(true);
+      await plp.capturarEvidencia(cp);
+    });
+
+    /*
+     * Corrida 2026-11-03. La entrada por el carrusel del Home ({HOME_CARRUSEL_N2} = Carrusel_Banner,
+     * id tb-banner-t4-hp) solo enlaza a N1 y a una búsqueda: el `test()` recorre las otras tres
+     * entradas y deja constancia de los destinos del carrusel; el veredicto del TC lo cierra eso.
+     */
+    test('TC-B2C35-D-001 · La PLP N2/N3 carga desde menu, URL directa, banner del Home o carrusel del Home (Desktop)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C35-D-001';
+      test.setTimeout(240000);
+      const urlPlp = tokenExigido(testData, 'PLP_URL');
+      const nombrePlp = await PLPCategoriaPage.nombreDeCategoria(page, urlPlp);
+
+      // Paso 1 — desde el menú de categorías: N1 del breadcrumb de la PLP y su tarjeta N2.
+      const home = await new HomePage(page).goto();
+      const menu = await home.header.abrirCategoriasDesktop();
+      await home.capturarEvidencia(cp, 1, 'menu de categorias');
+      await menu.abrirN2Desktop(new RegExp(`^\\s*${nombrePlp}\\s*$`));
+      const desdeMenu = new PLPCategoriaPage(page);
+      await desdeMenu.waitUntilReady();
+      expect(new URL(page.url()).pathname, 'menú → la PLP de {PLP_URL}').toBe(new URL(urlPlp).pathname);
+      await expect(desdeMenu.titulo).toHaveText(nombrePlp);
+      await expect(desdeMenu.tarjetas.first(), 'con su listado').toBeVisible();
+      await desdeMenu.capturarEvidencia(cp, 1, `PLP ${nombrePlp} desde el menu`);
+
+      // Paso 2a — URL directa.
+      const directa = await new PLPCategoriaPage(page, rutaDe(urlPlp)).goto();
+      expect(new URL(page.url()).pathname, 'URL directa → la PLP de {PLP_URL}').toBe(new URL(urlPlp).pathname);
+      await expect(directa.titulo).toHaveText(nombrePlp);
+      await expect(directa.tarjetas.first()).toBeVisible();
+      await directa.capturarEvidencia(cp, 2, `PLP ${nombrePlp} por URL directa`);
+
+      // Paso 2b — banner del Home: la slide que enlaza a una N2/N3.
+      await new HomePage(page).goto();
+      const banner = await idDeComponenteDelHome(page, tokenExigido(testData, 'HOME_BANNER_N2'));
+      const destinoBanner = (await categoriasDelComponente(page, banner)).find((c) => c.includes('_'));
+      expect(destinoBanner, '{HOME_BANNER_N2} enlaza a una categoría N2/N3').toBeTruthy();
+      await clicEnSlide(page, banner, destinoBanner!);
+      const desdeBanner = new PLPCategoriaPage(page);
+      await page.waitForURL(`**${destinoBanner}`, { timeout: 30000 });
+      await desdeBanner.waitUntilReady();
+      await expect(desdeBanner.tarjetas.first(), 'banner → PLP con listado').toBeVisible();
+      await desdeBanner.capturarEvidencia(cp, 2, `PLP desde el banner del Home (${slugDe(page.url())})`);
+
+      // Paso 2c — carrusel del Home: se deja constancia de a dónde enlaza.
+      await new HomePage(page).goto();
+      const carrusel = await idDeComponenteDelHome(page, tokenExigido(testData, 'HOME_CARRUSEL_N2'));
+      const destinosCarrusel = await categoriasDelComponente(page, carrusel);
+      test.info().annotations.push({ type: 'carrusel', description: `${carrusel}: ${destinosCarrusel.join(', ')}` });
+      await page.locator(`[id="${carrusel}"]`).scrollIntoViewIfNeeded();
+      await home.capturarEvidencia(cp, 2, `carrusel ${carrusel} del Home`, { elemento: page.locator(`[id="${carrusel}"]`) });
+      await home.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C35-D-004 · El titulo y contador de productos se actualizan al cambiar la direccion (Desktop)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C35-D-004';
+      test.setTimeout(300000);
+      const tienda1 = tokenExigido(testData, 'TIENDA_RETIRO_001');
+      const tienda2 = tokenExigido(testData, 'TIENDA_RETIRO_002');
+      const urlPlp = tokenExigido(testData, 'PLP_URL');
+
+      // Paso 1 — el contador con la primera tienda.
+      await new HomePage(page).goto();
+      await fijarRetiro(page, await abrirMetodoDeEntrega(page), tienda1);
+      const plp = await new PLPCategoriaPage(page, rutaDe(urlPlp)).goto();
+      const titulo = await plp.titulo.innerText();
+      const antes = await contadorEstable(page, plp);
+      await plp.capturarEvidencia(cp, 1, `${titulo} con ${tienda1}: ${antes} productos`);
+
+      // Paso 2 — cambiar a la segunda tienda desde la misma PLP, sin recargar.
+      await page.evaluate(() => ((window as unknown as { __sinRecarga: boolean }).__sinRecarga = true));
+      await fijarRetiro(page, await abrirMetodoDeEntrega(page), tienda2);
+      const despues = await contadorEstable(page, plp);
+      const sinRecarga = await page.evaluate(() => !!(window as unknown as { __sinRecarga?: boolean }).__sinRecarga);
+      await plp.capturarEvidencia(cp, 2, `${titulo} con ${tienda2}: ${despues} productos`);
+
+      // Referencia — la misma PLP cargada desde cero con la segunda tienda.
+      await plp.goto();
+      const referencia = await contadorEstable(page, plp);
+      test.info().annotations.push({
+        type: 'contador',
+        description: `${tienda1}: ${antes} · tras el cambio: ${despues} (sin recarga: ${sinRecarga}) · ${tienda2} desde cero: ${referencia}`,
+      });
+      await expect(plp.titulo, 'el título sigue siendo el de la categoría').toHaveText(titulo);
+      expect(despues, 'el contador tras el cambio es el de la segunda tienda').toBe(referencia);
+      await plp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C35-D-005 · Las pildoras de PLP N2 muestran Todas por defecto y las N3 en orden BM; sin N3 no se renderizan; en Mobile se desplazan horizontalmente (Desktop)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C35-D-005';
+      test.setTimeout(180000);
+      const urlN2 = categoriaN2(testData);
+      const slugN2 = slugDe(urlN2);
+
+      // Paso 1 — N2 con subcategorías: "Todas" activa y luego las N3.
+      const plp = await new PLPCategoriaPage(page, rutaDe(urlN2)).goto();
+      // "Todo" se monta después que las N3: esperar solo por la cantidad lee la fila a medias.
+      await expect
+        .poll(async () => (await plp.estadoDeLasPildoras(slugN2)).some((p) => /^tod(o|as)$/i.test(p.texto)), { timeout: 30000 })
+        .toBe(true);
+      const todas = await plp.estadoDeLasPildoras(slugN2);
+      const pildoras = todas.slice(Math.max(0, todas.findIndex((p) => /^tod(o|as)$/i.test(p.texto))));
+      test.info().annotations.push({ type: 'pildoras N2', description: pildoras.map((p) => `${p.texto}${p.seleccionada ? '*' : ''}`).join(', ') });
+      expect(pildoras[0].texto, 'la primera píldora es "Todas" (la UI la escribe "Todo")').toMatch(/^tod(o|as)$/i);
+      expect(pildoras[0].seleccionada, '"Todas" activa por defecto').toBe(true);
+      expect(pildoras.length, 'le siguen las N3').toBeGreaterThan(1);
+      for (const p of pildoras.slice(1)) expect(p.href ?? '', `${p.texto} es N3 de la categoría`).toMatch(new RegExp(`^/category/${slugN2}_`));
+      await plp.capturarEvidencia(cp, 1, 'N2 con subcategorias: pildoras');
+
+      // Paso 3 — las mismas píldoras en 390 px se desplazan sin romper el layout.
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.reload();
+      await plp.waitUntilReady();
+      await expect.poll(() => plp.filaDePildoras(), { timeout: 30000, message: 'la fila de píldoras se monta en 390 px' }).not.toBeNull();
+      const fila = await plp.filaDePildoras();
+      expect(fila, 'en Mobile la fila tiene scroll horizontal').not.toBeNull();
+      const r = await plp.deslizarPildoras(250);
+      test.info().annotations.push({ type: 'mobile', description: JSON.stringify({ fila, ...r }) });
+      expect(r.despues, 'las píldoras se desplazan').toBeGreaterThan(r.antes);
+      expect(r.anchoDoc, 'sin scroll horizontal del documento').toBeLessThanOrEqual(390);
+      await plp.capturarEvidencia(cp, 3, 'pildoras desplazadas en 390 px');
+      await page.setViewportSize({ width: 1440, height: 900 });
+
+      // Paso 2 — N2 sin subcategorías: sin fila de píldoras.
+      const nombreSinN3 = tokenExigido(testData, 'CATEGORY_N2_WO_SUB');
+      const home = await new HomePage(page).goto();
+      const menu = await home.header.abrirCategoriasDesktop();
+      await menu.abrirN2Desktop(new RegExp(`^\\s*${nombreSinN3}\\s*$`, 'i'));
+      const sinN3 = new PLPCategoriaPage(page);
+      await sinN3.waitUntilReady();
+      await expect(sinN3.titulo, `la PLP de ${nombreSinN3}`).toHaveText(new RegExp(`^${nombreSinN3}$`, 'i'));
+      await page.waitForTimeout(2000);
+      const visibles = await sinN3.estadoDeLasPildoras(slugDe(page.url()));
+      test.info().annotations.push({ type: `pildoras ${nombreSinN3}`, description: visibles.map((p) => `${p.texto}${p.seleccionada ? '*' : ''}`).join(', ') || '(ninguna)' });
+      await sinN3.capturarEvidencia(cp, 2, `${nombreSinN3} (N2 sin N3)`);
+      await expect(sinN3.pildoraTodo.locator('visible=true'), `${nombreSinN3} no tiene N3: no se renderiza la fila de píldoras`).toHaveCount(0);
+      await sinN3.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C35-D-008 · La grilla muestra 50 productos con imagen, nombre, precio y boton Agregar al carro (Desktop)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C35-D-008';
+      test.setTimeout(240000);
+      const nombre = tokenExigido(testData, 'CATEGORY_N3_MAS_50_PRODS');
+
+      // Paso 1 — la N3 declarada, desde su N2 en el menú y la píldora.
+      const home = await new HomePage(page).goto();
+      const menu = await home.header.abrirCategoriasDesktop();
+      await menu.abrirN3Desktop(new RegExp(`^\\s*${nombre}\\s*$`, 'i'));
+      const plp = new PLPCategoriaPage(page);
+      await plp.waitUntilReady();
+      await expect(plp.titulo).toHaveText(new RegExp(`^${nombre}$`, 'i'));
+      const declarados = await contadorEstable(page, plp);
+      await plp.capturarEvidencia(cp, 1, `${nombre}: ${declarados} productos`);
+
+      // Paso 2 — contar y revisar cada tarjeta.
+      const tarjetas = await plp.contenidoDeLasTarjetas();
+      const incompletas = tarjetas.filter((t) => !t.imagen || !t.nombre || !t.precio || !(t.agregar || t.sinStock)).map((t) => t.nombre || '(sin nombre)');
+      const sinImagen = await plp.shelvesMobile
+        .filter({ hasText: /imagen no disponible/i })
+        .evaluateAll((ts) => ts.map((t) => `${t.querySelector('a[href$=".html"]')?.getAttribute('href')} · ${(t as HTMLElement).innerText.replace(/\s+/g, ' ').slice(0, 120)}`));
+      test.info().annotations.push({ type: 'grilla', description: `${declarados} declarados, ${tarjetas.length} en la grilla, ${tarjetas.filter((t) => t.sinStock).length} sin stock; sin imagen: ${sinImagen.join(' || ') || 'ninguno'}` });
+      if (sinImagen.length) await plp.capturarEvidencia(cp, 2, 'producto con "Imagen no disponible"', { elemento: plp.shelvesMobile.filter({ hasText: /imagen no disponible/i }).first() });
+      await plp.capturarEvidencia(cp, 2, `grilla con ${tarjetas.length} productos`, { fullPage: true });
+      expect(declarados ?? 0, 'la categoría tiene más de 50 productos').toBeGreaterThan(50);
+      expect(tarjetas.length, 'la grilla inicial muestra 50 productos').toBe(50);
+      expect(incompletas, 'cada producto con imagen, nombre, precio y Agregar').toEqual([]);
       await plp.capturarEvidencia(cp);
     });
   });
@@ -834,6 +1105,160 @@ test.describe('B2C-35 — Listado de productos por categoria', () => {
       await plp.reintentar.click();
       await expect(plp.enlacesDeProducto.first(), 'la PLP carga la grilla de productos').toBeVisible({ timeout: 30000 });
       await plp.capturarEvidencia(cp, 4, 'grilla cargada tras Reintentar');
+      await plp.capturarEvidencia(cp);
+    });
+
+    // --- Corrida 2026-11-03 ----------------------------------------------------------------------
+    //
+    // M-009 y M-025 piden en su precondición "Despacho a domicilio activo con {DIRECCION_DESPACHO_001}":
+    // la dirección la nombra el propio TC, así que es la que se usa, aunque la columna Test data
+    // declare {DIRECCION_DESPACHO} (que el caso no usa en ningún paso).
+
+    test('TC-B2C35-M-003 · Verificar que un banner del Home vinculado a una categoría abre su PLP (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C35-M-003';
+      test.setTimeout(180000);
+      const home = await new HomePage(page).goto();
+      const banner = await idDeComponenteDelHome(page, tokenExigido(testData, 'HOME_BANNER_N2'));
+      const destino = (await categoriasDelComponente(page, banner)).find((c) => c.includes('_'));
+      test.info().annotations.push({ type: 'banner', description: `${banner} → ${(await categoriasDelComponente(page, banner)).join(', ')}` });
+      expect(destino, '{HOME_BANNER_N2} enlaza a una categoría N2/N3').toBeTruthy();
+      await home.capturarEvidencia(cp, 2, `banner ${banner} del Home`, { elemento: page.locator(`[id="${banner}"]`) });
+
+      // Pasos 3 y 4 — tocar la slide de la N2/N3 y llegar a su PLP.
+      await clicEnSlide(page, banner, destino!);
+      await page.waitForURL(`**${destino}`, { timeout: 30000 });
+      const plp = new PLPCategoriaPage(page);
+      await plp.waitUntilReady();
+      await expect(plp.titulo, 'la PLP de la categoría vinculada').toHaveText(await PLPCategoriaPage.nombreDeCategoria(page, new URL(destino!, page.url()).href));
+      await expect(plp.enlacesDeProducto.first(), 'con su listado').toBeVisible();
+      await plp.capturarEvidencia(cp, 4, `PLP ${slugDe(page.url())}`);
+      await plp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C35-M-009 · Verificar que el contador de productos se actualiza al cambiar la dirección (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C35-M-009';
+      test.setTimeout(300000);
+      const tienda = tokenExigido(testData, 'TIENDA_RETIRO_001');
+      await fijarDespacho(page, tokenExigido(testData, 'DIRECCION_DESPACHO_001'));
+
+      // Pasos 1 a 3 — PLP N2 y su cantidad con el despacho activo.
+      const plp = await new PLPCategoriaPage(page, rutaDe(categoriaN2(testData))).goto();
+      await plp.header.esperarDireccionEnStoreLocator(45000);
+      const antes = await contadorEstable(page, plp);
+      await plp.capturarEvidencia(cp, 3, `PLP N2 con despacho: ${antes} productos`);
+
+      // Pasos 4 y 5 — retiro en la tienda declarada desde el Store Locator, sin recargar.
+      await page.evaluate(() => ((window as unknown as { __sinRecarga: boolean }).__sinRecarga = true));
+      await fijarRetiro(page, await abrirMetodoDeEntrega(page), tienda);
+      const despues = await contadorEstable(page, plp);
+      const sinRecarga = await page.evaluate(() => !!(window as unknown as { __sinRecarga?: boolean }).__sinRecarga);
+      await plp.capturarEvidencia(cp, 5, `PLP N2 con retiro en ${tienda}: ${despues} productos`);
+
+      await plp.goto();
+      const referencia = await contadorEstable(page, plp);
+      test.info().annotations.push({ type: 'contador', description: `despacho: ${antes} · tras el cambio: ${despues} (sin recarga: ${sinRecarga}) · ${tienda} desde cero: ${referencia}` });
+      expect(despues, `la cantidad corresponde a ${tienda}`).toBe(referencia);
+      await plp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C35-M-014 · Verificar que una PLP N2 sin subcategorías N3 no muestra la fila de píldoras (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C35-M-014';
+      test.setTimeout(150000);
+      const nombre = tokenExigido(testData, 'CATEGORY_N2_WO_SUB');
+      const home = await new HomePage(page).goto();
+      const menu = await home.header.abrirCategoriasMobile();
+      await menu.clicTarjetaN2(new RegExp(`^\\s*${nombre}\\s*$`, 'i'));
+      const plp = new PLPCategoriaPage(page);
+      await plp.waitUntilReady();
+      await expect(plp.titulo, `la PLP de ${nombre}`).toHaveText(new RegExp(`^${nombre}$`, 'i'));
+      await expect(plp.enlacesDeProducto.first(), 'con su listado').toBeVisible();
+      await page.waitForTimeout(2000);
+      const visibles = await plp.estadoDeLasPildoras(slugDe(page.url()));
+      test.info().annotations.push({ type: 'pildoras', description: visibles.map((p) => `${p.texto}${p.seleccionada ? '*' : ''}`).join(', ') || '(ninguna)' });
+      await plp.capturarEvidencia(cp, 2, `PLP ${nombre}`);
+      await expect(plp.pildoraTodo.locator('visible=true'), 'sin N3 no se muestra la fila de píldoras').toHaveCount(0);
+      await plp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C35-M-023 · Verificar que con Retiro en tienda la PLP muestra el stock de la tienda elegida (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C35-M-023';
+      test.setTimeout(300000);
+      const tienda = tokenExigido(testData, 'TIENDA_RETIRO_001');
+      await new HomePage(page).goto();
+      await fijarRetiro(page, await abrirMetodoDeEntrega(page), tienda);
+
+      const plp = new PLPCategoriaPage(page, rutaDe(categoriaN2(testData)));
+      const asignada = plp.observarTiendaAsignada();
+      await plp.goto();
+      await expect(plp.header.storeLocator).toContainText(tienda, { timeout: 45000 });
+      const enPantalla = await plp.disponibilidadPorSku();
+      await expect.poll(() => !!asignada.inventoryId && !!asignada.authorization, { timeout: 30000, message: 'inventario de la tienda de retiro' }).toBe(true);
+      await plp.capturarEvidencia(cp, 2, `PLP N2 con retiro en ${tienda}`);
+
+      const skus = Object.keys(enPantalla);
+      expect(skus.length, 'productos en la grilla').toBeGreaterThan(0);
+      const enTienda = await plp.disponibilidadEnInventario(skus, asignada.inventoryId!, asignada);
+      const distintos = skus.filter((s) => enPantalla[s] !== enTienda[s]);
+      test.info().annotations.push({ type: 'disponibilidad', description: `tienda ${asignada.tienda} (${asignada.inventoryId}): ${skus.length} productos, ${skus.filter((s) => !enPantalla[s]).length} sin stock en pantalla` });
+      expect(distintos, `productos cuya disponibilidad no coincide con el stock de ${tienda}`).toEqual([]);
+      await plp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C35-M-024 · Verificar que un producto sin stock muestra "Pronto disponible" y "Ver similares" (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C35-M-024';
+      test.setTimeout(240000);
+      const sku = tokenExigido(testData, 'SKU_SIN_STOCK');
+      await fijarDespacho(page, tokenExigido(testData, 'DIRECCION_DESPACHO'));
+
+      const plp = await new PLPCategoriaPage(page, rutaDe(tokenExigido(testData, 'PLP_URL'))).goto();
+      await plp.header.esperarDireccionEnStoreLocator(45000);
+      await plp.contenidoDeLasTarjetas();
+      await plp.capturarEvidencia(cp, 2, 'PLP con despacho activo');
+
+      // Paso 3 — la tarjeta del SKU declarado.
+      const tarjeta = plp.shelvesMobile.filter({ has: page.locator(`a[href*="${sku}"]`) }).first();
+      await expect(tarjeta, `${sku} aparece en la PLP`).toBeVisible({ timeout: 30000 });
+      await tarjeta.scrollIntoViewIfNeeded();
+      await plp.capturarEvidencia(cp, 3, `tarjeta de ${sku}`, { elemento: tarjeta });
+      await expect(tarjeta, 'etiqueta "Pronto disponible"').toContainText(/pronto disponible/i);
+      await expect(tarjeta.getByRole('button', { name: /^agregar$/i }), 'sin "Agregar"').toHaveCount(0);
+      await expect(tarjeta.getByText(/ver similares/i).first(), '"Ver similares"').toBeVisible();
+      await plp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C35-M-025 · Verificar que cambiar el método de entrega desde la PLP actualiza la disponibilidad (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C35-M-025';
+      test.setTimeout(300000);
+      const tienda = tokenExigido(testData, 'TIENDA_RETIRO_001');
+      await fijarDespacho(page, tokenExigido(testData, 'DIRECCION_DESPACHO_001'));
+
+      // Pasos 1 y 2 — PLP N2 con el despacho.
+      const plp = new PLPCategoriaPage(page, rutaDe(categoriaN2(testData)));
+      const asignada = plp.observarTiendaAsignada();
+      await plp.goto();
+      await plp.header.esperarDireccionEnStoreLocator(45000);
+      await expect.poll(() => !!asignada.inventoryId, { timeout: 30000, message: 'tienda del despacho' }).toBe(true);
+      const tiendaDespacho = asignada.inventoryId;
+      await plp.contenidoDeLasTarjetas();
+      await plp.capturarEvidencia(cp, 2, `PLP N2 con despacho (${tiendaDespacho})`);
+
+      // Pasos 3 y 4 — Retiro en tienda desde el Store Locator de la PLP. Con la página desplazada,
+      // el header de Mobile oculta la fila del Store Locator: se vuelve arriba antes de tocarlo.
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await fijarRetiro(page, await abrirMetodoDeEntrega(page), tienda);
+      await expect.poll(() => asignada.inventoryId, { timeout: 45000, message: `la PLP pasa al inventario de ${tienda}` }).not.toBe(tiendaDespacho);
+      await page.waitForTimeout(3000);
+      const enPantalla = await plp.disponibilidadPorSku();
+      const tarjetas = await plp.contenidoDeLasTarjetas();
+      await plp.capturarEvidencia(cp, 4, `PLP N2 con retiro en ${tienda} (${asignada.inventoryId})`);
+
+      const skus = Object.keys(enPantalla);
+      const enTienda = await plp.disponibilidadEnInventario(skus, asignada.inventoryId!, asignada);
+      const distintos = skus.filter((s) => enPantalla[s] !== enTienda[s]);
+      const sinEtiqueta = tarjetas.filter((t) => !t.agregar && !t.sinStock).map((t) => t.nombre);
+      test.info().annotations.push({ type: 'disponibilidad', description: `${tiendaDespacho} → ${asignada.inventoryId}: ${skus.length} productos, ${skus.filter((s) => !enTienda[s]).length} sin stock en la tienda` });
+      expect(distintos, `la PLP refleja el stock de ${tienda}`).toEqual([]);
+      expect(sinEtiqueta, 'los productos sin stock muestran "Pronto disponible"').toEqual([]);
       await plp.capturarEvidencia(cp);
     });
   });

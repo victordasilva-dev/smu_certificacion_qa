@@ -3,6 +3,10 @@ import { test, expect, token } from './support/fixtures';
 import { DESKTOP_1280, MOBILE } from './support/viewports';
 import { BuscadorModal, FormFactor } from './pages/BuscadorModal';
 import { SRPPage } from './pages/SRPPage';
+import { HeaderFull } from './pages/HeaderFull';
+import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
+import { AgotarseModal } from './pages/AgotarseModal';
+import { LoginModal } from './pages/LoginModal';
 
 /**
  * B2C-18 — Search Results Page (SRP).
@@ -73,6 +77,213 @@ async function abrirSRP(page: Page, termino: string): Promise<SRPPage> {
  */
 async function escribirEnElBuscador(buscador: BuscadorModal, termino: string): Promise<void> {
   await buscador.input.fill(termino);
+}
+
+/** Abre "Elige tu método de entrega" desde el Store Locator del header de la página vigente. */
+async function abrirMetodoDeEntrega(page: Page): Promise<MetodoEntregaModal> {
+  await new HeaderFull(page).storeLocator.click();
+  return new MetodoEntregaModal(page).esperarAbierto();
+}
+
+/**
+ * "Algunos productos podrían agotarse" aparece al cambiar un método ya elegido por otro; al elegir
+ * el primero no se monta. Se acepta si aparece, porque el caso pide que el cambio se aplique.
+ */
+async function aceptarAgotarseSiAparece(page: Page): Promise<void> {
+  const agotarse = new AgotarseModal(page);
+  if (await agotarse.root.waitFor({ state: 'visible', timeout: 8000 }).then(() => true, () => false)) {
+    await agotarse.botonSi.click();
+  }
+}
+
+/** Deja "Retiro en tienda" con `tienda` desde el modal abierto y espera a que el header la muestre. */
+async function fijarRetiro(page: Page, modal: MetodoEntregaModal, tienda: string): Promise<void> {
+  await modal.tabRetiroEnTienda.click();
+  await modal.elegirTienda(tienda);
+  await aceptarAgotarseSiAparece(page);
+  await new LoginModal(page).cerrarSiAparece();
+  await expect(new HeaderFull(page).storeLocator).toContainText(tienda, { timeout: 45000 });
+}
+
+/** Deja "Despacho a domicilio" con `direccion` como invitado, desde el Home. */
+async function fijarDespacho(page: Page, direccion: string): Promise<void> {
+  await page.goto('/');
+  await new SRPPage(page).cookies.aceptarSiAparece();
+  const modal = await abrirMetodoDeEntrega(page);
+  await modal.fijarDireccionComoInvitado(direccion, new RegExp(direccion.split(',')[0].trim(), 'i'));
+}
+
+/** Cuántos shelves cambiaron de disponibilidad entre dos lecturas de la misma SRP. */
+function cambiosDeDisponibilidad(
+  antes: Record<string, string>,
+  despues: Record<string, string>,
+): string[] {
+  return Object.keys(despues).filter((k) => k in antes && antes[k] !== despues[k]);
+}
+
+type Ctx = { page: Page; testData: Parameters<typeof token>[0]; baseURL: string | undefined };
+
+/**
+ * CA9a con un método activo: la SRP del término se resuelve contra el stock de la tienda que
+ * atiende el método. Se comprueba contra la SRP del mismo término sin método —el catálogo
+ * general—: si ningún shelf cambia de disponibilidad, la SRP no está mirando la tienda.
+ *
+ * **La SRP no quita los productos sin stock**: los deja con "Ver similares" (lo que pide el
+ * CA9a de D-014), así que el total no baja. Lo que cambia es la disponibilidad de cada shelf.
+ */
+async function casoMetodoActivo(
+  { page, testData, baseURL }: Ctx,
+  cp: string,
+  fijar: () => Promise<string>,
+): Promise<void> {
+  const termino = terminoDeclarado(testData, 'SEARCH_TERM_001');
+  const general = await disponibilidadSinMetodo(page, baseURL, termino);
+  const srp = new SRPPage(page, termino);
+
+  const enHeader = await fijar();
+  const storeLocator = new HeaderFull(page).storeLocator;
+  await srp.capturarEvidencia(cp, 2, `método de entrega activo: ${enHeader}`, { elemento: storeLocator });
+
+  await srp.goto();
+  await srp.waitUntilReady();
+  await srp.esperarInteractiva();
+  await expect(storeLocator).toContainText(enHeader);
+  await srp.capturarEvidencia(cp, 3, `SRP de "${termino}" con el método activo`);
+
+  const enTienda = await srp.disponibilidad();
+  expect(Object.values(enTienda), 'todo shelf resuelve su disponibilidad').not.toContain('otro');
+  const cambios = cambiosDeDisponibilidad(general, enTienda);
+  expect(cambios.length, 'la disponibilidad refleja el stock de la tienda, no el catálogo general').toBeGreaterThan(0);
+  await srp.capturarEvidencia(cp, 4, `${cambios.length} producto(s) con disponibilidad distinta a la del catálogo general`, {
+    fullPage: true,
+  });
+  await srp.capturarEvidencia(cp);
+}
+
+async function fijarRetiroDesdeHome(page: Page, tienda: string): Promise<string> {
+  await page.goto('/');
+  await new SRPPage(page).cookies.aceptarSiAparece();
+  await fijarRetiro(page, await abrirMetodoDeEntrega(page), tienda);
+  return tienda;
+}
+
+/** CA9a: un producto sin stock para el método activo — etiqueta, Agregar oculto y "Ver similares". */
+async function casoSinStock({ page, testData }: Ctx, cp: string): Promise<void> {
+  const termino = terminoDeclarado(testData, 'SEARCH_TERM_001');
+  const tienda = terminoDeclarado(testData, 'TIENDA_RETIRO_001');
+  const sku = token(testData, 'SKU_SIN_STOCK');
+  const srp = new SRPPage(page, termino);
+
+  await fijarRetiroDesdeHome(page, tienda);
+  await srp.goto();
+  await srp.waitUntilReady();
+  await srp.esperarInteractiva();
+  await srp.capturarEvidencia(cp, 2, `SRP de "${termino}" con retiro en ${tienda}`);
+
+  // El del SKU declarado si la SRP del término lo trae; si no, el primero que la SRP marca sin
+  // stock, que es lo que el paso 3 pide identificar.
+  const delSku = srp.shelves.filter({ has: page.locator(`a[href*="${sku}"]`) });
+  const raiz = (await delSku.count())
+    ? delSku.first()
+    : srp.shelves.filter({ has: page.getByRole('button', { name: /ver similares/i }) }).first();
+  await raiz.scrollIntoViewIfNeeded();
+  await srp.capturarEvidencia(cp, 3, 'producto sin disponibilidad en la grilla', { elemento: raiz });
+
+  await expect(raiz.getByRole('button', { name: /ver similares/i })).toBeVisible();
+  await expect(raiz.getByRole('button', { name: /^agregar$/i })).toHaveCount(0);
+  await srp.capturarEvidencia(cp, 5, 'botón Agregar oculto y "Ver similares" visible', { elemento: raiz });
+
+  // La etiqueta va al final y blanda: es la única parte del esperado que puede discrepar, y las
+  // otras dos tienen que quedar medidas igual.
+  const texto = (await raiz.innerText()).replace(/\s+/g, ' ');
+  expect.soft(texto, 'etiqueta "No disponible" en el shelf').toMatch(/(^|\s)no disponible/i);
+  await srp.capturarEvidencia(cp, 4, `etiqueta del shelf: ${texto.match(/pronto disponible|no disponible/i)?.[0] ?? 'sin etiqueta'}`, {
+    elemento: raiz,
+  });
+  await srp.capturarEvidencia(cp);
+}
+
+/** CA9b: cambiar de despacho a retiro desde la propia SRP actualiza la disponibilidad sin salir de ella. */
+async function casoCambioDeMetodo({ page, testData }: Ctx, cp: string): Promise<void> {
+  const termino = terminoDeclarado(testData, 'SEARCH_TERM_001');
+  const tienda = terminoDeclarado(testData, 'TIENDA_RETIRO_001');
+  const direccion = terminoDeclarado(testData, 'DIRECCION_DESPACHO_001');
+  const srp = new SRPPage(page, termino);
+
+  await fijarDespacho(page, direccion);
+  await srp.goto();
+  await srp.waitUntilReady();
+  await srp.esperarInteractiva();
+  await srp.capturarEvidencia(cp, 2, `SRP con despacho a ${direccion}`);
+  const conDespacho = await srp.disponibilidad();
+  const urlAntes = srp.rutaConQuery;
+  // Una marca en `window`: si la SRP se recarga para aplicar el cambio, desaparece.
+  await page.evaluate(() => ((window as unknown as { __qaSinRecarga: boolean }).__qaSinRecarga = true));
+
+  const modal = await abrirMetodoDeEntrega(page);
+  await srp.capturarEvidencia(cp, 3, 'opción de cambio de método abierta desde la SRP', { elemento: modal.root });
+  await fijarRetiro(page, modal, tienda);
+  await srp.capturarEvidencia(cp, 4, `retiro en ${tienda} elegido`);
+
+  await expect
+    .poll(async () => cambiosDeDisponibilidad(conDespacho, await srp.disponibilidad()).length, {
+      message: 'la SRP actualiza la disponibilidad al nuevo método',
+      timeout: 30000,
+    })
+    .toBeGreaterThan(0);
+  await srp.capturarEvidencia(cp, 5, 'disponibilidad actualizada según la tienda de retiro', { fullPage: true });
+
+  expect(srp.rutaConQuery, 'sigue en la misma SRP').toBe(urlAntes);
+  expect(
+    await page.evaluate(() => (window as unknown as { __qaSinRecarga?: boolean }).__qaSinRecarga === true),
+    'sin recargar la página',
+  ).toBe(true);
+  await srp.capturarEvidencia(cp, 6, 'misma SRP, sin recarga ni navegación');
+  await srp.capturarEvidencia(cp);
+}
+
+/** CA10a: el componente de monetización configurado se muestra en la SRP del término. */
+async function casoMonetizacion({ page, testData }: Ctx, cp: string): Promise<void> {
+  const termino = terminoDeclarado(testData, 'SEARCH_TERM_001');
+  const srp = await abrirSRP(page, termino);
+  await srp.capturarEvidencia(cp, 3, `SRP de "${termino}"`);
+
+  // El que la SRP de "leche" trae es un Sponsor Banner (tipo 2): una tarjeta "Patrocinado" con
+  // imagen de campaña y logo del patrocinador que interrumpe la grilla.
+  const banner = srp.sponsorBanners.first();
+  await expect(banner).toBeVisible({ timeout: 30000 });
+  await banner.scrollIntoViewIfNeeded();
+  const cajaBanner = (await banner.boundingBox())!;
+  const tops = await srp.shelves.evaluateAll((s) => s.map((e) => e.getBoundingClientRect().top));
+  expect(tops.some((t) => t < cajaBanner.y), 'hay productos antes del banner').toBe(true);
+  expect(tops.some((t) => t > cajaBanner.y + cajaBanner.height), 'y después: interrumpe la grilla').toBe(true);
+  await expect(banner).toContainText(/patrocinado/i);
+  expect(await banner.getAttribute('href')).toBeTruthy();
+  await srp.capturarEvidencia(cp, 4, 'Sponsor Banner (tipo 2) interrumpiendo la grilla', { elemento: banner });
+
+  expect.soft(await srp.imagenCargada(banner), 'la imagen de campaña del Sponsor Banner se pinta').toBe(true);
+  await srp.capturarEvidencia(cp, 5, `${await srp.sponsorBanners.count()} Sponsor Banner(s) en la SRP`, { fullPage: true });
+  await srp.capturarEvidencia(cp);
+}
+
+/**
+ * La disponibilidad de la SRP del invitado sin método de entrega: el catálogo general, contra el
+ * que se compara la de una tienda. Se lee en un contexto aparte para no tocar la sesión del caso.
+ */
+async function disponibilidadSinMetodo(
+  page: Page,
+  baseURL: string | undefined,
+  termino: string,
+): Promise<Record<string, string>> {
+  const ctx = await page.context().browser()!.newContext({ baseURL, viewport: page.viewportSize() });
+  try {
+    const srp = await new SRPPage(await ctx.newPage(), termino).goto();
+    await srp.waitUntilReady();
+    await srp.esperarInteractiva();
+    return await srp.disponibilidad();
+  } finally {
+    await ctx.close();
+  }
 }
 
 test.describe('B2C-18 — Search Results Page', () => {
@@ -535,6 +746,74 @@ test.describe('B2C-18 — Search Results Page', () => {
       });
       await srp.capturarEvidencia(cp);
     });
+
+    test('TC-B2C18-D-013 · Con retiro en tienda activo la SRP muestra productos según stock de la tienda seleccionada (Desktop)', async ({
+      page,
+      testData,
+      baseURL,
+    }) => {
+      test.setTimeout(180000);
+      await casoMetodoActivo({ page, testData, baseURL }, 'TC-B2C18-D-013', () =>
+        fijarRetiroDesdeHome(page, terminoDeclarado(testData, 'TIENDA_RETIRO_001')),
+      );
+    });
+
+    test('TC-B2C18-D-014 · Un producto sin disponibilidad muestra etiqueta "No disponible", Agregar oculto y "Ver similares" (Desktop)', async ({
+      page,
+      testData,
+      baseURL,
+    }) => {
+      test.setTimeout(180000);
+      await casoSinStock({ page, testData, baseURL }, 'TC-B2C18-D-014');
+    });
+
+    test('TC-B2C18-D-015 · Cambiar el método de entrega desde la SRP actualiza la disponibilidad sin salir de la SRP (Desktop)', async ({
+      page,
+      testData,
+      baseURL,
+    }) => {
+      test.setTimeout(240000);
+      await casoCambioDeMetodo({ page, testData, baseURL }, 'TC-B2C18-D-015');
+    });
+
+    test('TC-B2C18-D-016 · Los componentes de monetización configurados se muestran en la SRP según el tipo activo (Desktop)', async ({
+      page,
+      testData,
+      baseURL,
+    }) => {
+      await casoMonetizacion({ page, testData, baseURL }, 'TC-B2C18-D-016');
+    });
+
+    test('TC-B2C18-D-026 · La paginación muestra la página 1 activa, los números de página y la flecha siguiente (Desktop)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C18-D-026';
+      const termino = terminoDeclarado(testData, 'SEARCH_TERM_50+_SKUS');
+      const srp = await abrirSRP(page, termino);
+      const total = await srp.conteoDeclarado();
+      expect(total, 'precondición: más de 50 resultados').toBeGreaterThan(50);
+      await srp.capturarEvidencia(cp, 2, `SRP de "${termino}" con ${total} productos`, { elemento: srp.contador });
+
+      await srp.paginacion.scrollIntoViewIfNeeded();
+      await expect(srp.paginacion).toBeVisible();
+      // Debajo del listado: el nav empieza donde termina el último shelf.
+      const finGrilla = await srp.shelves.last().evaluate((e) => e.getBoundingClientRect().bottom);
+      const inicioNav = (await srp.paginacion.boundingBox())!.y;
+      expect(inicioNav, 'la paginación va debajo del listado').toBeGreaterThanOrEqual(finGrilla);
+      await srp.capturarEvidencia(cp, 4, 'componente de paginación debajo del listado');
+
+      await expect(srp.botonDePagina(1)).toHaveAttribute('aria-current', 'page');
+      await expect(srp.botonDePagina(2)).not.toHaveAttribute('aria-current', 'page');
+      const paginas = Math.ceil(total! / 50);
+      for (let n = 1; n <= paginas; n++) await expect(srp.botonDePagina(n)).toBeVisible();
+      await expect(srp.flechaSiguiente).toBeVisible();
+      await expect(srp.flechaSiguiente).not.toHaveAttribute('aria-disabled', 'true');
+      await srp.capturarEvidencia(cp, 7, `página 1 activa, ${paginas} páginas y flecha siguiente`, {
+        elemento: srp.paginacion,
+      });
+      await srp.capturarEvidencia(cp);
+    });
   });
 
   // ===================================================================== MOBILE
@@ -925,6 +1204,117 @@ test.describe('B2C-18 — Search Results Page', () => {
         fullPage: true,
       });
       await srp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C18-M-008 · La SRP muestra hasta 50 productos en la carga inicial con estructura de shelf correcta (Mobile)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C18-M-008';
+      const termino = terminoDeclarado(testData, 'SEARCH_TERM_50+_SKUS');
+      const srp = await abrirSRP(page, termino);
+      const total = await srp.conteoDeclarado();
+      expect(total, 'precondición: más de 50 resultados').toBeGreaterThan(50);
+      await srp.capturarEvidencia(cp, 2, `SRP de "${termino}" con ${total} productos`);
+
+      expect(await srp.shelves.count(), 'carga inicial de 50 productos').toBe(50);
+      await srp.capturarEvidencia(cp, 3, '50 productos en la carga inicial');
+
+      for (let i = 0; i < 3; i++) {
+        const shelf = srp.shelves.nth(i);
+        await shelf.scrollIntoViewIfNeeded();
+        await expect(shelf.locator('img').first()).toBeVisible();
+        await expect(srp.enlaceDelProducto(i)).toHaveText(/\S/);
+        await expect(shelf.getByText(/\$[\d.]+/).first()).toBeVisible();
+        await expect(shelf.getByRole('button', { name: /^agregar$/i })).toBeVisible();
+        await srp.capturarEvidencia(cp, `5-${i + 1}`, `shelf ${i + 1}: imagen, nombre, precio y Agregar`, {
+          elemento: shelf,
+        });
+      }
+      await srp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C18-M-009 · El scroll infinito carga el siguiente bloque de productos con indicador de carga (Mobile)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C18-M-009';
+      const termino = terminoDeclarado(testData, 'SEARCH_TERM_50+_SKUS');
+      const srp = await abrirSRP(page, termino);
+      await srp.esperarInteractiva();
+      const inicial = await srp.shelves.count();
+      expect(inicial).toBe(50);
+      await srp.capturarEvidencia(cp, 2, `carga inicial de ${inicial} productos`);
+
+      // Como en el skeleton de D-021/M-020: el retraso no cambia lo verificado, solo deja ver el
+      // indicador, que sin él dura lo que tarda la respuesta.
+      await srp.retrasarBloqueSiguiente(3000);
+      await srp.observarIndicadorDeCarga();
+      const pedido = page.waitForRequest(/product-search.*[?&]offset=50/, { timeout: 30000 });
+      await srp.shelves.last().scrollIntoViewIfNeeded();
+      await page.mouse.wheel(0, 3000);
+      await pedido;
+      await page.waitForTimeout(1000);
+      await srp.capturarEvidencia(cp, 3, 'final del listado alcanzado: bloque siguiente pedido');
+
+      await expect.poll(() => srp.shelves.count(), { timeout: 30000 }).toBeGreaterThan(inicial);
+      const despues = await srp.shelves.count();
+      await srp.shelves.nth(inicial).scrollIntoViewIfNeeded();
+      await srp.capturarEvidencia(cp, 5, `bloque siguiente cargado: ${despues} productos`);
+
+      expect.soft(await srp.indicadoresObservados(), 'indicador de carga mientras llega el bloque').not.toEqual([]);
+      expect(srp.rutaConQuery, 'sin navegar').toBe(`/search?q=${encodeURIComponent(termino)}`);
+      await srp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C18-M-011 · Con despacho a domicilio activo la SRP muestra productos según cobertura de la dirección (Mobile)', async ({
+      page,
+      testData,
+      baseURL,
+    }) => {
+      test.setTimeout(180000);
+      const direccion = terminoDeclarado(testData, 'DIRECCION_DESPACHO_002');
+      await casoMetodoActivo({ page, testData, baseURL }, 'TC-B2C18-M-011', async () => {
+        await fijarDespacho(page, direccion);
+        return direccion.split(',')[0].trim();
+      });
+    });
+
+    test('TC-B2C18-M-012 · Con retiro en tienda activo la SRP muestra productos según stock de la tienda seleccionada (Mobile)', async ({
+      page,
+      testData,
+      baseURL,
+    }) => {
+      test.setTimeout(180000);
+      await casoMetodoActivo({ page, testData, baseURL }, 'TC-B2C18-M-012', () =>
+        fijarRetiroDesdeHome(page, terminoDeclarado(testData, 'TIENDA_RETIRO_001')),
+      );
+    });
+
+    test('TC-B2C18-M-013 · Un producto sin disponibilidad muestra etiqueta "No disponible", Agregar oculto y "Ver similares" (Mobile)', async ({
+      page,
+      testData,
+      baseURL,
+    }) => {
+      test.setTimeout(180000);
+      await casoSinStock({ page, testData, baseURL }, 'TC-B2C18-M-013');
+    });
+
+    test('TC-B2C18-M-014 · Cambiar el método de entrega desde la SRP actualiza la disponibilidad sin salir de la SRP (Mobile)', async ({
+      page,
+      testData,
+      baseURL,
+    }) => {
+      test.setTimeout(240000);
+      await casoCambioDeMetodo({ page, testData, baseURL }, 'TC-B2C18-M-014');
+    });
+
+    test('TC-B2C18-M-015 · Los componentes de monetización configurados se muestran en la SRP según el tipo activo (Mobile)', async ({
+      page,
+      testData,
+      baseURL,
+    }) => {
+      await casoMonetizacion({ page, testData, baseURL }, 'TC-B2C18-M-015');
     });
   });
 });

@@ -1,5 +1,5 @@
 {
-  "plugin_version": "1.9.0",
+  "plugin_version": "1.10.0",
   "files": {
     ".env.example": "a8e83af139805ae495679712f2a23415dcaee8cd96900086047d600a18f79784",
     ".gitignore": "610afcc2a4bf5f16942c155f88c31b1363da06c5fa9a2dc407ca877525f2145e",

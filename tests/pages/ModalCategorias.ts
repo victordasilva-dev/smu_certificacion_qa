@@ -239,6 +239,45 @@ export class ModalCategorias {
     await this.entradasN1.filter({ hasText: exacto }).first().click();
   }
 
+  /**
+   * Tarjeta N2 del panel derecho del modal de **Desktop**: imagen sin svg. Ese modal no tiene
+   * `.chakra-modal__body`, así que `tarjetaN2` (de Mobile) no la encuentra.
+   */
+  tarjetaN2Desktop(nombre: RegExp): Locator {
+    return this.root.locator('button:has(img):not(:has(svg)), a:has(img):not(:has(svg))').filter({ hasText: nombre });
+  }
+
+  /**
+   * Abre la PLP de una N2 por su nombre en el modal de Desktop sin saber de qué N1 cuelga: pasa
+   * el puntero por cada N1 de la columna izquierda hasta que el panel muestra la tarjeta (B2C-35).
+   */
+  async abrirN2Desktop(nombre: RegExp): Promise<void> {
+    const total = await this.entradasN1.count();
+    for (let i = 0; i < total; i += 1) {
+      await this.entradasN1.nth(i).hover();
+      const tarjeta = this.tarjetaN2Desktop(nombre).locator('visible=true').first();
+      if (await tarjeta.waitFor({ state: 'visible', timeout: 2000 }).then(() => true, () => false)) {
+        await tarjeta.click();
+        return;
+      }
+    }
+    throw new Error(`Ninguna N1 del menú tiene la subcategoría ${nombre}`);
+  }
+
+  /** Igual que `abrirN2Desktop`, para una N3: en el panel de Desktop las N3 van como texto, sin imagen. */
+  async abrirN3Desktop(nombre: RegExp): Promise<void> {
+    const total = await this.entradasN1.count();
+    for (let i = 0; i < total; i += 1) {
+      await this.entradasN1.nth(i).hover();
+      const hoja = this.root.locator('a:not(:has(img)), button:not(:has(img)):not(:has(svg))').filter({ hasText: nombre }).locator('visible=true').first();
+      if (await hoja.waitFor({ state: 'visible', timeout: 2000 }).then(() => true, () => false)) {
+        await hoja.click();
+        return;
+      }
+    }
+    throw new Error(`Ninguna N1 del menú tiene la subcategoría ${nombre}`);
+  }
+
   async cerrar(): Promise<void> {
     await this.botonCerrar.click();
   }
