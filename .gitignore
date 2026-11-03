@@ -19,3 +19,13 @@ __pycache__/
 # Artefactos pesados de Playwright (no se suben a GitHub: pasan el límite de 100 MB)
 evidencias/**/trace.zip
 evidencias/**/*.webm
+
+# Locales, sensibles o temporales (no se suben a GitHub)
+tools/
+scripts/
+reportes/
+.qa/respaldo/
+.qa/gmail-venv/
+.qa/explore*/
+.qa/*.png
+.qa/*.txt
