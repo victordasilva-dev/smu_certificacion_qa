@@ -3,7 +3,7 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-99 |
-| Última actualización | 2026-10-26 |
+| Última actualización | 2026-11-03 |
 | Ejecutado por | Daniel Uñuruco |
 | Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
@@ -15,16 +15,16 @@
 
 | Estado | Casos |
 |---|---|
-| Aprobado | 42 |
+| Aprobado | 46 |
 | Rechazado | 20 |
 | Bloqueado Data | 12 |
-| **Total** | **74** |
+| **Total** | **78** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
-| 2026-10-26 | 74 | TC-B2C99-D-001, TC-B2C99-D-002, TC-B2C99-D-003, TC-B2C99-D-004, TC-B2C99-D-005, TC-B2C99-D-006, TC-B2C99-D-007, TC-B2C99-D-008, TC-B2C99-D-009, TC-B2C99-D-010, TC-B2C99-D-011, TC-B2C99-D-012, TC-B2C99-D-013, TC-B2C99-D-014, TC-B2C99-D-015, TC-B2C99-D-016, TC-B2C99-D-017, TC-B2C99-D-018, TC-B2C99-D-019, TC-B2C99-D-020, TC-B2C99-D-021, TC-B2C99-D-022, TC-B2C99-D-023, TC-B2C99-D-024, TC-B2C99-D-025, TC-B2C99-D-026, TC-B2C99-D-027, TC-B2C99-D-028, TC-B2C99-D-029, TC-B2C99-D-030, TC-B2C99-D-031, TC-B2C99-D-032, TC-B2C99-D-033, TC-B2C99-D-034, TC-B2C99-D-035, TC-B2C99-D-036, TC-B2C99-D-037, TC-B2C99-M-001, TC-B2C99-M-002, TC-B2C99-M-003, TC-B2C99-M-004, TC-B2C99-M-005, TC-B2C99-M-006, TC-B2C99-M-007, TC-B2C99-M-008, TC-B2C99-M-009, TC-B2C99-M-010, TC-B2C99-M-011, TC-B2C99-M-012, TC-B2C99-M-013, TC-B2C99-M-014, TC-B2C99-M-015, TC-B2C99-M-016, TC-B2C99-M-017, TC-B2C99-M-018, TC-B2C99-M-019, TC-B2C99-M-020, TC-B2C99-M-021, TC-B2C99-M-022, TC-B2C99-M-023, TC-B2C99-M-024, TC-B2C99-M-025, TC-B2C99-M-026, TC-B2C99-M-027, TC-B2C99-M-028, TC-B2C99-M-029, TC-B2C99-M-030, TC-B2C99-M-031, TC-B2C99-M-032, TC-B2C99-M-033, TC-B2C99-M-034, TC-B2C99-M-035, TC-B2C99-M-036, TC-B2C99-M-037 |
+| 2026-11-03 | 78 | TC-B2C99-D-001, TC-B2C99-D-002, TC-B2C99-D-003, TC-B2C99-D-004, TC-B2C99-D-005, TC-B2C99-D-006, TC-B2C99-D-007, TC-B2C99-D-008, TC-B2C99-D-009, TC-B2C99-D-010, TC-B2C99-D-011, TC-B2C99-D-012, TC-B2C99-D-013, TC-B2C99-D-014, TC-B2C99-D-015, TC-B2C99-D-016, TC-B2C99-D-017, TC-B2C99-D-018, TC-B2C99-D-019, TC-B2C99-D-020, TC-B2C99-D-021, TC-B2C99-D-022, TC-B2C99-D-023, TC-B2C99-D-024, TC-B2C99-D-025, TC-B2C99-D-026, TC-B2C99-D-027, TC-B2C99-D-028, TC-B2C99-D-029, TC-B2C99-D-030, TC-B2C99-D-031, TC-B2C99-D-032, TC-B2C99-D-033, TC-B2C99-D-034, TC-B2C99-D-035, TC-B2C99-D-036, TC-B2C99-D-037, TC-B2C99-D-038, TC-B2C99-D-039, TC-B2C99-M-001, TC-B2C99-M-002, TC-B2C99-M-003, TC-B2C99-M-004, TC-B2C99-M-005, TC-B2C99-M-006, TC-B2C99-M-007, TC-B2C99-M-008, TC-B2C99-M-009, TC-B2C99-M-010, TC-B2C99-M-011, TC-B2C99-M-012, TC-B2C99-M-013, TC-B2C99-M-014, TC-B2C99-M-015, TC-B2C99-M-016, TC-B2C99-M-017, TC-B2C99-M-018, TC-B2C99-M-019, TC-B2C99-M-020, TC-B2C99-M-021, TC-B2C99-M-022, TC-B2C99-M-023, TC-B2C99-M-024, TC-B2C99-M-025, TC-B2C99-M-026, TC-B2C99-M-027, TC-B2C99-M-028, TC-B2C99-M-029, TC-B2C99-M-030, TC-B2C99-M-031, TC-B2C99-M-032, TC-B2C99-M-033, TC-B2C99-M-034, TC-B2C99-M-035, TC-B2C99-M-036, TC-B2C99-M-037, TC-B2C99-M-038, TC-B2C99-M-039 |
 
 ## Detalle por caso de prueba
 
@@ -4458,6 +4458,240 @@ Esperado: el botón atrás vuelve al buscador del Store Locator. Obtenido: vuelv
 
 ---
 
+### TC-B2C99-D-038 - Verificar que con productos en el carro y la misma tienda abastecedora no se muestra el modal No se te escapen [Desktop] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-03 |
+| Form factor | desktop |
+| Viewport | 1440x900 |
+| Navegador | chromium |
+| Spec | tests/B2C-99.spec.ts |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Desktop 1440x900
+- Ubicacion: Home
+- La dirección activa es {DIRECCION_MISMA_TIENDA}
+- El carro contiene {SKU_VALID_001} x 1
+- {DIRECCION_MISMA_TIENDA_2} es atendida por la misma tienda abastecedora que {DIRECCION_MISMA_TIENDA}
+
+**Data utilizada**
+
+- {BASE_URL}
+- {CART_URL}
+- {DIRECCION_MISMA_TIENDA}
+- {DIRECCION_MISMA_TIENDA_2}
+- {SKU_VALID_001}
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a {BASE_URL}.
+2. El sistema carga el Home.
+3. El usuario hace clic en el Store Locator del header.
+4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
+5. El usuario ingresa la dirección {DIRECCION_MISMA_TIENDA_2} en el buscador y la selecciona de las sugerencias de Google.
+6. El sistema redirige a "Detalles de la dirección" con el mapa y el PIN posicionado sobre la dirección.
+7. El usuario hace clic en el botón "Agregar dirección".
+8. El usuario ingresa a {CART_URL}.
+
+**Resultado esperado**
+
+No se muestra el modal "No se te escapen"; se cierra el modal y el Store Locator muestra el método de entrega Despacho con {DIRECCION_MISMA_TIENDA_2}. El carro mantiene {SKU_VALID_001} x 1 sin cambios de disponibilidad.
+
+**Observación**
+
+Desktop 1440x900, invitado. Con {DIRECCION_MISMA_TIENDA} activa y {SKU_VALID_001} x 1 en el carro, al agregar {DIRECCION_MISMA_TIENDA_2} no se mostró el modal «Algunos productos podrían agotarse» / «No se te escapen» (se esperó 15 s); se cerró la confirmación con PIN, el Store Locator muestra «General José Artigas» y el carro conserva el SKU x 1. Nota: el Store Locator y el modal no muestran el número de la dirección, así que desde la interfaz no se distingue entre las dos direcciones de la misma calle.
+
+**Evidencia**
+
+![Paso 4 — modal elige tu metodo de entrega](<B2C-99 Evidencias/TC-B2C99-D-038-p04-modal-elige-tu-metodo-de-entrega.png>)
+
+![Paso 6 — detalles de la direccion](<B2C-99 Evidencias/TC-B2C99-D-038-p06-detalles-de-la-direccion.png>)
+
+![Paso 7 — tras agregar direccion](<B2C-99 Evidencias/TC-B2C99-D-038-p07-tras-agregar-direccion.png>)
+
+![Paso 8 — direccion activa en el store locator](<B2C-99 Evidencias/TC-B2C99-D-038-p08-direccion-activa-en-el-store-locator.png>)
+
+![TC B2C99 D 038 ppre direccion activa y carro con el sku](<B2C-99 Evidencias/TC-B2C99-D-038-ppre-direccion-activa-y-carro-con-el-sku.png>)
+
+![Estado final](<B2C-99 Evidencias/TC-B2C99-D-038.png>)
+
+---
+
+### TC-B2C99-M-038 - Verificar que con productos en el carro y la misma tienda abastecedora no se muestra el modal No se te escapen [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-03 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | chromium |
+| Spec | tests/B2C-99.spec.ts |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: Home
+- La dirección activa es {DIRECCION_MISMA_TIENDA}
+- El carro contiene {SKU_VALID_001} x 1
+- {DIRECCION_MISMA_TIENDA_2} es atendida por la misma tienda abastecedora que {DIRECCION_MISMA_TIENDA}
+
+**Data utilizada**
+
+- {BASE_URL}
+- {CART_URL}
+- {DIRECCION_MISMA_TIENDA}
+- {DIRECCION_MISMA_TIENDA_2}
+- {SKU_VALID_001}
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a {BASE_URL}.
+2. El sistema carga el Home.
+3. El usuario toca el Store Locator del header.
+4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
+5. El usuario ingresa la dirección {DIRECCION_MISMA_TIENDA_2} en el buscador y la selecciona de las sugerencias de Google.
+6. El sistema redirige a "Detalles de la dirección" con el mapa y el PIN posicionado sobre la dirección.
+7. El usuario toca el botón "Agregar dirección".
+8. El usuario ingresa a {CART_URL}.
+
+**Resultado esperado**
+
+No se muestra el modal "No se te escapen"; se cierra el modal y el Store Locator muestra el método de entrega Despacho con {DIRECCION_MISMA_TIENDA_2}. El carro mantiene {SKU_VALID_001} x 1 sin cambios de disponibilidad.
+
+**Observación**
+
+Mobile 390x844, invitado. Con {DIRECCION_MISMA_TIENDA} activa y {SKU_VALID_001} x 1 en el carro, al agregar {DIRECCION_MISMA_TIENDA_2} no se mostró el modal «Algunos productos podrían agotarse» / «No se te escapen» (se esperó 15 s); se cerró la confirmación con PIN, el Store Locator muestra «General José Artigas» y el carro conserva el SKU x 1. Nota: el Store Locator y el modal no muestran el número de la dirección, así que desde la interfaz no se distingue entre las dos direcciones de la misma calle.
+
+**Evidencia**
+
+![Paso 4 — modal elige tu metodo de entrega](<B2C-99 Evidencias/TC-B2C99-M-038-p04-modal-elige-tu-metodo-de-entrega.png>)
+
+![Paso 6 — detalles de la direccion](<B2C-99 Evidencias/TC-B2C99-M-038-p06-detalles-de-la-direccion.png>)
+
+![Paso 7 — tras agregar direccion](<B2C-99 Evidencias/TC-B2C99-M-038-p07-tras-agregar-direccion.png>)
+
+![Paso 8 — direccion activa en el store locator](<B2C-99 Evidencias/TC-B2C99-M-038-p08-direccion-activa-en-el-store-locator.png>)
+
+![TC B2C99 M 038 ppre direccion activa y carro con el sku](<B2C-99 Evidencias/TC-B2C99-M-038-ppre-direccion-activa-y-carro-con-el-sku.png>)
+
+![Estado final](<B2C-99 Evidencias/TC-B2C99-M-038.png>)
+
+---
+
+### TC-B2C99-D-039 - Verificar que al agregar la dirección como invitado no se solicita OTP [Desktop] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-03 |
+| Form factor | desktop |
+| Viewport | 1440x900 |
+| Navegador | chromium |
+| Spec | tests/B2C-99.spec.ts |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Desktop 1440x900
+- Ubicacion: Home
+- El usuario no tiene dirección ni tienda seleccionada en el Store Locator
+- {DIRECCION_DESPACHO_001} tiene cobertura y horarios disponibles
+
+**Data utilizada**
+
+- {BASE_URL}
+- {DIRECCION_DESPACHO_001}
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a {BASE_URL}.
+2. El sistema carga el Home.
+3. El usuario hace clic en el Store Locator del header.
+4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
+5. El usuario ingresa la dirección {DIRECCION_DESPACHO_001} en el buscador y la selecciona de las sugerencias de Google.
+6. El sistema redirige a "Detalles de la dirección" con el mapa y el PIN posicionado sobre la dirección.
+7. El usuario hace clic en el botón "Agregar dirección".
+
+**Resultado esperado**
+
+Se muestra el loader y el sistema continúa con la validación de cobertura y horarios; no se muestra el modal "Autenticación requerida" ni se solicita ni envía código OTP. Se cierra el modal y el Store Locator muestra el método de entrega Despacho con {DIRECCION_DESPACHO_001}.
+
+**Observación**
+
+Desktop 1440x900, invitado sin dirección ni tienda. Al tocar «Agregar dirección» con {DIRECCION_DESPACHO_001} no apareció «Autenticación requerida» ni se pidió OTP (se esperó 12 s); la confirmación con PIN se cerró y el Store Locator muestra «Calle Uno 23».
+
+**Evidencia**
+
+![Paso 4 — modal elige tu metodo de entrega](<B2C-99 Evidencias/TC-B2C99-D-039-p04-modal-elige-tu-metodo-de-entrega.png>)
+
+![Paso 6 — detalles de la direccion](<B2C-99 Evidencias/TC-B2C99-D-039-p06-detalles-de-la-direccion.png>)
+
+![Paso 7 — tras agregar direccion](<B2C-99 Evidencias/TC-B2C99-D-039-p07-tras-agregar-direccion.png>)
+
+![Estado final](<B2C-99 Evidencias/TC-B2C99-D-039.png>)
+
+---
+
+### TC-B2C99-M-039 - Verificar que al agregar la dirección como invitado no se solicita OTP [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-03 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | chromium |
+| Spec | tests/B2C-99.spec.ts |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: Home
+- El usuario no tiene dirección ni tienda seleccionada en el Store Locator
+- {DIRECCION_DESPACHO_001} tiene cobertura y horarios disponibles
+
+**Data utilizada**
+
+- {BASE_URL}
+- {DIRECCION_DESPACHO_001}
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a {BASE_URL}.
+2. El sistema carga el Home.
+3. El usuario toca el Store Locator del header.
+4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
+5. El usuario ingresa la dirección {DIRECCION_DESPACHO_001} en el buscador y la selecciona de las sugerencias de Google.
+6. El sistema redirige a "Detalles de la dirección" con el mapa y el PIN posicionado sobre la dirección.
+7. El usuario toca el botón "Agregar dirección".
+
+**Resultado esperado**
+
+Se muestra el loader y el sistema continúa con la validación de cobertura y horarios; no se muestra el modal "Autenticación requerida" ni se solicita ni envía código OTP. Se cierra el modal y el Store Locator muestra el método de entrega Despacho con {DIRECCION_DESPACHO_001}.
+
+**Observación**
+
+Mobile 390x844, invitado sin dirección ni tienda. Al tocar «Agregar dirección» con {DIRECCION_DESPACHO_001} no apareció «Autenticación requerida» ni se pidió OTP (se esperó 12 s); la confirmación con PIN se cerró y el Store Locator muestra «Calle Uno 23».
+
+**Evidencia**
+
+![Paso 4 — modal elige tu metodo de entrega](<B2C-99 Evidencias/TC-B2C99-M-039-p04-modal-elige-tu-metodo-de-entrega.png>)
+
+![Paso 6 — detalles de la direccion](<B2C-99 Evidencias/TC-B2C99-M-039-p06-detalles-de-la-direccion.png>)
+
+![Paso 7 — tras agregar direccion](<B2C-99 Evidencias/TC-B2C99-M-039-p07-tras-agregar-direccion.png>)
+
+![Estado final](<B2C-99 Evidencias/TC-B2C99-M-039.png>)
+
+---
+
 <!-- qa-evidence-state
 {
  "header": {
@@ -4471,10 +4705,10 @@ Esperado: el botón atrás vuelve al buscador del Store Locator. Obtenido: vuelv
   "suite": "B2C-99",
   "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-99 Test Cases.xlsx",
   "title": "Confirmar dirección con PIN en mapa",
-  "updated_at": "2026-10-26"
+  "updated_at": "2026-11-03"
  },
  "history": {
-  "2026-10-26": [
+  "2026-11-03": [
    "TC-B2C99-D-001",
    "TC-B2C99-D-002",
    "TC-B2C99-D-003",
@@ -4512,6 +4746,8 @@ Esperado: el botón atrás vuelve al buscador del Store Locator. Obtenido: vuelv
    "TC-B2C99-D-035",
    "TC-B2C99-D-036",
    "TC-B2C99-D-037",
+   "TC-B2C99-D-038",
+   "TC-B2C99-D-039",
    "TC-B2C99-M-001",
    "TC-B2C99-M-002",
    "TC-B2C99-M-003",
@@ -4548,7 +4784,9 @@ Esperado: el botón atrás vuelve al buscador del Store Locator. Obtenido: vuelv
    "TC-B2C99-M-034",
    "TC-B2C99-M-035",
    "TC-B2C99-M-036",
-   "TC-B2C99-M-037"
+   "TC-B2C99-M-037",
+   "TC-B2C99-M-038",
+   "TC-B2C99-M-039"
   ]
  },
  "results": [
@@ -6982,6 +7220,154 @@ Esperado: el botón atrás vuelve al buscador del Store Locator. Obtenido: vuelv
    "status": "Rechazado",
    "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección {DIRECCION_DESPACHO_001} en el buscador y la selecciona de las sugerencias de Google.\n6. El sistema redirige a \"Detalles de la dirección\" y el mapa no carga.\n7. El usuario toca el botón atrás \"<\".",
    "test_data": "- {BASE_URL}\n- {CART_URL}\n- {DIRECCION_DESPACHO_001}",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-03",
+   "expected": "No se muestra el modal \"No se te escapen\"; se cierra el modal y el Store Locator muestra el método de entrega Despacho con {DIRECCION_MISMA_TIENDA_2}. El carro mantiene {SKU_VALID_001} x 1 sin cambios de disponibilidad.",
+   "form_factor": "desktop",
+   "id": "TC-B2C99-D-038",
+   "name": "Verificar que con productos en el carro y la misma tienda abastecedora no se muestra el modal No se te escapen [Desktop] [Guest]",
+   "observation": "Desktop 1440x900, invitado. Con {DIRECCION_MISMA_TIENDA} activa y {SKU_VALID_001} x 1 en el carro, al agregar {DIRECCION_MISMA_TIENDA_2} no se mostró el modal «Algunos productos podrían agotarse» / «No se te escapen» (se esperó 15 s); se cerró la confirmación con PIN, el Store Locator muestra «General José Artigas» y el carro conserva el SKU x 1. Nota: el Store Locator y el modal no muestran el número de la dirección, así que desde la interfaz no se distingue entre las dos direcciones de la misma calle.",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- La dirección activa es {DIRECCION_MISMA_TIENDA}\n- El carro contiene {SKU_VALID_001} x 1\n- {DIRECCION_MISMA_TIENDA_2} es atendida por la misma tienda abastecedora que {DIRECCION_MISMA_TIENDA}",
+   "screenshots": [
+    {
+     "caption": "Paso 4 — modal elige tu metodo de entrega",
+     "file": "TC-B2C99-D-038-p04-modal-elige-tu-metodo-de-entrega.png"
+    },
+    {
+     "caption": "Paso 6 — detalles de la direccion",
+     "file": "TC-B2C99-D-038-p06-detalles-de-la-direccion.png"
+    },
+    {
+     "caption": "Paso 7 — tras agregar direccion",
+     "file": "TC-B2C99-D-038-p07-tras-agregar-direccion.png"
+    },
+    {
+     "caption": "Paso 8 — direccion activa en el store locator",
+     "file": "TC-B2C99-D-038-p08-direccion-activa-en-el-store-locator.png"
+    },
+    {
+     "caption": "TC B2C99 D 038 ppre direccion activa y carro con el sku",
+     "file": "TC-B2C99-D-038-ppre-direccion-activa-y-carro-con-el-sku.png"
+    },
+    {
+     "caption": "Estado final",
+     "file": "TC-B2C99-D-038.png"
+    }
+   ],
+   "spec": "tests/B2C-99.spec.ts",
+   "status": "Aprobado",
+   "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema carga el Home.\n3. El usuario hace clic en el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección {DIRECCION_MISMA_TIENDA_2} en el buscador y la selecciona de las sugerencias de Google.\n6. El sistema redirige a \"Detalles de la dirección\" con el mapa y el PIN posicionado sobre la dirección.\n7. El usuario hace clic en el botón \"Agregar dirección\".\n8. El usuario ingresa a {CART_URL}.",
+   "test_data": "- {BASE_URL}\n- {CART_URL}\n- {DIRECCION_MISMA_TIENDA}\n- {DIRECCION_MISMA_TIENDA_2}\n- {SKU_VALID_001}",
+   "viewport": "1440x900"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-03",
+   "expected": "No se muestra el modal \"No se te escapen\"; se cierra el modal y el Store Locator muestra el método de entrega Despacho con {DIRECCION_MISMA_TIENDA_2}. El carro mantiene {SKU_VALID_001} x 1 sin cambios de disponibilidad.",
+   "form_factor": "mobile",
+   "id": "TC-B2C99-M-038",
+   "name": "Verificar que con productos en el carro y la misma tienda abastecedora no se muestra el modal No se te escapen [Mobile] [Guest]",
+   "observation": "Mobile 390x844, invitado. Con {DIRECCION_MISMA_TIENDA} activa y {SKU_VALID_001} x 1 en el carro, al agregar {DIRECCION_MISMA_TIENDA_2} no se mostró el modal «Algunos productos podrían agotarse» / «No se te escapen» (se esperó 15 s); se cerró la confirmación con PIN, el Store Locator muestra «General José Artigas» y el carro conserva el SKU x 1. Nota: el Store Locator y el modal no muestran el número de la dirección, así que desde la interfaz no se distingue entre las dos direcciones de la misma calle.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- La dirección activa es {DIRECCION_MISMA_TIENDA}\n- El carro contiene {SKU_VALID_001} x 1\n- {DIRECCION_MISMA_TIENDA_2} es atendida por la misma tienda abastecedora que {DIRECCION_MISMA_TIENDA}",
+   "screenshots": [
+    {
+     "caption": "Paso 4 — modal elige tu metodo de entrega",
+     "file": "TC-B2C99-M-038-p04-modal-elige-tu-metodo-de-entrega.png"
+    },
+    {
+     "caption": "Paso 6 — detalles de la direccion",
+     "file": "TC-B2C99-M-038-p06-detalles-de-la-direccion.png"
+    },
+    {
+     "caption": "Paso 7 — tras agregar direccion",
+     "file": "TC-B2C99-M-038-p07-tras-agregar-direccion.png"
+    },
+    {
+     "caption": "Paso 8 — direccion activa en el store locator",
+     "file": "TC-B2C99-M-038-p08-direccion-activa-en-el-store-locator.png"
+    },
+    {
+     "caption": "TC B2C99 M 038 ppre direccion activa y carro con el sku",
+     "file": "TC-B2C99-M-038-ppre-direccion-activa-y-carro-con-el-sku.png"
+    },
+    {
+     "caption": "Estado final",
+     "file": "TC-B2C99-M-038.png"
+    }
+   ],
+   "spec": "tests/B2C-99.spec.ts",
+   "status": "Aprobado",
+   "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección {DIRECCION_MISMA_TIENDA_2} en el buscador y la selecciona de las sugerencias de Google.\n6. El sistema redirige a \"Detalles de la dirección\" con el mapa y el PIN posicionado sobre la dirección.\n7. El usuario toca el botón \"Agregar dirección\".\n8. El usuario ingresa a {CART_URL}.",
+   "test_data": "- {BASE_URL}\n- {CART_URL}\n- {DIRECCION_MISMA_TIENDA}\n- {DIRECCION_MISMA_TIENDA_2}\n- {SKU_VALID_001}",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-03",
+   "expected": "Se muestra el loader y el sistema continúa con la validación de cobertura y horarios; no se muestra el modal \"Autenticación requerida\" ni se solicita ni envía código OTP. Se cierra el modal y el Store Locator muestra el método de entrega Despacho con {DIRECCION_DESPACHO_001}.",
+   "form_factor": "desktop",
+   "id": "TC-B2C99-D-039",
+   "name": "Verificar que al agregar la dirección como invitado no se solicita OTP [Desktop] [Guest]",
+   "observation": "Desktop 1440x900, invitado sin dirección ni tienda. Al tocar «Agregar dirección» con {DIRECCION_DESPACHO_001} no apareció «Autenticación requerida» ni se pidió OTP (se esperó 12 s); la confirmación con PIN se cerró y el Store Locator muestra «Calle Uno 23».",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- El usuario no tiene dirección ni tienda seleccionada en el Store Locator\n- {DIRECCION_DESPACHO_001} tiene cobertura y horarios disponibles",
+   "screenshots": [
+    {
+     "caption": "Paso 4 — modal elige tu metodo de entrega",
+     "file": "TC-B2C99-D-039-p04-modal-elige-tu-metodo-de-entrega.png"
+    },
+    {
+     "caption": "Paso 6 — detalles de la direccion",
+     "file": "TC-B2C99-D-039-p06-detalles-de-la-direccion.png"
+    },
+    {
+     "caption": "Paso 7 — tras agregar direccion",
+     "file": "TC-B2C99-D-039-p07-tras-agregar-direccion.png"
+    },
+    {
+     "caption": "Estado final",
+     "file": "TC-B2C99-D-039.png"
+    }
+   ],
+   "spec": "tests/B2C-99.spec.ts",
+   "status": "Aprobado",
+   "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema carga el Home.\n3. El usuario hace clic en el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección {DIRECCION_DESPACHO_001} en el buscador y la selecciona de las sugerencias de Google.\n6. El sistema redirige a \"Detalles de la dirección\" con el mapa y el PIN posicionado sobre la dirección.\n7. El usuario hace clic en el botón \"Agregar dirección\".",
+   "test_data": "- {BASE_URL}\n- {DIRECCION_DESPACHO_001}",
+   "viewport": "1440x900"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-03",
+   "expected": "Se muestra el loader y el sistema continúa con la validación de cobertura y horarios; no se muestra el modal \"Autenticación requerida\" ni se solicita ni envía código OTP. Se cierra el modal y el Store Locator muestra el método de entrega Despacho con {DIRECCION_DESPACHO_001}.",
+   "form_factor": "mobile",
+   "id": "TC-B2C99-M-039",
+   "name": "Verificar que al agregar la dirección como invitado no se solicita OTP [Mobile] [Guest]",
+   "observation": "Mobile 390x844, invitado sin dirección ni tienda. Al tocar «Agregar dirección» con {DIRECCION_DESPACHO_001} no apareció «Autenticación requerida» ni se pidió OTP (se esperó 12 s); la confirmación con PIN se cerró y el Store Locator muestra «Calle Uno 23».",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- El usuario no tiene dirección ni tienda seleccionada en el Store Locator\n- {DIRECCION_DESPACHO_001} tiene cobertura y horarios disponibles",
+   "screenshots": [
+    {
+     "caption": "Paso 4 — modal elige tu metodo de entrega",
+     "file": "TC-B2C99-M-039-p04-modal-elige-tu-metodo-de-entrega.png"
+    },
+    {
+     "caption": "Paso 6 — detalles de la direccion",
+     "file": "TC-B2C99-M-039-p06-detalles-de-la-direccion.png"
+    },
+    {
+     "caption": "Paso 7 — tras agregar direccion",
+     "file": "TC-B2C99-M-039-p07-tras-agregar-direccion.png"
+    },
+    {
+     "caption": "Estado final",
+     "file": "TC-B2C99-M-039.png"
+    }
+   ],
+   "spec": "tests/B2C-99.spec.ts",
+   "status": "Aprobado",
+   "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección {DIRECCION_DESPACHO_001} en el buscador y la selecciona de las sugerencias de Google.\n6. El sistema redirige a \"Detalles de la dirección\" con el mapa y el PIN posicionado sobre la dirección.\n7. El usuario toca el botón \"Agregar dirección\".",
+   "test_data": "- {BASE_URL}\n- {DIRECCION_DESPACHO_001}",
    "viewport": "390x844"
   }
  ]

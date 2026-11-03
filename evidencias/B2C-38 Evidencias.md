@@ -3,7 +3,7 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-38 |
-| Última actualización | 2026-10-20 |
+| Última actualización | 2026-11-03 |
 | Ejecutado por | Daniel Uñuruco |
 | Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
@@ -23,7 +23,7 @@
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
-| 2026-10-20 | 32 | TC-B2C38-D-001, TC-B2C38-D-002, TC-B2C38-D-003, TC-B2C38-D-004, TC-B2C38-D-005, TC-B2C38-D-006, TC-B2C38-D-007, TC-B2C38-D-008, TC-B2C38-D-009, TC-B2C38-D-010, TC-B2C38-D-011, TC-B2C38-D-012, TC-B2C38-D-013, TC-B2C38-D-014, TC-B2C38-D-015, TC-B2C38-M-001, TC-B2C38-M-002, TC-B2C38-M-003, TC-B2C38-M-004, TC-B2C38-M-005, TC-B2C38-M-006, TC-B2C38-M-007, TC-B2C38-M-008, TC-B2C38-M-009, TC-B2C38-M-010, TC-B2C38-M-011, TC-B2C38-M-012, TC-B2C38-M-013, TC-B2C38-M-014, TC-B2C38-M-015, TC-B2C38-M-016, TC-B2C38-M-017 |
+| 2026-11-03 | 32 | TC-B2C38-D-001, TC-B2C38-D-002, TC-B2C38-D-003, TC-B2C38-D-004, TC-B2C38-D-005, TC-B2C38-D-006, TC-B2C38-D-007, TC-B2C38-D-008, TC-B2C38-D-009, TC-B2C38-D-010, TC-B2C38-D-011, TC-B2C38-D-012, TC-B2C38-D-013, TC-B2C38-D-014, TC-B2C38-D-015, TC-B2C38-M-001, TC-B2C38-M-002, TC-B2C38-M-003, TC-B2C38-M-004, TC-B2C38-M-005, TC-B2C38-M-006, TC-B2C38-M-007, TC-B2C38-M-008, TC-B2C38-M-009, TC-B2C38-M-010, TC-B2C38-M-011, TC-B2C38-M-012, TC-B2C38-M-013, TC-B2C38-M-014, TC-B2C38-M-015, TC-B2C38-M-016, TC-B2C38-M-017 |
 
 ## Detalle por caso de prueba
 
@@ -1335,159 +1335,6 @@ Causa: {SKU_NO_DISPONIBLE} (000000000400254005-UN, Picado Nestlé Naturnes) figu
 
 ---
 
-### TC-B2C38-M-013 - Verificar que un error al eliminar muestra el toast CRT-021 y el ítem permanece [Mobile] [Logueado]
-
-| Campo | Valor |
-|---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-20 |
-| Form factor | mobile |
-| Viewport | 390x844 |
-| Navegador | chromium |
-| Spec | tests/B2C-38.spec.ts |
-
-**Precondiciones**
-
-- User type: Logueado
-- Viewport: Mobile 390x844
-- Ubicacion: Carrito
-- El carro contiene {SKU_VALID_001} x 1 y {SKU_UNITARIO} x 1
-- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)
-
-**Data utilizada**
-
-{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-
-{CART_ITEM_API_ENDPOINT} = None
-
-{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
-
-{SKU_UNITARIO} = 000000000000674797-UN
-
-{SKU_VALID_001} = 000000000000675191-UN
-
-**Pasos ejecutados**
-
-1. El usuario ingresa a {CART_URL}.
-2. El sistema carga el carrito.
-3. El usuario toca el ícono de eliminar del ítem {SKU_UNITARIO}.
-4. El sistema muestra el toast de error "No pudimos eliminar el producto del carro. Vuelve a intentarlo. [CRT-021]".
-5. El usuario espera 5 segundos y luego cierra el toast con la X.
-
-**Resultado esperado**
-
-El toast CRT-021 permanece visible hasta que el usuario lo cierra con la X y el ítem {SKU_UNITARIO} permanece en el carrito sin cambios.
-
-**Resultado obtenido**
-
-Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.
-
-**Observación**
-
-Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.
-
----
-
-### TC-B2C38-M-014 - Verificar que un error al incrementar muestra el toast CRT-022 y la cantidad no cambia [Mobile] [Logueado]
-
-| Campo | Valor |
-|---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-20 |
-| Form factor | mobile |
-| Viewport | 390x844 |
-| Navegador | chromium |
-| Spec | tests/B2C-38.spec.ts |
-
-**Precondiciones**
-
-- User type: Logueado
-- Viewport: Mobile 390x844
-- Ubicacion: Carrito
-- El carro contiene {SKU_VALID_001} x 1
-- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)
-
-**Data utilizada**
-
-{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-
-{CART_ITEM_API_ENDPOINT} = None
-
-{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
-
-{SKU_VALID_001} = 000000000000675191-UN
-
-**Pasos ejecutados**
-
-1. El usuario ingresa a {CART_URL}.
-2. El sistema carga el carrito.
-3. El usuario toca el control + del ítem {SKU_VALID_001}.
-4. El sistema muestra el toast de error "No pudimos sumar el producto a tu carro. Vuelve a intentarlo. [CRT-022]".
-
-**Resultado esperado**
-
-Se muestra el toast CRT-022 con cierre manual (X) y la cantidad de {SKU_VALID_001} permanece en 1.
-
-**Resultado obtenido**
-
-Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.
-
-**Observación**
-
-Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.
-
----
-
-### TC-B2C38-M-015 - Verificar que un error al disminuir muestra el toast CRT-023 y la cantidad no cambia [Mobile] [Logueado]
-
-| Campo | Valor |
-|---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-20 |
-| Form factor | mobile |
-| Viewport | 390x844 |
-| Navegador | chromium |
-| Spec | tests/B2C-38.spec.ts |
-
-**Precondiciones**
-
-- User type: Logueado
-- Viewport: Mobile 390x844
-- Ubicacion: Carrito
-- El carro contiene {SKU_VALID_001} x 2
-- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)
-
-**Data utilizada**
-
-{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-
-{CART_ITEM_API_ENDPOINT} = None
-
-{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
-
-{SKU_VALID_001} = 000000000000675191-UN
-
-**Pasos ejecutados**
-
-1. El usuario ingresa a {CART_URL}.
-2. El sistema carga el carrito.
-3. El usuario toca el control − del ítem {SKU_VALID_001}.
-4. El sistema muestra el toast de error "No pudimos disminuir la cantidad de tu producto. Vuelve a intentarlo.[CRT-023]".
-
-**Resultado esperado**
-
-Se muestra el toast CRT-023 con cierre manual (X) y la cantidad de {SKU_VALID_001} permanece en 2.
-
-**Resultado obtenido**
-
-Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.
-
-**Observación**
-
-Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.
-
----
-
 ### TC-B2C38-M-016 - Verificar que al quedar bajo el mínimo de compra se deshabilita Continuar con la entrega [Mobile] [Logueado]
 
 | Campo | Valor |
@@ -1551,12 +1398,143 @@ Esperado: el botón 'Continuar con la entrega' se muestra deshabilitado y se mue
 
 ---
 
+### TC-B2C38-M-013 - Verificar que un error al eliminar muestra el toast CRT-021 y el ítem permanece [Mobile] [Logueado]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-03 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | chromium |
+| Spec | tests/B2C-38.spec.ts |
+
+**Precondiciones**
+
+- User type: Logueado
+- Viewport: Mobile 390x844
+- Ubicacion: Carrito
+- El carro contiene {SKU_VALID_001} x 1 y {SKU_UNITARIO} x 1
+- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+- {CART_ITEM_API_ENDPOINT} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+- {SKU_UNITARIO} = 000000000400254005-UN
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a {CART_URL}.
+2. El sistema carga el carrito.
+3. El usuario toca el ícono de eliminar del ítem {SKU_UNITARIO}.
+4. El sistema muestra el toast de error "No pudimos eliminar el producto del carro. Vuelve a intentarlo. [CRT-021]".
+5. El usuario espera 5 segundos y luego cierra el toast con la X.
+
+**Resultado esperado**
+
+El toast CRT-021 permanece visible hasta que el usuario lo cierra con la X y el ítem {SKU_UNITARIO} permanece en el carrito sin cambios.
+
+**Observación**
+
+el TC se ejecuta con una cuenta logueada y su columna Test data no declara cuál: ningún token de usuario. Sin la cuenta no se puede correr sin elegirla a dedo, y eso invalidaría el veredicto. Además usa {CART_ITEM_API_ENDPOINT} para bloquear la request. Falta declarar la cuenta en el Test data del TC (lo hace quien mantiene la planilla).
+
+---
+
+### TC-B2C38-M-014 - Verificar que un error al incrementar muestra el toast CRT-022 y la cantidad no cambia [Mobile] [Logueado]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-03 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | chromium |
+| Spec | tests/B2C-38.spec.ts |
+
+**Precondiciones**
+
+- User type: Logueado
+- Viewport: Mobile 390x844
+- Ubicacion: Carrito
+- El carro contiene {SKU_VALID_001} x 1
+- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+- {CART_ITEM_API_ENDPOINT} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a {CART_URL}.
+2. El sistema carga el carrito.
+3. El usuario toca el control + del ítem {SKU_VALID_001}.
+4. El sistema muestra el toast de error "No pudimos sumar el producto a tu carro. Vuelve a intentarlo. [CRT-022]".
+
+**Resultado esperado**
+
+Se muestra el toast CRT-022 con cierre manual (X) y la cantidad de {SKU_VALID_001} permanece en 1.
+
+**Observación**
+
+el TC se ejecuta con una cuenta logueada y su columna Test data no declara cuál: ningún token de usuario. Sin la cuenta no se puede correr sin elegirla a dedo, y eso invalidaría el veredicto. Además usa {CART_ITEM_API_ENDPOINT} para bloquear la request. Falta declarar la cuenta en el Test data del TC (lo hace quien mantiene la planilla).
+
+---
+
+### TC-B2C38-M-015 - Verificar que un error al disminuir muestra el toast CRT-023 y la cantidad no cambia [Mobile] [Logueado]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-03 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | chromium |
+| Spec | tests/B2C-38.spec.ts |
+
+**Precondiciones**
+
+- User type: Logueado
+- Viewport: Mobile 390x844
+- Ubicacion: Carrito
+- El carro contiene {SKU_VALID_001} x 2
+- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+- {CART_ITEM_API_ENDPOINT} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a {CART_URL}.
+2. El sistema carga el carrito.
+3. El usuario toca el control − del ítem {SKU_VALID_001}.
+4. El sistema muestra el toast de error "No pudimos disminuir la cantidad de tu producto. Vuelve a intentarlo.[CRT-023]".
+
+**Resultado esperado**
+
+Se muestra el toast CRT-023 con cierre manual (X) y la cantidad de {SKU_VALID_001} permanece en 2.
+
+**Observación**
+
+el TC se ejecuta con una cuenta logueada y su columna Test data no declara cuál: ningún token de usuario. Sin la cuenta no se puede correr sin elegirla a dedo, y eso invalidaría el veredicto. Además usa {CART_ITEM_API_ENDPOINT} para bloquear la request. Falta declarar la cuenta en el Test data del TC (lo hace quien mantiene la planilla).
+
+---
+
 ### TC-B2C38-D-015 - Verificar que al llegar al stock disponible de un producto pesable se muestra el toast de máximo y el botón Máx deshabilitado [Desktop] [Logueado]
 
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-20 |
+| Ejecutado | 2026-11-03 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -1573,13 +1551,11 @@ Esperado: el botón 'Continuar con la entrega' se muestra deshabilitado y se mue
 
 **Data utilizada**
 
-{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-
-{BM_INVENTORY_LIST} = https://development-na01-smu.demandware.net/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dUnimarc/ViewProductInventory_52-View
-
-{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
-
-{SKU_PESABLE} = 000000000000037972-KG
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+- {COMPRADOR_USER} = TBD
+- {SKU_PESABLE} = 000000000000037972-KG
+- {BM_INVENTORY_LIST} = https://development-na01-smu.demandware.net/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dUnimarc/ViewProductInventory_52-View
 
 **Pasos ejecutados**
 
@@ -1593,13 +1569,9 @@ Esperado: el botón 'Continuar con la entrega' se muestra deshabilitado y se mue
 
 Se muestra el toast "Alcanzaste el máximo de productos", el + se reemplaza por "Máx" deshabilitado y la cantidad en kg queda igual al stock disponible.
 
-**Resultado obtenido**
-
-Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su columna Test data no declara la cuenta. Acción: declarar en la fila el token de la cuenta (p. ej. {USER_AUTH_001}) con la que se ejecuta.
-
 **Observación**
 
-Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su columna Test data no declara la cuenta. Acción: declarar en la fila el token de la cuenta (p. ej. {USER_AUTH_001}) con la que se ejecuta.
+el TC se ejecuta con una cuenta logueada y su columna Test data no declara cuál: ningún token de usuario. Sin la cuenta no se puede correr sin elegirla a dedo, y eso invalidaría el veredicto. Falta declarar la cuenta en el Test data del TC (lo hace quien mantiene la planilla).
 
 ---
 
@@ -1608,7 +1580,7 @@ Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su column
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-20 |
+| Ejecutado | 2026-11-03 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | chromium |
@@ -1625,13 +1597,11 @@ Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su column
 
 **Data utilizada**
 
-{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-
-{BM_INVENTORY_LIST} = https://development-na01-smu.demandware.net/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dUnimarc/ViewProductInventory_52-View
-
-{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
-
-{SKU_PESABLE_STOCK_LIMITADO} = 000000000000038019-KG
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+- {COMPRADOR_USER} = TBD
+- {SKU_PESABLE_STOCK_LIMITADO} = 000000000000037972-KG
+- {BM_INVENTORY_LIST} = https://development-na01-smu.demandware.net/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dUnimarc/ViewProductInventory_52-View
 
 **Pasos ejecutados**
 
@@ -1645,13 +1615,9 @@ Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su column
 
 Se muestra el toast "Alcanzaste el máximo de productos", el + se reemplaza por "Máx" deshabilitado y la cantidad en kg queda igual al stock disponible.
 
-**Resultado obtenido**
-
-Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su columna Test data no declara la cuenta. Acción: declarar en la fila el token de la cuenta (p. ej. {USER_AUTH_001}) con la que se ejecuta.
-
 **Observación**
 
-Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su columna Test data no declara la cuenta. Acción: declarar en la fila el token de la cuenta (p. ej. {USER_AUTH_001}) con la que se ejecuta.
+el TC se ejecuta con una cuenta logueada y su columna Test data no declara cuál: ningún token de usuario. Sin la cuenta no se puede correr sin elegirla a dedo, y eso invalidaría el veredicto. Falta declarar la cuenta en el Test data del TC (lo hace quien mantiene la planilla).
 
 ---
 
@@ -1668,10 +1634,10 @@ Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su column
   "suite": "B2C-38",
   "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-38 Test Cases.xlsx",
   "title": "Cantidad y eliminación en el carro",
-  "updated_at": "2026-10-20"
+  "updated_at": "2026-11-03"
  },
  "history": {
-  "2026-10-20": [
+  "2026-11-03": [
    "TC-B2C38-D-001",
    "TC-B2C38-D-002",
    "TC-B2C38-D-003",
@@ -2140,54 +2106,6 @@ Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su column
   {
    "browser": "chromium",
    "executed_at": "2026-10-20",
-   "expected": "El toast CRT-021 permanece visible hasta que el usuario lo cierra con la X y el ítem {SKU_UNITARIO} permanece en el carrito sin cambios.",
-   "form_factor": "mobile",
-   "id": "TC-B2C38-M-013",
-   "name": "Verificar que un error al eliminar muestra el toast CRT-021 y el ítem permanece [Mobile] [Logueado]",
-   "observation": "Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.",
-   "observed": "Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- El carro contiene {SKU_VALID_001} x 1 y {SKU_UNITARIO} x 1\n- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)",
-   "spec": "tests/B2C-38.spec.ts",
-   "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.\n3. El usuario toca el ícono de eliminar del ítem {SKU_UNITARIO}.\n4. El sistema muestra el toast de error \"No pudimos eliminar el producto del carro. Vuelve a intentarlo. [CRT-021]\".\n5. El usuario espera 5 segundos y luego cierra el toast con la X.",
-   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_ITEM_API_ENDPOINT} = None\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{SKU_UNITARIO} = 000000000000674797-UN\n{SKU_VALID_001} = 000000000000675191-UN",
-   "viewport": "390x844"
-  },
-  {
-   "browser": "chromium",
-   "executed_at": "2026-10-20",
-   "expected": "Se muestra el toast CRT-022 con cierre manual (X) y la cantidad de {SKU_VALID_001} permanece en 1.",
-   "form_factor": "mobile",
-   "id": "TC-B2C38-M-014",
-   "name": "Verificar que un error al incrementar muestra el toast CRT-022 y la cantidad no cambia [Mobile] [Logueado]",
-   "observation": "Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.",
-   "observed": "Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- El carro contiene {SKU_VALID_001} x 1\n- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)",
-   "spec": "tests/B2C-38.spec.ts",
-   "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.\n3. El usuario toca el control + del ítem {SKU_VALID_001}.\n4. El sistema muestra el toast de error \"No pudimos sumar el producto a tu carro. Vuelve a intentarlo. [CRT-022]\".",
-   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_ITEM_API_ENDPOINT} = None\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{SKU_VALID_001} = 000000000000675191-UN",
-   "viewport": "390x844"
-  },
-  {
-   "browser": "chromium",
-   "executed_at": "2026-10-20",
-   "expected": "Se muestra el toast CRT-023 con cierre manual (X) y la cantidad de {SKU_VALID_001} permanece en 2.",
-   "form_factor": "mobile",
-   "id": "TC-B2C38-M-015",
-   "name": "Verificar que un error al disminuir muestra el toast CRT-023 y la cantidad no cambia [Mobile] [Logueado]",
-   "observation": "Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.",
-   "observed": "Causa: {CART_ITEM_API_ENDPOINT} está en TBD en el Excel de data (necesario para forzar el error del servicio), y además la fila no declara la cuenta con la que se ejecuta. Acción: cargar el endpoint y declarar la cuenta.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- El carro contiene {SKU_VALID_001} x 2\n- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)",
-   "spec": "tests/B2C-38.spec.ts",
-   "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.\n3. El usuario toca el control − del ítem {SKU_VALID_001}.\n4. El sistema muestra el toast de error \"No pudimos disminuir la cantidad de tu producto. Vuelve a intentarlo.[CRT-023]\".",
-   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{CART_ITEM_API_ENDPOINT} = None\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{SKU_VALID_001} = 000000000000675191-UN",
-   "viewport": "390x844"
-  },
-  {
-   "browser": "chromium",
-   "executed_at": "2026-10-20",
    "expected": "El botón \"Continuar con la entrega\" se muestra deshabilitado y se muestra el mensaje informativo de mínimo de compra sobre el subtotal.",
    "form_factor": "mobile",
    "id": "TC-B2C38-M-016",
@@ -2217,34 +2135,77 @@ Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su column
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-20",
+   "executed_at": "2026-11-03",
+   "expected": "El toast CRT-021 permanece visible hasta que el usuario lo cierra con la X y el ítem {SKU_UNITARIO} permanece en el carrito sin cambios.",
+   "form_factor": "mobile",
+   "id": "TC-B2C38-M-013",
+   "name": "Verificar que un error al eliminar muestra el toast CRT-021 y el ítem permanece [Mobile] [Logueado]",
+   "observation": "el TC se ejecuta con una cuenta logueada y su columna Test data no declara cuál: ningún token de usuario. Sin la cuenta no se puede correr sin elegirla a dedo, y eso invalidaría el veredicto. Además usa {CART_ITEM_API_ENDPOINT} para bloquear la request. Falta declarar la cuenta en el Test data del TC (lo hace quien mantiene la planilla).",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- El carro contiene {SKU_VALID_001} x 1 y {SKU_UNITARIO} x 1\n- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)",
+   "spec": "tests/B2C-38.spec.ts",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.\n3. El usuario toca el ícono de eliminar del ítem {SKU_UNITARIO}.\n4. El sistema muestra el toast de error \"No pudimos eliminar el producto del carro. Vuelve a intentarlo. [CRT-021]\".\n5. El usuario espera 5 segundos y luego cierra el toast con la X.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n- {CART_ITEM_API_ENDPOINT} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN\n- {SKU_UNITARIO} = 000000000400254005-UN",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-03",
+   "expected": "Se muestra el toast CRT-022 con cierre manual (X) y la cantidad de {SKU_VALID_001} permanece en 1.",
+   "form_factor": "mobile",
+   "id": "TC-B2C38-M-014",
+   "name": "Verificar que un error al incrementar muestra el toast CRT-022 y la cantidad no cambia [Mobile] [Logueado]",
+   "observation": "el TC se ejecuta con una cuenta logueada y su columna Test data no declara cuál: ningún token de usuario. Sin la cuenta no se puede correr sin elegirla a dedo, y eso invalidaría el veredicto. Además usa {CART_ITEM_API_ENDPOINT} para bloquear la request. Falta declarar la cuenta en el Test data del TC (lo hace quien mantiene la planilla).",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- El carro contiene {SKU_VALID_001} x 1\n- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)",
+   "spec": "tests/B2C-38.spec.ts",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.\n3. El usuario toca el control + del ítem {SKU_VALID_001}.\n4. El sistema muestra el toast de error \"No pudimos sumar el producto a tu carro. Vuelve a intentarlo. [CRT-022]\".",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n- {CART_ITEM_API_ENDPOINT} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-03",
+   "expected": "Se muestra el toast CRT-023 con cierre manual (X) y la cantidad de {SKU_VALID_001} permanece en 2.",
+   "form_factor": "mobile",
+   "id": "TC-B2C38-M-015",
+   "name": "Verificar que un error al disminuir muestra el toast CRT-023 y la cantidad no cambia [Mobile] [Logueado]",
+   "observation": "el TC se ejecuta con una cuenta logueada y su columna Test data no declara cuál: ningún token de usuario. Sin la cuenta no se puede correr sin elegirla a dedo, y eso invalidaría el veredicto. Además usa {CART_ITEM_API_ENDPOINT} para bloquear la request. Falta declarar la cuenta en el Test data del TC (lo hace quien mantiene la planilla).",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- El carro contiene {SKU_VALID_001} x 2\n- DevTools abierto con bloqueo de la request {CART_ITEM_API_ENDPOINT} (Network request blocking)",
+   "spec": "tests/B2C-38.spec.ts",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.\n3. El usuario toca el control − del ítem {SKU_VALID_001}.\n4. El sistema muestra el toast de error \"No pudimos disminuir la cantidad de tu producto. Vuelve a intentarlo.[CRT-023]\".",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n- {CART_ITEM_API_ENDPOINT} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-03",
    "expected": "Se muestra el toast \"Alcanzaste el máximo de productos\", el + se reemplaza por \"Máx\" deshabilitado y la cantidad en kg queda igual al stock disponible.",
    "form_factor": "desktop",
    "id": "TC-B2C38-D-015",
    "name": "Verificar que al llegar al stock disponible de un producto pesable se muestra el toast de máximo y el botón Máx deshabilitado [Desktop] [Logueado]",
-   "observation": "Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su columna Test data no declara la cuenta. Acción: declarar en la fila el token de la cuenta (p. ej. {USER_AUTH_001}) con la que se ejecuta.",
-   "observed": "Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su columna Test data no declara la cuenta. Acción: declarar en la fila el token de la cuenta (p. ej. {USER_AUTH_001}) con la que se ejecuta.",
+   "observation": "el TC se ejecuta con una cuenta logueada y su columna Test data no declara cuál: ningún token de usuario. Sin la cuenta no se puede correr sin elegirla a dedo, y eso invalidaría el veredicto. Falta declarar la cuenta en el Test data del TC (lo hace quien mantiene la planilla).",
    "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- {SKU_PESABLE} tiene stock limitado en la tienda activa\n- El carro contiene {SKU_PESABLE_STOCK_LIMITADO} con X Kg menos que su stock disponible\n- El Stock maximo del producto {SKU_PESABLE_STOCK_LIMITADO} es 4",
    "spec": "tests/B2C-38.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.\n3. El usuario hace clic en el control + del ítem {SKU_PESABLE_STOCK_LIMITADO}.\n4. El sistema muestra un loading en el shelf y suma X Kg, alcanzando el stock disponible.\n5. El sistema muestra el toast informativo \"Alcanzaste el máximo de productos\" con ícono X.",
-   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{BM_INVENTORY_LIST} = https://development-na01-smu.demandware.net/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dUnimarc/ViewProductInventory_52-View\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{SKU_PESABLE} = 000000000000037972-KG",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n- {COMPRADOR_USER} = TBD\n- {SKU_PESABLE} = 000000000000037972-KG\n- {BM_INVENTORY_LIST} = https://development-na01-smu.demandware.net/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dUnimarc/ViewProductInventory_52-View",
    "viewport": "1440x900"
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-20",
+   "executed_at": "2026-11-03",
    "expected": "Se muestra el toast \"Alcanzaste el máximo de productos\", el + se reemplaza por \"Máx\" deshabilitado y la cantidad en kg queda igual al stock disponible.",
    "form_factor": "mobile",
    "id": "TC-B2C38-M-017",
    "name": "Verificar que al llegar al stock disponible de un producto pesable se muestra el toast de máximo y el botón Máx deshabilitado [Mobile] [Guest]",
-   "observation": "Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su columna Test data no declara la cuenta. Acción: declarar en la fila el token de la cuenta (p. ej. {USER_AUTH_001}) con la que se ejecuta.",
-   "observed": "Causa: el caso se ejecuta con sesión iniciada (User type: Logueado) y su columna Test data no declara la cuenta. Acción: declarar en la fila el token de la cuenta (p. ej. {USER_AUTH_001}) con la que se ejecuta.",
+   "observation": "el TC se ejecuta con una cuenta logueada y su columna Test data no declara cuál: ningún token de usuario. Sin la cuenta no se puede correr sin elegirla a dedo, y eso invalidaría el veredicto. Falta declarar la cuenta en el Test data del TC (lo hace quien mantiene la planilla).",
    "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- {SKU_PESABLE_STOCK_LIMITADO} tiene stock limitado en la tienda activa\n- El carro contiene {SKU_PESABLE_STOCK_LIMITADO} con X Kg menos que su stock disponible\n- El Stock maximo del producto {SKU_PESABLE_STOCK_LIMITADO} es 4",
    "spec": "tests/B2C-38.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.\n3. El usuario toca el control + del ítem {SKU_PESABLE_STOCK_LIMITADO}.\n4. El sistema muestra un loading en el shelf y suma X Kg, alcanzando el stock disponible.\n5. El sistema muestra el toast informativo \"Alcanzaste el máximo de productos\" con ícono X.",
-   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{BM_INVENTORY_LIST} = https://development-na01-smu.demandware.net/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dUnimarc/ViewProductInventory_52-View\n{CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n{SKU_PESABLE_STOCK_LIMITADO} = 000000000000038019-KG",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n- {COMPRADOR_USER} = TBD\n- {SKU_PESABLE_STOCK_LIMITADO} = 000000000000037972-KG\n- {BM_INVENTORY_LIST} = https://development-na01-smu.demandware.net/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dUnimarc/ViewProductInventory_52-View",
    "viewport": "390x844"
   }
  ]

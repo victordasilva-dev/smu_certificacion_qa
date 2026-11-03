@@ -3,7 +3,7 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-147 |
-| Última actualización | 2026-10-16 |
+| Última actualización | 2026-11-03 |
 | Ejecutado por | Victor Chirinos |
 | Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
@@ -15,16 +15,16 @@
 
 | Estado | Casos |
 |---|---|
-| Bloqueado Data | 28 |
+| Bloqueado Data | 27 |
 | Aprobado | 11 |
-| Rechazado | 2 |
+| Rechazado | 3 |
 | **Total** | **41** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
-| 2026-10-16 | 41 | TC-B2C147-D-001, TC-B2C147-D-002, TC-B2C147-D-003, TC-B2C147-D-004, TC-B2C147-D-005, TC-B2C147-D-006, TC-B2C147-D-007, TC-B2C147-D-008, TC-B2C147-D-009, TC-B2C147-D-010, TC-B2C147-D-011, TC-B2C147-D-012, TC-B2C147-D-013, TC-B2C147-D-014, TC-B2C147-D-015, TC-B2C147-D-016, TC-B2C147-D-017, TC-B2C147-D-018, TC-B2C147-D-020, TC-B2C147-D-021, TC-B2C147-D-022, TC-B2C147-M-001, TC-B2C147-M-002, TC-B2C147-M-003, TC-B2C147-M-004, TC-B2C147-M-005, TC-B2C147-M-006, TC-B2C147-M-007, TC-B2C147-M-008, TC-B2C147-M-009, TC-B2C147-M-010, TC-B2C147-M-011, TC-B2C147-M-012, TC-B2C147-M-013, TC-B2C147-M-014, TC-B2C147-M-015, TC-B2C147-M-016, TC-B2C147-M-017, TC-B2C147-M-018, TC-B2C147-M-019, TC-B2C147-M-020 |
+| 2026-11-03 | 41 | TC-B2C147-D-001, TC-B2C147-D-002, TC-B2C147-D-003, TC-B2C147-D-004, TC-B2C147-D-005, TC-B2C147-D-006, TC-B2C147-D-007, TC-B2C147-D-008, TC-B2C147-D-009, TC-B2C147-D-010, TC-B2C147-D-011, TC-B2C147-D-012, TC-B2C147-D-013, TC-B2C147-D-014, TC-B2C147-D-015, TC-B2C147-D-016, TC-B2C147-D-017, TC-B2C147-D-018, TC-B2C147-D-020, TC-B2C147-D-021, TC-B2C147-D-022, TC-B2C147-M-001, TC-B2C147-M-002, TC-B2C147-M-003, TC-B2C147-M-004, TC-B2C147-M-005, TC-B2C147-M-006, TC-B2C147-M-007, TC-B2C147-M-008, TC-B2C147-M-009, TC-B2C147-M-010, TC-B2C147-M-011, TC-B2C147-M-012, TC-B2C147-M-013, TC-B2C147-M-014, TC-B2C147-M-015, TC-B2C147-M-016, TC-B2C147-M-017, TC-B2C147-M-018, TC-B2C147-M-019, TC-B2C147-M-020 |
 
 ## Detalle por caso de prueba
 
@@ -191,51 +191,6 @@ Despacho a Calle Uno 23, La Florida: header y footer simplificados, '<', título
 
 ---
 
-### TC-B2C147-D-004 - Verificar que una dirección sin número se muestra con S/N y sin comas vacías [Desktop] [Logueado]
-
-| Campo | Valor |
-|---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-16 |
-| Form factor | desktop |
-| Viewport | 1440x900 |
-| Navegador | chromium |
-
-**Precondiciones**
-
-- User type: Logueado
-- Viewport: Desktop 1440x900
-- Ubicacion: Carrito
-- Sesión iniciada con la cuenta cuenta de comprador (correo + OTP)
-- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000
-- Despacho a domicilio configurado con Metropolitana, Las Condes, Las Condes (sin número ni complemento)
-
-**Data utilizada**
-
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Metropolitana, Las Condes, Las Condes, 20000, 000000000000675191-UN, 11, cuenta de comprador (correo + OTP)
-
-**Pasos ejecutados**
-
-1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.
-2. El sistema carga el carrito.
-3. El usuario hace clic en "Continuar con la entrega" y luego "Continuar" en el modal de sugeridos si aparece.
-4. El sistema carga la página "Datos de entrega" (Mis Envíos).
-5. El usuario revisa la tarjeta de dirección.
-
-**Resultado esperado**
-
-La tarjeta muestra la dirección con "S/N" en lugar del número y, si no hay complemento, sin coma vacía.
-
-**Resultado obtenido**
-
-No se ejecutó: la data declarada no sirve o está en TBD.
-
-**Observación**
-
-Causa: {DIRECCION_SIN_NUMERO} = 'Metropolitana, Las Condes, Las Condes' no es una calle: el Store Locator no ofrece ninguna sugerencia de Google que corresponda (2026-10-16), así que no se puede configurar como despacho. Acción: declarar una calle real sin número que Google sugiera y que tenga cobertura.
-
----
-
 ### TC-B2C147-D-005 - Verificar que el selector de fechas muestra los días de Janis con el primero disponible marcado [Desktop] [Logueado]
 
 | Campo | Valor |
@@ -290,97 +245,6 @@ Días 'Hoy 16', 'Sab 17' … con 'Hoy' seleccionado (primer día disponible); ni
 ![Paso 5 — selector de fechas](<B2C-147 Evidencias/TC-B2C147-D-005-p05-selector-de-fechas.png>)
 
 ![Estado final del caso](<B2C-147 Evidencias/TC-B2C147-D-005.png>)
-
----
-
-### TC-B2C147-D-006 - Verificar que el resumen de totales incluye despacho, subtotal y subtotal con Unipay [Desktop] [Logueado]
-
-| Campo | Valor |
-|---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-16 |
-| Form factor | desktop |
-| Viewport | 1440x900 |
-| Navegador | chromium |
-
-**Precondiciones**
-
-- User type: Logueado
-- Viewport: Desktop 1440x900
-- Ubicacion: Carrito
-- Sesión iniciada con la cuenta cuenta de comprador (correo + OTP)
-- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000
-- El carro también contiene 000000000000661945-UN
-- Despacho a domicilio configurado con Calle Uno 23, La Florida
-
-**Data utilizada**
-
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, 20000, 000000000000661945-UN, 000000000000675191-UN, 11, cuenta de comprador (correo + OTP)
-
-**Pasos ejecutados**
-
-1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.
-2. El sistema carga el carrito.
-3. El usuario hace clic en "Continuar con la entrega" y luego "Continuar" en el modal de sugeridos si aparece.
-4. El sistema carga la página "Datos de entrega" (Mis Envíos).
-5. El usuario revisa el resumen de totales.
-
-**Resultado esperado**
-
-El resumen muestra Despacho, Subtotal (subtotal + despacho) y Subtotal con Unipay (subtotal con descuento + despacho).
-
-**Resultado obtenido**
-
-No se ejecutó: la data declarada no sirve o está en TBD.
-
-**Observación**
-
-Causa: {SKU_UNIPAY_001} = 000000000000661945-UN (Lavaloza Quix 1.5 L) no tiene precio Unipay en DEV: el shelf muestra solo $4.750 y en Mis Envíos 'Subtotal con Unipay' = 'Subtotal' ($35.130 con 11 × {SKU_VALID_001}), sin descuento que verificar. Acción: declarar un SKU con descuento Unipay vigente en DEV.
-
----
-
-### TC-B2C147-D-007 - Verificar que con Express disponible Envío Express queda seleccionado por defecto [Desktop] [Logueado]
-
-| Campo | Valor |
-|---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-16 |
-| Form factor | desktop |
-| Viewport | 1440x900 |
-| Navegador | chromium |
-
-**Precondiciones**
-
-- User type: Logueado
-- Viewport: Desktop 1440x900
-- Ubicacion: Carrito
-- Sesión iniciada con la cuenta cuenta de comprador (correo + OTP)
-- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000
-- Despacho a domicilio configurado con Calle Uno 23, La Florida
-
-**Data utilizada**
-
-https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, 20000, 000000000000675191-UN, 11, cuenta de comprador (correo + OTP)
-
-**Pasos ejecutados**
-
-1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.
-2. El sistema carga el carrito.
-3. El usuario hace clic en "Continuar con la entrega" y luego "Continuar" en el modal de sugeridos si aparece.
-4. El sistema carga la página "Datos de entrega" (Mis Envíos).
-5. El usuario revisa la sección de horarios.
-
-**Resultado esperado**
-
-La sección muestra "Envío Express 30-60min" seleccionado por defecto y las ventanas con rango horario y precio.
-
-**Resultado obtenido**
-
-No se ejecutó: la data declarada no sirve o está en TBD.
-
-**Observación**
-
-Causa: con {DIRECCION_EXPRESS_Y_PROG_CON_COSTO} = Calle Uno 23, La Florida, Mis Envíos no ofrece 'Envío Express' (solo 12:00-15:00, 15:00-18:00 y 18:00-21:00 a $2.990; 2026-10-16), así que no se puede validar la selección por defecto de Express. Acción: declarar una dirección cuya tienda abastecedora tenga Express habilitado en DEV.
 
 ---
 
@@ -2021,6 +1885,164 @@ Causa: {TIENDA_SIN_SLA} = 'Unimac Los Lagos II' (typo de 'Unimarc Los Lagos II',
 
 ---
 
+### TC-B2C147-D-006 - Verificar que el resumen de totales incluye despacho, subtotal y subtotal con Unipay [Desktop] [Logueado]
+
+| Campo | Valor |
+|---|---|
+| Estado | Rechazado |
+| Ejecutado | 2026-11-03 |
+| Form factor | desktop |
+| Viewport | 1440x900 |
+| Navegador | chromium |
+| Spec | tests/B2C-147.spec.ts |
+
+**Precondiciones**
+
+- User type: Logueado
+- Viewport: Desktop 1440x900
+- Ubicacion: Carrito
+- Sesión iniciada con la cuenta {USER_AUTH_001}
+- El carro contiene {SKU_VALID_001} x {UNIDADES_SOBRE_MINIMO} y el subtotal es mayor o igual a {MONTO_MINIMO_COMPRA}
+- El carro también contiene {SKU_UNIPAY_001}
+- Despacho a domicilio configurado con {DIRECCION_DESPACHO_001}
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+- {DIRECCION_DESPACHO_001} = Casa
+- {SKU_UNIPAY_001} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+- {UNIDADES_SOBRE_MINIMO} = TBD
+- {MONTO_MINIMO_COMPRA} = TBD
+- {USER_AUTH_001} = girolamo_coppo@hotmail.com
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a {CART_URL}.
+2. El sistema carga el carrito.
+3. El usuario hace clic en "Continuar con la entrega" y luego "Continuar" en el modal de sugeridos si aparece.
+4. El sistema carga la página "Datos de entrega" (Mis Envíos).
+5. El usuario revisa el resumen de totales.
+
+**Resultado esperado**
+
+El resumen muestra Despacho, Subtotal (subtotal + despacho) y Subtotal con Unipay (subtotal con descuento + despacho).
+
+**Resultado obtenido**
+
+Desktop 1440x900, logueado, despacho a {DIRECCION_DESPACHO_001}, carro con {SKU_VALID_001} x {UNIDADES_SOBRE_MINIMO} y {SKU_UNIPAY_001}. Esperado: el resumen muestra Despacho, Subtotal (subtotal + despacho) y Subtotal con Unipay (subtotal con descuento + despacho). Obtenido: las tres líneas aparecen («Despacho $2.990», «Subtotal $35.130», «Subtotal con Unipay $35.130») pero Subtotal con Unipay es igual a Subtotal: no refleja el descuento Unipay del producto (su PDP muestra $4.275 frente a $4.750) ni suma el despacho. Bug: B2C-1455.
+
+**Observación**
+
+Desktop 1440x900, logueado, despacho a {DIRECCION_DESPACHO_001}, carro con {SKU_VALID_001} x {UNIDADES_SOBRE_MINIMO} y {SKU_UNIPAY_001}. Esperado: el resumen muestra Despacho, Subtotal (subtotal + despacho) y Subtotal con Unipay (subtotal con descuento + despacho). Obtenido: las tres líneas aparecen («Despacho $2.990», «Subtotal $35.130», «Subtotal con Unipay $35.130») pero Subtotal con Unipay es igual a Subtotal: no refleja el descuento Unipay del producto (su PDP muestra $4.275 frente a $4.750) ni suma el despacho. Bug: B2C-1455.
+
+**Evidencia**
+
+![Paso 2 — carro con sku valid 001 y sku unipay 001](<B2C-147 Evidencias/TC-B2C147-D-006-p02-carro-con-sku-valid-001-y-sku-unipay-001.png>)
+
+![Paso 4 — mis envios despacho con producto unipay](<B2C-147 Evidencias/TC-B2C147-D-006-p04-mis-envios-despacho-con-producto-unipay.png>)
+
+![Estado final](<B2C-147 Evidencias/TC-B2C147-D-006.png>)
+
+---
+
+### TC-B2C147-D-004 - Verificar que una dirección sin número se muestra con S/N y sin comas vacías [Desktop] [Logueado]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-03 |
+| Form factor | desktop |
+| Viewport | 1440x900 |
+| Navegador | chromium |
+| Spec | tests/B2C-147.spec.ts |
+
+**Precondiciones**
+
+- User type: Logueado
+- Viewport: Desktop 1440x900
+- Ubicacion: Carrito
+- Sesión iniciada con la cuenta {USER_AUTH_001}
+- El carro contiene {SKU_VALID_001} x {UNIDADES_SOBRE_MINIMO} y el subtotal es mayor o igual a {MONTO_MINIMO_COMPRA}
+- Despacho a domicilio configurado con {DIRECCION_SIN_NUMERO} (sin número ni complemento)
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+- {DIRECCION_SIN_NUMERO} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+- {UNIDADES_SOBRE_MINIMO} = TBD
+- {MONTO_MINIMO_COMPRA} = TBD
+- {USER_AUTH_001} = girolamo_coppo@hotmail.com
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a {CART_URL}.
+2. El sistema carga el carrito.
+3. El usuario hace clic en "Continuar con la entrega" y luego "Continuar" en el modal de sugeridos si aparece.
+4. El sistema carga la página "Datos de entrega" (Mis Envíos).
+5. El usuario revisa la tarjeta de dirección.
+
+**Resultado esperado**
+
+La tarjeta muestra la dirección con "S/N" en lugar del número y, si no hay complemento, sin coma vacía.
+
+**Observación**
+
+la precondición pide {DIRECCION_SIN_NUMERO} (Metropolitana, Las Condes, Las Condes) como dirección guardada sin número; el buscador del Store Locator no ofrece una sugerencia de Google para esa dirección, así que no se puede setear desde la web. Falta una dirección sin numeración que Google sugiera (lo carga el equipo de data).
+
+---
+
+### TC-B2C147-D-007 - Verificar que con Express disponible Envío Express queda seleccionado por defecto [Desktop] [Logueado]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-03 |
+| Form factor | desktop |
+| Viewport | 1440x900 |
+| Navegador | chromium |
+| Spec | tests/B2C-147.spec.ts |
+
+**Precondiciones**
+
+- User type: Logueado
+- Viewport: Desktop 1440x900
+- Ubicacion: Carrito
+- Sesión iniciada con la cuenta {USER_AUTH_001}
+- El carro contiene {SKU_VALID_001} x {UNIDADES_SOBRE_MINIMO} y el subtotal es mayor o igual a {MONTO_MINIMO_COMPRA}
+- Despacho a domicilio configurado con {DIRECCION_EXPRESS_Y_PROG_CON_COSTO}
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart
+- {DIRECCION_EXPRESS_Y_PROG_CON_COSTO} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+- {UNIDADES_SOBRE_MINIMO} = TBD
+- {MONTO_MINIMO_COMPRA} = TBD
+- {USER_AUTH_001} = girolamo_coppo@hotmail.com
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a {CART_URL}.
+2. El sistema carga el carrito.
+3. El usuario hace clic en "Continuar con la entrega" y luego "Continuar" en el modal de sugeridos si aparece.
+4. El sistema carga la página "Datos de entrega" (Mis Envíos).
+5. El usuario revisa la sección de horarios.
+
+**Resultado esperado**
+
+La sección muestra "Envío Express 30-60min" seleccionado por defecto y las ventanas con rango horario y precio.
+
+**Observación**
+
+la precondición pide que Janis ofrezca Envío Express para {DIRECCION_EXPRESS_Y_PROG_CON_COSTO} (= Calle Uno 23, La Florida); esa dirección muestra solo ventana Programada con costo, sin Envío Express (verificado en el app en el mismo ambiente). Falta una dirección con Express vigente (lo configura el equipo de data).
+
+---
+
 <!-- qa-evidence-state
 {
  "header": {
@@ -2034,10 +2056,10 @@ Causa: {TIENDA_SIN_SLA} = 'Unimac Los Lagos II' (typo de 'Unimarc Los Lagos II',
   "suite": "B2C-147",
   "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-147 WEB Test Cases.xlsx",
   "title": "B2C-147 - Ver y seleccionar la ventana de despacho o retiro (WEB) - Evidencias QA",
-  "updated_at": "2026-10-16"
+  "updated_at": "2026-11-03"
  },
  "history": {
-  "2026-10-16": [
+  "2026-11-03": [
    "TC-B2C147-D-001",
    "TC-B2C147-D-002",
    "TC-B2C147-D-003",
@@ -2181,21 +2203,6 @@ Causa: {TIENDA_SIN_SLA} = 'Unimac Los Lagos II' (typo de 'Unimarc Los Lagos II',
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-16",
-   "expected": "La tarjeta muestra la dirección con \"S/N\" en lugar del número y, si no hay complemento, sin coma vacía.",
-   "form_factor": "desktop",
-   "id": "TC-B2C147-D-004",
-   "name": "Verificar que una dirección sin número se muestra con S/N y sin comas vacías [Desktop] [Logueado]",
-   "observation": "Causa: {DIRECCION_SIN_NUMERO} = 'Metropolitana, Las Condes, Las Condes' no es una calle: el Store Locator no ofrece ninguna sugerencia de Google que corresponda (2026-10-16), así que no se puede configurar como despacho. Acción: declarar una calle real sin número que Google sugiera y que tenga cobertura.",
-   "observed": "No se ejecutó: la data declarada no sirve o está en TBD.",
-   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta cuenta de comprador (correo + OTP)\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Metropolitana, Las Condes, Las Condes (sin número ni complemento)",
-   "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario revisa la tarjeta de dirección.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Metropolitana, Las Condes, Las Condes, 20000, 000000000000675191-UN, 11, cuenta de comprador (correo + OTP)",
-   "viewport": "1440x900"
-  },
-  {
-   "browser": "chromium",
    "duration_s": 62.7,
    "executed_at": "2026-10-16",
    "expected": "El selector muestra los días que retorna Janis (\"Hoy\" + número, abreviatura de día + número), con los días sin disponibilidad deshabilitados y el primer día disponible seleccionado.",
@@ -2226,36 +2233,6 @@ Causa: {TIENDA_SIN_SLA} = 'Unimac Los Lagos II' (typo de 'Unimarc Los Lagos II',
    "spec": "tests/B2C-147.spec.ts:313",
    "status": "Aprobado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario revisa el selector de fechas.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, 20000, 000000000000675191-UN, 11, cuenta de comprador (correo + OTP)",
-   "viewport": "1440x900"
-  },
-  {
-   "browser": "chromium",
-   "executed_at": "2026-10-16",
-   "expected": "El resumen muestra Despacho, Subtotal (subtotal + despacho) y Subtotal con Unipay (subtotal con descuento + despacho).",
-   "form_factor": "desktop",
-   "id": "TC-B2C147-D-006",
-   "name": "Verificar que el resumen de totales incluye despacho, subtotal y subtotal con Unipay [Desktop] [Logueado]",
-   "observation": "Causa: {SKU_UNIPAY_001} = 000000000000661945-UN (Lavaloza Quix 1.5 L) no tiene precio Unipay en DEV: el shelf muestra solo $4.750 y en Mis Envíos 'Subtotal con Unipay' = 'Subtotal' ($35.130 con 11 × {SKU_VALID_001}), sin descuento que verificar. Acción: declarar un SKU con descuento Unipay vigente en DEV.",
-   "observed": "No se ejecutó: la data declarada no sirve o está en TBD.",
-   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta cuenta de comprador (correo + OTP)\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- El carro también contiene 000000000000661945-UN\n- Despacho a domicilio configurado con Calle Uno 23, La Florida",
-   "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario revisa el resumen de totales.",
-   "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, 20000, 000000000000661945-UN, 000000000000675191-UN, 11, cuenta de comprador (correo + OTP)",
-   "viewport": "1440x900"
-  },
-  {
-   "browser": "chromium",
-   "executed_at": "2026-10-16",
-   "expected": "La sección muestra \"Envío Express 30-60min\" seleccionado por defecto y las ventanas con rango horario y precio.",
-   "form_factor": "desktop",
-   "id": "TC-B2C147-D-007",
-   "name": "Verificar que con Express disponible Envío Express queda seleccionado por defecto [Desktop] [Logueado]",
-   "observation": "Causa: con {DIRECCION_EXPRESS_Y_PROG_CON_COSTO} = Calle Uno 23, La Florida, Mis Envíos no ofrece 'Envío Express' (solo 12:00-15:00, 15:00-18:00 y 18:00-21:00 a $2.990; 2026-10-16), así que no se puede validar la selección por defecto de Express. Acción: declarar una dirección cuya tienda abastecedora tenga Express habilitado en DEV.",
-   "observed": "No se ejecutó: la data declarada no sirve o está en TBD.",
-   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta cuenta de comprador (correo + OTP)\n- El carro contiene 000000000000675191-UN x 11 y el subtotal es mayor o igual a 20000\n- Despacho a domicilio configurado con Calle Uno 23, La Florida",
-   "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario revisa la sección de horarios.",
    "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, Calle Uno 23, La Florida, 20000, 000000000000675191-UN, 11, cuenta de comprador (correo + OTP)",
    "viewport": "1440x900"
   },
@@ -2920,6 +2897,66 @@ Causa: {TIENDA_SIN_SLA} = 'Unimac Los Lagos II' (typo de 'Unimarc Los Lagos II',
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n2. El sistema carga el carrito.\n3. El usuario toca \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.",
    "test_data": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart, 20000, 000000000000675191-UN, Unimac Los Lagos II, 11, cuenta de comprador (correo + OTP)",
    "viewport": "390x844"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-03",
+   "expected": "El resumen muestra Despacho, Subtotal (subtotal + despacho) y Subtotal con Unipay (subtotal con descuento + despacho).",
+   "form_factor": "desktop",
+   "id": "TC-B2C147-D-006",
+   "name": "Verificar que el resumen de totales incluye despacho, subtotal y subtotal con Unipay [Desktop] [Logueado]",
+   "observation": "Desktop 1440x900, logueado, despacho a {DIRECCION_DESPACHO_001}, carro con {SKU_VALID_001} x {UNIDADES_SOBRE_MINIMO} y {SKU_UNIPAY_001}. Esperado: el resumen muestra Despacho, Subtotal (subtotal + despacho) y Subtotal con Unipay (subtotal con descuento + despacho). Obtenido: las tres líneas aparecen («Despacho $2.990», «Subtotal $35.130», «Subtotal con Unipay $35.130») pero Subtotal con Unipay es igual a Subtotal: no refleja el descuento Unipay del producto (su PDP muestra $4.275 frente a $4.750) ni suma el despacho. Bug: B2C-1455.",
+   "observed": "Desktop 1440x900, logueado, despacho a {DIRECCION_DESPACHO_001}, carro con {SKU_VALID_001} x {UNIDADES_SOBRE_MINIMO} y {SKU_UNIPAY_001}. Esperado: el resumen muestra Despacho, Subtotal (subtotal + despacho) y Subtotal con Unipay (subtotal con descuento + despacho). Obtenido: las tres líneas aparecen («Despacho $2.990», «Subtotal $35.130», «Subtotal con Unipay $35.130») pero Subtotal con Unipay es igual a Subtotal: no refleja el descuento Unipay del producto (su PDP muestra $4.275 frente a $4.750) ni suma el despacho. Bug: B2C-1455.",
+   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta {USER_AUTH_001}\n- El carro contiene {SKU_VALID_001} x {UNIDADES_SOBRE_MINIMO} y el subtotal es mayor o igual a {MONTO_MINIMO_COMPRA}\n- El carro también contiene {SKU_UNIPAY_001}\n- Despacho a domicilio configurado con {DIRECCION_DESPACHO_001}",
+   "screenshots": [
+    {
+     "caption": "Paso 2 — carro con sku valid 001 y sku unipay 001",
+     "file": "TC-B2C147-D-006-p02-carro-con-sku-valid-001-y-sku-unipay-001.png"
+    },
+    {
+     "caption": "Paso 4 — mis envios despacho con producto unipay",
+     "file": "TC-B2C147-D-006-p04-mis-envios-despacho-con-producto-unipay.png"
+    },
+    {
+     "caption": "Estado final",
+     "file": "TC-B2C147-D-006.png"
+    }
+   ],
+   "spec": "tests/B2C-147.spec.ts",
+   "status": "Rechazado",
+   "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario revisa el resumen de totales.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n- {DIRECCION_DESPACHO_001} = Casa\n- {SKU_UNIPAY_001} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN\n- {UNIDADES_SOBRE_MINIMO} = TBD\n- {MONTO_MINIMO_COMPRA} = TBD\n- {USER_AUTH_001} = girolamo_coppo@hotmail.com",
+   "viewport": "1440x900"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-03",
+   "expected": "La tarjeta muestra la dirección con \"S/N\" en lugar del número y, si no hay complemento, sin coma vacía.",
+   "form_factor": "desktop",
+   "id": "TC-B2C147-D-004",
+   "name": "Verificar que una dirección sin número se muestra con S/N y sin comas vacías [Desktop] [Logueado]",
+   "observation": "la precondición pide {DIRECCION_SIN_NUMERO} (Metropolitana, Las Condes, Las Condes) como dirección guardada sin número; el buscador del Store Locator no ofrece una sugerencia de Google para esa dirección, así que no se puede setear desde la web. Falta una dirección sin numeración que Google sugiera (lo carga el equipo de data).",
+   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta {USER_AUTH_001}\n- El carro contiene {SKU_VALID_001} x {UNIDADES_SOBRE_MINIMO} y el subtotal es mayor o igual a {MONTO_MINIMO_COMPRA}\n- Despacho a domicilio configurado con {DIRECCION_SIN_NUMERO} (sin número ni complemento)",
+   "spec": "tests/B2C-147.spec.ts",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario revisa la tarjeta de dirección.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n- {DIRECCION_SIN_NUMERO} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN\n- {UNIDADES_SOBRE_MINIMO} = TBD\n- {MONTO_MINIMO_COMPRA} = TBD\n- {USER_AUTH_001} = girolamo_coppo@hotmail.com",
+   "viewport": "1440x900"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-03",
+   "expected": "La sección muestra \"Envío Express 30-60min\" seleccionado por defecto y las ventanas con rango horario y precio.",
+   "form_factor": "desktop",
+   "id": "TC-B2C147-D-007",
+   "name": "Verificar que con Express disponible Envío Express queda seleccionado por defecto [Desktop] [Logueado]",
+   "observation": "la precondición pide que Janis ofrezca Envío Express para {DIRECCION_EXPRESS_Y_PROG_CON_COSTO} (= Calle Uno 23, La Florida); esa dirección muestra solo ventana Programada con costo, sin Envío Express (verificado en el app en el mismo ambiente). Falta una dirección con Express vigente (lo configura el equipo de data).",
+   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta {USER_AUTH_001}\n- El carro contiene {SKU_VALID_001} x {UNIDADES_SOBRE_MINIMO} y el subtotal es mayor o igual a {MONTO_MINIMO_COMPRA}\n- Despacho a domicilio configurado con {DIRECCION_EXPRESS_Y_PROG_CON_COSTO}",
+   "spec": "tests/B2C-147.spec.ts",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a {CART_URL}.\n2. El sistema carga el carrito.\n3. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n4. El sistema carga la página \"Datos de entrega\" (Mis Envíos).\n5. El usuario revisa la sección de horarios.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CART_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart\n- {DIRECCION_EXPRESS_Y_PROG_CON_COSTO} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN\n- {UNIDADES_SOBRE_MINIMO} = TBD\n- {MONTO_MINIMO_COMPRA} = TBD\n- {USER_AUTH_001} = girolamo_coppo@hotmail.com",
+   "viewport": "1440x900"
   }
  ]
 }

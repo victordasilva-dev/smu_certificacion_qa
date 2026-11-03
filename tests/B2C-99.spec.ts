@@ -884,6 +884,54 @@ const CASOS: { n: string; nombre: string; logueado?: boolean; cuerpo: Caso }[] =
       await expect(r.pin.actual, 'sale de la confirmación con PIN').toBeHidden();
     },
   },
+  {
+    n: '038',
+    nombre: 'con productos en el carro y la misma tienda abastecedora no se muestra el modal No se te escapen',
+    cuerpo: async ({ page, testData, cp }) => {
+      const misma = token(testData, 'DIRECCION_MISMA_TIENDA')!;
+      const misma2 = token(testData, 'DIRECCION_MISMA_TIENDA_2')!;
+      const pre = await abrirModal(page);
+      await pre.modal.fijarDireccionComoInvitado(misma.split(',')[0], sugerenciaDe(misma));
+      const pdp = await new PDPPage(page).abrir(token(testData, 'SKU_VALID_001')!);
+      await pdp.agregarVisible.click();
+      await expect(pdp.header.miniCarrito, 'el carro contiene el SKU').toHaveAttribute('aria-label', /\b1\b/, { timeout: 20000 });
+      await pdp.capturarEvidencia(cp, 'pre', 'dirección activa y carro con el SKU', { elemento: pdp.header.barraDelSitio });
+      const r = await hastaDetalles(page, testData, cp, 'DIRECCION_MISMA_TIENDA_2');
+      await r.pin.botonAgregarDireccion.click();
+      const agotarse = new AgotarseModal(page);
+      const aparecio = await agotarse.root.waitFor({ state: 'visible', timeout: 15000 }).then(() => true, () => false);
+      await capturar(page, cp, 7, 'tras «Agregar dirección»');
+      if (aparecio) nota('Modal', ((await agotarse.root.innerText()) ?? '').replace(/\s+/g, ' ').slice(0, 200));
+      expect(aparecio, 'no se muestra el modal de cambio de tienda («Algunos productos podrían agotarse» / «No se te escapen»)').toBe(false);
+      await expect(r.pin.actual, 'se cierra la confirmación con PIN').toBeHidden({ timeout: 60000 });
+      const header = await new PaginaHabilitada(page).header.esperarDireccionEnStoreLocator(45000).catch(() => '');
+      nota('Store Locator', header);
+      expect(header, 'Store Locator con la calle de la dirección nueva').toMatch(/artigas/i);
+      await new PaginaHabilitada(page).header.storeLocator.click();
+      const activa = ((await new MetodoEntregaModal(page).esperarAbierto().then((m) => m.direccionActiva.innerText())) ?? '').replace(/\s+/g, ' ');
+      nota('Dirección activa en el modal', activa);
+      await capturar(page, cp, 8, 'dirección activa en el Store Locator');
+      expect(activa, 'la dirección activa es de la calle de {DIRECCION_MISMA_TIENDA_2}').toMatch(/artigas/i);
+      nota('Limitación', 'El Store Locator y el modal muestran solo «General José Artigas», sin número, para {DIRECCION_MISMA_TIENDA} y {DIRECCION_MISMA_TIENDA_2}: el número no se distingue desde la interfaz.');
+      await page.keyboard.press('Escape');
+      await expect(pdp.header.miniCarrito, 'el carro conserva el SKU x 1').toHaveAttribute('aria-label', /\b1\b/, { timeout: 20000 });
+    },
+  },
+  {
+    n: '039',
+    nombre: 'al agregar la dirección como invitado no se solicita OTP',
+    cuerpo: async ({ page, testData, cp }) => {
+      const r = await hastaDetalles(page, testData, cp);
+      await r.pin.botonAgregarDireccion.click();
+      const hubo = await r.modal.modalOtp.waitFor({ state: 'visible', timeout: 12000 }).then(() => true, () => false);
+      await capturar(page, cp, 7, 'tras «Agregar dirección»');
+      expect(hubo, 'no se muestra «Autenticación requerida» ni se pide OTP').toBe(false);
+      await expect(r.pin.actual, 'se cierra la confirmación con PIN').toBeHidden({ timeout: 60000 });
+      const header = await new PaginaHabilitada(page).header.esperarDireccionEnStoreLocator(45000).catch(() => '');
+      nota('Store Locator', header);
+      expect(header, 'Store Locator con la dirección').toMatch(/calle uno 23/i);
+    },
+  },
 ];
 
 async function capturar(page: Page, cp: string, paso: number, etiqueta: string): Promise<void> {
