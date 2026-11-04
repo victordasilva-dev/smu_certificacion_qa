@@ -4,7 +4,7 @@ import { token } from '../tests/support/testData';
 import type { Plataforma } from '../tests/support/rutasEvidencia';
 import { TabBar } from './pages/TabBar';
 import { BuscarScreen } from './pages/BuscarScreen';
-import { PDPScreen } from './pages/PDPScreen';
+import { PDPScreen } from './pages/PdpPreciosScreen';
 import { CombinaLaPromoModal } from './pages/CombinaLaPromoModal';
 import { arrancarInvitado, visibleEn } from './support/entregaApp';
 import { colorMedio, tieneTachado } from './support/pixeles';
