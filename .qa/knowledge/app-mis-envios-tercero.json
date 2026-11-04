@@ -1,0 +1,43 @@
+{
+  "flow": "app-mis-envios-tercero",
+  "description": "App nativa Unimarc: Mis Envíos («Datos de entrega») y el modal «¿Recibe alguien más?» para registrar, editar y eliminar un tercero (HU B2C-190); entrada a «Mi pago».",
+  "last_updated": "2026-11-04T17:15:00Z",
+  "version": 1,
+  "source": {
+    "suite": "B2C-190",
+    "tc_file": "Casos de Prueba/Ejecutados/SP2/Unimarc/B2C-190 APP Test Cases.xlsx",
+    "spec": "tests-app/B2C-190.spec.ts",
+    "last_sync": "2026-11-04T17:15:00Z"
+  },
+  "app": {
+    "android_package": "cl.smu.unimarcapp.sfcc.qa",
+    "build": "v1.0.1"
+  },
+  "platforms_explored": {
+    "android": {
+      "device": "emulador Pixel_4_API_33 (Android 13, 1080x2280); antes Samsung SM-A075M (720x1600)",
+      "driver": "mobilecli local"
+    }
+  },
+  "selectors": {
+    "preferred": [
+      { "description": "Modal tercero: campos", "selector": "getByTestId('receiver-input-rut' | 'receiver-input-firstName' | 'receiver-input-lastName' | 'receiver-input-phone')" },
+      { "description": "Modal tercero: CTA guardar (etiqueta en el app: «Guardar datos de terceros», con s)", "selector": "getByTestId('receiver-submit')" },
+      { "description": "Modal tercero: «Lo recibiré yo»", "selector": "getByTestId('receiver-self')" },
+      { "description": "Abrir el modal", "selector": "getByText('¿Recibe alguien más?')" },
+      { "description": "Editar el tercero", "selector": "getByText(/^Editar$/)" }
+    ]
+  },
+  "behaviour": [
+    "El RUT se autoformatea al escribirlo: «123456785» queda «12.345.678-5». Un RUT sin formato con DV válido NO muestra error (APP-013, aceptado como diseño: CA10 pide el formato, no prohíbe autoformatear); con DV inválido sí muestra «Ingrese un valor válido».",
+    "Nombre recorta a 30 caracteres sin mostrar error (bug B2C-1438).",
+    "El teléfono tiene el prefijo +569 fijo: se escriben solo los 8 dígitos restantes.",
+    "Los toasts «Los datos de quien recibirá tu compra se guardaron correctamente.» y «Los datos fueron eliminados correctamente» aparecen ~1.5 s después de la acción y duran ~4 s: hay que leer el árbol en bucle desde el toque (fase `toast` del spec); con pausas de 5-6 s se pierden.",
+    "Cambiar a retiro en tienda (o volver a despacho) muestra «Algunos productos podrían agotarse» y luego pide OTP. Tras tocar «Sí, continuar» el botón pasa a un loader sin texto mientras el aviso sigue visible: no reintentar el toque.",
+    "El buscador de tiendas del modal conserva el texto anterior: limpiarlo antes de escribir.",
+    "Tras el login la app ofrece «Ingresa con rostro o huella»: «Ahora no».",
+    "En el Pixel 4 el toque de coordenadas que oculta el teclado en el Pixel 6 abre «Choose input method»: se oculta con BACK (sesionOtp.ts).",
+    "«Mi pago» (cuenta OneClick): Unipay recomendado, «Mi tarjeta» con la tarjeta principal y «Elegir» → «Mis tarjetas» (principal + «Más tarjetas guardadas» + «Agregar tarjeta» + «Continuar»). El CTA inferior dice «Elegir medio de pago» hasta que se elige uno.",
+    "Los OTP llegan a la casilla de vhchirinos+<alias>@avatar-global.com (Gmail del ejecutor). Los de cambio de dirección valen 1-5 min; los de login, 10 min."
+  ]
+}

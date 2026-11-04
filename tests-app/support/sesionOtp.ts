@@ -94,8 +94,11 @@ export async function esperarCodigo(cp: string, correo: string, desde: Date): Pr
   throw new Error('OTP_NO_RECIBIDO: el código no llegó a tiempo');
 }
 
-/** Escribe un código en las seis casillas visibles y toca «Validar». */
-export async function ingresarCodigo(screen: any, codigo: string): Promise<void> {
+/**
+ * Escribe un código en las seis casillas visibles y toca «Validar». `espera` es la pausa tras
+ * «Validar»: 0 para quien necesita leer un toast que la app muestra justo al validar (B2C-190 APP-005).
+ */
+export async function ingresarCodigo(screen: any, codigo: string, espera = 6000): Promise<void> {
   // Si el teclado no está abierto (el modal OTP no siempre enfoca la casilla) se toca la casilla para abrirlo.
   if (!/mInputShown=true/.test(execSync('adb shell dumpsys input_method', { timeout: 15000 }).toString())) {
     await screen.getByType('android.widget.EditText').first().tap().catch(() => undefined);
@@ -108,11 +111,14 @@ export async function ingresarCodigo(screen: any, codigo: string): Promise<void>
   // Samsung (portapapeles). Se oculta el teclado con el botón de la barra de navegación antes de tocar.
   const tecladoVisible = () => /mInputShown=true/.test(execSync('adb shell dumpsys input_method', { timeout: 15000 }).toString());
   for (let i = 0; i < 3 && tecladoVisible(); i++) {
-    tocarEscalado(847, 2330);
+    // Fuera del Pixel 6 esa coordenada cae en el botón de cambiar teclado (abre «Choose input method», Pixel 4):
+    // ahí se cierra con BACK, que con el teclado abierto solo lo oculta.
+    if (pantalla().join('x') === '1080x2400') tocarEscalado(847, 2330);
+    else execSync('adb shell input keyevent 4', { timeout: 15000 });
     await dormir(1500);
   }
   await tol(() => screen.getByText('Validar').tap());
-  await dormir(6000);
+  await dormir(espera);
 }
 
 /** Deja la app con sesión de `correo`: reutiliza la que hay o inicia sesión por OTP. */
