@@ -8,9 +8,10 @@ mobilewright-report/
 .qa/evidence/
 .qa/run/
 .qa/explore/
+.qa/otp/
+.qa/tmp/
+.qa/secrets/
 tests/data.json
 __pycache__/
 *.apk
 *.ipa
-.qa/tmp/
-.qa/otp/

@@ -8,7 +8,7 @@ import { Plataforma, esEvidenciaDeAppEn } from '../../tests/support/rutasEvidenc
  * Borra al arrancar una corrida **completa** la evidencia de app **de las plataformas de este
  * config**, y nada más. Las tres corridas —web, Android, iOS— escriben en la misma
  * `test-results/evidence/` y cada una arranca cuando le toca: si iOS vaciara la carpeta entera,
- * se llevaría la evidencia de la web y de Android que la Fase 9 todavía tiene que meter en el Word.
+ * se llevaría la evidencia de la web y de Android que la Fase 9 todavía tiene que meter en el reporte.
  *
  * En una corrida filtrada (`--grep <CP-ID>`, `--project`, `--shard`) no borra nada: la limpieza la
  * hace caso por caso el fixture `evidenciaDelCaso` de tests-app/support/fixtures.ts, igual que en

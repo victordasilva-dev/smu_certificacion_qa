@@ -13,7 +13,7 @@ export default defineConfig({
   testDir: './tests',
   // Playwright escribe sus propios artefactos (trazas, video, captura del fallo) en el outputDir
   // y LO LIMPIA al arrancar la corrida. Por defecto ese directorio es `test-results`, el mismo
-  // donde `capturarEvidencia` deja las capturas que alimentan el Word — es decir, la evidencia
+  // donde `capturarEvidencia` deja las capturas que alimentan el reporte — es decir, la evidencia
   // del entregable comparte destino con algo que borra Playwright y no controlamos nosotros.
   // Confinándolo en un subdirectorio propio, `test-results/evidence/` queda fuera de su alcance.
   outputDir: 'test-results/pw',
