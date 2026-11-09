@@ -30,7 +30,7 @@ export const test = base.extend<{ testData: LoadedTestData; evidenciaDelCaso: vo
    * Hace falta borrar y no simplemente sobrescribir: las capturas llevan el número de paso y su
    * etiqueta en el nombre, de modo que si el caso cambia —un paso menos, una etiqueta reescrita—
    * la captura vieja no se pisa, se queda. Y como el JSON de corrida recoge del disco todo lo que
-   * empiece por el CP-ID, esa huérfana entraría en el Word mezclada con las nuevas.
+   * empiece por el CP-ID, esa huérfana entraría en el reporte mezclada con las nuevas.
    *
    * Corre también en cada reintento, que es justo lo que se quiere: la evidencia que queda es la
    * del último intento, que es el que decide el veredicto.
@@ -41,6 +41,13 @@ export const test = base.extend<{ testData: LoadedTestData; evidenciaDelCaso: vo
       // Excel y con el nombre de sus capturas.
       const cpId = testInfo.title.split(' ')[0];
       const dir = path.resolve(process.cwd(), EVIDENCE_DIR);
+
+      // Un intento que terminó en PRECONDICION_NO_DISPONIBLE no cambia al reintentarlo: la data es
+      // la misma. El reintento falla en el acto con el mismo motivo y conserva la evidencia del
+      // primer intento, en vez de volver a iniciar sesión y armar el carro para llegar a lo mismo.
+      const marca = path.resolve(process.cwd(), '.qa/run/precondicion', `${testInfo.testId}.txt`);
+      if (testInfo.retry === 0) await fs.promises.rm(marca, { force: true });
+      else if (fs.existsSync(marca)) throw new Error(await fs.promises.readFile(marca, 'utf-8'));
 
       if (/^TC-[A-Z0-9-]+$/i.test(cpId)) {
         const previas = await fs.promises.readdir(dir).catch(() => [] as string[]);
@@ -54,6 +61,12 @@ export const test = base.extend<{ testData: LoadedTestData; evidenciaDelCaso: vo
       }
 
       await use();
+
+      const motivo = testInfo.errors.map((e) => e.message ?? '').find((m) => m.includes('PRECONDICION_NO_DISPONIBLE'));
+      if (motivo) {
+        await fs.promises.mkdir(path.dirname(marca), { recursive: true });
+        await fs.promises.writeFile(marca, motivo.split('\n')[0]);
+      }
     },
     { auto: true },
   ],

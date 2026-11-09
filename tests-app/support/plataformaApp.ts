@@ -28,13 +28,17 @@ export const SUFIJO = { ios: /\(iOS\)/, android: /\(Android\)/ } as const;
 /**
  * ¿Esta plataforma corre en Mobile Next Cloud?
  *
- * iOS **siempre**: en Windows no hay simulador de iOS, así que la nube no es una opción sino el
- * único camino. Android corre en local por defecto (emulador o equipo por ADB, vía mobilecli), y
+ * iOS va a la nube por defecto (`IOS_EN_CLOUD=true`): en Windows no hay simulador de iOS, así que
+ * ahí la nube es el único camino. En una Mac con Xcode, `IOS_EN_CLOUD=false` lo corre en el
+ * simulador local (vía mobilecli), con un `.zip` del `.app` de simulador en `{IOS_APP_BUILD}`.
+ * Android corre en local por defecto (emulador o equipo por ADB, vía mobilecli), y
  * `ANDROID_EN_CLOUD=true` lo manda a la nube cuando la máquina no tiene emulador o se quiere
  * certificar en hardware real.
  */
 export function enNube(plataforma: 'ios' | 'android'): boolean {
-  return plataforma === 'ios' || envBool('ANDROID_EN_CLOUD', false);
+  return plataforma === 'ios'
+    ? envBool('IOS_EN_CLOUD', true)
+    : envBool('ANDROID_EN_CLOUD', false);
 }
 
 /** `IOS_DEVICE_NAME=iPhone 1[56]` → /iPhone 1[56]/i. Vacío → sin filtro. */

@@ -26,6 +26,15 @@ export function configApp(plataforma: Plataforma): MobilewrightConfig {
   const bundleId = token(data, TOKENS_APP[plataforma].bundle);
   const build = token(data, TOKENS_APP[plataforma].build);
   const nube = enNube(plataforma);
+  if (plataforma === 'ios' && !nube && process.platform !== 'darwin') {
+    // El simulador de iOS solo existe en macOS: en otra máquina no hay con qué correrlo, y caer a
+    // otra cosa en silencio produciría un veredicto que no certifica nada.
+    throw new Error(
+      'IOS_EN_CLOUD=false pide el simulador de iOS, que solo existe en macOS con Xcode.\n' +
+        'En esta máquina iOS corre en Mobile Next Cloud: quita IOS_EN_CLOUD del .env (o ponlo en ' +
+        'true) y define MOBILENEXT_API_KEY.',
+    );
+  }
 
   return defineConfig({
     // Solo los specs de app. tests/ es de la web y la corre Playwright: si este testDir lo
@@ -33,14 +42,14 @@ export function configApp(plataforma: Plataforma): MobilewrightConfig {
     testDir: './tests-app',
     testMatch: '**/*.spec.ts',
     // Un outputDir por plataforma y fuera de test-results/evidence, por lo mismo que en la web:
-    // el runner limpia su outputDir al arrancar, y la evidencia del Word no puede estar ahí.
+    // el runner limpia su outputDir al arrancar, y la evidencia del reporte no puede estar ahí.
     outputDir: `test-results/mw-${plataforma}`,
     globalSetup: './tests-app/support/limpiarEvidenciaApp.ts',
     // Mismo presupuesto que la web. La espera en la cola de la nube NO sale de aquí: corre con
     // su propio reloj (`allocationTimeout`), así que un dispositivo que tarda en asignarse no se
     // come el tiempo del caso.
     timeout: 180000,
-    retries: 2,
+    retries: 1,
     // El árbol de accesibilidad adjunto al reporte cuando un caso falla: es lo que permite
     // distinguir "el elemento no existe" de "el locator está mal" sin volver a correr nada.
     viewTree: 'on-failure',
@@ -50,7 +59,9 @@ export function configApp(plataforma: Plataforma): MobilewrightConfig {
     bundleId,
     // El binario se sube e instala en cada dispositivo asignado. Relativo a la raíz del proyecto
     // si el Excel lo trae relativo.
-    installApps: build ? path.resolve(process.cwd(), build) : undefined,
+    // APP_YA_INSTALADA=1 salta la reinstalación del APK en cada test (130 MB: en un emulador lento
+    // supera el timeout de 60 s de `installApp`). Solo vale si el build correcto ya está instalado.
+    installApps: build && !process.env.APP_YA_INSTALADA ? path.resolve(process.cwd(), build) : undefined,
     reporter: [
       ['list'],
       // Un JSON y un JUnit por plataforma: correr iOS después de Android no puede pisar los
@@ -82,7 +93,9 @@ export function configApp(plataforma: Plataforma): MobilewrightConfig {
           platform: plataforma,
           // En la nube se piden dispositivos reales: un simulador no instala un .ipa firmado
           // para dispositivo, y es hardware real lo que se quiere certificar.
-          deviceType: nube ? 'real' : undefined,
+          // iOS en local es siempre el simulador (IOS_EN_CLOUD=false, solo en macOS): un iPhone
+          // conectado por cable necesitaría un .ipa firmado y no es lo que se configura aquí.
+          deviceType: nube ? 'real' : plataforma === 'ios' ? 'simulator' : undefined,
           deviceName: filtroDispositivo(plataforma),
           osVersion: versionSO(plataforma),
         },
@@ -106,7 +119,10 @@ function driverNube(plataforma: Plataforma): MobileNextDriver {
       `${plataforma === 'ios' ? 'iOS' : 'Android con ANDROID_EN_CLOUD=true'} corre en Mobile Next ` +
         `Cloud y falta MOBILENEXT_API_KEY.\n` +
         `Sácala de https://app.mobilenext.ai y ponla en el .env del proyecto (nunca en el Excel ` +
-        `de data: es un secreto de la máquina, no data de la suite).`,
+        `de data: es un secreto de la máquina, no data de la suite).` +
+        (plataforma === 'ios'
+          ? `\nEn una Mac con Xcode, IOS_EN_CLOUD=false corre iOS en el simulador local sin clave.`
+          : ''),
     );
   }
   const subida = process.env.MOBILENEXT_SUBIR_REPORTE?.trim().toLowerCase();

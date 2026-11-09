@@ -10,12 +10,12 @@ import { EVIDENCE_DIR, esEvidenciaDeApp } from './rutasEvidencia';
  * Existe por una consecuencia del `outputDir` propio de Playwright (`test-results/pw`): al sacar
  * la evidencia de su terreno, dejó de heredar la limpieza que él hacía, y las capturas de una
  * corrida vivirían para siempre. Eso es peor que perderlas: el JSON de corrida recoge las capturas
- * del disco por nombre, así que una imagen de la semana pasada entraría en el Word de hoy sin que
+ * del disco por nombre, así que una imagen de la semana pasada entraría en el reporte de hoy sin que
  * nada lo delate —un documento que el cliente lee como la evidencia de esta certificación—.
  *
  * **Pero no borra nada cuando la corrida está filtrada.** Re-ejecutar un caso que quedó dudoso
  * (`-g TC-B2C87-D-008`) es parte normal del flujo, y con un borrado indiscriminado esa pasada se
- * llevaba por delante la evidencia de los otros veinticinco TC: el Word quedaba con un solo caso
+ * llevaba por delante la evidencia de los otros veinticinco TC: el reporte quedaba con un solo caso
  * ilustrado y había que repetir la suite entera de media hora para recuperarla. En una corrida
  * filtrada la limpieza la hace, caso por caso, el fixture `evidenciaDelCaso` de `fixtures.ts`:
  * cada test borra lo suyo justo antes de generarlo, así que lo que se reemplaza es exactamente lo
@@ -28,7 +28,7 @@ async function limpiarEvidencia(_config: FullConfig): Promise<void> {
   if (corridaFiltrada()) return;
   // La web solo barre lo suyo: las capturas de los TC de app las deja mobilewright, que es otro
   // runner y corre en otro momento. Sin este filtro, correr la web después de la app se llevaba
-  // la evidencia de la app, y el Word de la corrida quedaba con esos casos sin ilustrar.
+  // la evidencia de la app, y el reporte de evidencia quedaba con esos casos sin ilustrar.
   await vaciarEvidencia((archivo) => !esEvidenciaDeApp(archivo));
 }
 
@@ -77,7 +77,7 @@ const BANDERAS_QUE_FILTRAN = [
  *
  * `QA_EVIDENCIA_PARCIAL=1` queda como salida explícita para cualquier forma de acotar que no esté
  * en la lista. Ante la duda conviene pasarlo: conservar evidencia de más se nota al revisar el
- * Word, y borrarla de menos obliga a repetir la suite entera.
+ * reporte, y borrarla de menos obliga a repetir la suite entera.
  */
 export function corridaFiltrada(argv: string[] = process.argv.slice(2)): boolean {
   if (process.env.QA_EVIDENCIA_PARCIAL === '1') return true;

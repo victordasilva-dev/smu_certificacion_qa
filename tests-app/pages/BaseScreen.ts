@@ -37,7 +37,7 @@ export abstract class BaseScreen {
   }
 
   /**
-   * Captura de evidencia con el nombre que consume el Word
+   * Captura de evidencia con el nombre que consume el reporte
    * (`test-results/evidence/<CP-ID>-<plataforma>-p<NN>-<etiqueta>.png`). Con `elemento`, solo ese
    * componente.
    */

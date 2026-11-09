@@ -2,7 +2,7 @@ import { Locator, Page } from '@playwright/test';
 import { rutaEvidencia } from './rutasEvidencia';
 
 /**
- * Captura de evidencia con nombre determinista, la que consume el Word de la corrida.
+ * Captura de evidencia con nombre determinista, la que consume el reporte de evidencia.
  *
  * Un TC rara vez se demuestra con una sola imagen: el estado previo, la acción y el resultado
  * son momentos distintos y el lector del documento necesita compararlos. Por eso la captura se
@@ -31,7 +31,7 @@ export async function capturarEvidencia(
 ): Promise<string> {
   const path = rutaEvidencia(cpId, paso, etiqueta);
   // `animations: 'disabled'` congela transiciones y carruseles: sin eso, dos corridas del mismo
-  // TC dejan capturas distintas y el Word deja de ser comparable entre entregas.
+  // TC dejan capturas distintas y el reporte deja de ser comparable entre entregas.
   if (typeof (objetivo as Page).goto === 'function') {
     await (objetivo as Page).screenshot({
       path,
