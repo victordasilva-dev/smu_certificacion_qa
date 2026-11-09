@@ -16,7 +16,7 @@ test.describe('B2C-63 sonda (Android)', () => {
   test('GUEST · TC-B2C63-APP (sonda)', async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const sku = token(testData, 'SKU_COMPLETA_PROMO_2X1')!;
     await asegurarApp(screen);
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
     await r(() => screen.getByTestId('tab-Home').tap()); await pausa(3000);
     const vistos: string[] = []; let hallado = -1;
     for (let i = 0; i < 12; i++) {

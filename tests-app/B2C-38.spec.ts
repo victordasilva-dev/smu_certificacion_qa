@@ -173,13 +173,13 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test.describe.configure({ timeout: 600000 });
 
   test(`TC-B2C38-APP-000 · Precondición: invitado con {DIRECCION_DESPACHO_001} (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
   });
 
   test(`TC-B2C38-APP-001 · El + de un producto estándar suma 1 unidad y actualiza el precio [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-001';
     const v = token(testData, 'SKU_VALID_001')!;
-    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId, p));
+    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId!, p));
     const carro = await armarCarro(screen, p, [[v, 1]]);
     const antes = await subtotal(screen);
     await carro.capturarEvidencia(cp, 2, 'carro con 1 unidad');
@@ -194,7 +194,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test(`TC-B2C38-APP-002 · El − de un producto estándar con 2 unidades resta 1 unidad [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-002';
     const v = token(testData, 'SKU_VALID_001')!;
-    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId, p));
+    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId!, p));
     const carro = await armarCarro(screen, p, [[v, 2]]);
     expect(await esperarCantidad(screen, v, 2), 'precondición: 2 unidades').toBe(2);
     const antes = await subtotal(screen);
@@ -211,7 +211,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test(`TC-B2C38-APP-003 · Con 1 unidad el − se muestra como tacho y elimina el ítem sin confirmar [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-003';
     const v = token(testData, 'SKU_VALID_001')!, u = token(testData, 'SKU_UNITARIO')!;
-    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId, p));
+    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId!, p));
     const carro = await armarCarro(screen, p, [[v, 1], [u, 1]]);
     await expect(tacho(screen, v), 'el − de {SKU_VALID_001} se muestra como tacho').toBeVisible();
     const antes = await subtotal(screen);
@@ -228,7 +228,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test(`TC-B2C38-APP-010 · El swipe to delete quita un ítem disponible sin confirmación [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-010';
     const v = token(testData, 'SKU_VALID_001')!, u = token(testData, 'SKU_UNITARIO')!;
-    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId, p));
+    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId!, p));
     const carro = await armarCarro(screen, p, [[v, 1], [u, 2]]);
     const antes = await subtotal(screen);
     await carro.capturarEvidencia(cp, 2, 'carro con {SKU_VALID_001} x1 y {SKU_UNITARIO} x2');
@@ -247,7 +247,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test(`TC-B2C38-APP-004 · El + de un producto pesable suma 0,5 kg y actualiza el precio según el peso [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-004';
     const w = token(testData, 'SKU_PESABLE')!;
-    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId, p));
+    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId!, p));
     const carro = await armarCarro(screen, p, [[w, 1]]);
     expect(await esperarCantidad(screen, w, 1), 'precondición: 1 un. (0,5 kg)').toBe(1);
     const antes = await subtotal(screen);
@@ -263,7 +263,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test(`TC-B2C38-APP-005 · El − de un producto pesable resta 0,5 kg y actualiza el precio [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-005';
     const w = token(testData, 'SKU_PESABLE')!;
-    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId, p));
+    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId!, p));
     const carro = await armarCarro(screen, p, [[w, 2]]);
     expect(await esperarCantidad(screen, w, 2), 'precondición: 2 un. (1 kg)').toBe(2);
     const antes = await subtotal(screen);
@@ -280,7 +280,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test(`TC-B2C38-APP-006 · Un pesable en 0,5 kg muestra el tacho y se elimina sin confirmar [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-006';
     const w = token(testData, 'SKU_PESABLE')!, v = token(testData, 'SKU_VALID_001')!;
-    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId, p));
+    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId!, p));
     const carro = await armarCarro(screen, p, [[w, 1], [v, 1]]);
     await expect(tacho(screen, w), 'el − del pesable en 0,5 kg se muestra como tacho').toBeVisible();
     const antes = await subtotal(screen);
@@ -318,7 +318,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test(`TC-B2C38-APP-007 · Al llegar al cartlimit se muestra el toast de máximo y el botón Máx deshabilitado [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-007';
     const s = token(testData, 'SKU_CAR_LIMIT')!;
-    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId, p));
+    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId!, p));
     const carro = await armarCarro(screen, p, [[s, 1]]);
     const r = await subirAlMaximo(screen, s, 12);
     await carro.capturarEvidencia(cp, 4, 'carro al llegar al cartlimit');
@@ -334,7 +334,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test(`TC-B2C38-APP-008 · Al llegar al stock disponible se muestra el toast de máximo y el botón Máx deshabilitado [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-008';
     const s = token(testData, 'SKU_STOCK_LIMITADO')!;
-    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId, p));
+    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId!, p));
     const carro = await armarCarro(screen, p, [[s, 1]]);
     const r = await subirAlMaximo(screen, s, 40);
     await carro.capturarEvidencia(cp, 4, 'carro al llegar al stock disponible');
@@ -347,7 +347,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test(`TC-B2C38-APP-017 · Al llegar al stock disponible de un pesable se muestra el toast de máximo y el botón Máx deshabilitado [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-017';
     const w = token(testData, 'SKU_PESABLE_STOCK_LIMITADO')!;
-    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId, p));
+    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId!, p));
     const carro = await armarCarro(screen, p, [[w, 1]]);
     const r = await subirAlMaximo(screen, w, 20);
     await carro.capturarEvidencia(cp, 4, 'carro al llegar al stock del pesable');
@@ -363,7 +363,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
     const unidades = Number(token(testData, 'UNIDADES_SOBRE_MINIMO')!);
     const correo = token(testData, 'USER_AUTH_001')!.split('/')[0].trim();
     await paso('iniciar sesión', async () => { await asegurarApp(screen); await sesion(screen, p, cp, correo, /Karl|Comprador/i); });
-    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId, p));
+    await paso('vaciar el carro', () => reabrirYVaciar(screen, device, bundleId!, p));
     const carro = await armarCarro(screen, p, [[v, unidades]]);
     expect(await subtotal(screen), 'precondición: subtotal mayor o igual al mínimo de compra').toBeGreaterThanOrEqual(minimo);
     await carro.capturarEvidencia(cp, 2, `carro con ${unidades} unidades sobre el mínimo`);
@@ -416,7 +416,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test.skip(`TC-B2C38-APP-011 · El ícono de eliminar quita un ítem no disponible sin confirmación [Logueado] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-011';
     const v = token(testData, 'SKU_VALID_001')!;
-    const carro = await carroConNoDisponible(screen, device, bundleId, p, testData, cp);
+    const carro = await carroConNoDisponible(screen, device, bundleId!, p, testData, cp);
     await expect(screen.getByText(/^faltantes: /i).first(), 'precondición: el ítem aparece como no disponible').toBeVisible();
     await carro.capturarEvidencia(cp, 3, 'carro con un ítem no disponible');
     await tol(() => screen.getByText(/^eliminar$/i).first().tap());
@@ -431,7 +431,7 @@ test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test.skip(`TC-B2C38-APP-012 · El swipe to delete quita un ítem no disponible sin confirmación [Logueado] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C38-APP-012';
     const v = token(testData, 'SKU_VALID_001')!, nd = token(testData, 'SKU_NO_DISPONIBLE')!;
-    const carro = await carroConNoDisponible(screen, device, bundleId, p, testData, cp);
+    const carro = await carroConNoDisponible(screen, device, bundleId!, p, testData, cp);
     await expect(screen.getByText(/^faltantes: /i).first(), 'precondición: el ítem aparece como no disponible').toBeVisible();
     await carro.capturarEvidencia(cp, 3, 'carro con un ítem no disponible');
     await tol(() => item(screen, nd).swipe({ direction: 'left' }));

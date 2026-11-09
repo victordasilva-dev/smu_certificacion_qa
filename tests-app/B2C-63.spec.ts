@@ -75,7 +75,7 @@ test.describe('B2C-63 — Toast de la promo Completa la promo (Android)', () => 
     const quitar = async (sku: string) => { await r(() => home.botonQuitar(sku).tap()); };
 
     await asegurarApp(screen);
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
 
     if (FASE === 'todo' || FASE === 'srp') {
       // ── Cadena sobre el shelf de los resultados (2x1): 001 → 002 → 009 → 015 → 016 → 008 → 011

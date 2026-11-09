@@ -32,7 +32,7 @@ test.describe('B2C-144 — Navbar de entrega (Android)', () => {
     const label = async () => { await pausa(1500); const ns = await nodos(screen); return (ns.find((n) => n.id === 'delivery-open')?.label ?? '').replace(/\s+/g, ' '); };
     const chip = (l: string) => (l.match(/(\$[\d.]+|Gratis|Despacho gratis)\s*$/)?.[1] ?? '');
     await asegurarApp(screen);
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
 
     await verif('TC-B2C144-APP-001', async () => {
       const l = await label(); cap('TC-B2C144-APP-001', 'navbar-tras-setear');
@@ -47,7 +47,7 @@ test.describe('B2C-144 — Navbar de entrega (Android)', () => {
     });
     await verif('TC-B2C144-APP-002', async () => {
       const antes = await label();
-      await device.terminateApp(bundleId); await device.launchApp(bundleId); await pausa(9000);
+      await device.terminateApp(bundleId!); await device.launchApp(bundleId!); await pausa(9000);
       for (let i = 0; i < 5 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) await pausa(3000);
       await r(() => screen.getByTestId('tab-Home').tap()); const despues = await label(); cap('TC-B2C144-APP-002', 'navbar-tras-reabrir');
       return [despues.includes(calle) && /Desde:/.test(despues), `Antes de cerrar y reabrir el app: «${antes}». Después (sin borrar datos): «${despues}».`];
@@ -234,7 +234,7 @@ test.describe('B2C-144 — Navbar de entrega (Android)', () => {
 
     // 026: invitado sin dirección que inicia sesión carga la última dirección de la cuenta
     await verif('TC-B2C144-APP-026', async () => {
-      await device.terminateApp(bundleId); borrarDatosApp(bundleId, process.env.ANDROID_SERIAL); await device.launchApp(bundleId); await esperarTabBar(tabs);
+      await device.terminateApp(bundleId!); borrarDatosApp(bundleId!, process.env.ANDROID_SERIAL); await device.launchApp(bundleId!); await esperarTabBar(tabs);
       const sinDir = await label(); cap('TC-B2C144-APP-026', 'invitado-sin-direccion');
       await sesion(screen, p, 'TC-B2C144-APP-026', correo, /Karl|Comprador/i);
       await home(); let l = await label(); for (let i = 0; i < 8 && !/Desde:/.test(l); i++) { await pausa(4000); l = await label(); }

@@ -104,7 +104,7 @@ test.describe('B2C-147 — Datos de entrega (Android)', () => {
 
   test('GUEST · TC-B2C147-APP-002 (invitado)', async ({ screen, device, bundleId, plataforma: p, testData }) => {
     await asegurarApp(screen);
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
     await armarCarro(screen, p, testData);
     await verif('TC-B2C147-APP-002', async () => {
       cap('TC-B2C147-APP-002', 'carro-del-invitado');
