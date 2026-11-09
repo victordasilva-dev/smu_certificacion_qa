@@ -64,7 +64,7 @@ export const test = base.extend<
    * Lo segundo es propio de la app. En la web, la captura del fallo la toma Playwright y la Fase 8
    * la copia a mano a `<CP-ID>.png`; mobilewright la adjunta al reporte como `body`, sin archivo
    * en disco que copiar. Tomarla aquí, con el dispositivo todavía conectado, deja el TC rechazado
-   * con su imagen del fallo en la convención de nombre que consume el Word.
+   * con su imagen del fallo en la convención de nombre que consume el reporte.
    */
   evidenciaDelCaso: [
     async ({ plataforma, screen }, use, testInfo) => {

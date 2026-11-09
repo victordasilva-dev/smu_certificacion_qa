@@ -8,13 +8,13 @@ mobilewright-report/
 .qa/evidence/
 .qa/run/
 .qa/explore/
+.qa/otp/
+.qa/tmp/
+.qa/secrets/
 tests/data.json
 __pycache__/
 *.apk
 *.ipa
-.qa/tmp/
-.qa/otp/
-.qa/secrets/
 
 # Artefactos pesados de Playwright (no se suben a GitHub: pasan el límite de 100 MB)
 

@@ -10,11 +10,11 @@ export { EVIDENCE_DIR } from '../../tests/support/rutasEvidencia';
  *
  * `qa_evidence.py` no distingue de qué runner salió una captura: la ordena por nombre y deduce el
  * epígrafe del archivo. Por eso esto no inventa convención propia y usa `rutaEvidencia()`, con la
- * plataforma como segmento extra (`TC-B2C69-APP-004-ios-p02-home-con-saludo.png`), que en el Word
+ * plataforma como segmento extra (`TC-B2C69-APP-004-ios-p02-home-con-saludo.png`), que en el reporte
  * se lee "iOS · Paso 2 — home con saludo".
  *
  * Sin `paso` deja el estado final (`<CP-ID>-<plataforma>.png`). Pasa un `Locator` en vez de la
- * `Screen` cuando el TC valida un componente: a media columna del Word, una pantalla entera de
+ * `Screen` cuando el TC valida un componente: a media columna (visor o Word), una pantalla entera de
  * teléfono se lee peor que el componente solo.
  */
 export async function capturarEvidenciaApp(

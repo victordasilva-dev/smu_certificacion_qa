@@ -30,7 +30,7 @@ export const test = base.extend<{ testData: LoadedTestData; evidenciaDelCaso: vo
    * Hace falta borrar y no simplemente sobrescribir: las capturas llevan el número de paso y su
    * etiqueta en el nombre, de modo que si el caso cambia —un paso menos, una etiqueta reescrita—
    * la captura vieja no se pisa, se queda. Y como el JSON de corrida recoge del disco todo lo que
-   * empiece por el CP-ID, esa huérfana entraría en el Word mezclada con las nuevas.
+   * empiece por el CP-ID, esa huérfana entraría en el reporte mezclada con las nuevas.
    *
    * Corre también en cada reintento, que es justo lo que se quiere: la evidencia que queda es la
    * del último intento, que es el que decide el veredicto.
