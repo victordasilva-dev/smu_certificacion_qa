@@ -5,7 +5,8 @@
  *   node tests-app/support/explorar.ts ios login .qa/explore/guiones/login.ts
  *
  * Abre la app **en la misma plataforma y con el mismo driver con que después corre la suite**
- * —iOS en Mobile Next Cloud; Android en local, o en la nube con ANDROID_EN_CLOUD=true—, y por cada
+ * —iOS en Mobile Next Cloud, o en el simulador de la Mac con IOS_EN_CLOUD=false; Android en
+ * local, o en la nube con ANDROID_EN_CLOUD=true—, y por cada
  * estado que se le pida deja en `.qa/explore/<flujo>-<plataforma>/` dos archivos:
  *
  *   01-inicio.json   el árbol de accesibilidad (`screen.viewTree()`), de donde salen los locators

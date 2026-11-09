@@ -20,7 +20,7 @@ import base from './playwright.config';
  *    rompiéndose el día que alguien clona el pipeline y no copia la variable.
  *
  * 2. **Evidencia solo de lo que falla.** En la corrida manual grabamos video, trace y captura de
- *    todo porque esa evidencia alimenta el Word que revisa el equipo. En un pipeline nadie mira
+ *    todo porque esa evidencia alimenta el reporte que revisa el equipo. En un pipeline nadie mira
  *    la evidencia de un caso que pasó, y se acumula en cada ejecución. Medido sobre el mismo
  *    caso en verde: 23 MB con el config principal (11 MB de test-results + 12 MB de reporte)
  *    contra 0,9 MB con este. Un caso que falla sigue guardando trace, video y captura íntegros,
@@ -30,7 +30,7 @@ import base from './playwright.config';
  *    y omita los demás **reportando verde**, que es la peor forma de fallar: nadie revisa una
  *    suite que pasó. En CI eso pasa a ser un error de configuración, no un silencio.
  *
- * Lo que NO cambia: `retries: 2` y los projects. Los reintentos se conservan porque un pipeline
+ * Lo que NO cambia: `retries: 1` y los projects. Los reintentos se conservan porque un pipeline
  * corre contra un ambiente compartido, donde un fallo de red puntual no debería ensuciar el
  * reporte; y combinan bien con `trace: 'on-first-retry'`, que captura el trace exactamente
  * cuando algo empezó a fallar.

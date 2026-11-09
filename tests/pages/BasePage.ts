@@ -40,10 +40,10 @@ export abstract class BasePage {
   }
 
   /**
-   * Captura de evidencia con el nombre determinista que consume el Word.
+   * Captura de evidencia con el nombre determinista que consume el reporte.
    *
    * Sin `paso` deja el estado final (`test-results/evidence/<CP-ID>.png`). Con `paso` deja la
-   * captura de ese paso del TC (`<CP-ID>-p02-modal-de-login-abierto.png`), y el Word las
+   * captura de ese paso del TC (`<CP-ID>-p02-modal-de-login-abierto.png`), y el reporte las
    * maqueta juntas, dos por fila. Un TC merece una captura por paso verificable: con una sola
    * foto del final, quien lee el documento no puede reconstruir cómo se llegó ahí.
    *

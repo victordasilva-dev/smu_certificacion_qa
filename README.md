@@ -2,7 +2,7 @@
 
 Proyecto de automatización generado por el plugin **qa-executor**. La web corre con Playwright (`tests/`); los TC de app nativa (`-APP-`), con mobilewright (`tests-app/`): iOS en Mobile Next Cloud, Android en un dispositivo Samsung o en la nube. Los Test Cases y la data de prueba **no viven aquí**: viven en Excel, en el workspace QA que apunta `QA_WORKSPACE_DIR` del `.env`. Este repositorio guarda el código que ejecuta esos casos.
 
-El flujo completo —leer la planilla, explorar, generar los specs, correr, escribir el veredicto de vuelta, armar el Word de evidencia y abrir los bugs en Jira— lo conduce la skill. Aquí solo está lo que la skill produce y lo que hace falta para correrlo a mano.
+El flujo completo —leer la planilla, explorar, generar los specs, correr, escribir el veredicto de vuelta, actualizar el reporte de evidencia de la HU (`evidencias/<HU> Evidencias.md`) y abrir los bugs en Jira— lo conduce la skill. Aquí solo está lo que la skill produce y lo que hace falta para correrlo a mano.
 
 ## Puesta en marcha
 
@@ -10,7 +10,7 @@ Si estás leyendo esto en un clon nuevo (requiere **Node ≥ 22.18**: mobilewrig
 
 ```bash
 npm install                       # Playwright + mobilewright + los tres motores (via postinstall)
-pip install openpyxl python-docx  # los scripts de la skill
+pip install openpyxl python-docx  # los scripts de la skill (python-docx, para pasar el reporte a Word)
 cp .env.example .env              # y completar QA_WORKSPACE_DIR (y MOBILENEXT_API_KEY si hay TC de iOS)
 ```
 
@@ -20,7 +20,7 @@ cp .env.example .env              # y completar QA_WORKSPACE_DIR (y MOBILENEXT_A
 
 | Variable | Qué hace |
 |---|---|
-| `QA_WORKSPACE_DIR` | Carpeta con los Excel de Test Cases y de data, y donde se deja el Word de evidencia |
+| `QA_WORKSPACE_DIR` | Carpeta con los Excel de Test Cases y de data, y donde se deja el Word de evidencia cuando se pide |
 | `HEADED` | `true` (por defecto) corre con el navegador visible; `false` para CI |
 | `DESKTOP_BROWSER` / `MOBILE_BROWSER` | Motor por form-factor: `chromium`, `firefox`, `webkit`. `MOBILE_BROWSER` no admite firefox |
 | `MOBILENEXT_API_KEY` | Clave de Mobile Next Cloud. Obligatoria para TC de app en iOS (y Android en la nube). Nunca en el Excel |
@@ -49,6 +49,9 @@ tests-app/          TC de app nativa (mobilewright)
 └── <SUITE>.spec.ts un test() por CP-ID y plataforma, con sufijo (iOS) / (Android)
 mobilewright.config.ts      Android (dispositivo Samsung, o nube con ANDROID_EN_CLOUD=true)
 mobilewright.ios.config.ts  iOS (siempre Mobile Next Cloud)
+evidencias/         reporte de evidencia por HU — se commitea
+├── <HU> Evidencias.md   uno por HU; cada corrida lo actualiza (no se edita a mano)
+└── <HU> Evidencias/     las capturas que el .md referencia
 .qa/
 ├── knowledge/      lo aprendido de cada flujo, para no re-explorar cada corrida
 └── scaffold-version.json   qué versión del molde del plugin se depositó aquí

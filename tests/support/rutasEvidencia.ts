@@ -1,5 +1,5 @@
 /**
- * Nombres de la evidencia de la corrida: la convención que consume el Word.
+ * Nombres de la evidencia de la corrida: la convención que consume el reporte.
  *
  * Vive aparte de `evidencia.ts` porque la usan dos runners: Playwright para la web y
  * mobilewright para la app nativa. Aquí no se importa nada de Playwright a propósito: lo que
@@ -12,7 +12,7 @@
  *
  * La app lleva la plataforma en el nombre porque un mismo TC de app puede declarar
  * `Plataforma: Ambas` y correr en iOS y en Android: sin ese segmento, las capturas de una
- * plataforma pisarían las de la otra, y el Word mostraría una mezcla de las dos corridas.
+ * plataforma pisarían las de la otra, y el reporte mostraría una mezcla de las dos corridas.
  *
  * Las rutas son **relativas a la raíz del proyecto**: el JSON de corrida las cita tal cual, y una
  * ruta absoluta solo se resuelve en la máquina que corrió la suite.
