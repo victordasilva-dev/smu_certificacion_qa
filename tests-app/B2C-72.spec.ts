@@ -78,7 +78,7 @@ test.describe('B2C-72 — Carrusel de imágenes circulares (Android)', () => {
 
   test('TC-B2C72-APP-001 · El carrusel muestra el título centrado e imágenes circulares con su título [Guest] (Android)', async ({ screen, device, bundleId, plataforma: p }) => {
     const cp = 'TC-B2C72-APP-001';
-    const home = await irAlCarrusel(screen, device, bundleId, p);
+    const home = await irAlCarrusel(screen, device, bundleId!, p);
     await tol(() => home.capturarEvidencia(cp, 2, 'Home con el carrusel de imágenes circulares'));
     const t = await nodos(screen);
     const titulo = t.find((x) => x.t === TITULO)!;
@@ -94,7 +94,7 @@ test.describe('B2C-72 — Carrusel de imágenes circulares (Android)', () => {
 
   test('TC-B2C72-APP-002 · El carrusel de imágenes circulares se desliza horizontalmente [Guest] (Android)', async ({ screen, device, bundleId, plataforma: p }) => {
     const cp = 'TC-B2C72-APP-002';
-    const home = await irAlCarrusel(screen, device, bundleId, p);
+    const home = await irAlCarrusel(screen, device, bundleId!, p);
     const antes = await items(screen);
     const primero = antes.find(enPantalla)!;
     const origen = masCentrado(antes.filter(enPantalla));
@@ -111,7 +111,7 @@ test.describe('B2C-72 — Carrusel de imágenes circulares (Android)', () => {
 
   test('TC-B2C72-APP-003 · Tocar una imagen circular abre la categoría configurada [Guest] (Android)', async ({ screen, device, bundleId, plataforma: p }) => {
     const cp = 'TC-B2C72-APP-003';
-    const home = await irAlCarrusel(screen, device, bundleId, p);
+    const home = await irAlCarrusel(screen, device, bundleId!, p);
     const it = (await items(screen)).filter(enPantalla);
     const elegido = it[0];
     await tol(() => home.capturarEvidencia(cp, 2, 'carrusel con la imagen a tocar'));

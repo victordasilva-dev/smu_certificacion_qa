@@ -41,7 +41,7 @@ test.describe('B2C-51 y B2C-122 (Android)', () => {
     const tarjetaSrp = async (s: string) => { const todos = await ns(); const c = todos.find((n) => n.id === `product-${s}`); return c ? todos.filter((n) => n.x >= c.x - 2 && n.x <= c.x + c.w && n.y >= c.y - 2 && n.y <= c.y + c.h && n.id !== c.id).sort((a, b) => a.y - b.y || a.x - b.x).map((n) => `${lim(n.label)}@${n.y}`) : ['(tarjeta no encontrada)']; };
 
     await asegurarApp(screen);
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
 
     if (FASE() === 'todo' || FASE() === '51') {
       for (const [cp, k] of [['TC-B2C51-APP-003', 'SKU_PROM_NxM'], ['TC-B2C51-APP-004', 'SKU_PROM_NxPRECIO'], ['TC-B2C51-APP-006', 'SKU_PRECIO_UNIPAY'], ['TC-B2C51-APP-007', 'SKU_PRECIO_BE'], ['TC-B2C51-APP-011', 'SKU_OFERTA_UNIPAY']] as const) {

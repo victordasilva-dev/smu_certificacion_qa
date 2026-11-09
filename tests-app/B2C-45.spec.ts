@@ -163,7 +163,7 @@ test.describe(`B2C-45 — Instrucciones por producto (${PLATAFORMA})`, () => {
   test('GUEST · TC-B2C45-APP-006 (invitado)', async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const T1 = token(testData, 'TEXTO_INSTRUCCION_001')!;
     await asegurarApp(screen);
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
     await agregarDesdePdp(screen, p, token(testData, 'SKU_VALID_001')!);
     await abrirCarro(screen, p);
     await pausa(3000);

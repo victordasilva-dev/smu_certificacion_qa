@@ -62,7 +62,7 @@ test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C61-APP-008 · Un producto con stock en la tienda activa se muestra disponible [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C61-APP-008';
     const sku = token(testData, 'SKU_STOCK_SOLO_TIENDA_A')!;
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
     const pdp = await abrirPdp(screen, p, sku);
     await pdp.capturarEvidencia(cp, 2, 'PDP con la dirección de despacho activa');
     const t = await textosDe(screen);
@@ -74,7 +74,7 @@ test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C61-APP-009 · Un producto sin stock en la tienda activa se muestra no disponible y sin Agregar [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C61-APP-009';
     const sku = token(testData, 'SKU_STOCK_SOLO_TIENDA_A')!;
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData, 'DIRECCION_OTRA_TIENDA');
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData, 'DIRECCION_OTRA_TIENDA');
     const { b, srp } = await buscar(screen, p, token(testData, 'SEARCH_TERM_SKU_TIENDA_A')!);
     // La búsqueda trae 8 productos: se baja por la lista hasta ver el shelf del SKU.
     for (let i = 0; i < 8 && !(await srp.tarjeta(sku).isVisible().catch(() => false)); i++) { await tol(() => screen.swipe('up')); await pausa(1200); }
@@ -91,7 +91,7 @@ test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C61-APP-010 · Un producto inactivo para la tienda activa no aparece en catálogo ni en PDP [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C61-APP-010';
     const sku = token(testData, 'SKU_INACTIVO_TIENDA_A')!;
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
     const { srp } = await buscar(screen, p, sku);
     await srp.capturarEvidencia(cp, 3, 'resultados de la búsqueda del producto inactivo');
     const aparece = await srp.tarjeta(sku).isVisible().catch(() => false);
@@ -103,7 +103,7 @@ test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C61-APP-012 · Al cambiar de tienda un producto que ahora tiene stock se habilita [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C61-APP-012';
     const sku = token(testData, 'SKU_STOCK_SOLO_TIENDA_A')!;
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData, 'DIRECCION_OTRA_TIENDA');
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData, 'DIRECCION_OTRA_TIENDA');
     const antes = await abrirPdp(screen, p, sku);
     if (!(await textosDe(screen)).some((x) => /pronto disponible/i.test(x))) throw BD('{SKU_STOCK_SOLO_TIENDA_A} tiene stock en la tienda de {DIRECCION_OTRA_TIENDA}; la precondición pide que no lo tenga');
     await antes.capturarEvidencia(cp, 2, 'PDP sin stock en la tienda de la dirección actual');
@@ -119,7 +119,7 @@ test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C61-APP-013 · La PDP de un producto sin stock en la tienda activa deshabilita Agregar con mensaje [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C61-APP-013';
     const sku = token(testData, 'SKU_STOCK_SOLO_TIENDA_A')!;
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData, 'DIRECCION_OTRA_TIENDA');
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData, 'DIRECCION_OTRA_TIENDA');
     const pdp = await abrirPdp(screen, p, sku);
     await pdp.capturarEvidencia(cp, 2, 'PDP del producto');
     const t = await textosDe(screen);
@@ -131,7 +131,7 @@ test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C61-APP-014 · Solo se muestran las promociones vigentes de la tienda activa [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C61-APP-014';
     const sku = token(testData, 'SKU_PROMO_SOLO_TIENDA_A')!;
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData, 'DIRECCION_OTRA_TIENDA');
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData, 'DIRECCION_OTRA_TIENDA');
     const pdp = await abrirPdp(screen, p, sku);
     await pdp.capturarEvidencia(cp, 2, 'PDP en la tienda sin la promoción');
     const t = await textosDe(screen);
@@ -142,7 +142,7 @@ test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C61-APP-015 · La promoción de la tienda activa se refleja en el precio con descuento [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C61-APP-015';
     const sku = token(testData, 'SKU_PROMO_SOLO_TIENDA_A')!;
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
     const pdp = await abrirPdp(screen, p, sku);
     await pdp.capturarEvidencia(cp, 2, 'PDP en la tienda con la promoción');
     const t = await textosDe(screen);
@@ -154,7 +154,7 @@ test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C61-APP-016 · Un usuario sin Unipay ve el ahorro potencial de la promoción Unipay [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C61-APP-016';
     const sku = token(testData, 'SKU_UNIPAY_001')!;
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
     const pdp = await abrirPdp(screen, p, sku);
     await pdp.capturarEvidencia(cp, 2, 'PDP del producto con promoción Unipay');
     const t = await textosDe(screen);
@@ -167,9 +167,9 @@ test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
     const cp = 'TC-B2C61-APP-019';
     const sku = token(testData, 'SKU_VALID_001')!;
     const correo = token(testData, 'SIN_DIRECCION_USER')!.split('/')[0].trim();
-    await device.terminateApp(bundleId);
+    await device.terminateApp(bundleId!);
     execSync(`adb shell pm clear ${bundleId}`, { timeout: 30000 });
-    await device.launchApp(bundleId);
+    await device.launchApp(bundleId!);
     await asegurarApp(screen);
     await sesion(screen, p, cp, correo, /QA/i);
     await tol(() => screen.getByTestId('tab-Home').tap());

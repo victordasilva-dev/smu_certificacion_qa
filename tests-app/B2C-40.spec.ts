@@ -21,7 +21,7 @@ test.describe(`B2C-40 — Productos similares (${PLATAFORMA})`, () => {
   test.describe.configure({ timeout: 600000 });
 
   test(`TC-B2C40-APP-000 · Precondición: invitado con {DIRECCION_DESPACHO_001} (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
   });
 
   test(`TC-B2C40-APP-001 · «Ver similares» en un shelf de navegación abre el modal Productos similares [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {

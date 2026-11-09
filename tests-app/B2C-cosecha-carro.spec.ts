@@ -72,7 +72,7 @@ test.describe('Cosecha de carro y PDP (Android)', () => {
     const paso = async (cp: string, clave: string, skus: string[]) => { const d = await leerCarro(skus); guardar(`${cp}|${clave}`, d); cap(cp, clave.replace(/\W+/g, '-')); return d; };
 
     await asegurarApp(screen);
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
 
     // ───────── B2C-31: PDP con carro (024, 025, 028, 029) ─────────
     if (FASE() === 'todo' || FASE() === '31') {

@@ -63,7 +63,7 @@ test.describe('B2C-31 y B2C-59 — PDP y shelf (Android)', () => {
     const atras = async () => { for (let i = 0; i < 3 && !(await screen.getByTestId('tab-Buscar').isVisible().catch(() => false)); i++) { execSync('adb shell input keyevent 4', { timeout: 15000 }); await pausa(1500); } };
 
     await asegurarApp(screen);
-    await fijarDireccionInvitado(screen, device, bundleId, p, testData);
+    await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
 
     // ───────── B2C-59: shelf y galería ─────────
     await verif('TC-B2C59-APP-001', async () => {
