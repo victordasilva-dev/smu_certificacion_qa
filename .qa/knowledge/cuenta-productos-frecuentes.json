@@ -1,7 +1,7 @@
 {
   "flow": "cuenta-productos-frecuentes",
-  "last_updated": "2026-10-07T22:00:00Z",
-  "version": 2,
+  "last_updated": "2026-11-11T19:30:00Z",
+  "version": 3,
   "description": "Página 'Mis productos frecuentes' (My Usuals) de Mi Cuenta: grilla de los productos que el cliente compra habitualmente, con el shelf estándar del sitio. Es el objeto de la HU B2C-85. Existe en DEV, pero casi toda la suite está bloqueada por data.",
   "source": {
     "suite": "B2C-85",
@@ -63,7 +63,13 @@
     "LA PÁGINA SÍ EXISTE EN EL AMBIENTE, cosa que ya había registrado [[home-page-designer]] al certificar B2C-29: con sesión responde con su título y lista los productos del usuario. Lo que faltaba entonces era el carrusel de frecuentes en el Home, que implementa otra historia (B2C-55). Esto NO se volvió a verificar en esta corrida a propósito: comprobarlo exigía iniciar sesión con una cuenta que la suite no declara, que es exactamente lo que estos casos no permiten.",
     "QUÉ HARÍA FALTA PARA CERTIFICAR LA SUITE: que la planilla declare como token, en el Excel de data, las cuentas con cada estado que los casos piden —una con productos frecuentes, una con al menos un frecuente sin stock, una con más de 50 frecuentes, una con frecuentes en promoción con badges— y que las filas las referencien. Con eso once de los doce TC web pasan a ser ejecutables sin tocar una línea de código.",
     "CORRIDA 2026-09-14 (B2C-85): 1 Aprobado, 11 Bloqueado y 1 Fuera de alcance sobre 13 TC.",
-    "2026-10-09: 11.223.344-K tiene 4 frecuentes (Galletas La Galleteria, Carne molida tartaro 250 g con precio socio, Tapapecho 'Pronto disponible', Carne molida tartaro 500 g con NxPrecio + Combina la promo). Ninguno con tachado ni cucarda de campana. D-006/M-001/D-010 siguen Bloqueado Data."
+    "2026-10-09: 11.223.344-K tiene 4 frecuentes (Galletas La Galleteria, Carne molida tartaro 250 g con precio socio, Tapapecho 'Pronto disponible', Carne molida tartaro 500 g con NxPrecio + Combina la promo). Ninguno con tachado ni cucarda de campana. D-006/M-001/D-010 siguen Bloqueado Data.",
+    "CORRIDA 2026-11-11 (B2C-55 WEB, carrusel My Usuals del Home): section[data-testid=my-usuals-carousel] dentro del div.component del tipo smu.myUsualsCarousel. Título h2 'Tus productos mas comprados' centrado, link 'Ver todos' -> /account/my-usuals, flechas 'Ver productos anteriores'/'Ver más productos'. POM: tests/pages/MyUsualsCarrusel.ts.",
+    "TARJETA DEL CARRUSEL: el corazón de favoritos está DOS niveles bajo la tarjeta (su padre solo envuelve imagen + corazón); la tarjeta completa es div:has(> div > div > button[aria-label*=favoritos]). Con un nivel menos se pierden nombre, precio y 'Agregar'.",
+    "EL CARRUSEL SOLO PIDE 5 SKU: shopper-products ...products?ids= lleva los 5 primeros de c_myUsuals aunque el cliente tenga 29 (vhchirinos+comprador@: 29 en c_myUsuals, 27 en la página). En Desktop no hay nada que desplazar; en Mobile (2 visibles) se desliza hasta el 5º. Bug B2C-1482 (TC-B2C55-D-006).",
+    "CARGA: 5 chakra-skeleton con el título y 'Ver todos' ya visibles (no ícono) -> Aprobado con nota, mismo criterio que B2C-85. ERROR: con shopper-customers/customers/{id}?siteId en 500 el div.component queda con alto 0 y no hay mensaje.",
+    "WEBKIT + page.route: las lecturas de cliente y catálogo pasan por el service worker y page.route no las intercepta (el 500 simulado nunca llegó). En los casos de red simulada en Mobile: test.use({ serviceWorkers: 'block' }). En WebKit además, la captura de elemento no termina mientras una petición sigue retenida por el route: acotarla.",
+    "CUENTAS (2026-11-11): {COMPRADOR_USUALS_MAS_24_USER}=vhchirinos+comprador@ (29 frecuentes, sin método de entrega activo: header 'Elige una forma de entrega'); {COMPRADOR_5_FRECUENTES_USER}=vhchirinos+5frecuentes@ (exactamente 5, el Home no muestra el carrusel). Login por correo + OTP; en Mobile el primer intento a veces no completa la sesión y pasa en el reintento."
   ],
   "page_objects": {
     "exists": true,

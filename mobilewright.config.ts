@@ -6,10 +6,9 @@ import { configApp } from './tests-app/support/configApp';
  *   npx mobilewright test                              # todos los (Android) de tests-app/
  *   npx mobilewright test --grep TC-B2C69-APP-004      # un TC, por CP-ID
  *
- * Corre en local (emulador o equipo por ADB, vía mobilecli) salvo que `.env` diga
- * `ANDROID_EN_CLOUD=true`, que lo manda a Mobile Next Cloud. iOS tiene su propio config,
- * `mobilewright.ios.config.ts`, porque siempre va a la nube y mobilewright no admite un driver
- * distinto por project (el porqué completo está en tests-app/support/configApp.ts).
+ * Corre en local: el emulador o el equipo conectado por ADB, vía mobilecli. iOS tiene su propio
+ * config, `mobilewright.ios.config.ts`, porque corre en otra máquina —el simulador de una Mac— (el
+ * porqué completo está en tests-app/support/configApp.ts).
  *
  * Este es el `mobilewright.config.ts` —el nombre que mobilewright busca sin `-c`— y es Android a
  * propósito: además de ser el que corre en local, que es lo que los comandos de mobilewright

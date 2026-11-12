@@ -3,7 +3,7 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-35 |
-| Última actualización | 2026-11-03 |
+| Última actualización | 2026-11-10 |
 | Ejecutado por | Victor Chirinos |
 | Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
@@ -15,16 +15,17 @@
 
 | Estado | Casos |
 |---|---|
-| Bloqueado | 7 |
-| Bloqueado Data | 7 |
+| Bloqueado Data | 14 |
+| Bloqueado | 6 |
 | Aprobado | 4 |
 | Rechazado | 2 |
-| **Total** | **20** |
+| **Total** | **26** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-10 | 10 | TC-B2C35-D-001, TC-B2C35-D-009, TC-B2C35-M-009, TC-B2C35-M-020, TC-B2C35-M-029, TC-B2C35-M-030, TC-B2C35-M-040, TC-B2C35-M-041, TC-B2C35-M-042, TC-B2C35-M-043 |
 | 2026-11-03 | 20 | TC-B2C35-D-001, TC-B2C35-D-004, TC-B2C35-D-005, TC-B2C35-D-008, TC-B2C35-D-009, TC-B2C35-D-010, TC-B2C35-D-014, TC-B2C35-M-003, TC-B2C35-M-004, TC-B2C35-M-009, TC-B2C35-M-014, TC-B2C35-M-018, TC-B2C35-M-020, TC-B2C35-M-023, TC-B2C35-M-024, TC-B2C35-M-025, TC-B2C35-M-026, TC-B2C35-M-028, TC-B2C35-M-032, TC-B2C35-M-033 |
 
 ## Detalle por caso de prueba
@@ -33,12 +34,12 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado |
-| Ejecutado | 2026-11-03 |
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-10 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
-| Duración | 56.0 s |
+| Spec | tests/B2C-35.spec.ts:468 |
 
 **Precondiciones**
 
@@ -46,10 +47,12 @@
 
 **Data utilizada**
 
-- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-- {HOME_BANNER_N2}: Home_Banner
-- {HOME_CARRUSEL_N2}: Carrusel_Banner
-- {PLP_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {COMPRADOR_PASSWORD} = contraseña de la cuenta (no se transcribe)
+- {COMPRADOR_USER} = vhchirinos+comprador@avatar-global.com
+- {HOME_BANNER_N2} = Home_Banner
+- {HOME_CARRUSEL_N2} = Carrusel_Banner
+- {PLP_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno
 
 **Pasos ejecutados**
 
@@ -62,11 +65,11 @@ En los 4 puntos de entrada carga la PLP correcta.
 
 **Resultado obtenido**
 
-Menu (Carnes > Vacuno), URL directa (/category/carnes_vacuno) y banner del Home (Home_Banner, slide a la N3 Leches blancas) cargan la PLP correcta con su listado. El carrusel Carrusel_Banner (tb-banner-t4-hp, "Cada dia, una ocasion") solo enlaza a N1 (carnes, bebes-y-ninos, frutas-y-verduras, desayuno-y-dulces) y a una busqueda: no hay entrada de carrusel a una N2/N3 que probar.
+Causa: {HOME_CARRUSEL_N2} = Carrusel_Banner (tb-banner-t4-hp) solo enlaza a categorías N1 (/category/carnes, /category/bebes-y-ninos, /category/frutas-y-verduras, /category/desayuno-y-dulces), así que el cuarto punto de entrada (carrusel → PLP N2/N3) no se puede probar. Las otras tres entradas cargan la PLP correcta: menú y URL directa → Vacuno (/category/carnes_vacuno); Home_Banner → su N3 de leches. Acción: declarar un carrusel del Home que enlace a una N2/N3, o configurarlo en Carrusel_Banner. Re-verificado el 2026-11-10.
 
 **Observación**
 
-Causa: el carrusel {HOME_CARRUSEL_N2} = Carrusel_Banner del Home (tb-banner-t4-hp) solo enlaza a categorias N1 y a /search?q=ofertas; el cuarto punto de entrada (carrusel a una PLP N2/N3) no se puede ejecutar. Las otras tres entradas (menu, URL directa y banner) cargan la PLP correcta. Accion requerida: configurar en el Carrusel_Banner una slide que enlace a una N2/N3 y re-ejecutar.
+Causa: {HOME_CARRUSEL_N2} = Carrusel_Banner (tb-banner-t4-hp) solo enlaza a categorías N1 (/category/carnes, /category/bebes-y-ninos, /category/frutas-y-verduras, /category/desayuno-y-dulces), así que el cuarto punto de entrada (carrusel → PLP N2/N3) no se puede probar. Las otras tres entradas cargan la PLP correcta: menú y URL directa → Vacuno (/category/carnes_vacuno); Home_Banner → su N3 de leches. Acción: declarar un carrusel del Home que enlace a una N2/N3, o configurarlo en Carrusel_Banner. Re-verificado el 2026-11-10.
 
 **Evidencia**
 
@@ -80,7 +83,7 @@ Causa: el carrusel {HOME_CARRUSEL_N2} = Carrusel_Banner del Home (tb-banner-t4-h
 
 ![Paso 2 — plp vacuno por url directa](<B2C-35 Evidencias/TC-B2C35-D-001-p02-plp-vacuno-por-url-directa.png>)
 
-![Estado final del caso](<B2C-35 Evidencias/TC-B2C35-D-001.png>)
+![Estado final](<B2C-35 Evidencias/TC-B2C35-D-001.png>)
 
 ---
 
@@ -237,10 +240,11 @@ Causa: el producto 000000000000627789-UN (Prosepan, pan de molde integral famili
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-11-03 |
+| Ejecutado | 2026-11-10 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
 
 **Precondiciones**
 
@@ -248,7 +252,8 @@ Causa: el producto 000000000000627789-UN (Prosepan, pan de molde integral famili
 
 **Data utilizada**
 
-- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CATEGORY_N2_MAS_50_PRODS} = {CATEGORY_N2_MAS_50_PRODS}
 
 **Pasos ejecutados**
 
@@ -259,9 +264,13 @@ Causa: el producto 000000000000627789-UN (Prosepan, pan de molde integral famili
 
 Desktop muestra paginacion; Mobile/App cargan mas productos con scroll infinito.
 
+**Resultado obtenido**
+
+Causa: {CATEGORY_N2_MAS_50_PRODS} no tiene fila en el Excel de data. Acción: cargar una categoría N2 con más de 50 productos (p. ej. /category/panaderia-y-pasteleria_pan-envasado, 103 productos) y re-ejecutar.
+
 **Observación**
 
-Causa: el caso exige una categoria N2 con mas de 50 productos y el token declarado {CATEGORY_N2_MAS_50_PRODS} no tiene fila en el Excel de data. Accion requerida: cargar el token en el Excel de data (p. ej. Pan envasado, /category/panaderia-y-pasteleria_pan-envasado, 103 productos) y re-ejecutar.
+Causa: {CATEGORY_N2_MAS_50_PRODS} no tiene fila en el Excel de data. Acción: cargar una categoría N2 con más de 50 productos (p. ej. /category/panaderia-y-pasteleria_pan-envasado, 103 productos) y re-ejecutar.
 
 ---
 
@@ -436,26 +445,26 @@ Causa: el carrusel {HOME_CARRUSEL_N2} = Carrusel_Banner (tb-banner-t4-hp) no est
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-11-03 |
+| Ejecutado | 2026-11-10 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
-| Duración | 64.0 s |
+| Duración | 67.4 s |
+| Spec | tests/B2C-35.spec.ts:1143 |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Mobile 390x844
 - Ubicacion: PLP N2
-- Despacho a domicilio activo con {DIRECCION_DESPACHO_001}
+- Despacho a domicilio activo con Calle Uno 23, La Florida
 
 **Data utilizada**
 
-- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-- {CATEGORY_N2_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo
-- {DIRECCION_DESPACHO_001}: Calle Uno 23, La Florida
-- {DIRECCION_DESPACHO}: Camino La Fuente 1589 Las Condes
-- {TIENDA_RETIRO_001}: Unimarc Las Condes
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CATEGORY_N2_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo
+- {DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida
+- {TIENDA_RETIRO_001} = Unimarc Las Condes
 
 **Pasos ejecutados**
 
@@ -467,15 +476,15 @@ Causa: el carrusel {HOME_CARRUSEL_N2} = Carrusel_Banner (tb-banner-t4-hp) no est
 
 **Resultado esperado**
 
-La cantidad de productos se actualiza sin recargar manualmente y corresponde a la tienda {TIENDA_RETIRO_001}.
+La cantidad de productos se actualiza sin recargar manualmente y corresponde a la tienda Unimarc Las Condes.
 
 **Resultado obtenido**
 
-Con despacho a Calle Uno 23, La Florida la PLP de Cerdo muestra 15 productos; al cambiar a retiro en Unimarc Las Condes desde el Store Locator (sin recarga) sigue en 15, igual que la PLP cargada desde cero con esa tienda.
+Causa: con {DIRECCION_DESPACHO_001} (Calle Uno 23, La Florida) y con {TIENDA_RETIRO_001} (Unimarc Las Condes), {CATEGORY_N2_URL} (/category/carnes_cerdo) tiene la misma cantidad de productos: 15 y 15. La PLP no quita los productos sin stock, así que no se puede observar que el contador se actualice. El cambio de método sí se aplicó sin recargar la página. Acción: declarar una dirección y una tienda con distinta cantidad de productos en la categoría. Re-verificado el 2026-11-10.
 
 **Observación**
 
-Causa: con la direccion de la precondicion ({DIRECCION_DESPACHO_001}) y {TIENDA_RETIRO_001} la categoria {CATEGORY_N2_URL} tiene la misma cantidad de productos (15), asi que la actualizacion del contador no es observable. Ademas la precondicion nombra {DIRECCION_DESPACHO_001} y la columna Test data declara {DIRECCION_DESPACHO}. Accion requerida: declarar en Test data la direccion de la precondicion y una tienda con distinta cantidad de productos en la categoria, y re-ejecutar.
+Causa: con {DIRECCION_DESPACHO_001} (Calle Uno 23, La Florida) y con {TIENDA_RETIRO_001} (Unimarc Las Condes), {CATEGORY_N2_URL} (/category/carnes_cerdo) tiene la misma cantidad de productos: 15 y 15. La PLP no quita los productos sin stock, así que no se puede observar que el contador se actualice. El cambio de método sí se aplicó sin recargar la página. Acción: declarar una dirección y una tienda con distinta cantidad de productos en la categoría. Re-verificado el 2026-11-10.
 
 **Evidencia**
 
@@ -483,7 +492,7 @@ Causa: con la direccion de la precondicion ({DIRECCION_DESPACHO_001}) y {TIENDA_
 
 ![Paso 5 — plp n2 con retiro en unimarc las condes 15 productos](<B2C-35 Evidencias/TC-B2C35-M-009-p05-plp-n2-con-retiro-en-unimarc-las-condes-15-productos.png>)
 
-![Estado final del caso](<B2C-35 Evidencias/TC-B2C35-M-009.png>)
+![Estado final](<B2C-35 Evidencias/TC-B2C35-M-009.png>)
 
 ---
 
@@ -576,10 +585,11 @@ Causa: los pasos usan {PLP_URL_MAS_50}, que no tiene fila en el Excel de data (l
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-11-03 |
+| Ejecutado | 2026-11-10 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
 
 **Precondiciones**
 
@@ -590,12 +600,12 @@ Causa: los pasos usan {PLP_URL_MAS_50}, que no tiene fila en el Excel de data (l
 
 **Data utilizada**
 
-- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-- {CATEGORY_N3_MAS_50_PRODS}: Pan molde y pita
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CATEGORY_N3_MAS_50_PRODS} = Pan molde y pita
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {PLP_URL_MAS_50}.
+1. El usuario ingresa a Pan molde y pita.
 2. El sistema carga la PLP con el listado de productos.
 3. El usuario hace scroll hasta el final del listado visible.
 4. El sistema muestra el indicador de carga «…» y agrega el siguiente bloque de productos al listado.
@@ -604,9 +614,13 @@ Causa: los pasos usan {PLP_URL_MAS_50}, que no tiene fila en el Excel de data (l
 
 Se agregan hasta 50 productos más al listado, sin paginación y sin recargar la página.
 
+**Resultado obtenido**
+
+Causa: la precondición usa {PLP_URL_MAS_50}, que no tiene fila en el Excel de data. El paso 1 usa {CATEGORY_N3_MAS_50_PRODS} = «Pan molde y pita», que es un nombre y no una URL. Acción: cargar {PLP_URL_MAS_50} con la URL de una N2/N3 de más de 50 productos y usar un solo token en precondición y pasos.
+
 **Observación**
 
-Causa: los pasos usan {PLP_URL_MAS_50}, que no tiene fila en el Excel de data (la fila declara {CATEGORY_N3_MAS_50_PRODS}, que los pasos no usan). Accion requerida: cargar {PLP_URL_MAS_50} en el Excel de data o corregir los pasos para que usen el token declarado, y re-ejecutar.
+Causa: la precondición usa {PLP_URL_MAS_50}, que no tiene fila en el Excel de data. El paso 1 usa {CATEGORY_N3_MAS_50_PRODS} = «Pan molde y pita», que es un nombre y no una URL. Acción: cargar {PLP_URL_MAS_50} con la URL de una N2/N3 de más de 50 productos y usar un solo token en precondición y pasos.
 
 ---
 
@@ -952,6 +966,268 @@ Causa: /category/frutas-y-verduras_frutas ({PLP_URL_MONETIZACION}) no tiene un c
 
 ---
 
+### TC-B2C35-M-029 - Verificar que sin banner circular asignado el componente no se muestra [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-10 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PLP N2
+- https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo no tiene content asset de tipo Banner circular en el slot
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {CATEGORY_N2_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo.
+2. El sistema carga la PLP N2 con el listado de productos.
+
+**Resultado esperado**
+
+No se muestra el banner circular y no queda espacio vacío bajo el título.
+
+**Resultado obtenido**
+
+Causa: {CATEGORY_N2_URL} (/category/carnes_cerdo) SÍ tiene Banner circular (content asset carnes-cerdo-plp-banner-circular: Carnes, Chuleta, Pavo), así que no cumple la precondición «sin banner circular». Acción: declarar una PLP N2 sin Banner circular (por ejemplo, una cuya consulta a <categoria>-plp-banner-circular dé 404).
+
+**Observación**
+
+Causa: {CATEGORY_N2_URL} (/category/carnes_cerdo) SÍ tiene Banner circular (content asset carnes-cerdo-plp-banner-circular: Carnes, Chuleta, Pavo), así que no cumple la precondición «sin banner circular». Acción: declarar una PLP N2 sin Banner circular (por ejemplo, una cuya consulta a <categoria>-plp-banner-circular dé 404).
+
+---
+
+### TC-B2C35-M-030 - Verificar que el grid de banners configurado se muestra arriba del título de la categoría [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-10 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PLP N2
+- https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo tiene un content asset de tipo Grid Banners en el slot
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {PLP_URL_GRID_BANNERS} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo.
+2. El sistema carga la PLP con el listado de productos.
+3. El usuario toca uno de los banners del grid.
+4. El sistema navega al link configurado para ese banner.
+
+**Resultado esperado**
+
+El grid de banners se muestra arriba del título y el banner tocado lleva a su link configurado.
+
+**Resultado obtenido**
+
+Causa: {PLP_URL_GRID_BANNERS} (/category/carnes_cerdo) no tiene Grid Banners: el content asset carnes-cerdo-plp-grid-banner da 404 (Content Asset Not Found). Acción: configurar el Grid Banners en esa categoría o declarar una PLP que lo tenga.
+
+**Observación**
+
+Causa: {PLP_URL_GRID_BANNERS} (/category/carnes_cerdo) no tiene Grid Banners: el content asset carnes-cerdo-plp-grid-banner da 404 (Content Asset Not Found). Acción: configurar el Grid Banners en esa categoría o declarar una PLP que lo tenga.
+
+---
+
+### TC-B2C35-M-040 - Verificar que la PLP hija de una categoría top con SEO muestra el bloque SEO al final [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-10 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PLP N2
+- La categoría top de https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes tiene un content asset SEO configurado en BM
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {PLP_URL_SEO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes.
+2. El sistema carga la PLP con el listado de productos.
+3. El usuario hace scroll hasta el final de la página.
+
+**Resultado esperado**
+
+Al final, bajo la grilla, se muestra el bloque SEO con links de texto y "Revisa también las Bases legales y las Políticas de privacidad de unimarc.cl".
+
+**Resultado obtenido**
+
+Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Ojo al corregir la data: ese contenido dice «Revisa también: Vacuno, Pollo, Cerdo, Cordero y Pavo, Embutidos y Cecinas, Carnes Especiales» y no trae el texto ni los links de «Bases legales» y «Políticas de privacidad». Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).
+
+**Observación**
+
+Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Ojo al corregir la data: ese contenido dice «Revisa también: Vacuno, Pollo, Cerdo, Cordero y Pavo, Embutidos y Cecinas, Carnes Especiales» y no trae el texto ni los links de «Bases legales» y «Políticas de privacidad». Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).
+
+---
+
+### TC-B2C35-M-041 - Verificar que los links del bloque SEO redirigen a Bases legales y Políticas de privacidad [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-10 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PLP N2
+- La categoría top de https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes tiene un content asset SEO configurado en BM
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {PLP_URL_SEO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes.
+2. El sistema carga la PLP con el listado de productos.
+3. El usuario hace scroll hasta el bloque SEO y toca "Bases legales".
+4. El sistema abre la página de Bases legales.
+5. El usuario vuelve a la PLP y toca "Políticas de privacidad".
+6. El sistema abre la página de Políticas de privacidad.
+
+**Resultado esperado**
+
+Cada link abre su página correspondiente.
+
+**Resultado obtenido**
+
+Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Ojo al corregir la data: ese contenido dice «Revisa también: Vacuno, Pollo, Cerdo, Cordero y Pavo, Embutidos y Cecinas, Carnes Especiales» y no trae el texto ni los links de «Bases legales» y «Políticas de privacidad». Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).
+
+**Observación**
+
+Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Ojo al corregir la data: ese contenido dice «Revisa también: Vacuno, Pollo, Cerdo, Cordero y Pavo, Embutidos y Cecinas, Carnes Especiales» y no trae el texto ni los links de «Bases legales» y «Políticas de privacidad». Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).
+
+---
+
+### TC-B2C35-M-043 - Verificar que un error del componente SEO lo oculta sin afectar el resto de la PLP [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-10 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PLP N2
+- La categoría top de https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes tiene un content asset SEO configurado en BM
+- DevTools (emulación Mobile 390x844) con bloqueo de la request de contenido SEO (Network request blocking)
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {PLP_URL_SEO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes.
+2. El sistema carga la PLP con el listado de productos.
+3. El usuario hace scroll hasta el final de la página.
+
+**Resultado esperado**
+
+Listado, filtros y píldoras se muestran correctamente; el bloque SEO no aparece y no hay mensajes de error visibles.
+
+**Resultado obtenido**
+
+Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Por eso, bloquear la request de SEO en /category/carnes no cambia nada. Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).
+
+**Observación**
+
+Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Por eso, bloquear la request de SEO en /category/carnes no cambia nada. Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).
+
+---
+
+### TC-B2C35-M-042 - Verificar que sin SEO en la categoría top sus PLP hijas no muestran el bloque SEO [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-10 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PLP N2
+- La categoría top de https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebes-y-ninos no tiene content asset SEO configurado
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {PLP_URL_SIN_SEO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebes-y-ninos
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebes-y-ninos.
+2. El sistema carga la PLP con el listado de productos.
+3. El usuario hace scroll hasta el final de la página.
+
+**Resultado esperado**
+
+Al final de la PLP no se muestra el bloque SEO y no queda espacio vacío.
+
+**Resultado obtenido**
+
+Causa: {PLP_URL_SIN_SEO} es /category/bebes-y-ninos, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. La precondición sí se cumple (el content asset bebes-y-ninos-plp-links-seo da 404) y esa N1 no muestra bloque SEO, pero eso no prueba lo que pasa en sus PLP hijas. Acción: declarar en {PLP_URL_SIN_SEO} una PLP N2 hija de bebes-y-ninos.
+
+**Observación**
+
+Causa: {PLP_URL_SIN_SEO} es /category/bebes-y-ninos, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. La precondición sí se cumple (el content asset bebes-y-ninos-plp-links-seo da 404) y esa N1 no muestra bloque SEO, pero eso no prueba lo que pasa en sus PLP hijas. Acción: declarar en {PLP_URL_SIN_SEO} una PLP N2 hija de bebes-y-ninos.
+
+---
+
 <!-- qa-evidence-state
 {
  "header": {
@@ -965,7 +1241,7 @@ Causa: /category/frutas-y-verduras_frutas ({PLP_URL_MONETIZACION}) no tiene un c
   "suite": "B2C-35",
   "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-35 Test Cases.xlsx",
   "title": "B2C-35 - Product List Page (PLP) N2 y N3 - Evidencias QA",
-  "updated_at": "2026-11-03"
+  "updated_at": "2026-11-10"
  },
  "history": {
   "2026-11-03": [
@@ -989,19 +1265,30 @@ Causa: /category/frutas-y-verduras_frutas ({PLP_URL_MONETIZACION}) no tiene un c
    "TC-B2C35-M-028",
    "TC-B2C35-M-032",
    "TC-B2C35-M-033"
+  ],
+  "2026-11-10": [
+   "TC-B2C35-D-001",
+   "TC-B2C35-D-009",
+   "TC-B2C35-M-009",
+   "TC-B2C35-M-020",
+   "TC-B2C35-M-029",
+   "TC-B2C35-M-030",
+   "TC-B2C35-M-040",
+   "TC-B2C35-M-041",
+   "TC-B2C35-M-042",
+   "TC-B2C35-M-043"
   ]
  },
  "results": [
   {
    "browser": "chromium",
-   "duration_s": 56,
-   "executed_at": "2026-11-03",
+   "executed_at": "2026-11-10",
    "expected": "En los 4 puntos de entrada carga la PLP correcta.",
    "form_factor": "desktop",
    "id": "TC-B2C35-D-001",
    "name": "La PLP N2/N3 carga desde menu, URL directa, banner del Home o carrusel del Home",
-   "observation": "Causa: el carrusel {HOME_CARRUSEL_N2} = Carrusel_Banner del Home (tb-banner-t4-hp) solo enlaza a categorias N1 y a /search?q=ofertas; el cuarto punto de entrada (carrusel a una PLP N2/N3) no se puede ejecutar. Las otras tres entradas (menu, URL directa y banner) cargan la PLP correcta. Accion requerida: configurar en el Carrusel_Banner una slide que enlace a una N2/N3 y re-ejecutar.",
-   "observed": "Menu (Carnes > Vacuno), URL directa (/category/carnes_vacuno) y banner del Home (Home_Banner, slide a la N3 Leches blancas) cargan la PLP correcta con su listado. El carrusel Carrusel_Banner (tb-banner-t4-hp, \"Cada dia, una ocasion\") solo enlaza a N1 (carnes, bebes-y-ninos, frutas-y-verduras, desayuno-y-dulces) y a una busqueda: no hay entrada de carrusel a una N2/N3 que probar.",
+   "observation": "Causa: {HOME_CARRUSEL_N2} = Carrusel_Banner (tb-banner-t4-hp) solo enlaza a categorías N1 (/category/carnes, /category/bebes-y-ninos, /category/frutas-y-verduras, /category/desayuno-y-dulces), así que el cuarto punto de entrada (carrusel → PLP N2/N3) no se puede probar. Las otras tres entradas cargan la PLP correcta: menú y URL directa → Vacuno (/category/carnes_vacuno); Home_Banner → su N3 de leches. Acción: declarar un carrusel del Home que enlace a una N2/N3, o configurarlo en Carrusel_Banner. Re-verificado el 2026-11-10.",
+   "observed": "Causa: {HOME_CARRUSEL_N2} = Carrusel_Banner (tb-banner-t4-hp) solo enlaza a categorías N1 (/category/carnes, /category/bebes-y-ninos, /category/frutas-y-verduras, /category/desayuno-y-dulces), así que el cuarto punto de entrada (carrusel → PLP N2/N3) no se puede probar. Las otras tres entradas cargan la PLP correcta: menú y URL directa → Vacuno (/category/carnes_vacuno); Home_Banner → su N3 de leches. Acción: declarar un carrusel del Home que enlace a una N2/N3, o configurarlo en Carrusel_Banner. Re-verificado el 2026-11-10.",
    "preconditions": "- Viewport: Desktop 1440x900",
    "screenshots": [
     {
@@ -1025,13 +1312,14 @@ Causa: /category/frutas-y-verduras_frutas ({PLP_URL_MONETIZACION}) no tiene un c
      "file": "TC-B2C35-D-001-p02-plp-vacuno-por-url-directa.png"
     },
     {
-     "caption": "Estado final del caso",
+     "caption": "Estado final",
      "file": "TC-B2C35-D-001.png"
     }
    ],
-   "status": "Bloqueado",
+   "spec": "tests/B2C-35.spec.ts:468",
+   "status": "Bloqueado Data",
    "steps": "1. Acceder desde el menu.\n2. Repetir con URL directa, banner y carrusel del Home.",
-   "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {HOME_BANNER_N2}: Home_Banner\n- {HOME_CARRUSEL_N2}: Carrusel_Banner\n- {PLP_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPRADOR_PASSWORD} = contraseña de la cuenta (no se transcribe)\n- {COMPRADOR_USER} = vhchirinos+comprador@avatar-global.com\n- {HOME_BANNER_N2} = Home_Banner\n- {HOME_CARRUSEL_N2} = Carrusel_Banner\n- {PLP_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno",
    "viewport": "1440x900"
   },
   {
@@ -1131,16 +1419,18 @@ Causa: /category/frutas-y-verduras_frutas ({PLP_URL_MONETIZACION}) no tiene un c
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-11-03",
+   "executed_at": "2026-11-10",
    "expected": "Desktop muestra paginacion; Mobile/App cargan mas productos con scroll infinito.",
    "form_factor": "desktop",
    "id": "TC-B2C35-D-009",
    "name": "Web Desktop muestra paginacion y Mobile/App cargan mas via scroll infinito",
-   "observation": "Causa: el caso exige una categoria N2 con mas de 50 productos y el token declarado {CATEGORY_N2_MAS_50_PRODS} no tiene fila en el Excel de data. Accion requerida: cargar el token en el Excel de data (p. ej. Pan envasado, /category/panaderia-y-pasteleria_pan-envasado, 103 productos) y re-ejecutar.",
+   "observation": "Causa: {CATEGORY_N2_MAS_50_PRODS} no tiene fila en el Excel de data. Acción: cargar una categoría N2 con más de 50 productos (p. ej. /category/panaderia-y-pasteleria_pan-envasado, 103 productos) y re-ejecutar.",
+   "observed": "Causa: {CATEGORY_N2_MAS_50_PRODS} no tiene fila en el Excel de data. Acción: cargar una categoría N2 con más de 50 productos (p. ej. /category/panaderia-y-pasteleria_pan-envasado, 103 productos) y re-ejecutar.",
    "preconditions": "- Viewport: Desktop 1440x900",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
    "status": "Bloqueado Data",
    "steps": "1. Llegar al final del listado en Desktop.\n2. Repetir en Mobile/App.",
-   "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CATEGORY_N2_MAS_50_PRODS} = {CATEGORY_N2_MAS_50_PRODS}",
    "viewport": "1440x900"
   },
   {
@@ -1224,15 +1514,15 @@ Causa: /category/frutas-y-verduras_frutas ({PLP_URL_MONETIZACION}) no tiene un c
   },
   {
    "browser": "webkit",
-   "duration_s": 64,
-   "executed_at": "2026-11-03",
-   "expected": "La cantidad de productos se actualiza sin recargar manualmente y corresponde a la tienda {TIENDA_RETIRO_001}.",
+   "duration_s": 67.4,
+   "executed_at": "2026-11-10",
+   "expected": "La cantidad de productos se actualiza sin recargar manualmente y corresponde a la tienda Unimarc Las Condes.",
    "form_factor": "mobile",
    "id": "TC-B2C35-M-009",
    "name": "Verificar que el contador de productos se actualiza al cambiar la dirección [Mobile] [Guest]",
-   "observation": "Causa: con la direccion de la precondicion ({DIRECCION_DESPACHO_001}) y {TIENDA_RETIRO_001} la categoria {CATEGORY_N2_URL} tiene la misma cantidad de productos (15), asi que la actualizacion del contador no es observable. Ademas la precondicion nombra {DIRECCION_DESPACHO_001} y la columna Test data declara {DIRECCION_DESPACHO}. Accion requerida: declarar en Test data la direccion de la precondicion y una tienda con distinta cantidad de productos en la categoria, y re-ejecutar.",
-   "observed": "Con despacho a Calle Uno 23, La Florida la PLP de Cerdo muestra 15 productos; al cambiar a retiro en Unimarc Las Condes desde el Store Locator (sin recarga) sigue en 15, igual que la PLP cargada desde cero con esa tienda.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PLP N2\n- Despacho a domicilio activo con {DIRECCION_DESPACHO_001}",
+   "observation": "Causa: con {DIRECCION_DESPACHO_001} (Calle Uno 23, La Florida) y con {TIENDA_RETIRO_001} (Unimarc Las Condes), {CATEGORY_N2_URL} (/category/carnes_cerdo) tiene la misma cantidad de productos: 15 y 15. La PLP no quita los productos sin stock, así que no se puede observar que el contador se actualice. El cambio de método sí se aplicó sin recargar la página. Acción: declarar una dirección y una tienda con distinta cantidad de productos en la categoría. Re-verificado el 2026-11-10.",
+   "observed": "Causa: con {DIRECCION_DESPACHO_001} (Calle Uno 23, La Florida) y con {TIENDA_RETIRO_001} (Unimarc Las Condes), {CATEGORY_N2_URL} (/category/carnes_cerdo) tiene la misma cantidad de productos: 15 y 15. La PLP no quita los productos sin stock, así que no se puede observar que el contador se actualice. El cambio de método sí se aplicó sin recargar la página. Acción: declarar una dirección y una tienda con distinta cantidad de productos en la categoría. Re-verificado el 2026-11-10.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PLP N2\n- Despacho a domicilio activo con Calle Uno 23, La Florida",
    "screenshots": [
     {
      "caption": "Paso 3 — plp n2 con despacho 15 productos",
@@ -1243,13 +1533,14 @@ Causa: /category/frutas-y-verduras_frutas ({PLP_URL_MONETIZACION}) no tiene un c
      "file": "TC-B2C35-M-009-p05-plp-n2-con-retiro-en-unimarc-las-condes-15-productos.png"
     },
     {
-     "caption": "Estado final del caso",
+     "caption": "Estado final",
      "file": "TC-B2C35-M-009.png"
     }
    ],
+   "spec": "tests/B2C-35.spec.ts:1143",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo.\n2. El sistema carga la PLP N2 con el listado de productos.\n3. El usuario anota la cantidad de productos.\n4. El usuario cambia desde el Store Locator a Retiro en tienda en Unimarc Las Condes.\n5. El sistema actualiza la PLP y la cantidad de productos según la nueva tienda.",
-   "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CATEGORY_N2_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo\n- {DIRECCION_DESPACHO_001}: Calle Uno 23, La Florida\n- {DIRECCION_DESPACHO}: Camino La Fuente 1589 Las Condes\n- {TIENDA_RETIRO_001}: Unimarc Las Condes",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CATEGORY_N2_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo\n- {DIRECCION_DESPACHO_001} = Calle Uno 23, La Florida\n- {TIENDA_RETIRO_001} = Unimarc Las Condes",
    "viewport": "390x844"
   },
   {
@@ -1291,16 +1582,18 @@ Causa: /category/frutas-y-verduras_frutas ({PLP_URL_MONETIZACION}) no tiene un c
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-11-03",
+   "executed_at": "2026-11-10",
    "expected": "Se agregan hasta 50 productos más al listado, sin paginación y sin recargar la página.",
    "form_factor": "mobile",
    "id": "TC-B2C35-M-020",
    "name": "Verificar que el scroll infinito carga el siguiente bloque de 50 productos [Mobile] [Guest]",
-   "observation": "Causa: los pasos usan {PLP_URL_MAS_50}, que no tiene fila en el Excel de data (la fila declara {CATEGORY_N3_MAS_50_PRODS}, que los pasos no usan). Accion requerida: cargar {PLP_URL_MAS_50} en el Excel de data o corregir los pasos para que usen el token declarado, y re-ejecutar.",
+   "observation": "Causa: la precondición usa {PLP_URL_MAS_50}, que no tiene fila en el Excel de data. El paso 1 usa {CATEGORY_N3_MAS_50_PRODS} = «Pan molde y pita», que es un nombre y no una URL. Acción: cargar {PLP_URL_MAS_50} con la URL de una N2/N3 de más de 50 productos y usar un solo token en precondición y pasos.",
+   "observed": "Causa: la precondición usa {PLP_URL_MAS_50}, que no tiene fila en el Excel de data. El paso 1 usa {CATEGORY_N3_MAS_50_PRODS} = «Pan molde y pita», que es un nombre y no una URL. Acción: cargar {PLP_URL_MAS_50} con la URL de una N2/N3 de más de 50 productos y usar un solo token en precondición y pasos.",
    "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PLP N2\n- {PLP_URL_MAS_50} es una categoría N2/N3 con más de 50 productos disponibles",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {PLP_URL_MAS_50}.\n2. El sistema carga la PLP con el listado de productos.\n3. El usuario hace scroll hasta el final del listado visible.\n4. El sistema muestra el indicador de carga «…» y agrega el siguiente bloque de productos al listado.",
-   "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CATEGORY_N3_MAS_50_PRODS}: Pan molde y pita",
+   "steps": "1. El usuario ingresa a Pan molde y pita.\n2. El sistema carga la PLP con el listado de productos.\n3. El usuario hace scroll hasta el final del listado visible.\n4. El sistema muestra el indicador de carga «…» y agrega el siguiente bloque de productos al listado.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CATEGORY_N3_MAS_50_PRODS} = Pan molde y pita",
    "viewport": "390x844"
   },
   {
@@ -1473,6 +1766,102 @@ Causa: /category/frutas-y-verduras_frutas ({PLP_URL_MONETIZACION}) no tiene un c
    "status": "Bloqueado",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/frutas-y-verduras_frutas.\n2. El sistema carga la PLP con el listado de productos.\n3. El usuario hace scroll por todo el listado.",
    "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {PLP_URL_MONETIZACION}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/frutas-y-verduras_frutas",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-10",
+   "expected": "No se muestra el banner circular y no queda espacio vacío bajo el título.",
+   "form_factor": "mobile",
+   "id": "TC-B2C35-M-029",
+   "name": "Verificar que sin banner circular asignado el componente no se muestra [Mobile] [Guest]",
+   "observation": "Causa: {CATEGORY_N2_URL} (/category/carnes_cerdo) SÍ tiene Banner circular (content asset carnes-cerdo-plp-banner-circular: Carnes, Chuleta, Pavo), así que no cumple la precondición «sin banner circular». Acción: declarar una PLP N2 sin Banner circular (por ejemplo, una cuya consulta a <categoria>-plp-banner-circular dé 404).",
+   "observed": "Causa: {CATEGORY_N2_URL} (/category/carnes_cerdo) SÍ tiene Banner circular (content asset carnes-cerdo-plp-banner-circular: Carnes, Chuleta, Pavo), así que no cumple la precondición «sin banner circular». Acción: declarar una PLP N2 sin Banner circular (por ejemplo, una cuya consulta a <categoria>-plp-banner-circular dé 404).",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PLP N2\n- https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo no tiene content asset de tipo Banner circular en el slot",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo.\n2. El sistema carga la PLP N2 con el listado de productos.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {CATEGORY_N2_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-10",
+   "expected": "El grid de banners se muestra arriba del título y el banner tocado lleva a su link configurado.",
+   "form_factor": "mobile",
+   "id": "TC-B2C35-M-030",
+   "name": "Verificar que el grid de banners configurado se muestra arriba del título de la categoría [Mobile] [Guest]",
+   "observation": "Causa: {PLP_URL_GRID_BANNERS} (/category/carnes_cerdo) no tiene Grid Banners: el content asset carnes-cerdo-plp-grid-banner da 404 (Content Asset Not Found). Acción: configurar el Grid Banners en esa categoría o declarar una PLP que lo tenga.",
+   "observed": "Causa: {PLP_URL_GRID_BANNERS} (/category/carnes_cerdo) no tiene Grid Banners: el content asset carnes-cerdo-plp-grid-banner da 404 (Content Asset Not Found). Acción: configurar el Grid Banners en esa categoría o declarar una PLP que lo tenga.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PLP N2\n- https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo tiene un content asset de tipo Grid Banners en el slot",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo.\n2. El sistema carga la PLP con el listado de productos.\n3. El usuario toca uno de los banners del grid.\n4. El sistema navega al link configurado para ese banner.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {PLP_URL_GRID_BANNERS} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_cerdo",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-10",
+   "expected": "Al final, bajo la grilla, se muestra el bloque SEO con links de texto y \"Revisa también las Bases legales y las Políticas de privacidad de unimarc.cl\".",
+   "form_factor": "mobile",
+   "id": "TC-B2C35-M-040",
+   "name": "Verificar que la PLP hija de una categoría top con SEO muestra el bloque SEO al final [Mobile] [Guest]",
+   "observation": "Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Ojo al corregir la data: ese contenido dice «Revisa también: Vacuno, Pollo, Cerdo, Cordero y Pavo, Embutidos y Cecinas, Carnes Especiales» y no trae el texto ni los links de «Bases legales» y «Políticas de privacidad». Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).",
+   "observed": "Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Ojo al corregir la data: ese contenido dice «Revisa también: Vacuno, Pollo, Cerdo, Cordero y Pavo, Embutidos y Cecinas, Carnes Especiales» y no trae el texto ni los links de «Bases legales» y «Políticas de privacidad». Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PLP N2\n- La categoría top de https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes tiene un content asset SEO configurado en BM",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes.\n2. El sistema carga la PLP con el listado de productos.\n3. El usuario hace scroll hasta el final de la página.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {PLP_URL_SEO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-10",
+   "expected": "Cada link abre su página correspondiente.",
+   "form_factor": "mobile",
+   "id": "TC-B2C35-M-041",
+   "name": "Verificar que los links del bloque SEO redirigen a Bases legales y Políticas de privacidad [Mobile] [Guest]",
+   "observation": "Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Ojo al corregir la data: ese contenido dice «Revisa también: Vacuno, Pollo, Cerdo, Cordero y Pavo, Embutidos y Cecinas, Carnes Especiales» y no trae el texto ni los links de «Bases legales» y «Políticas de privacidad». Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).",
+   "observed": "Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Ojo al corregir la data: ese contenido dice «Revisa también: Vacuno, Pollo, Cerdo, Cordero y Pavo, Embutidos y Cecinas, Carnes Especiales» y no trae el texto ni los links de «Bases legales» y «Políticas de privacidad». Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PLP N2\n- La categoría top de https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes tiene un content asset SEO configurado en BM",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes.\n2. El sistema carga la PLP con el listado de productos.\n3. El usuario hace scroll hasta el bloque SEO y toca \"Bases legales\".\n4. El sistema abre la página de Bases legales.\n5. El usuario vuelve a la PLP y toca \"Políticas de privacidad\".\n6. El sistema abre la página de Políticas de privacidad.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {PLP_URL_SEO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-10",
+   "expected": "Listado, filtros y píldoras se muestran correctamente; el bloque SEO no aparece y no hay mensajes de error visibles.",
+   "form_factor": "mobile",
+   "id": "TC-B2C35-M-043",
+   "name": "Verificar que un error del componente SEO lo oculta sin afectar el resto de la PLP [Mobile] [Guest]",
+   "observation": "Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Por eso, bloquear la request de SEO en /category/carnes no cambia nada. Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).",
+   "observed": "Causa: {PLP_URL_SEO} es /category/carnes, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. En DEV el bloque SEO de Carnes (content asset carnes-plp-links-seo) se muestra en las PLP hijas (/category/carnes_vacuno, /category/carnes_cerdo), no en /category/carnes, que ni siquiera lo pide. Por eso, bloquear la request de SEO en /category/carnes no cambia nada. Acción: declarar en {PLP_URL_SEO} una PLP N2 hija de una categoría top con SEO (p. ej. /category/carnes_vacuno).",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PLP N2\n- La categoría top de https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes tiene un content asset SEO configurado en BM\n- DevTools (emulación Mobile 390x844) con bloqueo de la request de contenido SEO (Network request blocking)",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes.\n2. El sistema carga la PLP con el listado de productos.\n3. El usuario hace scroll hasta el final de la página.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {PLP_URL_SEO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-10",
+   "expected": "Al final de la PLP no se muestra el bloque SEO y no queda espacio vacío.",
+   "form_factor": "mobile",
+   "id": "TC-B2C35-M-042",
+   "name": "Verificar que sin SEO en la categoría top sus PLP hijas no muestran el bloque SEO [Mobile] [Guest]",
+   "observation": "Causa: {PLP_URL_SIN_SEO} es /category/bebes-y-ninos, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. La precondición sí se cumple (el content asset bebes-y-ninos-plp-links-seo da 404) y esa N1 no muestra bloque SEO, pero eso no prueba lo que pasa en sus PLP hijas. Acción: declarar en {PLP_URL_SIN_SEO} una PLP N2 hija de bebes-y-ninos.",
+   "observed": "Causa: {PLP_URL_SIN_SEO} es /category/bebes-y-ninos, la categoría top misma, y el caso se ubica en una PLP N2 hija de ella. La precondición sí se cumple (el content asset bebes-y-ninos-plp-links-seo da 404) y esa N1 no muestra bloque SEO, pero eso no prueba lo que pasa en sus PLP hijas. Acción: declarar en {PLP_URL_SIN_SEO} una PLP N2 hija de bebes-y-ninos.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PLP N2\n- La categoría top de https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebes-y-ninos no tiene content asset SEO configurado",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebes-y-ninos.\n2. El sistema carga la PLP con el listado de productos.\n3. El usuario hace scroll hasta el final de la página.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {PLP_URL_SIN_SEO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebes-y-ninos",
    "viewport": "390x844"
   }
  ]

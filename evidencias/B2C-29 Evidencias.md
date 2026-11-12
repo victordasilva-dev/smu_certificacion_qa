@@ -1,15 +1,15 @@
-# B2C-29 APP
+# B2C-29 - Home configurable desde Page Designer - Evidencias QA
 
 | Campo | Valor |
 |---|---|
 | Suite | B2C-29 |
-| Última actualización | 2026-10-27 |
-| Ejecutado por | Daniel Uñuruco |
-| Ambiente | App Unimarc v1.0.1 (DEV) |
+| Última actualización | 2026-11-10 |
+| Ejecutado por | Victor Chirinos |
+| Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
-| Navegador Mobile | chromium |
+| Navegador Mobile | webkit |
 | Dispositivo Android | Pixel 6 · Android 14 (emulador) |
-| Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-29 APP Test Cases.xlsx |
+| Origen de los TC | Casos de Prueba/Para Ejecutar/SP1/B2C-29 WEB Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
 ## Resumen de resultados
@@ -17,15 +17,16 @@
 | Estado | Casos |
 |---|---|
 | Bloqueado Data | 21 |
-| Aprobado | 6 |
+| Aprobado | 8 |
 | Fuera de alcance | 4 |
 | Bloqueado | 1 |
-| **Total** | **32** |
+| **Total** | **34** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-10 | 13 | TC-B2C29-D-005, TC-B2C29-D-013, TC-B2C29-D-014, TC-B2C29-D-015, TC-B2C29-D-017, TC-B2C29-M-006, TC-B2C29-M-007, TC-B2C29-M-008, TC-B2C29-M-009, TC-B2C29-M-015, TC-B2C29-M-016, TC-B2C29-M-017, TC-B2C29-M-019 |
 | 2026-10-27 | 12 | TC-B2C29-APP-008, TC-B2C29-APP-009, TC-B2C29-APP-010, TC-B2C29-APP-011, TC-B2C29-APP-012, TC-B2C29-APP-013, TC-B2C29-APP-015, TC-B2C29-APP-016, TC-B2C29-APP-017, TC-B2C29-APP-018, TC-B2C29-APP-019, TC-B2C29-APP-020 |
 | 2026-10-26 | 6 | TC-B2C29-APP-001, TC-B2C29-APP-002, TC-B2C29-APP-003, TC-B2C29-APP-004, TC-B2C29-APP-005, TC-B2C29-APP-014 |
 | 2026-10-22 | 12 | TC-B2C29-D-006, TC-B2C29-D-013, TC-B2C29-D-014, TC-B2C29-D-015, TC-B2C29-D-017, TC-B2C29-M-007, TC-B2C29-M-008, TC-B2C29-M-009, TC-B2C29-M-015, TC-B2C29-M-016, TC-B2C29-M-017, TC-B2C29-M-019 |
@@ -37,43 +38,46 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-22 |
+| Estado | Aprobado |
+| Ejecutado | 2026-11-10 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
-| Spec | tests/B2C-29.spec.ts |
+| Navegador | chromium |
+| Spec | tests/B2C-29.spec.ts:513 |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Desktop 1440x900
 - Ubicacion: Home
-- En Page Designer, {COMPONENTE_CON_LINK} está publicado en la Home con el link de redirección {URL_DESTINO_COMPONENTE}
+- En Page Designer, Home_Banner está publicado en la Home con el link de redirección https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores
 
 **Data utilizada**
 
-- {BASE_URL}
-- {COMPONENTE_CON_LINK}
-- {URL_DESTINO_COMPONENTE}
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {COMPONENTE_CON_LINK} = Home_Banner
+- {URL_DESTINO_COMPONENTE} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {BASE_URL}.
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.
 2. El sistema carga el Home con los componentes configurados en Page Designer.
-3. El usuario ubica {COMPONENTE_CON_LINK} en la Home.
-4. El usuario hace clic en {COMPONENTE_CON_LINK}.
+3. El usuario ubica Home_Banner en la Home.
+4. El usuario hace clic en Home_Banner.
 
 **Resultado esperado**
 
-El sistema navega a {URL_DESTINO_COMPONENTE} (misma pestaña/pantalla) y la página de destino carga completa, sin errores.
+El sistema navega a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores (misma pestaña/pantalla) y la página de destino carga completa, sin errores.
 
 **Resultado obtenido**
 
-Causa: {COMPONENTE_CON_LINK}, {URL_DESTINO_COMPONENTE} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Se hizo clic en el slide de «Home_Banner» (componente tb-banner-hp, slide tb-banner-b1-hp) y la página navegó en la misma pestaña a /category/bebidas-y-licores, que cargó completa y sin mensajes de error.
 
-**Observación**
+**Evidencia**
 
-Causa: {COMPONENTE_CON_LINK}, {URL_DESTINO_COMPONENTE} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+![Paso 3 — home banner en la home](<B2C-29 Evidencias/TC-B2C29-D-013-p03-home-banner-en-la-home.png>)
+
+![Paso 4 — pagina de destino](<B2C-29 Evidencias/TC-B2C29-D-013-p04-pagina-de-destino.png>)
 
 ---
 
@@ -82,28 +86,29 @@ Causa: {COMPONENTE_CON_LINK}, {URL_DESTINO_COMPONENTE} no tienen fila en el Exce
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-22 |
+| Ejecutado | 2026-11-10 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
-| Spec | tests/B2C-29.spec.ts |
+| Navegador | chromium |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Desktop 1440x900
 - Ubicacion: Home
-- En Page Designer, {COMPONENTE_SIN_LINK} está publicado en la Home sin link de redirección
+- En Page Designer, Featured Block (OT) está publicado en la Home sin link de redirección
 
 **Data utilizada**
 
-- {BASE_URL}
-- {COMPONENTE_SIN_LINK}
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {COMPONENTE_SIN_LINK} = Featured Block (OT)
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {BASE_URL}.
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.
 2. El sistema carga el Home con los componentes configurados en Page Designer.
-3. El usuario hace clic en {COMPONENTE_SIN_LINK}.
+3. El usuario hace clic en Featured Block (OT).
 4. El usuario revisa la pantalla.
 
 **Resultado esperado**
@@ -112,11 +117,11 @@ El usuario permanece en la Home: no hay navegación, no se abre una página en b
 
 **Resultado obtenido**
 
-Causa: {COMPONENTE_SIN_LINK} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: el componente declarado en {COMPONENTE_SIN_LINK} («Featured Block (OT)») corresponde al único Featured Block de la Home (hp-membresia-hw, «Contrata la membresía»), que SÍ tiene link configurado: ctaUrl /membresia, CTA «Comienza tus 15 días gratis». No hay en la Home un componente publicado sin link. Acción: declarar en el Excel de data un componente publicado en la Home sin link de redirección.
 
 **Observación**
 
-Causa: {COMPONENTE_SIN_LINK} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: el componente declarado en {COMPONENTE_SIN_LINK} («Featured Block (OT)») corresponde al único Featured Block de la Home (hp-membresia-hw, «Contrata la membresía»), que SÍ tiene link configurado: ctaUrl /membresia, CTA «Comienza tus 15 días gratis». No hay en la Home un componente publicado sin link. Acción: declarar en el Excel de data un componente publicado en la Home sin link de redirección.
 
 ---
 
@@ -125,28 +130,29 @@ Causa: {COMPONENTE_SIN_LINK} no tienen fila en el Excel de data. Acción: declar
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-22 |
+| Ejecutado | 2026-11-10 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
-| Spec | tests/B2C-29.spec.ts |
+| Navegador | chromium |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Desktop 1440x900
 - Ubicacion: Home
-- En Page Designer, {COMPONENTE_LINK_INVALIDO} está publicado en la Home con un link a una URL inexistente del sitio
+- En Page Designer, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX está publicado en la Home con un link a una URL inexistente del sitio
 
 **Data utilizada**
 
-- {BASE_URL}
-- {COMPONENTE_LINK_INVALIDO}
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {COMPONENTE_LINK_INVALIDO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {BASE_URL}.
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.
 2. El sistema carga el Home con los componentes configurados en Page Designer.
-3. El usuario hace clic en {COMPONENTE_LINK_INVALIDO}.
+3. El usuario hace clic en https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX.
 4. El usuario revisa la pantalla resultante.
 5. El usuario usa el botón Atrás para volver a la Home.
 
@@ -156,11 +162,11 @@ Se muestra la página de "no encontrado" del sitio (con header y navegación dis
 
 **Resultado obtenido**
 
-Causa: {COMPONENTE_LINK_INVALIDO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: {COMPONENTE_LINK_INVALIDO} trae una URL (…/category/lacteos-huevos-y-refrigeradosX) y ningún componente de la Home enlaza a ella: no aparece en la configuración de Page Designer ni en el DOM, en Desktop ni en Mobile. El slide más parecido de Home_Banner apunta a la URL válida /category/lacteos-huevos-y-refrigerados. Acción: publicar un componente con ese link inválido y declarar su nombre en {COMPONENTE_LINK_INVALIDO}.
 
 **Observación**
 
-Causa: {COMPONENTE_LINK_INVALIDO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: {COMPONENTE_LINK_INVALIDO} trae una URL (…/category/lacteos-huevos-y-refrigeradosX) y ningún componente de la Home enlaza a ella: no aparece en la configuración de Page Designer ni en el DOM, en Desktop ni en Mobile. El slide más parecido de Home_Banner apunta a la URL válida /category/lacteos-huevos-y-refrigerados. Acción: publicar un componente con ese link inválido y declarar su nombre en {COMPONENTE_LINK_INVALIDO}.
 
 ---
 
@@ -220,44 +226,54 @@ La red Slow 3G se emuló por CDP (no con DevTools abierto); resultado equivalent
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-22 |
+| Ejecutado | 2026-11-10 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
-| Spec | tests/B2C-29.spec.ts |
+| Navegador | chromium |
+| Duración | 360.4 s |
+| Spec | tests/B2C-29.spec.ts:538 |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Desktop 1440x900
 - Ubicacion: Home
-- En Page Designer, {COMPONENTE_SEGMENTO_LOGUEADO} está publicado en la Home con segmentación por estado de sesión (solo logueados)
+- En Page Designer, Bienvenida_Diamante está publicado en la Home con segmentación por estado de sesión (solo logueados)
 
 **Data utilizada**
 
-- {BASE_URL}
-- {COMPONENTE_SEGMENTO_LOGUEADO}
-- {USER_AUTH_001}
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {COMPONENTE_SEGMENTO_LOGUEADO} = Bienvenida_Diamante
+- {USER_AUTH_001} = vhchirinos+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {BASE_URL}.
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.
 2. El sistema carga el Home con los componentes configurados en Page Designer.
-3. El usuario revisa si se muestra {COMPONENTE_SEGMENTO_LOGUEADO}.
-4. El usuario inicia sesión con la cuenta {USER_AUTH_001} y vuelve a la Home.
-5. El usuario revisa si se muestra {COMPONENTE_SEGMENTO_LOGUEADO}.
+3. El usuario revisa si se muestra Bienvenida_Diamante.
+4. El usuario inicia sesión con la cuenta vhchirinos+comprador@avatar-global.com y vuelve a la Home.
+5. El usuario revisa si se muestra Bienvenida_Diamante.
 6. El usuario cierra sesión y vuelve a la Home.
 
 **Resultado esperado**
 
-Como invitado {COMPONENTE_SEGMENTO_LOGUEADO} no se muestra y no queda espacio reservado; con sesión iniciada sí se muestra; al cerrar sesión vuelve a ocultarse.
+Como invitado Bienvenida_Diamante no se muestra y no queda espacio reservado; con sesión iniciada sí se muestra; al cerrar sesión vuelve a ocultarse.
 
 **Resultado obtenido**
 
-Causa: {COMPONENTE_SEGMENTO_LOGUEADO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.
 
 **Observación**
 
-Causa: {COMPONENTE_SEGMENTO_LOGUEADO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.
+
+**Evidencia**
+
+![Paso 3 — home como invitado](<B2C-29 Evidencias/TC-B2C29-D-017-p03-home-como-invitado.png>)
+
+![Paso 5 — home con sesion iniciada](<B2C-29 Evidencias/TC-B2C29-D-017-p05-home-con-sesion-iniciada.png>)
+
+![Paso 6 — home tras cerrar sesion](<B2C-29 Evidencias/TC-B2C29-D-017-p06-home-tras-cerrar-sesion.png>)
 
 ---
 
@@ -265,43 +281,46 @@ Causa: {COMPONENTE_SEGMENTO_LOGUEADO} no tienen fila en el Excel de data. Acció
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-22 |
+| Estado | Aprobado |
+| Ejecutado | 2026-11-10 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Spec | tests/B2C-29.spec.ts |
+| Navegador | webkit |
+| Spec | tests/B2C-29.spec.ts:513 |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Mobile 390x844
 - Ubicacion: Home
-- En Page Designer, {COMPONENTE_CON_LINK} está publicado en la Home con el link de redirección {URL_DESTINO_COMPONENTE}
+- En Page Designer, Home_Banner está publicado en la Home con el link de redirección https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores
 
 **Data utilizada**
 
-- {BASE_URL}
-- {COMPONENTE_CON_LINK}
-- {URL_DESTINO_COMPONENTE}
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {COMPONENTE_CON_LINK} = Home_Banner
+- {URL_DESTINO_COMPONENTE} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.
 2. El sistema carga el Home con los componentes configurados en Page Designer.
-3. El usuario ubica {COMPONENTE_CON_LINK} en la Home.
-4. El usuario toca {COMPONENTE_CON_LINK}.
+3. El usuario ubica Home_Banner en la Home.
+4. El usuario toca Home_Banner.
 
 **Resultado esperado**
 
-El sistema navega a {URL_DESTINO_COMPONENTE} (misma pestaña/pantalla) y la página de destino carga completa, sin errores.
+El sistema navega a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores (misma pestaña/pantalla) y la página de destino carga completa, sin errores.
 
 **Resultado obtenido**
 
-Causa: {COMPONENTE_CON_LINK}, {URL_DESTINO_COMPONENTE} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Se tocó el slide de «Home_Banner» (tb-banner-b1-hp) y la página navegó en la misma pestaña a /category/bebidas-y-licores, que cargó completa y sin mensajes de error.
 
-**Observación**
+**Evidencia**
 
-Causa: {COMPONENTE_CON_LINK}, {URL_DESTINO_COMPONENTE} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+![Paso 3 — home banner en la home](<B2C-29 Evidencias/TC-B2C29-M-015-p03-home-banner-en-la-home.png>)
+
+![Paso 4 — pagina de destino](<B2C-29 Evidencias/TC-B2C29-M-015-p04-pagina-de-destino.png>)
 
 ---
 
@@ -310,28 +329,29 @@ Causa: {COMPONENTE_CON_LINK}, {URL_DESTINO_COMPONENTE} no tienen fila en el Exce
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-22 |
+| Ejecutado | 2026-11-10 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Spec | tests/B2C-29.spec.ts |
+| Navegador | webkit |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Mobile 390x844
 - Ubicacion: Home
-- En Page Designer, {COMPONENTE_SIN_LINK} está publicado en la Home sin link de redirección
+- En Page Designer, Featured Block (OT) está publicado en la Home sin link de redirección
 
 **Data utilizada**
 
-- {BASE_URL}
-- {COMPONENTE_SIN_LINK}
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {COMPONENTE_SIN_LINK} = Featured Block (OT)
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.
 2. El sistema carga el Home con los componentes configurados en Page Designer.
-3. El usuario toca {COMPONENTE_SIN_LINK}.
+3. El usuario toca Featured Block (OT).
 4. El usuario revisa la pantalla.
 
 **Resultado esperado**
@@ -340,11 +360,11 @@ El usuario permanece en la Home: no hay navegación, no se abre una página en b
 
 **Resultado obtenido**
 
-Causa: {COMPONENTE_SIN_LINK} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: el componente declarado en {COMPONENTE_SIN_LINK} («Featured Block (OT)») corresponde al único Featured Block de la Home (hp-membresia-hw, «Contrata la membresía»), que SÍ tiene link configurado: ctaUrl /membresia, CTA «Comienza tus 15 días gratis». No hay en la Home un componente publicado sin link. Acción: declarar en el Excel de data un componente publicado en la Home sin link de redirección.
 
 **Observación**
 
-Causa: {COMPONENTE_SIN_LINK} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: el componente declarado en {COMPONENTE_SIN_LINK} («Featured Block (OT)») corresponde al único Featured Block de la Home (hp-membresia-hw, «Contrata la membresía»), que SÍ tiene link configurado: ctaUrl /membresia, CTA «Comienza tus 15 días gratis». No hay en la Home un componente publicado sin link. Acción: declarar en el Excel de data un componente publicado en la Home sin link de redirección.
 
 ---
 
@@ -353,28 +373,29 @@ Causa: {COMPONENTE_SIN_LINK} no tienen fila en el Excel de data. Acción: declar
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-22 |
+| Ejecutado | 2026-11-10 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Spec | tests/B2C-29.spec.ts |
+| Navegador | webkit |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Mobile 390x844
 - Ubicacion: Home
-- En Page Designer, {COMPONENTE_LINK_INVALIDO} está publicado en la Home con un link a una URL inexistente del sitio
+- En Page Designer, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX está publicado en la Home con un link a una URL inexistente del sitio
 
 **Data utilizada**
 
-- {BASE_URL}
-- {COMPONENTE_LINK_INVALIDO}
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {COMPONENTE_LINK_INVALIDO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.
 2. El sistema carga el Home con los componentes configurados en Page Designer.
-3. El usuario toca {COMPONENTE_LINK_INVALIDO}.
+3. El usuario toca https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX.
 4. El usuario revisa la pantalla resultante.
 5. El usuario usa el botón Atrás para volver a la Home.
 
@@ -384,11 +405,11 @@ Se muestra la página de "no encontrado" del sitio (con header y navegación dis
 
 **Resultado obtenido**
 
-Causa: {COMPONENTE_LINK_INVALIDO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: {COMPONENTE_LINK_INVALIDO} trae una URL (…/category/lacteos-huevos-y-refrigeradosX) y ningún componente de la Home enlaza a ella: no aparece en la configuración de Page Designer ni en el DOM, en Desktop ni en Mobile. El slide más parecido de Home_Banner apunta a la URL válida /category/lacteos-huevos-y-refrigerados. Acción: publicar un componente con ese link inválido y declarar su nombre en {COMPONENTE_LINK_INVALIDO}.
 
 **Observación**
 
-Causa: {COMPONENTE_LINK_INVALIDO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: {COMPONENTE_LINK_INVALIDO} trae una URL (…/category/lacteos-huevos-y-refrigeradosX) y ningún componente de la Home enlaza a ella: no aparece en la configuración de Page Designer ni en el DOM, en Desktop ni en Mobile. El slide más parecido de Home_Banner apunta a la URL válida /category/lacteos-huevos-y-refrigerados. Acción: publicar un componente con ese link inválido y declarar su nombre en {COMPONENTE_LINK_INVALIDO}.
 
 ---
 
@@ -448,44 +469,54 @@ La red Slow 3G se emuló por CDP (no con DevTools abierto); resultado equivalent
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-22 |
+| Ejecutado | 2026-11-10 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Spec | tests/B2C-29.spec.ts |
+| Navegador | webkit |
+| Duración | 315.8 s |
+| Spec | tests/B2C-29.spec.ts:538 |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Mobile 390x844
 - Ubicacion: Home
-- En Page Designer, {COMPONENTE_SEGMENTO_LOGUEADO} está publicado en la Home con segmentación por estado de sesión (solo logueados)
+- En Page Designer, Bienvenida_Diamante está publicado en la Home con segmentación por estado de sesión (solo logueados)
 
 **Data utilizada**
 
-- {BASE_URL}
-- {COMPONENTE_SEGMENTO_LOGUEADO}
-- {USER_AUTH_001}
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {COMPONENTE_SEGMENTO_LOGUEADO} = Bienvenida_Diamante
+- {USER_AUTH_001} = vhchirinos+comprador@avatar-global.com
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.
 2. El sistema carga el Home con los componentes configurados en Page Designer.
-3. El usuario revisa si se muestra {COMPONENTE_SEGMENTO_LOGUEADO}.
-4. El usuario inicia sesión con la cuenta {USER_AUTH_001} y vuelve a la Home.
-5. El usuario revisa si se muestra {COMPONENTE_SEGMENTO_LOGUEADO}.
+3. El usuario revisa si se muestra Bienvenida_Diamante.
+4. El usuario inicia sesión con la cuenta vhchirinos+comprador@avatar-global.com y vuelve a la Home.
+5. El usuario revisa si se muestra Bienvenida_Diamante.
 6. El usuario cierra sesión y vuelve a la Home.
 
 **Resultado esperado**
 
-Como invitado {COMPONENTE_SEGMENTO_LOGUEADO} no se muestra y no queda espacio reservado; con sesión iniciada sí se muestra; al cerrar sesión vuelve a ocultarse.
+Como invitado Bienvenida_Diamante no se muestra y no queda espacio reservado; con sesión iniciada sí se muestra; al cerrar sesión vuelve a ocultarse.
 
 **Resultado obtenido**
 
-Causa: {COMPONENTE_SEGMENTO_LOGUEADO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.
 
 **Observación**
 
-Causa: {COMPONENTE_SEGMENTO_LOGUEADO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.
+Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.
+
+**Evidencia**
+
+![Paso 3 — home como invitado](<B2C-29 Evidencias/TC-B2C29-M-019-p03-home-como-invitado.png>)
+
+![Paso 5 — home con sesion iniciada](<B2C-29 Evidencias/TC-B2C29-M-019-p05-home-con-sesion-iniciada.png>)
+
+![Paso 6 — home tras cerrar sesion](<B2C-29 Evidencias/TC-B2C29-M-019-p06-home-tras-cerrar-sesion.png>)
 
 ---
 
@@ -534,9 +565,11 @@ Causa: la precondición exige configurar el componente con fecha de fin desde Bu
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-22 |
+| Ejecutado | 2026-11-10 |
 | Form factor | mobile |
-| Spec | tests/B2C-29.spec.ts |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
 
 **Precondiciones**
 
@@ -544,32 +577,32 @@ Causa: la precondición exige configurar el componente con fecha de fin desde Bu
 - Viewport: Mobile 390x844
 - Ubicacion: Home
 - Sesión nueva de navegador (ventana de incógnito), sin sesión iniciada
-- {COMPONENTE_PROGRAMADO} está configurado en Page Designer con fin de vigencia {FECHA_FIN_VIGENCIA}
+- Modulo Bomba está configurado en Page Designer con fin de vigencia 2026-12-12 00:00:00
 
 **Data utilizada**
 
 - {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-- {COMPONENTE_PROGRAMADO} = TBD
-- {FECHA_FIN_VIGENCIA} = TBD
+- {COMPONENTE_PROGRAMADO} = Modulo Bomba
+- {FECHA_FIN_VIGENCIA} = 2026-12-12 00:00:00
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.
-2. El sistema carga la Home con {COMPONENTE_PROGRAMADO} antes de {FECHA_FIN_VIGENCIA}.
-3. El usuario vuelve a acceder a la Home después de {FECHA_FIN_VIGENCIA}.
-4. El sistema carga la Home sin {COMPONENTE_PROGRAMADO}.
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.
+2. El sistema carga la Home con Modulo Bomba antes de 2026-12-12 00:00:00.
+3. El usuario vuelve a acceder a la Home después de 2026-12-12 00:00:00.
+4. El sistema carga la Home sin Modulo Bomba.
 
 **Resultado esperado**
 
-{COMPONENTE_PROGRAMADO} se muestra hasta {FECHA_FIN_VIGENCIA} y deja de mostrarse después, sin dejar espacio vacío.
+Modulo Bomba se muestra hasta 2026-12-12 00:00:00 y deja de mostrarse después, sin dejar espacio vacío.
 
 **Resultado obtenido**
 
-Causa: {FECHA_FIN_VIGENCIA} es 2026-12-12 y aún no se cumple (hoy 2026-10-22), así que no se puede ver que {COMPONENTE_PROGRAMADO} («Modulo Bomba», nombre en Page Designer, sin texto visible en el Home) deje de mostrarse. Acción: probar después de esa fecha o configurar un componente con una fecha fin cercana. Verificado el 2026-10-22.
+Causa: {FECHA_FIN_VIGENCIA} es 2026-12-12 y todavía no llega (hoy es 2026-11-10), así que no se puede ver que «Modulo Bomba» deje de mostrarse. Hoy se muestra en la Home (hp-bomba-hw, endDate 12/12/2026 23:59:59 en Page Designer; el token dice 00:00:00). Ese endDate es el de la cuenta regresiva del módulo (mensaje «Finalizado» al vencer), así que no está claro que sea un fin de vigencia. Acción: volver a probar después del 12/12/2026 o programar un componente con fin de vigencia cercano.
 
 **Observación**
 
-Causa: {FECHA_FIN_VIGENCIA} es 2026-12-12 y aún no se cumple (hoy 2026-10-22), así que no se puede ver que {COMPONENTE_PROGRAMADO} («Modulo Bomba», nombre en Page Designer, sin texto visible en el Home) deje de mostrarse. Acción: probar después de esa fecha o configurar un componente con una fecha fin cercana. Verificado el 2026-10-22.
+Causa: {FECHA_FIN_VIGENCIA} es 2026-12-12 y todavía no llega (hoy es 2026-11-10), así que no se puede ver que «Modulo Bomba» deje de mostrarse. Hoy se muestra en la Home (hp-bomba-hw, endDate 12/12/2026 23:59:59 en Page Designer; el token dice 00:00:00). Ese endDate es el de la cuenta regresiva del módulo (mensaje «Finalizado» al vencer), así que no está claro que sea un fin de vigencia. Acción: volver a probar después del 12/12/2026 o programar un componente con fin de vigencia cercano.
 
 ---
 
@@ -578,47 +611,50 @@ Causa: {FECHA_FIN_VIGENCIA} es 2026-12-12 y aún no se cumple (hoy 2026-10-22), 
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-22 |
+| Ejecutado | 2026-11-10 |
 | Form factor | mobile |
-| Spec | tests/B2C-29.spec.ts |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Duración | 210.5 s |
+| Spec | tests/B2C-29.spec.ts:564 |
 
 **Precondiciones**
 
 - User type: Logueado
 - Viewport: Mobile 390x844
 - Ubicacion: Home
-- {COMPONENTE_SEGMENTADO} está publicado con segmentación activa
-- La cuenta {COMPRADOR_SEGMENTO_USER} pertenece al segmento de {COMPONENTE_SEGMENTADO}
+- Bienvenida_Diamante está publicado con segmentación activa
+- La cuenta vhchirinos+noaddress@avatar-global.com pertenece al segmento de Bienvenida_Diamante
 
 **Data utilizada**
 
 - {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-- {COMPONENTE_SEGMENTADO} = TBD
-- {COMPRADOR_SEGMENTO_USER} = TBD
-- {COMPRADOR_SEGMENTO_PASSWORD} = TBD
+- {COMPONENTE_SEGMENTADO} = Bienvenida_Diamante
+- {COMPRADOR_SEGMENTO_PASSWORD} = contraseña de la cuenta (no se transcribe)
+- {COMPRADOR_SEGMENTO_USER} = vhchirinos+noaddress@avatar-global.com
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.
 2. El sistema carga el Home.
-3. El usuario inicia sesión con la cuenta {COMPRADOR_SEGMENTO_USER}.
+3. El usuario inicia sesión con la cuenta vhchirinos+noaddress@avatar-global.com.
 4. El sistema autentica al usuario y muestra el Home.
 
 **Resultado esperado**
 
-La Home muestra {COMPONENTE_SEGMENTADO}.
+La Home muestra Bienvenida_Diamante.
 
 **Resultado obtenido**
 
-Con la cuenta {COMPRADOR_SEGMENTO_USER} el Home móvil muestra 68 bloques y ninguno es «Bienvenida» ni «Diamante».
+Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.
 
 **Observación**
 
-Causa: la cuenta {COMPRADOR_SEGMENTO_USER} y la cuenta {COMPRADOR_FUERA_SEGMENTO_USER} ven exactamente el mismo Home móvil (68 bloques, ninguno «Bienvenida» ni «Diamante»): no se puede comprobar que la cuenta pertenezca al segmento de {COMPONENTE_SEGMENTADO} («Bienvenida_Diamante», nombre en Page Designer, sin texto visible). Acción: confirmar el segmento de la cuenta y declarar cómo se reconoce el componente en el Home. Verificado el 2026-10-22 con ambas cuentas.
+Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.
 
 **Evidencia**
 
-![Estado final](<B2C-29 Evidencias/TC-B2C29-M-008.png>)
+![Paso 4 — home de la cuenta del segmento](<B2C-29 Evidencias/TC-B2C29-M-008-p04-home-de-la-cuenta-del-segmento.png>)
 
 ---
 
@@ -627,47 +663,50 @@ Causa: la cuenta {COMPRADOR_SEGMENTO_USER} y la cuenta {COMPRADOR_FUERA_SEGMENTO
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-22 |
+| Ejecutado | 2026-11-10 |
 | Form factor | mobile |
-| Spec | tests/B2C-29.spec.ts |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Duración | 195.1 s |
+| Spec | tests/B2C-29.spec.ts:574 |
 
 **Precondiciones**
 
 - User type: Logueado
 - Viewport: Mobile 390x844
 - Ubicacion: Home
-- {COMPONENTE_SEGMENTADO} está publicado con segmentación activa
-- La cuenta {COMPRADOR_FUERA_SEGMENTO_USER} no pertenece al segmento de {COMPONENTE_SEGMENTADO}
+- Bienvenida_Diamante está publicado con segmentación activa
+- La cuenta vhchirinos+segundo@avatar-global.com no pertenece al segmento de Bienvenida_Diamante
 
 **Data utilizada**
 
 - {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-- {COMPONENTE_SEGMENTADO} = TBD
-- {COMPRADOR_FUERA_SEGMENTO_USER} = TBD
-- {COMPRADOR_FUERA_SEGMENTO_PASSWORD} = TBD
+- {COMPONENTE_SEGMENTADO} = Bienvenida_Diamante
+- {COMPRADOR_FUERA_SEGMENTO_PASSWORD} = contraseña de la cuenta (no se transcribe)
+- {COMPRADOR_FUERA_SEGMENTO_USER} = vhchirinos+segundo@avatar-global.com
 
 **Pasos ejecutados**
 
-1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.
 2. El sistema carga el Home.
-3. El usuario inicia sesión con la cuenta {COMPRADOR_FUERA_SEGMENTO_USER}.
+3. El usuario inicia sesión con la cuenta vhchirinos+segundo@avatar-global.com.
 4. El sistema autentica al usuario y muestra el Home.
 
 **Resultado esperado**
 
-La Home no muestra {COMPONENTE_SEGMENTADO} y el componente siguiente aparece a continuación del anterior, sin espacio vacío.
+La Home no muestra Bienvenida_Diamante y el componente siguiente aparece a continuación del anterior, sin espacio vacío.
 
 **Resultado obtenido**
 
-Con la cuenta {COMPRADOR_FUERA_SEGMENTO_USER} el Home móvil muestra los mismos bloques que la cuenta del segmento.
+Causa: la cuenta fuera del segmento no recibe «Bienvenida_Diamante», pero ninguna otra sesión lo recibe tampoco, así que el resultado no demuestra la segmentación. Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.
 
 **Observación**
 
-Causa: la cuenta {COMPRADOR_SEGMENTO_USER} y la cuenta {COMPRADOR_FUERA_SEGMENTO_USER} ven exactamente el mismo Home móvil (68 bloques, ninguno «Bienvenida» ni «Diamante»): no se puede comprobar que la cuenta pertenezca al segmento de {COMPONENTE_SEGMENTADO} («Bienvenida_Diamante», nombre en Page Designer, sin texto visible). Acción: confirmar el segmento de la cuenta y declarar cómo se reconoce el componente en el Home. Verificado el 2026-10-22 con ambas cuentas.
+Causa: la cuenta fuera del segmento no recibe «Bienvenida_Diamante», pero ninguna otra sesión lo recibe tampoco, así que el resultado no demuestra la segmentación. Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.
 
 **Evidencia**
 
-![Estado final](<B2C-29 Evidencias/TC-B2C29-M-009.png>)
+![Paso 4 — home de la cuenta fuera del segmento](<B2C-29 Evidencias/TC-B2C29-M-009-p04-home-de-la-cuenta-fuera-del-segmento.png>)
 
 ---
 
@@ -1426,23 +1465,110 @@ Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: el pas
 
 ---
 
+### TC-B2C29-M-006 - Verificar que un componente programado aparece en su fecha y hora de inicio [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-10 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: Home
+- Sesión nueva de navegador (ventana de incógnito), sin sesión iniciada
+- Modulo Bomba está configurado en Page Designer con inicio de vigencia 2026-09-01 00:00:00
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {COMPONENTE_PROGRAMADO} = Modulo Bomba
+- {FECHA_INICIO_VIGENCIA} = 2026-09-01 00:00:00
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.
+2. El sistema carga la Home sin Modulo Bomba antes de 2026-09-01 00:00:00.
+3. El usuario vuelve a acceder a la Home después de 2026-09-01 00:00:00.
+4. El sistema muestra Modulo Bomba en la Home.
+
+**Resultado esperado**
+
+Modulo Bomba no se muestra antes de 2026-09-01 00:00:00 y sí se muestra desde esa fecha y hora.
+
+**Resultado obtenido**
+
+Causa: {FECHA_INICIO_VIGENCIA} es 2026-09-01 00:00 y ya pasó (hoy es 2026-11-10), así que no se puede observar la Home «antes» del inicio de vigencia (pasos 2 y 3). Además, en Page Designer «Modulo Bomba» (hp-bomba-hw) no tiene fecha de inicio: solo un endDate de cuenta regresiva (12/12/2026 23:59:59). Acción: programar un componente con un inicio de vigencia futuro y cercano, y declararlo en {COMPONENTE_PROGRAMADO} / {FECHA_INICIO_VIGENCIA}.
+
+**Observación**
+
+Causa: {FECHA_INICIO_VIGENCIA} es 2026-09-01 00:00 y ya pasó (hoy es 2026-11-10), así que no se puede observar la Home «antes» del inicio de vigencia (pasos 2 y 3). Además, en Page Designer «Modulo Bomba» (hp-bomba-hw) no tiene fecha de inicio: solo un endDate de cuenta regresiva (12/12/2026 23:59:59). Acción: programar un componente con un inicio de vigencia futuro y cercano, y declararlo en {COMPONENTE_PROGRAMADO} / {FECHA_INICIO_VIGENCIA}.
+
+---
+
+### TC-B2C29-D-005 - Activacion automatica de un componente en la fecha y hora programada
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-10 |
+| Form factor | desktop |
+| Viewport | 1440x900 |
+| Navegador | chromium |
+| Spec | (sin spec: el caso quedó bloqueado antes de ejecutarse) |
+
+**Precondiciones**
+
+- User type: BM Admin (config) / Guest (verificacion)
+- Viewport: Desktop 1440x900
+- Required data state: componente configurado con fecha de inicio de vigencia
+
+**Data utilizada**
+
+- {FECHA_INICIO_VIGENCIA} = 2026-09-01 00:00:00
+
+**Pasos ejecutados**
+
+1. En Page Designer, configurar un componente con fecha/hora de inicio de vigencia.
+2. Esperar (o simular) que se cumpla la fecha/hora configurada.
+3. Navegar al Home.
+
+**Resultado esperado**
+
+El componente se activa y se muestra automaticamente al cumplirse la fecha/hora configurada, sin intervencion manual adicional.
+
+**Resultado obtenido**
+
+Causa: la columna Test data solo declara {FECHA_INICIO_VIGENCIA} (2026-09-01, ya pasada). Faltan {BASE_URL}, el componente programado y la cuenta de Business Manager con la que se configura en Page Designer (paso 1). Acción: declarar esos tokens en la fila, con una fecha de inicio futura.
+
+**Observación**
+
+Causa: la columna Test data solo declara {FECHA_INICIO_VIGENCIA} (2026-09-01, ya pasada). Faltan {BASE_URL}, el componente programado y la cuenta de Business Manager con la que se configura en Page Designer (paso 1). Acción: declarar esos tokens en la fila, con una fecha de inicio futura.
+
+---
+
 <!-- qa-evidence-state
 {
  "header": {
   "browsers": {
    "desktop": "chromium",
-   "mobile": "chromium"
+   "mobile": "webkit"
   },
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "devices": {
    "android": "Pixel 6 · Android 14 (emulador)"
   },
-  "environment": "App Unimarc v1.0.1 (DEV)",
-  "executed_by": "Daniel Uñuruco",
+  "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
+  "executed_by": "Victor Chirinos",
   "suite": "B2C-29",
-  "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-29 APP Test Cases.xlsx",
-  "title": "B2C-29 APP",
-  "updated_at": "2026-10-27"
+  "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-29 WEB Test Cases.xlsx",
+  "title": "B2C-29 - Home configurable desde Page Designer - Evidencias QA",
+  "updated_at": "2026-11-10"
  },
  "history": {
   "2026-10-19": [
@@ -1492,52 +1618,79 @@ Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: el pas
    "TC-B2C29-APP-018",
    "TC-B2C29-APP-019",
    "TC-B2C29-APP-020"
+  ],
+  "2026-11-10": [
+   "TC-B2C29-D-005",
+   "TC-B2C29-D-013",
+   "TC-B2C29-D-014",
+   "TC-B2C29-D-015",
+   "TC-B2C29-D-017",
+   "TC-B2C29-M-006",
+   "TC-B2C29-M-007",
+   "TC-B2C29-M-008",
+   "TC-B2C29-M-009",
+   "TC-B2C29-M-015",
+   "TC-B2C29-M-016",
+   "TC-B2C29-M-017",
+   "TC-B2C29-M-019"
   ]
  },
  "results": [
   {
-   "executed_at": "2026-10-22",
-   "expected": "El sistema navega a {URL_DESTINO_COMPONENTE} (misma pestaña/pantalla) y la página de destino carga completa, sin errores.",
+   "browser": "chromium",
+   "executed_at": "2026-11-10",
+   "expected": "El sistema navega a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores (misma pestaña/pantalla) y la página de destino carga completa, sin errores.",
    "form_factor": "desktop",
    "id": "TC-B2C29-D-013",
    "name": "Verificar que al seleccionar un banner con link configurado se redirige al destino definido en Page Designer [Desktop] [Guest]",
-   "observation": "Causa: {COMPONENTE_CON_LINK}, {URL_DESTINO_COMPONENTE} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "observed": "Causa: {COMPONENTE_CON_LINK}, {URL_DESTINO_COMPONENTE} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- En Page Designer, {COMPONENTE_CON_LINK} está publicado en la Home con el link de redirección {URL_DESTINO_COMPONENTE}",
-   "spec": "tests/B2C-29.spec.ts",
-   "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario ubica {COMPONENTE_CON_LINK} en la Home.\n4. El usuario hace clic en {COMPONENTE_CON_LINK}.",
-   "test_data": "- {BASE_URL}\n- {COMPONENTE_CON_LINK}\n- {URL_DESTINO_COMPONENTE}",
+   "observed": "Se hizo clic en el slide de «Home_Banner» (componente tb-banner-hp, slide tb-banner-b1-hp) y la página navegó en la misma pestaña a /category/bebidas-y-licores, que cargó completa y sin mensajes de error.",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- En Page Designer, Home_Banner está publicado en la Home con el link de redirección https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores",
+   "screenshots": [
+    {
+     "caption": "Paso 3 — home banner en la home",
+     "file": "TC-B2C29-D-013-p03-home-banner-en-la-home.png"
+    },
+    {
+     "caption": "Paso 4 — pagina de destino",
+     "file": "TC-B2C29-D-013-p04-pagina-de-destino.png"
+    }
+   ],
+   "spec": "tests/B2C-29.spec.ts:513",
+   "status": "Aprobado",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario ubica Home_Banner en la Home.\n4. El usuario hace clic en Home_Banner.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_CON_LINK} = Home_Banner\n- {URL_DESTINO_COMPONENTE} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores",
    "viewport": "1440x900"
   },
   {
-   "executed_at": "2026-10-22",
+   "browser": "chromium",
+   "executed_at": "2026-11-10",
    "expected": "El usuario permanece en la Home: no hay navegación, no se abre una página en blanco ni de error y el resto de los componentes sigue visible y operativo.",
    "form_factor": "desktop",
    "id": "TC-B2C29-D-014",
    "name": "Verificar que un componente sin link configurado no redirige ni genera error al seleccionarlo [Desktop] [Guest]",
-   "observation": "Causa: {COMPONENTE_SIN_LINK} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "observed": "Causa: {COMPONENTE_SIN_LINK} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- En Page Designer, {COMPONENTE_SIN_LINK} está publicado en la Home sin link de redirección",
-   "spec": "tests/B2C-29.spec.ts",
+   "observation": "Causa: el componente declarado en {COMPONENTE_SIN_LINK} («Featured Block (OT)») corresponde al único Featured Block de la Home (hp-membresia-hw, «Contrata la membresía»), que SÍ tiene link configurado: ctaUrl /membresia, CTA «Comienza tus 15 días gratis». No hay en la Home un componente publicado sin link. Acción: declarar en el Excel de data un componente publicado en la Home sin link de redirección.",
+   "observed": "Causa: el componente declarado en {COMPONENTE_SIN_LINK} («Featured Block (OT)») corresponde al único Featured Block de la Home (hp-membresia-hw, «Contrata la membresía»), que SÍ tiene link configurado: ctaUrl /membresia, CTA «Comienza tus 15 días gratis». No hay en la Home un componente publicado sin link. Acción: declarar en el Excel de data un componente publicado en la Home sin link de redirección.",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- En Page Designer, Featured Block (OT) está publicado en la Home sin link de redirección",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario hace clic en {COMPONENTE_SIN_LINK}.\n4. El usuario revisa la pantalla.",
-   "test_data": "- {BASE_URL}\n- {COMPONENTE_SIN_LINK}",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario hace clic en Featured Block (OT).\n4. El usuario revisa la pantalla.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_SIN_LINK} = Featured Block (OT)",
    "viewport": "1440x900"
   },
   {
-   "executed_at": "2026-10-22",
+   "browser": "chromium",
+   "executed_at": "2026-11-10",
    "expected": "Se muestra la página de \"no encontrado\" del sitio (con header y navegación disponibles), no una pantalla en blanco ni un error técnico; al volver, la Home carga con normalidad.",
    "form_factor": "desktop",
    "id": "TC-B2C29-D-015",
    "name": "Verificar que un componente con link incorrecto lleva a la página de no encontrado del sitio sin romper la navegación [Desktop] [Guest]",
-   "observation": "Causa: {COMPONENTE_LINK_INVALIDO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "observed": "Causa: {COMPONENTE_LINK_INVALIDO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- En Page Designer, {COMPONENTE_LINK_INVALIDO} está publicado en la Home con un link a una URL inexistente del sitio",
-   "spec": "tests/B2C-29.spec.ts",
+   "observation": "Causa: {COMPONENTE_LINK_INVALIDO} trae una URL (…/category/lacteos-huevos-y-refrigeradosX) y ningún componente de la Home enlaza a ella: no aparece en la configuración de Page Designer ni en el DOM, en Desktop ni en Mobile. El slide más parecido de Home_Banner apunta a la URL válida /category/lacteos-huevos-y-refrigerados. Acción: publicar un componente con ese link inválido y declarar su nombre en {COMPONENTE_LINK_INVALIDO}.",
+   "observed": "Causa: {COMPONENTE_LINK_INVALIDO} trae una URL (…/category/lacteos-huevos-y-refrigeradosX) y ningún componente de la Home enlaza a ella: no aparece en la configuración de Page Designer ni en el DOM, en Desktop ni en Mobile. El slide más parecido de Home_Banner apunta a la URL válida /category/lacteos-huevos-y-refrigerados. Acción: publicar un componente con ese link inválido y declarar su nombre en {COMPONENTE_LINK_INVALIDO}.",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- En Page Designer, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX está publicado en la Home con un link a una URL inexistente del sitio",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario hace clic en {COMPONENTE_LINK_INVALIDO}.\n4. El usuario revisa la pantalla resultante.\n5. El usuario usa el botón Atrás para volver a la Home.",
-   "test_data": "- {BASE_URL}\n- {COMPONENTE_LINK_INVALIDO}",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario hace clic en https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX.\n4. El usuario revisa la pantalla resultante.\n5. El usuario usa el botón Atrás para volver a la Home.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_LINK_INVALIDO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX",
    "viewport": "1440x900"
   },
   {
@@ -1572,63 +1725,91 @@ Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: el pas
    "viewport": "1440x900"
   },
   {
-   "executed_at": "2026-10-22",
-   "expected": "Como invitado {COMPONENTE_SEGMENTO_LOGUEADO} no se muestra y no queda espacio reservado; con sesión iniciada sí se muestra; al cerrar sesión vuelve a ocultarse.",
+   "browser": "chromium",
+   "duration_s": 360.4,
+   "executed_at": "2026-11-10",
+   "expected": "Como invitado Bienvenida_Diamante no se muestra y no queda espacio reservado; con sesión iniciada sí se muestra; al cerrar sesión vuelve a ocultarse.",
    "form_factor": "desktop",
    "id": "TC-B2C29-D-017",
    "name": "Verificar que un componente segmentado para usuarios logueados solo se muestra con sesión iniciada [Desktop] [Guest]",
-   "observation": "Causa: {COMPONENTE_SEGMENTO_LOGUEADO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "observed": "Causa: {COMPONENTE_SEGMENTO_LOGUEADO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- En Page Designer, {COMPONENTE_SEGMENTO_LOGUEADO} está publicado en la Home con segmentación por estado de sesión (solo logueados)",
-   "spec": "tests/B2C-29.spec.ts",
+   "observation": "Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.",
+   "observed": "Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- En Page Designer, Bienvenida_Diamante está publicado en la Home con segmentación por estado de sesión (solo logueados)",
+   "screenshots": [
+    {
+     "caption": "Paso 3 — home como invitado",
+     "file": "TC-B2C29-D-017-p03-home-como-invitado.png"
+    },
+    {
+     "caption": "Paso 5 — home con sesion iniciada",
+     "file": "TC-B2C29-D-017-p05-home-con-sesion-iniciada.png"
+    },
+    {
+     "caption": "Paso 6 — home tras cerrar sesion",
+     "file": "TC-B2C29-D-017-p06-home-tras-cerrar-sesion.png"
+    }
+   ],
+   "spec": "tests/B2C-29.spec.ts:538",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {BASE_URL}.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario revisa si se muestra {COMPONENTE_SEGMENTO_LOGUEADO}.\n4. El usuario inicia sesión con la cuenta {USER_AUTH_001} y vuelve a la Home.\n5. El usuario revisa si se muestra {COMPONENTE_SEGMENTO_LOGUEADO}.\n6. El usuario cierra sesión y vuelve a la Home.",
-   "test_data": "- {BASE_URL}\n- {COMPONENTE_SEGMENTO_LOGUEADO}\n- {USER_AUTH_001}",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario revisa si se muestra Bienvenida_Diamante.\n4. El usuario inicia sesión con la cuenta vhchirinos+comprador@avatar-global.com y vuelve a la Home.\n5. El usuario revisa si se muestra Bienvenida_Diamante.\n6. El usuario cierra sesión y vuelve a la Home.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_SEGMENTO_LOGUEADO} = Bienvenida_Diamante\n- {USER_AUTH_001} = vhchirinos+comprador@avatar-global.com",
    "viewport": "1440x900"
   },
   {
-   "executed_at": "2026-10-22",
-   "expected": "El sistema navega a {URL_DESTINO_COMPONENTE} (misma pestaña/pantalla) y la página de destino carga completa, sin errores.",
+   "browser": "webkit",
+   "executed_at": "2026-11-10",
+   "expected": "El sistema navega a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores (misma pestaña/pantalla) y la página de destino carga completa, sin errores.",
    "form_factor": "mobile",
    "id": "TC-B2C29-M-015",
    "name": "Verificar que al seleccionar un banner con link configurado se redirige al destino definido en Page Designer [Mobile] [Guest]",
-   "observation": "Causa: {COMPONENTE_CON_LINK}, {URL_DESTINO_COMPONENTE} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "observed": "Causa: {COMPONENTE_CON_LINK}, {URL_DESTINO_COMPONENTE} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- En Page Designer, {COMPONENTE_CON_LINK} está publicado en la Home con el link de redirección {URL_DESTINO_COMPONENTE}",
-   "spec": "tests/B2C-29.spec.ts",
-   "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario ubica {COMPONENTE_CON_LINK} en la Home.\n4. El usuario toca {COMPONENTE_CON_LINK}.",
-   "test_data": "- {BASE_URL}\n- {COMPONENTE_CON_LINK}\n- {URL_DESTINO_COMPONENTE}",
+   "observed": "Se tocó el slide de «Home_Banner» (tb-banner-b1-hp) y la página navegó en la misma pestaña a /category/bebidas-y-licores, que cargó completa y sin mensajes de error.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- En Page Designer, Home_Banner está publicado en la Home con el link de redirección https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores",
+   "screenshots": [
+    {
+     "caption": "Paso 3 — home banner en la home",
+     "file": "TC-B2C29-M-015-p03-home-banner-en-la-home.png"
+    },
+    {
+     "caption": "Paso 4 — pagina de destino",
+     "file": "TC-B2C29-M-015-p04-pagina-de-destino.png"
+    }
+   ],
+   "spec": "tests/B2C-29.spec.ts:513",
+   "status": "Aprobado",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario ubica Home_Banner en la Home.\n4. El usuario toca Home_Banner.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_CON_LINK} = Home_Banner\n- {URL_DESTINO_COMPONENTE} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebidas-y-licores",
    "viewport": "390x844"
   },
   {
-   "executed_at": "2026-10-22",
+   "browser": "webkit",
+   "executed_at": "2026-11-10",
    "expected": "El usuario permanece en la Home: no hay navegación, no se abre una página en blanco ni de error y el resto de los componentes sigue visible y operativo.",
    "form_factor": "mobile",
    "id": "TC-B2C29-M-016",
    "name": "Verificar que un componente sin link configurado no redirige ni genera error al seleccionarlo [Mobile] [Guest]",
-   "observation": "Causa: {COMPONENTE_SIN_LINK} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "observed": "Causa: {COMPONENTE_SIN_LINK} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- En Page Designer, {COMPONENTE_SIN_LINK} está publicado en la Home sin link de redirección",
-   "spec": "tests/B2C-29.spec.ts",
+   "observation": "Causa: el componente declarado en {COMPONENTE_SIN_LINK} («Featured Block (OT)») corresponde al único Featured Block de la Home (hp-membresia-hw, «Contrata la membresía»), que SÍ tiene link configurado: ctaUrl /membresia, CTA «Comienza tus 15 días gratis». No hay en la Home un componente publicado sin link. Acción: declarar en el Excel de data un componente publicado en la Home sin link de redirección.",
+   "observed": "Causa: el componente declarado en {COMPONENTE_SIN_LINK} («Featured Block (OT)») corresponde al único Featured Block de la Home (hp-membresia-hw, «Contrata la membresía»), que SÍ tiene link configurado: ctaUrl /membresia, CTA «Comienza tus 15 días gratis». No hay en la Home un componente publicado sin link. Acción: declarar en el Excel de data un componente publicado en la Home sin link de redirección.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- En Page Designer, Featured Block (OT) está publicado en la Home sin link de redirección",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario toca {COMPONENTE_SIN_LINK}.\n4. El usuario revisa la pantalla.",
-   "test_data": "- {BASE_URL}\n- {COMPONENTE_SIN_LINK}",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario toca Featured Block (OT).\n4. El usuario revisa la pantalla.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_SIN_LINK} = Featured Block (OT)",
    "viewport": "390x844"
   },
   {
-   "executed_at": "2026-10-22",
+   "browser": "webkit",
+   "executed_at": "2026-11-10",
    "expected": "Se muestra la página de \"no encontrado\" del sitio (con header y navegación disponibles), no una pantalla en blanco ni un error técnico; al volver, la Home carga con normalidad.",
    "form_factor": "mobile",
    "id": "TC-B2C29-M-017",
    "name": "Verificar que un componente con link incorrecto lleva a la página de no encontrado del sitio sin romper la navegación [Mobile] [Guest]",
-   "observation": "Causa: {COMPONENTE_LINK_INVALIDO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "observed": "Causa: {COMPONENTE_LINK_INVALIDO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- En Page Designer, {COMPONENTE_LINK_INVALIDO} está publicado en la Home con un link a una URL inexistente del sitio",
-   "spec": "tests/B2C-29.spec.ts",
+   "observation": "Causa: {COMPONENTE_LINK_INVALIDO} trae una URL (…/category/lacteos-huevos-y-refrigeradosX) y ningún componente de la Home enlaza a ella: no aparece en la configuración de Page Designer ni en el DOM, en Desktop ni en Mobile. El slide más parecido de Home_Banner apunta a la URL válida /category/lacteos-huevos-y-refrigerados. Acción: publicar un componente con ese link inválido y declarar su nombre en {COMPONENTE_LINK_INVALIDO}.",
+   "observed": "Causa: {COMPONENTE_LINK_INVALIDO} trae una URL (…/category/lacteos-huevos-y-refrigeradosX) y ningún componente de la Home enlaza a ella: no aparece en la configuración de Page Designer ni en el DOM, en Desktop ni en Mobile. El slide más parecido de Home_Banner apunta a la URL válida /category/lacteos-huevos-y-refrigerados. Acción: publicar un componente con ese link inválido y declarar su nombre en {COMPONENTE_LINK_INVALIDO}.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- En Page Designer, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX está publicado en la Home con un link a una URL inexistente del sitio",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario toca {COMPONENTE_LINK_INVALIDO}.\n4. El usuario revisa la pantalla resultante.\n5. El usuario usa el botón Atrás para volver a la Home.",
-   "test_data": "- {BASE_URL}\n- {COMPONENTE_LINK_INVALIDO}",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario toca https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX.\n4. El usuario revisa la pantalla resultante.\n5. El usuario usa el botón Atrás para volver a la Home.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_LINK_INVALIDO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/lacteos-huevos-y-refrigeradosX",
    "viewport": "390x844"
   },
   {
@@ -1663,18 +1844,34 @@ Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: el pas
    "viewport": "390x844"
   },
   {
-   "executed_at": "2026-10-22",
-   "expected": "Como invitado {COMPONENTE_SEGMENTO_LOGUEADO} no se muestra y no queda espacio reservado; con sesión iniciada sí se muestra; al cerrar sesión vuelve a ocultarse.",
+   "browser": "webkit",
+   "duration_s": 315.8,
+   "executed_at": "2026-11-10",
+   "expected": "Como invitado Bienvenida_Diamante no se muestra y no queda espacio reservado; con sesión iniciada sí se muestra; al cerrar sesión vuelve a ocultarse.",
    "form_factor": "mobile",
    "id": "TC-B2C29-M-019",
    "name": "Verificar que un componente segmentado para usuarios logueados solo se muestra con sesión iniciada [Mobile] [Guest]",
-   "observation": "Causa: {COMPONENTE_SEGMENTO_LOGUEADO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "observed": "Causa: {COMPONENTE_SEGMENTO_LOGUEADO} no tienen fila en el Excel de data. Acción: declarar el componente de Page Designer que cumple la precondición. Verificado el 2026-10-22.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- En Page Designer, {COMPONENTE_SEGMENTO_LOGUEADO} está publicado en la Home con segmentación por estado de sesión (solo logueados)",
-   "spec": "tests/B2C-29.spec.ts",
+   "observation": "Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.",
+   "observed": "Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- En Page Designer, Bienvenida_Diamante está publicado en la Home con segmentación por estado de sesión (solo logueados)",
+   "screenshots": [
+    {
+     "caption": "Paso 3 — home como invitado",
+     "file": "TC-B2C29-M-019-p03-home-como-invitado.png"
+    },
+    {
+     "caption": "Paso 5 — home con sesion iniciada",
+     "file": "TC-B2C29-M-019-p05-home-con-sesion-iniciada.png"
+    },
+    {
+     "caption": "Paso 6 — home tras cerrar sesion",
+     "file": "TC-B2C29-M-019-p06-home-tras-cerrar-sesion.png"
+    }
+   ],
+   "spec": "tests/B2C-29.spec.ts:538",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario revisa si se muestra {COMPONENTE_SEGMENTO_LOGUEADO}.\n4. El usuario inicia sesión con la cuenta {USER_AUTH_001} y vuelve a la Home.\n5. El usuario revisa si se muestra {COMPONENTE_SEGMENTO_LOGUEADO}.\n6. El usuario cierra sesión y vuelve a la Home.",
-   "test_data": "- {BASE_URL}\n- {COMPONENTE_SEGMENTO_LOGUEADO}\n- {USER_AUTH_001}",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario revisa si se muestra Bienvenida_Diamante.\n4. El usuario inicia sesión con la cuenta vhchirinos+comprador@avatar-global.com y vuelve a la Home.\n5. El usuario revisa si se muestra Bienvenida_Diamante.\n6. El usuario cierra sesión y vuelve a la Home.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_SEGMENTO_LOGUEADO} = Bienvenida_Diamante\n- {USER_AUTH_001} = vhchirinos+comprador@avatar-global.com",
    "viewport": "390x844"
   },
   {
@@ -1692,58 +1889,66 @@ Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: el pas
    "test_data": "- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)\n- {FECHA_FIN_VIGENCIA} = fecha/hora de fin configurada"
   },
   {
-   "executed_at": "2026-10-22",
-   "expected": "{COMPONENTE_PROGRAMADO} se muestra hasta {FECHA_FIN_VIGENCIA} y deja de mostrarse después, sin dejar espacio vacío.",
+   "browser": "webkit",
+   "executed_at": "2026-11-10",
+   "expected": "Modulo Bomba se muestra hasta 2026-12-12 00:00:00 y deja de mostrarse después, sin dejar espacio vacío.",
    "form_factor": "mobile",
    "id": "TC-B2C29-M-007",
    "name": "Verificar que un componente programado deja de mostrarse al cumplirse su fecha de fin [Mobile] [Guest]",
-   "observation": "Causa: {FECHA_FIN_VIGENCIA} es 2026-12-12 y aún no se cumple (hoy 2026-10-22), así que no se puede ver que {COMPONENTE_PROGRAMADO} («Modulo Bomba», nombre en Page Designer, sin texto visible en el Home) deje de mostrarse. Acción: probar después de esa fecha o configurar un componente con una fecha fin cercana. Verificado el 2026-10-22.",
-   "observed": "Causa: {FECHA_FIN_VIGENCIA} es 2026-12-12 y aún no se cumple (hoy 2026-10-22), así que no se puede ver que {COMPONENTE_PROGRAMADO} («Modulo Bomba», nombre en Page Designer, sin texto visible en el Home) deje de mostrarse. Acción: probar después de esa fecha o configurar un componente con una fecha fin cercana. Verificado el 2026-10-22.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- Sesión nueva de navegador (ventana de incógnito), sin sesión iniciada\n- {COMPONENTE_PROGRAMADO} está configurado en Page Designer con fin de vigencia {FECHA_FIN_VIGENCIA}",
-   "spec": "tests/B2C-29.spec.ts",
+   "observation": "Causa: {FECHA_FIN_VIGENCIA} es 2026-12-12 y todavía no llega (hoy es 2026-11-10), así que no se puede ver que «Modulo Bomba» deje de mostrarse. Hoy se muestra en la Home (hp-bomba-hw, endDate 12/12/2026 23:59:59 en Page Designer; el token dice 00:00:00). Ese endDate es el de la cuenta regresiva del módulo (mensaje «Finalizado» al vencer), así que no está claro que sea un fin de vigencia. Acción: volver a probar después del 12/12/2026 o programar un componente con fin de vigencia cercano.",
+   "observed": "Causa: {FECHA_FIN_VIGENCIA} es 2026-12-12 y todavía no llega (hoy es 2026-11-10), así que no se puede ver que «Modulo Bomba» deje de mostrarse. Hoy se muestra en la Home (hp-bomba-hw, endDate 12/12/2026 23:59:59 en Page Designer; el token dice 00:00:00). Ese endDate es el de la cuenta regresiva del módulo (mensaje «Finalizado» al vencer), así que no está claro que sea un fin de vigencia. Acción: volver a probar después del 12/12/2026 o programar un componente con fin de vigencia cercano.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- Sesión nueva de navegador (ventana de incógnito), sin sesión iniciada\n- Modulo Bomba está configurado en Page Designer con fin de vigencia 2026-12-12 00:00:00",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.\n2. El sistema carga la Home con {COMPONENTE_PROGRAMADO} antes de {FECHA_FIN_VIGENCIA}.\n3. El usuario vuelve a acceder a la Home después de {FECHA_FIN_VIGENCIA}.\n4. El sistema carga la Home sin {COMPONENTE_PROGRAMADO}.",
-   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_PROGRAMADO} = TBD\n- {FECHA_FIN_VIGENCIA} = TBD"
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.\n2. El sistema carga la Home con Modulo Bomba antes de 2026-12-12 00:00:00.\n3. El usuario vuelve a acceder a la Home después de 2026-12-12 00:00:00.\n4. El sistema carga la Home sin Modulo Bomba.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_PROGRAMADO} = Modulo Bomba\n- {FECHA_FIN_VIGENCIA} = 2026-12-12 00:00:00",
+   "viewport": "390x844"
   },
   {
-   "executed_at": "2026-10-22",
-   "expected": "La Home muestra {COMPONENTE_SEGMENTADO}.",
+   "browser": "webkit",
+   "duration_s": 210.5,
+   "executed_at": "2026-11-10",
+   "expected": "La Home muestra Bienvenida_Diamante.",
    "form_factor": "mobile",
    "id": "TC-B2C29-M-008",
    "name": "Verificar que un usuario del segmento configurado ve el componente segmentado [Mobile] [Logueado]",
-   "observation": "Causa: la cuenta {COMPRADOR_SEGMENTO_USER} y la cuenta {COMPRADOR_FUERA_SEGMENTO_USER} ven exactamente el mismo Home móvil (68 bloques, ninguno «Bienvenida» ni «Diamante»): no se puede comprobar que la cuenta pertenezca al segmento de {COMPONENTE_SEGMENTADO} («Bienvenida_Diamante», nombre en Page Designer, sin texto visible). Acción: confirmar el segmento de la cuenta y declarar cómo se reconoce el componente en el Home. Verificado el 2026-10-22 con ambas cuentas.",
-   "observed": "Con la cuenta {COMPRADOR_SEGMENTO_USER} el Home móvil muestra 68 bloques y ninguno es «Bienvenida» ni «Diamante».",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- {COMPONENTE_SEGMENTADO} está publicado con segmentación activa\n- La cuenta {COMPRADOR_SEGMENTO_USER} pertenece al segmento de {COMPONENTE_SEGMENTADO}",
+   "observation": "Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.",
+   "observed": "Causa: Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). No se puede distinguir un defecto de una configuración ausente. Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- Bienvenida_Diamante está publicado con segmentación activa\n- La cuenta vhchirinos+noaddress@avatar-global.com pertenece al segmento de Bienvenida_Diamante",
    "screenshots": [
     {
-     "caption": "Estado final",
-     "file": "TC-B2C29-M-008.png"
+     "caption": "Paso 4 — home de la cuenta del segmento",
+     "file": "TC-B2C29-M-008-p04-home-de-la-cuenta-del-segmento.png"
     }
    ],
-   "spec": "tests/B2C-29.spec.ts",
+   "spec": "tests/B2C-29.spec.ts:564",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.\n2. El sistema carga el Home.\n3. El usuario inicia sesión con la cuenta {COMPRADOR_SEGMENTO_USER}.\n4. El sistema autentica al usuario y muestra el Home.",
-   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_SEGMENTADO} = TBD\n- {COMPRADOR_SEGMENTO_USER} = TBD\n- {COMPRADOR_SEGMENTO_PASSWORD} = TBD"
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.\n2. El sistema carga el Home.\n3. El usuario inicia sesión con la cuenta vhchirinos+noaddress@avatar-global.com.\n4. El sistema autentica al usuario y muestra el Home.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_SEGMENTADO} = Bienvenida_Diamante\n- {COMPRADOR_SEGMENTO_PASSWORD} = contraseña de la cuenta (no se transcribe)\n- {COMPRADOR_SEGMENTO_USER} = vhchirinos+noaddress@avatar-global.com",
+   "viewport": "390x844"
   },
   {
-   "executed_at": "2026-10-22",
-   "expected": "La Home no muestra {COMPONENTE_SEGMENTADO} y el componente siguiente aparece a continuación del anterior, sin espacio vacío.",
+   "browser": "webkit",
+   "duration_s": 195.1,
+   "executed_at": "2026-11-10",
+   "expected": "La Home no muestra Bienvenida_Diamante y el componente siguiente aparece a continuación del anterior, sin espacio vacío.",
    "form_factor": "mobile",
    "id": "TC-B2C29-M-009",
    "name": "Verificar que un usuario fuera del segmento no ve el componente y no queda espacio reservado [Mobile] [Logueado]",
-   "observation": "Causa: la cuenta {COMPRADOR_SEGMENTO_USER} y la cuenta {COMPRADOR_FUERA_SEGMENTO_USER} ven exactamente el mismo Home móvil (68 bloques, ninguno «Bienvenida» ni «Diamante»): no se puede comprobar que la cuenta pertenezca al segmento de {COMPONENTE_SEGMENTADO} («Bienvenida_Diamante», nombre en Page Designer, sin texto visible). Acción: confirmar el segmento de la cuenta y declarar cómo se reconoce el componente en el Home. Verificado el 2026-10-22 con ambas cuentas.",
-   "observed": "Con la cuenta {COMPRADOR_FUERA_SEGMENTO_USER} el Home móvil muestra los mismos bloques que la cuenta del segmento.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- {COMPONENTE_SEGMENTADO} está publicado con segmentación activa\n- La cuenta {COMPRADOR_FUERA_SEGMENTO_USER} no pertenece al segmento de {COMPONENTE_SEGMENTADO}",
+   "observation": "Causa: la cuenta fuera del segmento no recibe «Bienvenida_Diamante», pero ninguna otra sesión lo recibe tampoco, así que el resultado no demuestra la segmentación. Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.",
+   "observed": "Causa: la cuenta fuera del segmento no recibe «Bienvenida_Diamante», pero ninguna otra sesión lo recibe tampoco, así que el resultado no demuestra la segmentación. Page Designer no le entrega «Bienvenida_Diamante» a ninguna sesión: invitado, cuenta comprador (vhchirinos+comprador@…), cuenta del segmento (vhchirinos+noaddress@…) ni cuenta fuera del segmento (vhchirinos+segundo@…). Todas reciben solo Unimarc Home | Home_Banner | Modulo Bomba | Carrusel_Banner (respuesta de shopper-experience /pages/home-page, pedida con el token de cada sesión). Además, la data usa el mismo componente para dos segmentaciones distintas: «solo logueados» (D-017/M-019) y «segmento Diamante» (M-008/M-009). Acción: confirmar en Page Designer que «Bienvenida_Diamante» está publicado con la segmentación de cada caso (o declarar en el Excel de data un componente por segmentación) y que las cuentas declaradas pertenecen a ese segmento.",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- Bienvenida_Diamante está publicado con segmentación activa\n- La cuenta vhchirinos+segundo@avatar-global.com no pertenece al segmento de Bienvenida_Diamante",
    "screenshots": [
     {
-     "caption": "Estado final",
-     "file": "TC-B2C29-M-009.png"
+     "caption": "Paso 4 — home de la cuenta fuera del segmento",
+     "file": "TC-B2C29-M-009-p04-home-de-la-cuenta-fuera-del-segmento.png"
     }
    ],
-   "spec": "tests/B2C-29.spec.ts",
+   "spec": "tests/B2C-29.spec.ts:574",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.\n2. El sistema carga el Home.\n3. El usuario inicia sesión con la cuenta {COMPRADOR_FUERA_SEGMENTO_USER}.\n4. El sistema autentica al usuario y muestra el Home.",
-   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_SEGMENTADO} = TBD\n- {COMPRADOR_FUERA_SEGMENTO_USER} = TBD\n- {COMPRADOR_FUERA_SEGMENTO_PASSWORD} = TBD"
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.\n2. El sistema carga el Home.\n3. El usuario inicia sesión con la cuenta vhchirinos+segundo@avatar-global.com.\n4. El sistema autentica al usuario y muestra el Home.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_SEGMENTADO} = Bienvenida_Diamante\n- {COMPRADOR_FUERA_SEGMENTO_PASSWORD} = contraseña de la cuenta (no se transcribe)\n- {COMPRADOR_FUERA_SEGMENTO_USER} = vhchirinos+segundo@avatar-global.com",
+   "viewport": "390x844"
   },
   {
    "device": "Pixel 6 · Android 14 (emulador)",
@@ -2034,6 +2239,38 @@ Android (Pixel 6, Android 14, app v1.0.1, login por correo + OTP): Causa: el pas
    "status": "Bloqueado",
    "steps": "1. El usuario abre la App v1.0.1.\n2. El sistema carga el Home con los componentes configurados en Page Designer.\n3. El usuario anota el primer banner de la Home.\n4. Negocio publica en Page Designer un cambio en ese banner.\n5. El usuario, desde el inicio de la Home, desliza hacia abajo (pull to refresh) y suelta.\n6. El usuario observa la recarga y revisa el primer banner.",
    "test_data": "- v1.0.1\n- Android\n- daunuruco+comprador@avatar-global.com"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-10",
+   "expected": "Modulo Bomba no se muestra antes de 2026-09-01 00:00:00 y sí se muestra desde esa fecha y hora.",
+   "form_factor": "mobile",
+   "id": "TC-B2C29-M-006",
+   "name": "Verificar que un componente programado aparece en su fecha y hora de inicio [Mobile] [Guest]",
+   "observation": "Causa: {FECHA_INICIO_VIGENCIA} es 2026-09-01 00:00 y ya pasó (hoy es 2026-11-10), así que no se puede observar la Home «antes» del inicio de vigencia (pasos 2 y 3). Además, en Page Designer «Modulo Bomba» (hp-bomba-hw) no tiene fecha de inicio: solo un endDate de cuenta regresiva (12/12/2026 23:59:59). Acción: programar un componente con un inicio de vigencia futuro y cercano, y declararlo en {COMPONENTE_PROGRAMADO} / {FECHA_INICIO_VIGENCIA}.",
+   "observed": "Causa: {FECHA_INICIO_VIGENCIA} es 2026-09-01 00:00 y ya pasó (hoy es 2026-11-10), así que no se puede observar la Home «antes» del inicio de vigencia (pasos 2 y 3). Además, en Page Designer «Modulo Bomba» (hp-bomba-hw) no tiene fecha de inicio: solo un endDate de cuenta regresiva (12/12/2026 23:59:59). Acción: programar un componente con un inicio de vigencia futuro y cercano, y declararlo en {COMPONENTE_PROGRAMADO} / {FECHA_INICIO_VIGENCIA}.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- Sesión nueva de navegador (ventana de incógnito), sin sesión iniciada\n- Modulo Bomba está configurado en Page Designer con inicio de vigencia 2026-09-01 00:00:00",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ desde el navegador del dispositivo móvil.\n2. El sistema carga la Home sin Modulo Bomba antes de 2026-09-01 00:00:00.\n3. El usuario vuelve a acceder a la Home después de 2026-09-01 00:00:00.\n4. El sistema muestra Modulo Bomba en la Home.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {COMPONENTE_PROGRAMADO} = Modulo Bomba\n- {FECHA_INICIO_VIGENCIA} = 2026-09-01 00:00:00",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-10",
+   "expected": "El componente se activa y se muestra automaticamente al cumplirse la fecha/hora configurada, sin intervencion manual adicional.",
+   "form_factor": "desktop",
+   "id": "TC-B2C29-D-005",
+   "name": "Activacion automatica de un componente en la fecha y hora programada",
+   "observation": "Causa: la columna Test data solo declara {FECHA_INICIO_VIGENCIA} (2026-09-01, ya pasada). Faltan {BASE_URL}, el componente programado y la cuenta de Business Manager con la que se configura en Page Designer (paso 1). Acción: declarar esos tokens en la fila, con una fecha de inicio futura.",
+   "observed": "Causa: la columna Test data solo declara {FECHA_INICIO_VIGENCIA} (2026-09-01, ya pasada). Faltan {BASE_URL}, el componente programado y la cuenta de Business Manager con la que se configura en Page Designer (paso 1). Acción: declarar esos tokens en la fila, con una fecha de inicio futura.",
+   "preconditions": "- User type: BM Admin (config) / Guest (verificacion)\n- Viewport: Desktop 1440x900\n- Required data state: componente configurado con fecha de inicio de vigencia",
+   "spec": "(sin spec: el caso quedó bloqueado antes de ejecutarse)",
+   "status": "Bloqueado Data",
+   "steps": "1. En Page Designer, configurar un componente con fecha/hora de inicio de vigencia.\n2. Esperar (o simular) que se cumpla la fecha/hora configurada.\n3. Navegar al Home.",
+   "test_data": "- {FECHA_INICIO_VIGENCIA} = 2026-09-01 00:00:00",
+   "viewport": "1440x900"
   }
  ]
 }

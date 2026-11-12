@@ -75,7 +75,12 @@ async function fijarRetiro(page: Page, modal: MetodoEntregaModal, tienda: string
     await agotarse.botonSi.click();
   }
   await new LoginModal(page).cerrarSiAparece();
-  await expect(new HeaderFull(page).storeLocator).toContainText(tienda, { timeout: 45000 });
+  // El header muestra la tienda sin "Unimarc" desde el 2026-11-10.
+  await expect(new HeaderFull(page).storeLocator).toContainText(sinMarca(tienda), { timeout: 45000 });
+}
+
+function sinMarca(tienda: string): string {
+  return tienda.replace(/^unimarc\s+/i, '');
 }
 
 /** Deja "Despacho a domicilio" con `direccion` como invitado, desde el Home. */
@@ -1190,7 +1195,7 @@ test.describe('B2C-35 — Listado de productos por categoria', () => {
       const plp = new PLPCategoriaPage(page, rutaDe(categoriaN2(testData)));
       const asignada = plp.observarTiendaAsignada();
       await plp.goto();
-      await expect(plp.header.storeLocator).toContainText(tienda, { timeout: 45000 });
+      await expect(plp.header.storeLocator).toContainText(sinMarca(tienda), { timeout: 45000 });
       const enPantalla = await plp.disponibilidadPorSku();
       await expect.poll(() => !!asignada.inventoryId && !!asignada.authorization, { timeout: 30000, message: 'inventario de la tienda de retiro' }).toBe(true);
       await plp.capturarEvidencia(cp, 2, `PLP N2 con retiro en ${tienda}`);
