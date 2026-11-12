@@ -72,7 +72,9 @@ export class ShelfProducto {
   /** Todos los shelves de la página, en el orden en que se renderizan. */
   static todos(page: Page): Locator {
     // Con sesión, un producto ya favorito muestra "Quitar de favoritos" (666200 en {USER_AUTH_001}, B2C-50).
-    return page.locator('main div:has(> div > button:is([aria-label="Guardar en favoritos"], [aria-label="Quitar de favoritos"]))');
+    // Desde 2026-11-09 el corazón queda un nivel más adentro (button > div > div > tarjeta): con
+    // `> div > button` la raíz era el div de la imagen, sin precio, nombre ni "Agregar" (B2C-61).
+    return page.locator('main div:has(> div > div > button:is([aria-label="Guardar en favoritos"], [aria-label="Quitar de favoritos"]))');
   }
 
   static enIndice(page: Page, indice: number): ShelfProducto {

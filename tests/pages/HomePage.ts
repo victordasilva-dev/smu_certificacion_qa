@@ -251,6 +251,61 @@ export class HomePage extends BasePage {
       };
     });
   }
+
+  /**
+   * Los componentes de Page Designer de la Home, leídos del estado que el SSR deja en
+   * `#mobify-data`. Es la única forma de identificar un componente por el nombre que tiene en Page
+   * Designer ("Home_Banner"): el storefront no lo pinta. **El SSR resuelve la página como invitado**
+   * aunque haya sesión: para la segmentación usar `componentesParaLaSesion` (B2C-29).
+   */
+  async componentesPageDesigner(): Promise<ComponentePD[]> {
+    const estado = await this.page.evaluate(() => {
+      const s = document.getElementById('mobify-data')?.textContent ?? '';
+      return JSON.parse(s.slice(s.indexOf('{'), s.lastIndexOf('}') + 1));
+    });
+    return listarComponentes(estado);
+  }
+
+  /**
+   * Los componentes que Page Designer resuelve para la sesión en curso: navega a la Home del lado
+   * del cliente (logo del header, desde otra página) y lee la respuesta de
+   * `shopper-experience/.../pages/home-page`, que el cliente pide con el token del comprador. Es la
+   * que aplica la segmentación; el `#mobify-data` del SSR no (B2C-29, 2026-11-09).
+   */
+  async componentesParaLaSesion(): Promise<ComponentePD[]> {
+    await this.page.goto('/category/carnes', { waitUntil: 'domcontentloaded' });
+    await this.header.logo.waitFor({ state: 'visible', timeout: 60000 });
+    await this.page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
+    const [respuesta] = await Promise.all([
+      this.page.waitForResponse((r) => /shopper-experience\/v1\/.+\/pages\/home-page/.test(r.url()) && r.request().method() === 'GET', { timeout: 60000 }),
+      this.header.logo.click(),
+    ]);
+    const componentes = listarComponentes(await respuesta.json());
+    await this.page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
+    return componentes;
+  }
+}
+
+function listarComponentes(raiz: unknown): ComponentePD[] {
+  const out: ComponentePD[] = [];
+  const recorrer = (o: any) => {
+    if (!o || typeof o !== 'object') return;
+    if (o.typeId && o.id && !out.some((c) => c.id === o.id)) {
+      out.push({ id: o.id, nombre: o.name ?? '', tipo: o.typeId, ctaUrl: o.data?.ctaUrl ?? '', visible: o.visible !== false });
+    }
+    for (const k of Object.keys(o)) recorrer(o[k]);
+  };
+  recorrer(raiz);
+  return out;
+}
+
+export interface ComponentePD {
+  id: string;
+  /** Nombre en Page Designer (vacío si no se le puso). */
+  nombre: string;
+  tipo: string;
+  ctaUrl: string;
+  visible: boolean;
 }
 
 /**
