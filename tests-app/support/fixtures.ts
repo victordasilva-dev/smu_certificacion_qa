@@ -34,8 +34,8 @@ export const test = base.extend<
   /**
    * Corta el caso **antes de pedir el dispositivo** si la app de su plataforma no está en la data.
    *
-   * Pedir un dispositivo a la nube cuesta minutos de cola y de plan: descubrir después que no
-   * había bundle que lanzar es tirar las dos cosas. Como es `auto` y no depende de `device`,
+   * Preparar el dispositivo (arrancar, instalar el build) cuesta minutos: descubrir después que no
+   * había bundle que lanzar es tirar ese tiempo. Como es `auto` y no depende de `device`,
    * Playwright lo resuelve antes que la asignación.
    */
   appDeclarada: [

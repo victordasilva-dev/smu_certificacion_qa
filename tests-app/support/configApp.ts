@@ -1,38 +1,34 @@
 import * as path from 'path';
 import { defineConfig, type MobilewrightConfig } from 'mobilewright';
-import { MobileNextDriver } from '@mobilewright/driver-mobilenext';
 import { loadDotEnv } from '../../tests/support/dotenv';
 import { loadTestData, token } from '../../tests/support/testData';
 import type { Plataforma } from '../../tests/support/rutasEvidencia';
-import { SUFIJO, TOKENS_APP, enNube, filtroDispositivo, versionSO } from './plataformaApp';
+import { SUFIJO, TOKENS_APP, filtroDispositivo, plataformaDisponible, versionSO } from './plataformaApp';
 
-// mobilewright tampoco carga .env: MOBILENEXT_API_KEY, ANDROID_EN_CLOUD y los filtros de
-// dispositivo viven ahí.
+// mobilewright tampoco carga .env: los filtros de dispositivo y APP_ANIMACIONES viven ahí.
 loadDotEnv();
 
 /**
  * Config de mobilewright para una plataforma.
  *
- * **Un config por plataforma, y no un solo config con dos projects**, por una limitación
- * comprobada en mobilewright 0.0.60: el `driver` —local o nube— es de nivel superior, no de
- * project. Con los dos projects en un mismo config, iOS y Android compartirían driver, y no hay
- * forma de mandar uno a la nube y dejar el otro en el emulador local. Además el config se evalúa
- * también en cada worker, así que elegir el driver leyendo `--project` de la línea de comandos no
- * es fiable: en el worker esos argumentos no están. Dos archivos son explícitos y se propagan
- * solos (`testInfo.config.configFile`).
+ * **Un config por plataforma, y no un solo config con dos projects**: cada plataforma corre en
+ * una máquina distinta —Android en el emulador o equipo local, iOS en el simulador de una Mac
+ * (por ejemplo, MacinCloud)—, con su propio dispositivo, sus filtros y sus reportes. El config se
+ * evalúa también en cada worker, así que elegir la plataforma leyendo `--project` de la línea de
+ * comandos no es fiable: en el worker esos argumentos no están. Dos archivos son explícitos y se
+ * propagan solos (`testInfo.config.configFile`).
  */
 export function configApp(plataforma: Plataforma): MobilewrightConfig {
   const data = loadTestData();
   const bundleId = token(data, TOKENS_APP[plataforma].bundle);
   const build = token(data, TOKENS_APP[plataforma].build);
-  const nube = enNube(plataforma);
-  if (plataforma === 'ios' && !nube && process.platform !== 'darwin') {
+  if (!plataformaDisponible(plataforma)) {
     // El simulador de iOS solo existe en macOS: en otra máquina no hay con qué correrlo, y caer a
     // otra cosa en silencio produciría un veredicto que no certifica nada.
     throw new Error(
-      'IOS_EN_CLOUD=false pide el simulador de iOS, que solo existe en macOS con Xcode.\n' +
-        'En esta máquina iOS corre en Mobile Next Cloud: quita IOS_EN_CLOUD del .env (o ponlo en ' +
-        'true) y define MOBILENEXT_API_KEY.',
+      'iOS corre en el simulador de iOS, que solo existe en macOS con Xcode.\n' +
+        'Clona la suite en la Mac (p. ej. la de MacinCloud), arranca un simulador ' +
+        '(xcrun simctl boot "<nombre>") y corre ahí: npx mobilewright test -c mobilewright.ios.config.ts',
     );
   }
 
@@ -45,9 +41,7 @@ export function configApp(plataforma: Plataforma): MobilewrightConfig {
     // el runner limpia su outputDir al arrancar, y la evidencia del reporte no puede estar ahí.
     outputDir: `test-results/mw-${plataforma}`,
     globalSetup: './tests-app/support/limpiarEvidenciaApp.ts',
-    // Mismo presupuesto que la web. La espera en la cola de la nube NO sale de aquí: corre con
-    // su propio reloj (`allocationTimeout`), así que un dispositivo que tarda en asignarse no se
-    // come el tiempo del caso.
+    // Mismo presupuesto que la web.
     timeout: 180000,
     retries: 1,
     // El árbol de accesibilidad adjunto al reporte cuando un caso falla: es lo que permite
@@ -57,25 +51,20 @@ export function configApp(plataforma: Plataforma): MobilewrightConfig {
     // `tests/data.json`: lo corta, con un mensaje que dice de dónde sale el valor, el fixture
     // `appDeclarada` de tests-app/support/fixtures.ts, antes de pedir el dispositivo.
     bundleId,
-    // El binario se sube e instala en cada dispositivo asignado. Relativo a la raíz del proyecto
-    // si el Excel lo trae relativo.
-    // APP_YA_INSTALADA=1 salta la reinstalación del APK en cada test (130 MB: en un emulador lento
+    // El binario se instala en el dispositivo antes de cada caso. Relativo a la raíz del proyecto
+    // si el Excel lo trae relativo: en Android un `.apk`; en iOS un `.zip` del `.app` de simulador.
+    // APP_YA_INSTALADA=1 salta la reinstalación en cada test (un APK de 130 MB en un emulador lento
     // supera el timeout de 60 s de `installApp`). Solo vale si el build correcto ya está instalado.
     installApps: build && !process.env.APP_YA_INSTALADA ? path.resolve(process.cwd(), build) : undefined,
     reporter: [
       ['list'],
       // Un JSON y un JUnit por plataforma: correr iOS después de Android no puede pisar los
-      // resultados de Android, que la Fase 8 todavía necesita para decidir veredictos. La ruta
-      // va absoluta porque, con el driver de la nube, mobilewright reutiliza este mismo JSON
-      // para subir el resultado; con una relativa escribiría una segunda copia en un temporal.
+      // resultados de Android, que la Fase 8 todavía necesita para decidir veredictos.
       ['json', { outputFile: path.resolve(process.cwd(), `test-results/results-${plataforma}.json`) }],
       ['junit', { outputFile: `test-results/junit-${plataforma}.xml` }],
       ['html', { outputFolder: `mobilewright-report/${plataforma}`, open: 'never' }],
     ],
     use: {
-      // 15 min es el default de mobilewright. Se deja configurable porque la cola de la nube
-      // depende del plan contratado y de la hora, no de la suite.
-      allocationTimeout: Number(process.env.APP_ALLOCATION_TIMEOUT) || 15 * 60_000,
       // Animaciones del sistema en el dispositivo. Sin definir no se tocan: apagarlas cambia la
       // configuración del emulador de quien corre, y eso no se hace sin pedirlo. Con `off` se
       // evita el fallo intermitente de Android "failed to dump UI ... no XML content found in
@@ -91,52 +80,19 @@ export function configApp(plataforma: Plataforma): MobilewrightConfig {
         grep: SUFIJO[plataforma],
         use: {
           platform: plataforma,
-          // En la nube se piden dispositivos reales: un simulador no instala un .ipa firmado
-          // para dispositivo, y es hardware real lo que se quiere certificar.
-          // iOS en local es siempre el simulador (IOS_EN_CLOUD=false, solo en macOS): un iPhone
-          // conectado por cable necesitaría un .ipa firmado y no es lo que se configura aquí.
-          deviceType: nube ? 'real' : plataforma === 'ios' ? 'simulator' : undefined,
+          // iOS es siempre el simulador de la Mac: un iPhone conectado por cable necesitaría un
+          // .ipa firmado y no es lo que se configura aquí. Android toma el emulador o el equipo
+          // que vea ADB.
+          deviceType: plataforma === 'ios' ? 'simulator' : undefined,
           deviceName: filtroDispositivo(plataforma),
           osVersion: versionSO(plataforma),
         },
       },
     ],
-    driver: nube ? driverNube(plataforma) : undefined,
   });
 }
 
 function animaciones(): 'on' | 'off' | undefined {
   const v = process.env.APP_ANIMACIONES?.trim().toLowerCase();
   return v === 'on' || v === 'off' ? v : undefined;
-}
-
-function driverNube(plataforma: Plataforma): MobileNextDriver {
-  const apiKey = process.env.MOBILENEXT_API_KEY?.trim();
-  if (!apiKey) {
-    // Nunca se cae a local en silencio: un iOS "corrido" contra lo que haya conectado no
-    // certifica nada, y en Windows ni siquiera hay con qué correrlo.
-    throw new Error(
-      `${plataforma === 'ios' ? 'iOS' : 'Android con ANDROID_EN_CLOUD=true'} corre en Mobile Next ` +
-        `Cloud y falta MOBILENEXT_API_KEY.\n` +
-        `Sácala de https://app.mobilenext.ai y ponla en el .env del proyecto (nunca en el Excel ` +
-        `de data: es un secreto de la máquina, no data de la suite).` +
-        (plataforma === 'ios'
-          ? `\nEn una Mac con Xcode, IOS_EN_CLOUD=false corre iOS en el simulador local sin clave.`
-          : ''),
-    );
-  }
-  const subida = process.env.MOBILENEXT_SUBIR_REPORTE?.trim().toLowerCase();
-  // `--list` no corre nada, pero con el driver de la nube mobilewright igual registra una corrida
-  // en el dashboard (comprobado en 0.0.60): cada listado dejaría allí una corrida vacía.
-  const soloLista = process.argv.includes('--list');
-  return new MobileNextDriver({
-    apiKey,
-    testResult: {
-      // Por defecto se sube el reporte al dashboard de Mobile Next en cada corrida; es donde
-      // queda el video del dispositivo real. 'off' si el cliente no quiere el reporte fuera.
-      uploadReport: soloLista ? 'off' : subida === 'off' || subida === 'on-failure' ? subida : 'on',
-      name: process.env.QA_SUITE?.trim() || `qa-executor ${plataforma}`,
-      tags: ['qa-executor', plataforma],
-    },
-  });
 }

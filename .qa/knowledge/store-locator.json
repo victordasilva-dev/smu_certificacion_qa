@@ -202,7 +202,8 @@
     "B2C-99: toast fuera del radio = role=alert con Ajustar (data-testid=delivery-pin-adjust) y Close; 'Ajustar' devuelve el PIN y habilita Continuar pero el toast queda visible.",
     "B2C-99: Detalles = textbox 'Ej: Dpto 910' (maxlength 50), 'Ej: Mamá, Pololo, trabajo' (20), textarea instrucciones (300, contador 'NN / 300 caractéres'); radiogroup 'Etiqueta de la direccion' con Casa/Trabajo/Favorito/Otro, 'Otro' (pin) marcada por defecto; seleccionada = borde rgb(218, 41, 28).",
     "B2C-99: al 'Agregar direccion' como invitado se envia POST .../smu-delivery/v1/organizations/{org}/apply con latitude/longitude del PIN ajustado; .../smu-delivery/.../stores?siteId=Unimarc ({STORE_LOCATOR_API_ENDPOINT}) no se llama en ese paso.",
-    "B2C-99: con los scripts del mapa de Google bloqueados (map.js/marker.js/StaticMapService) el area del mapa queda en blanco, sin mensaje de error ni 'Confirmar direccion'; 'Ajusta aqui' sigue visible."
+    "B2C-99: con los scripts del mapa de Google bloqueados (map.js/marker.js/StaticMapService) el area del mapa queda en blanco, sin mensaje de error ni 'Confirmar direccion'; 'Ajusta aqui' sigue visible.",
+    "2026-11-09 (B2C-61 re-corrida, invitado Desktop): con {DIRECCION_DESPACHO_001} (La Florida) y con {DIRECCION_OTRA_TIENDA} (sugerencia 'Avenida Las Condes 14791, Lo Barnechea') {SKU_STOCK_SOLO_TIENDA_A} 674797 muestra 'Agregar' en SRP y PDP en ambas; {SKU_PROMO_SOLO_TIENDA_A} 652899 muestra $990 sin descuento en ambas. {SKU_INACTIVO_TIENDA_A} 400254005 con La Florida aparece en SRP con 'Pronto disponible' y su PDP se abre (sin direccion ofrece 'Agregar'). Flujo: header 'Elige una forma de entrega' -> textbox 'Ej: Av. Manquehue...' -> option -> 'Continuar con detalles de la direccion' -> 'Agregar direccion'; con carro vacio no aparece el modal de B2C-122."
   ],
   "page_objects": {
     "exists": true,

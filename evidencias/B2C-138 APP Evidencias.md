@@ -3,10 +3,10 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-138 APP |
-| Última actualización | 2026-10-14 |
+| Última actualización | 2026-11-09 |
 | Ejecutado por | Victor Chirinos |
-| Ambiente | App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV |
-| Dispositivo Android | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
+| Ambiente | App Unimarc cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador) contra DEV |
+| Dispositivo Android | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
 | Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-138 APP Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
@@ -14,15 +14,17 @@
 
 | Estado | Casos |
 |---|---|
-| Aprobado | 6 |
 | Bloqueado Data | 5 |
-| Rechazado | 2 |
+| Aprobado | 4 |
+| Rechazado | 3 |
+| Bloqueado | 1 |
 | **Total** | **13** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-09 | 12 | TC-B2C138-APP-001, TC-B2C138-APP-002, TC-B2C138-APP-003, TC-B2C138-APP-004, TC-B2C138-APP-005, TC-B2C138-APP-006, TC-B2C138-APP-007, TC-B2C138-APP-008, TC-B2C138-APP-009, TC-B2C138-APP-011, TC-B2C138-APP-012, TC-B2C138-APP-013 |
 | 2026-10-14 | 13 | TC-B2C138-APP-001, TC-B2C138-APP-002, TC-B2C138-APP-003, TC-B2C138-APP-004, TC-B2C138-APP-005, TC-B2C138-APP-006, TC-B2C138-APP-007, TC-B2C138-APP-008, TC-B2C138-APP-009, TC-B2C138-APP-010, TC-B2C138-APP-011, TC-B2C138-APP-012, TC-B2C138-APP-013 |
 
 ## Detalle por caso de prueba
@@ -32,12 +34,11 @@
 | Campo | Valor |
 |---|---|
 | Estado | Rechazado |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
-| Duración | 51.1 s |
-| Spec | tests-app/B2C-138.spec.ts:39 |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
+| Spec | tests-app/B2C-138.spec.ts |
 
 **Precondiciones**
 
@@ -48,11 +49,11 @@
 
 **Data utilizada**
 
-v1.0.7, iOS, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno, 000000000000675191-UN
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El sistema carga el Home de la App y muestra en el Store Locator del header ícono + "Elige una forma de entrega" + chevron ∨.
 3. El usuario navega a la PLP equivalente a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno.
 4. El sistema carga la PLP y muestra en el Store Locator del header ícono + "Elige una forma de entrega" + chevron ∨.
@@ -65,11 +66,11 @@ En Home, PLP y PDP el Store Locator del header muestra ícono + "Elige una forma
 
 **Resultado obtenido**
 
-Esperado: Store Locator con 'Elige una forma de entrega' en Home, PLP y PDP. Obtenido: el Home lo muestra, pero la PLP (listado de 'Mostrar todo'; {PLP_URL} es de la web) y la PDP de 000000000000675191-UN no tienen Store Locator en el header. Es lo reportado en B2C-1165 (DESCARTADO); no se abre bug nuevo.
+El Home muestra «Elige una forma de entrega»; la PLP no tiene Store Locator en el header.
 
 **Observación**
 
-Esperado: Store Locator con 'Elige una forma de entrega' en Home, PLP y PDP. Obtenido: el Home lo muestra, pero la PLP (listado de 'Mostrar todo'; {PLP_URL} es de la web) y la PDP de 000000000000675191-UN no tienen Store Locator en el header. Es lo reportado en B2C-1165 (DESCARTADO); no se abre bug nuevo. tests-app/B2C-138.spec.ts:39. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Esperado: Store Locator con 'Elige una forma de entrega' en Home, PLP y PDP. Obtenido: el Home lo muestra, pero la PLP (primera categoría; https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno es de la web) no tiene Store Locator en el header. Es lo reportado en B2C-1165 (DESCARTADO); no se abre bug nuevo. tests-app/B2C-138.spec.ts:39. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 **Evidencia**
 
@@ -88,10 +89,10 @@ Esperado: Store Locator con 'Elige una forma de entrega' en Home, PLP y PDP. Obt
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
 
 **Precondiciones**
 
@@ -103,11 +104,11 @@ Esperado: Store Locator con 'Elige una forma de entrega' en Home, PLP y PDP. Obt
 
 **Data utilizada**
 
-v1.0.7, iOS, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno, {SIN_DIRECCION_PASSWORD}, vhchirinos+noaddress@avatar-global.com, 000000000000675191-UN
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El sistema carga el Home de la App y muestra en el Store Locator del header ícono + "Elige una forma de entrega" + chevron ∨.
 3. El usuario navega a la PLP equivalente a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno.
 4. El sistema carga la PLP y muestra en el Store Locator del header ícono + "Elige una forma de entrega" + chevron ∨.
@@ -118,9 +119,13 @@ v1.0.7, iOS, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cate
 
 Con el usuario logueado, en Home, PLP y PDP el Store Locator del header muestra ícono + "Elige una forma de entrega" + chevron ∨.
 
+**Resultado obtenido**
+
+No se ejecutó: la cuenta declarada no cumple la precondición.
+
 **Observación**
 
-Causa: {SIN_DIRECCION_USER} (vhchirinos+noaddress@avatar-global.com) es un correo y en la app v1.0.7 el login solo acepta RUT: 'Clave de acceso por correo' está deshabilitado. Acción: declarar una cuenta sin dirección con RUT y contraseña, o entregar un build con el acceso por correo habilitado. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Causa: la cuenta vhchirinos+noaddress@avatar-global.com tiene una dirección guardada (Calle Uno 23, La Florida) y la precondición pide una cuenta sin dirección guardada ni método de entrega. Acción: eliminar las direcciones guardadas de la cuenta (o declarar otra sin direcciones) y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 ---
 
@@ -129,12 +134,11 @@ Causa: {SIN_DIRECCION_USER} (vhchirinos+noaddress@avatar-global.com) es un corre
 | Campo | Valor |
 |---|---|
 | Estado | Aprobado |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
-| Duración | 19.0 s |
-| Spec | tests-app/B2C-138.spec.ts:64 |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
+| Spec | tests-app/B2C-138.spec.ts |
 
 **Precondiciones**
 
@@ -145,11 +149,11 @@ Causa: {SIN_DIRECCION_USER} (vhchirinos+noaddress@avatar-global.com) es un corre
 
 **Data utilizada**
 
-v1.0.7, iOS
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El sistema carga el Home de la App con el Store Locator en el header.
 3. El usuario toca el chevron ∨ del Store Locator en el header.
 4. El sistema abre el modal "Elige tu método de entrega" con el botón cerrar "X".
@@ -160,11 +164,11 @@ Se muestra el modal "Elige tu método de entrega" con el botón "X".
 
 **Resultado obtenido**
 
-Al tocar el Store Locator del navbar se abre 'Elige tu método de entrega' con la X (✕) de cierre.
+El chevron abre «Elige tu método de entrega» con la ✕.
 
 **Observación**
 
-Al tocar el Store Locator del navbar se abre 'Elige tu método de entrega' con la X (✕) de cierre. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 **Evidencia**
 
@@ -172,7 +176,7 @@ Al tocar el Store Locator del navbar se abre 'Elige tu método de entrega' con l
 
 ![Android · Paso 4 — modal elige tu metodo de entrega](<B2C-138 APP Evidencias/TC-B2C138-APP-003-android-p04-modal-elige-tu-metodo-de-entrega.png>)
 
-![Estado final del caso](<B2C-138 APP Evidencias/TC-B2C138-APP-003-android.png>)
+![Estado final](<B2C-138 APP Evidencias/TC-B2C138-APP-003-android.png>)
 
 ---
 
@@ -181,12 +185,11 @@ Al tocar el Store Locator del navbar se abre 'Elige tu método de entrega' con l
 | Campo | Valor |
 |---|---|
 | Estado | Aprobado |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
-| Duración | 22.5 s |
-| Spec | tests-app/B2C-138.spec.ts:71 |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
+| Spec | tests-app/B2C-138.spec.ts |
 
 **Precondiciones**
 
@@ -197,11 +200,11 @@ Al tocar el Store Locator del navbar se abre 'Elige tu método de entrega' con l
 
 **Data utilizada**
 
-v1.0.7, iOS
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El sistema carga el Home de la App con el Store Locator en el header.
 3. El usuario toca el chevron ∨ del Store Locator en el header.
 4. El sistema abre el modal "Elige tu método de entrega" y muestra las pestañas ícono + "Despacho a domicilio" (activa) e ícono + "Retiro en tienda" (desactivada en gris), la imagen, el mensaje "Aún no tienes direcciones guardadas" y el texto de ayuda para ingresar una dirección.
@@ -212,11 +215,11 @@ El modal muestra "Despacho a domicilio" activa, "Retiro en tienda" en gris, la i
 
 **Resultado obtenido**
 
-El modal muestra 'Despacho a domicilio' activa (ícono en rojo) y 'Retiro en tienda' en gris, la imagen, 'Aún no tienes direcciones guardadas' y el texto de ayuda 'Para armar tu carro, ingresa una dirección…'.
+El modal muestra «Despacho a domicilio» activa, «Retiro en tienda» en gris, la imagen, «Aún no tienes direcciones guardadas» y el texto de ayuda.
 
 **Observación**
 
-El modal muestra 'Despacho a domicilio' activa (ícono en rojo) y 'Retiro en tienda' en gris, la imagen, 'Aún no tienes direcciones guardadas' y el texto de ayuda 'Para armar tu carro, ingresa una dirección…'. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 **Evidencia**
 
@@ -224,7 +227,7 @@ El modal muestra 'Despacho a domicilio' activa (ícono en rojo) y 'Retiro en tie
 
 ![Android · Paso 4 — modal elige tu metodo de entrega](<B2C-138 APP Evidencias/TC-B2C138-APP-004-android-p04-modal-elige-tu-metodo-de-entrega.png>)
 
-![Estado final del caso](<B2C-138 APP Evidencias/TC-B2C138-APP-004-android.png>)
+![Estado final](<B2C-138 APP Evidencias/TC-B2C138-APP-004-android.png>)
 
 ---
 
@@ -233,10 +236,10 @@ El modal muestra 'Despacho a domicilio' activa (ícono en rojo) y 'Retiro en tie
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
 
 **Precondiciones**
 
@@ -248,11 +251,11 @@ El modal muestra 'Despacho a domicilio' activa (ícono en rojo) y 'Retiro en tie
 
 **Data utilizada**
 
-v1.0.7, iOS, {SIN_DIRECCION_PASSWORD}, vhchirinos+noaddress@avatar-global.com
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El sistema carga el Home de la App con el Store Locator en el header.
 3. El usuario toca el chevron ∨ del Store Locator en el header.
 4. El sistema abre el modal "Elige tu método de entrega" y muestra las pestañas ícono + "Despacho a domicilio" (activa) e ícono + "Retiro en tienda" (desactivada en gris), la imagen, el mensaje "Aún no tienes direcciones guardadas" y el texto de ayuda para ingresar una dirección.
@@ -261,9 +264,13 @@ v1.0.7, iOS, {SIN_DIRECCION_PASSWORD}, vhchirinos+noaddress@avatar-global.com
 
 El modal muestra "Despacho a domicilio" activa, "Retiro en tienda" en gris, la imagen, "Aún no tienes direcciones guardadas" y el texto de ayuda.
 
+**Resultado obtenido**
+
+No se ejecutó: la cuenta declarada no cumple la precondición.
+
 **Observación**
 
-Causa: {SIN_DIRECCION_USER} (vhchirinos+noaddress@avatar-global.com) es un correo y en la app v1.0.7 el login solo acepta RUT: 'Clave de acceso por correo' está deshabilitado. Acción: declarar una cuenta sin dirección con RUT y contraseña, o entregar un build con el acceso por correo habilitado. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Causa: la cuenta vhchirinos+noaddress@avatar-global.com tiene una dirección guardada (Calle Uno 23, La Florida) y la precondición pide una cuenta sin dirección guardada ni método de entrega. Acción: eliminar las direcciones guardadas de la cuenta (o declarar otra sin direcciones) y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 ---
 
@@ -272,12 +279,11 @@ Causa: {SIN_DIRECCION_USER} (vhchirinos+noaddress@avatar-global.com) es un corre
 | Campo | Valor |
 |---|---|
 | Estado | Aprobado |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
-| Duración | 28.5 s |
-| Spec | tests-app/B2C-138.spec.ts:85 |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
+| Spec | tests-app/B2C-138.spec.ts |
 
 **Precondiciones**
 
@@ -288,11 +294,11 @@ Causa: {SIN_DIRECCION_USER} (vhchirinos+noaddress@avatar-global.com) es un corre
 
 **Data utilizada**
 
-v1.0.7, iOS, Calle Uno 23, La Florida
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El sistema carga el Home de la App con el Store Locator en el header.
 3. El usuario toca el chevron ∨ del Store Locator en el header.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña "Despacho a domicilio" activa.
@@ -305,11 +311,11 @@ Se inicia el flujo de configuración de despacho a domicilio definido en B2C-26.
 
 **Resultado obtenido**
 
-Al escribir Calle Uno 23, La Florida en el buscador y elegir la sugerencia se abre 'Detalles de la dirección' (flujo de B2C-26).
+Al escribir la dirección en el buscador se inicia el flujo de despacho de B2C-26.
 
 **Observación**
 
-Al escribir Calle Uno 23, La Florida en el buscador y elegir la sugerencia se abre 'Detalles de la dirección' (flujo de B2C-26). Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 **Evidencia**
 
@@ -317,7 +323,7 @@ Al escribir Calle Uno 23, La Florida en el buscador y elegir la sugerencia se ab
 
 ![Android · Paso 4 — modal elige tu metodo de entrega](<B2C-138 APP Evidencias/TC-B2C138-APP-006-android-p04-modal-elige-tu-metodo-de-entrega.png>)
 
-![Estado final del caso](<B2C-138 APP Evidencias/TC-B2C138-APP-006-android.png>)
+![Estado final](<B2C-138 APP Evidencias/TC-B2C138-APP-006-android.png>)
 
 ---
 
@@ -325,13 +331,12 @@ Al escribir Calle Uno 23, La Florida en el buscador y elegir la sugerencia se ab
 
 | Campo | Valor |
 |---|---|
-| Estado | Aprobado |
-| Ejecutado | 2026-10-14 |
+| Estado | Bloqueado |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
-| Duración | 28.4 s |
-| Spec | tests-app/B2C-138.spec.ts:95 |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
+| Spec | tests-app/B2C-138.spec.ts |
 
 **Precondiciones**
 
@@ -343,11 +348,11 @@ Al escribir Calle Uno 23, La Florida en el buscador y elegir la sugerencia se ab
 
 **Data utilizada**
 
-v1.0.7, iOS
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El sistema carga el Home de la App con el Store Locator en el header.
 3. El usuario toca el chevron ∨ del Store Locator en el header.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña "Despacho a domicilio" activa.
@@ -360,11 +365,11 @@ Se inicia el flujo de configuración de despacho a domicilio definido en B2C-26.
 
 **Resultado obtenido**
 
-Con permiso de ubicación concedido (emulador ubicado en La Florida, Santiago), 'Activar mi ubicación actual' abre 'Detalles de la dirección' (flujo de B2C-26).
+Al tocar «Activar mi ubicación actual» la app muestra «No pudimos obtener tu ubicación actual. Inténtalo nuevamente.».
 
 **Observación**
 
-Con permiso de ubicación concedido (emulador ubicado en La Florida, Santiago), 'Activar mi ubicación actual' abre 'Detalles de la dirección' (flujo de B2C-26). Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Causa: el emulador no entrega ubicación (last location=null aun con permiso concedido, ubicación activada y geo fix), y la app muestra 'No pudimos obtener tu ubicación actual. Inténtalo nuevamente.'. Acción: ejecutar en un emulador o equipo con GPS funcional y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 **Evidencia**
 
@@ -372,7 +377,7 @@ Con permiso de ubicación concedido (emulador ubicado en La Florida, Santiago), 
 
 ![Android · Paso 4 — modal elige tu metodo de entrega](<B2C-138 APP Evidencias/TC-B2C138-APP-007-android-p04-modal-elige-tu-metodo-de-entrega.png>)
 
-![Estado final del caso](<B2C-138 APP Evidencias/TC-B2C138-APP-007-android.png>)
+![Estado al fallar la aserción](<B2C-138 APP Evidencias/TC-B2C138-APP-007-android.png>)
 
 ---
 
@@ -381,12 +386,11 @@ Con permiso de ubicación concedido (emulador ubicado en La Florida, Santiago), 
 | Campo | Valor |
 |---|---|
 | Estado | Aprobado |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
-| Duración | 23.8 s |
-| Spec | tests-app/B2C-138.spec.ts:108 |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
+| Spec | tests-app/B2C-138.spec.ts |
 
 **Precondiciones**
 
@@ -397,11 +401,11 @@ Con permiso de ubicación concedido (emulador ubicado en La Florida, Santiago), 
 
 **Data utilizada**
 
-v1.0.7, iOS
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El sistema carga el Home de la App con el Store Locator en el header.
 3. El usuario toca el chevron ∨ del Store Locator en el header.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña "Despacho a domicilio" activa.
@@ -414,11 +418,11 @@ v1.0.7, iOS
 
 **Resultado obtenido**
 
-Al tocar 'Retiro en tienda' queda activa con el ícono en rojo, 'Despacho a domicilio' pasa a gris y se muestra 'Selecciona tu tienda Unimarc' (flujo de B2C-121).
+«Retiro en tienda» queda activa en rojo, «Despacho a domicilio» en gris y se inicia el flujo de B2C-121.
 
 **Observación**
 
-Al tocar 'Retiro en tienda' queda activa con el ícono en rojo, 'Despacho a domicilio' pasa a gris y se muestra 'Selecciona tu tienda Unimarc' (flujo de B2C-121). Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 **Evidencia**
 
@@ -426,7 +430,7 @@ Al tocar 'Retiro en tienda' queda activa con el ícono en rojo, 'Despacho a domi
 
 ![Android · Paso 4 — modal elige tu metodo de entrega](<B2C-138 APP Evidencias/TC-B2C138-APP-008-android-p04-modal-elige-tu-metodo-de-entrega.png>)
 
-![Estado final del caso](<B2C-138 APP Evidencias/TC-B2C138-APP-008-android.png>)
+![Estado final](<B2C-138 APP Evidencias/TC-B2C138-APP-008-android.png>)
 
 ---
 
@@ -434,13 +438,12 @@ Al tocar 'Retiro en tienda' queda activa con el ícono en rojo, 'Despacho a domi
 
 | Campo | Valor |
 |---|---|
-| Estado | Aprobado |
-| Ejecutado | 2026-10-14 |
+| Estado | Rechazado |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
-| Duración | 23.6 s |
-| Spec | tests-app/B2C-138.spec.ts:120 |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
+| Spec | tests-app/B2C-138.spec.ts |
 
 **Precondiciones**
 
@@ -451,11 +454,11 @@ Al tocar 'Retiro en tienda' queda activa con el ícono en rojo, 'Despacho a domi
 
 **Data utilizada**
 
-v1.0.7, iOS
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El sistema carga el Home de la App con el Store Locator en el header.
 3. El usuario toca el chevron ∨ del Store Locator en el header.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña "Despacho a domicilio" activa.
@@ -468,11 +471,11 @@ El modal se cierra y el header sigue mostrando ícono + "Elige una forma de entr
 
 **Resultado obtenido**
 
-La X cierra el modal y el navbar sigue mostrando 'Elige una forma de entrega'.
+Al tocar la ✕ el modal «Elige tu método de entrega» sigue abierto.
 
 **Observación**
 
-La X cierra el modal y el navbar sigue mostrando 'Elige una forma de entrega'. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Esperado: el modal se cierra y el header sigue en 'Elige una forma de entrega'. Obtenido: al tocar la ✕ el modal 'Elige tu método de entrega' sigue abierto (2 de 2 intentos en la corrida y 2 de 2 a mano). tests-app/B2C-138.spec.ts:120. Bug: B2C-1479. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 **Evidencia**
 
@@ -480,7 +483,7 @@ La X cierra el modal y el navbar sigue mostrando 'Elige una forma de entrega'. C
 
 ![Android · Paso 4 — modal elige tu metodo de entrega](<B2C-138 APP Evidencias/TC-B2C138-APP-009-android-p04-modal-elige-tu-metodo-de-entrega.png>)
 
-![Estado final del caso](<B2C-138 APP Evidencias/TC-B2C138-APP-009-android.png>)
+![Estado al fallar la aserción](<B2C-138 APP Evidencias/TC-B2C138-APP-009-android.png>)
 
 ---
 
@@ -545,10 +548,10 @@ Esperado: tocar fuera del modal lo cierra. Obtenido: el modal ocupa toda la pant
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
 
 **Precondiciones**
 
@@ -556,15 +559,15 @@ Esperado: tocar fuera del modal lo cierra. Obtenido: el modal ocupa toda la pant
 - Viewport: App iOS/Android
 - Ubicacion: Home de la App
 - Sin método de entrega seleccionado (App recién instalada o con datos borrados)
-- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {STORE_LOCATOR_API_ENDPOINT}
+- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc
 
 **Data utilizada**
 
-v1.0.7, iOS, {HERRAMIENTA_PROXY_APP}, {STORE_LOCATOR_API_ENDPOINT}
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El sistema carga el Home de la App con el Store Locator en el header.
 3. El usuario toca el chevron ∨ del Store Locator en el header.
 4. El sistema mantiene el modal abierto y muestra en su interior la pantalla de error con el mensaje correspondiente y los botones "Reintentar" y "Volver al Inicio".
@@ -573,9 +576,13 @@ v1.0.7, iOS, {HERRAMIENTA_PROXY_APP}, {STORE_LOCATOR_API_ENDPOINT}
 
 El modal permanece abierto con la pantalla de error, "Reintentar" y "Volver al Inicio", y el header sigue mostrando ícono + "Elige una forma de entrega" + chevron ∨.
 
+**Resultado obtenido**
+
+No se ejecutó: falta data de prueba.
+
 **Observación**
 
-Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en el Excel de data. Acción: cargar la herramienta de proxy y el endpoint del Store Locator a forzar con error. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Causa: {HERRAMIENTA_PROXY_APP} está en TBD en el Excel de data. Acción: definir la herramienta de proxy de la app para forzar el error en *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 ---
 
@@ -584,10 +591,10 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
 
 **Precondiciones**
 
@@ -595,19 +602,19 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
 - Viewport: App iOS/Android
 - Ubicacion: Home de la App
 - Sin método de entrega seleccionado (App recién instalada o con datos borrados)
-- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {STORE_LOCATOR_API_ENDPOINT}
+- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc
 
 **Data utilizada**
 
-v1.0.7, iOS, {HERRAMIENTA_PROXY_APP}, {STORE_LOCATOR_API_ENDPOINT}
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El sistema carga el Home de la App con el Store Locator en el header.
 3. El usuario toca el chevron ∨ del Store Locator en el header.
 4. El sistema mantiene el modal abierto y muestra en su interior la pantalla de error con el mensaje correspondiente y los botones "Reintentar" y "Volver al Inicio".
-5. El usuario desactiva en {HERRAMIENTA_PROXY_APP} el error forzado en {STORE_LOCATOR_API_ENDPOINT}.
+5. El usuario desactiva en {HERRAMIENTA_PROXY_APP} el error forzado en *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc.
 6. El usuario toca "Reintentar".
 7. El sistema abre el modal "Elige tu método de entrega" con la pestaña "Despacho a domicilio" activa.
 
@@ -615,9 +622,13 @@ v1.0.7, iOS, {HERRAMIENTA_PROXY_APP}, {STORE_LOCATOR_API_ENDPOINT}
 
 El modal carga el selector "Elige tu método de entrega" con sus pestañas.
 
+**Resultado obtenido**
+
+No se ejecutó: falta data de prueba.
+
 **Observación**
 
-Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en el Excel de data. Acción: cargar la herramienta de proxy y el endpoint del Store Locator a forzar con error. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Causa: {HERRAMIENTA_PROXY_APP} está en TBD en el Excel de data. Acción: definir la herramienta de proxy de la app para forzar el error en *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 ---
 
@@ -626,10 +637,10 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-14 |
+| Ejecutado | 2026-11-09 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local |
 
 **Precondiciones**
 
@@ -637,15 +648,15 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
 - Viewport: App iOS/Android
 - Ubicacion: Home de la App
 - Sin método de entrega seleccionado (App recién instalada o con datos borrados)
-- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {STORE_LOCATOR_API_ENDPOINT}
+- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc
 
 **Data utilizada**
 
-v1.0.7, iOS, {HERRAMIENTA_PROXY_APP}, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno, {STORE_LOCATOR_API_ENDPOINT}
+Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
+1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).
 2. El usuario navega a la PLP equivalente a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno.
 3. El sistema carga la PLP con el Store Locator en el header.
 4. El usuario toca el chevron ∨ del Store Locator en el header.
@@ -657,9 +668,13 @@ v1.0.7, iOS, {HERRAMIENTA_PROXY_APP}, https://smu-dev-development.sfdc-8tgtt5-ec
 
 El usuario queda en el Home de la App.
 
+**Resultado obtenido**
+
+No se ejecutó: falta data de prueba.
+
 **Observación**
 
-Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en el Excel de data. Acción: cargar la herramienta de proxy y el endpoint del Store Locator a forzar con error. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Causa: {HERRAMIENTA_PROXY_APP} está en TBD en el Excel de data. Acción: definir la herramienta de proxy de la app para forzar el error en *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.
 
 ---
 
@@ -668,14 +683,14 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
  "header": {
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "devices": {
-   "android": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)"
+   "android": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local"
   },
-  "environment": "App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV",
+  "environment": "App Unimarc cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador) contra DEV",
   "executed_by": "Victor Chirinos",
   "suite": "B2C-138 APP",
   "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-138 APP Test Cases.xlsx",
   "title": "B2C-138 APP - Store Locator sin dirección - Evidencias QA",
-  "updated_at": "2026-10-14"
+  "updated_at": "2026-11-09"
  },
  "history": {
   "2026-10-14": [
@@ -692,19 +707,32 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "TC-B2C138-APP-011",
    "TC-B2C138-APP-012",
    "TC-B2C138-APP-013"
+  ],
+  "2026-11-09": [
+   "TC-B2C138-APP-001",
+   "TC-B2C138-APP-002",
+   "TC-B2C138-APP-003",
+   "TC-B2C138-APP-004",
+   "TC-B2C138-APP-005",
+   "TC-B2C138-APP-006",
+   "TC-B2C138-APP-007",
+   "TC-B2C138-APP-008",
+   "TC-B2C138-APP-009",
+   "TC-B2C138-APP-011",
+   "TC-B2C138-APP-012",
+   "TC-B2C138-APP-013"
   ]
  },
  "results": [
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "duration_s": 51.1,
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "En Home, PLP y PDP el Store Locator del header muestra ícono + \"Elige una forma de entrega\" + chevron ∨.",
    "form_factor": "app",
    "id": "TC-B2C138-APP-001",
    "name": "Verificar que el Store Locator muestra \"Elige una forma de entrega\" sin método seleccionado [App] [Guest]",
-   "observation": "Esperado: Store Locator con 'Elige una forma de entrega' en Home, PLP y PDP. Obtenido: el Home lo muestra, pero la PLP (listado de 'Mostrar todo'; {PLP_URL} es de la web) y la PDP de 000000000000675191-UN no tienen Store Locator en el header. Es lo reportado en B2C-1165 (DESCARTADO); no se abre bug nuevo. tests-app/B2C-138.spec.ts:39. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
-   "observed": "Esperado: Store Locator con 'Elige una forma de entrega' en Home, PLP y PDP. Obtenido: el Home lo muestra, pero la PLP (listado de 'Mostrar todo'; {PLP_URL} es de la web) y la PDP de 000000000000675191-UN no tienen Store Locator en el header. Es lo reportado en B2C-1165 (DESCARTADO); no se abre bug nuevo.",
+   "observation": "Esperado: Store Locator con 'Elige una forma de entrega' en Home, PLP y PDP. Obtenido: el Home lo muestra, pero la PLP (primera categoría; https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno es de la web) no tiene Store Locator en el header. Es lo reportado en B2C-1165 (DESCARTADO); no se abre bug nuevo. tests-app/B2C-138.spec.ts:39. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "El Home muestra «Elige una forma de entrega»; la PLP no tiene Store Locator en el header.",
    "platform": "Android",
    "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)",
    "screenshots": [
@@ -725,35 +753,35 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
      "file": "TC-B2C138-APP-001-android.png"
     }
    ],
-   "spec": "tests-app/B2C-138.spec.ts:39",
+   "spec": "tests-app/B2C-138.spec.ts",
    "status": "Rechazado",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home de la App y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.\n3. El usuario navega a la PLP equivalente a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno.\n4. El sistema carga la PLP y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.\n5. El usuario abre la PDP de 000000000000675191-UN.\n6. El sistema carga la PDP y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.",
-   "test_data": "v1.0.7, iOS, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno, 000000000000675191-UN"
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El sistema carga el Home de la App y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.\n3. El usuario navega a la PLP equivalente a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno.\n4. El sistema carga la PLP y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.\n5. El usuario abre la PDP de 000000000000675191-UN.\n6. El sistema carga la PDP y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "Con el usuario logueado, en Home, PLP y PDP el Store Locator del header muestra ícono + \"Elige una forma de entrega\" + chevron ∨.",
    "form_factor": "app",
    "id": "TC-B2C138-APP-002",
    "name": "Verificar que el Store Locator muestra \"Elige una forma de entrega\" sin método seleccionado [App] [Logueado]",
-   "observation": "Causa: {SIN_DIRECCION_USER} (vhchirinos+noaddress@avatar-global.com) es un correo y en la app v1.0.7 el login solo acepta RUT: 'Clave de acceso por correo' está deshabilitado. Acción: declarar una cuenta sin dirección con RUT y contraseña, o entregar un build con el acceso por correo habilitado. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "observation": "Causa: la cuenta vhchirinos+noaddress@avatar-global.com tiene una dirección guardada (Calle Uno 23, La Florida) y la precondición pide una cuenta sin dirección guardada ni método de entrega. Acción: eliminar las direcciones guardadas de la cuenta (o declarar otra sin direcciones) y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "No se ejecutó: la cuenta declarada no cumple la precondición.",
    "platform": "Android",
    "preconditions": "- User type: Logueado\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sesión iniciada con la cuenta vhchirinos+noaddress@avatar-global.com\n- La cuenta vhchirinos+noaddress@avatar-global.com no tiene dirección guardada ni método de entrega seleccionado",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home de la App y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.\n3. El usuario navega a la PLP equivalente a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno.\n4. El sistema carga la PLP y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.\n5. El usuario abre la PDP de 000000000000675191-UN.\n6. El sistema carga la PDP y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.",
-   "test_data": "v1.0.7, iOS, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno, {SIN_DIRECCION_PASSWORD}, vhchirinos+noaddress@avatar-global.com, 000000000000675191-UN"
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El sistema carga el Home de la App y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.\n3. El usuario navega a la PLP equivalente a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno.\n4. El sistema carga la PLP y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.\n5. El usuario abre la PDP de 000000000000675191-UN.\n6. El sistema carga la PDP y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "duration_s": 19.0,
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "Se muestra el modal \"Elige tu método de entrega\" con el botón \"X\".",
    "form_factor": "app",
    "id": "TC-B2C138-APP-003",
    "name": "Verificar que tocar el chevron del Store Locator abre el modal \"Elige tu método de entrega\" con X [App] [Guest]",
-   "observation": "Al tocar el Store Locator del navbar se abre 'Elige tu método de entrega' con la X (✕) de cierre. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
-   "observed": "Al tocar el Store Locator del navbar se abre 'Elige tu método de entrega' con la X (✕) de cierre.",
+   "observation": "Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "El chevron abre «Elige tu método de entrega» con la ✕.",
    "platform": "Android",
    "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)",
    "screenshots": [
@@ -766,25 +794,24 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
      "file": "TC-B2C138-APP-003-android-p04-modal-elige-tu-metodo-de-entrega.png"
     },
     {
-     "caption": "Estado final del caso",
+     "caption": "Estado final",
      "file": "TC-B2C138-APP-003-android.png"
     }
    ],
-   "spec": "tests-app/B2C-138.spec.ts:64",
+   "spec": "tests-app/B2C-138.spec.ts",
    "status": "Aprobado",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con el botón cerrar \"X\".",
-   "test_data": "v1.0.7, iOS"
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con el botón cerrar \"X\".",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "duration_s": 22.5,
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "El modal muestra \"Despacho a domicilio\" activa, \"Retiro en tienda\" en gris, la imagen, \"Aún no tienes direcciones guardadas\" y el texto de ayuda.",
    "form_factor": "app",
    "id": "TC-B2C138-APP-004",
    "name": "Verificar que el modal muestra las pestañas y el mensaje \"Aún no tienes direcciones guardadas\" [App] [Guest]",
-   "observation": "El modal muestra 'Despacho a domicilio' activa (ícono en rojo) y 'Retiro en tienda' en gris, la imagen, 'Aún no tienes direcciones guardadas' y el texto de ayuda 'Para armar tu carro, ingresa una dirección…'. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
-   "observed": "El modal muestra 'Despacho a domicilio' activa (ícono en rojo) y 'Retiro en tienda' en gris, la imagen, 'Aún no tienes direcciones guardadas' y el texto de ayuda 'Para armar tu carro, ingresa una dirección…'.",
+   "observation": "Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "El modal muestra «Despacho a domicilio» activa, «Retiro en tienda» en gris, la imagen, «Aún no tienes direcciones guardadas» y el texto de ayuda.",
    "platform": "Android",
    "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)",
    "screenshots": [
@@ -797,39 +824,39 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
      "file": "TC-B2C138-APP-004-android-p04-modal-elige-tu-metodo-de-entrega.png"
     },
     {
-     "caption": "Estado final del caso",
+     "caption": "Estado final",
      "file": "TC-B2C138-APP-004-android.png"
     }
    ],
-   "spec": "tests-app/B2C-138.spec.ts:71",
+   "spec": "tests-app/B2C-138.spec.ts",
    "status": "Aprobado",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" y muestra las pestañas ícono + \"Despacho a domicilio\" (activa) e ícono + \"Retiro en tienda\" (desactivada en gris), la imagen, el mensaje \"Aún no tienes direcciones guardadas\" y el texto de ayuda para ingresar una dirección.",
-   "test_data": "v1.0.7, iOS"
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" y muestra las pestañas ícono + \"Despacho a domicilio\" (activa) e ícono + \"Retiro en tienda\" (desactivada en gris), la imagen, el mensaje \"Aún no tienes direcciones guardadas\" y el texto de ayuda para ingresar una dirección.",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "El modal muestra \"Despacho a domicilio\" activa, \"Retiro en tienda\" en gris, la imagen, \"Aún no tienes direcciones guardadas\" y el texto de ayuda.",
    "form_factor": "app",
    "id": "TC-B2C138-APP-005",
    "name": "Verificar que el modal muestra las pestañas y el mensaje \"Aún no tienes direcciones guardadas\" [App] [Logueado]",
-   "observation": "Causa: {SIN_DIRECCION_USER} (vhchirinos+noaddress@avatar-global.com) es un correo y en la app v1.0.7 el login solo acepta RUT: 'Clave de acceso por correo' está deshabilitado. Acción: declarar una cuenta sin dirección con RUT y contraseña, o entregar un build con el acceso por correo habilitado. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "observation": "Causa: la cuenta vhchirinos+noaddress@avatar-global.com tiene una dirección guardada (Calle Uno 23, La Florida) y la precondición pide una cuenta sin dirección guardada ni método de entrega. Acción: eliminar las direcciones guardadas de la cuenta (o declarar otra sin direcciones) y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "No se ejecutó: la cuenta declarada no cumple la precondición.",
    "platform": "Android",
    "preconditions": "- User type: Logueado\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sesión iniciada con la cuenta vhchirinos+noaddress@avatar-global.com\n- La cuenta vhchirinos+noaddress@avatar-global.com no tiene dirección guardada ni método de entrega seleccionado",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" y muestra las pestañas ícono + \"Despacho a domicilio\" (activa) e ícono + \"Retiro en tienda\" (desactivada en gris), la imagen, el mensaje \"Aún no tienes direcciones guardadas\" y el texto de ayuda para ingresar una dirección.",
-   "test_data": "v1.0.7, iOS, {SIN_DIRECCION_PASSWORD}, vhchirinos+noaddress@avatar-global.com"
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" y muestra las pestañas ícono + \"Despacho a domicilio\" (activa) e ícono + \"Retiro en tienda\" (desactivada en gris), la imagen, el mensaje \"Aún no tienes direcciones guardadas\" y el texto de ayuda para ingresar una dirección.",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "duration_s": 28.5,
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "Se inicia el flujo de configuración de despacho a domicilio definido en B2C-26.",
    "form_factor": "app",
    "id": "TC-B2C138-APP-006",
    "name": "Verificar que el buscador de dirección inicia el flujo de configuración de despacho [App] [Guest]",
-   "observation": "Al escribir Calle Uno 23, La Florida en el buscador y elegir la sugerencia se abre 'Detalles de la dirección' (flujo de B2C-26). Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
-   "observed": "Al escribir Calle Uno 23, La Florida en el buscador y elegir la sugerencia se abre 'Detalles de la dirección' (flujo de B2C-26).",
+   "observation": "Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "Al escribir la dirección en el buscador se inicia el flujo de despacho de B2C-26.",
    "platform": "Android",
    "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)",
    "screenshots": [
@@ -842,25 +869,24 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
      "file": "TC-B2C138-APP-006-android-p04-modal-elige-tu-metodo-de-entrega.png"
     },
     {
-     "caption": "Estado final del caso",
+     "caption": "Estado final",
      "file": "TC-B2C138-APP-006-android.png"
     }
    ],
-   "spec": "tests-app/B2C-138.spec.ts:85",
+   "spec": "tests-app/B2C-138.spec.ts",
    "status": "Aprobado",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña \"Despacho a domicilio\" activa.\n5. El usuario toca el buscador y escribe Calle Uno 23, La Florida.\n6. El sistema inicia el flujo de configuración de despacho a domicilio (B2C-26).",
-   "test_data": "v1.0.7, iOS, Calle Uno 23, La Florida"
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña \"Despacho a domicilio\" activa.\n5. El usuario toca el buscador y escribe Calle Uno 23, La Florida.\n6. El sistema inicia el flujo de configuración de despacho a domicilio (B2C-26).",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "duration_s": 28.4,
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "Se inicia el flujo de configuración de despacho a domicilio definido en B2C-26.",
    "form_factor": "app",
    "id": "TC-B2C138-APP-007",
    "name": "Verificar que \"Activar ubicación actual\" inicia el flujo de configuración de despacho [App] [Guest]",
-   "observation": "Con permiso de ubicación concedido (emulador ubicado en La Florida, Santiago), 'Activar mi ubicación actual' abre 'Detalles de la dirección' (flujo de B2C-26). Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
-   "observed": "Con permiso de ubicación concedido (emulador ubicado en La Florida, Santiago), 'Activar mi ubicación actual' abre 'Detalles de la dirección' (flujo de B2C-26).",
+   "observation": "Causa: el emulador no entrega ubicación (last location=null aun con permiso concedido, ubicación activada y geo fix), y la app muestra 'No pudimos obtener tu ubicación actual. Inténtalo nuevamente.'. Acción: ejecutar en un emulador o equipo con GPS funcional y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "Al tocar «Activar mi ubicación actual» la app muestra «No pudimos obtener tu ubicación actual. Inténtalo nuevamente.».",
    "platform": "Android",
    "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)\n- La App tiene permiso de ubicación del dispositivo",
    "screenshots": [
@@ -873,25 +899,24 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
      "file": "TC-B2C138-APP-007-android-p04-modal-elige-tu-metodo-de-entrega.png"
     },
     {
-     "caption": "Estado final del caso",
+     "caption": "Estado al fallar la aserción",
      "file": "TC-B2C138-APP-007-android.png"
     }
    ],
-   "spec": "tests-app/B2C-138.spec.ts:95",
-   "status": "Aprobado",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña \"Despacho a domicilio\" activa.\n5. El usuario toca \"Activar ubicación actual\".\n6. El sistema inicia el flujo de configuración de despacho a domicilio (B2C-26).",
-   "test_data": "v1.0.7, iOS"
+   "spec": "tests-app/B2C-138.spec.ts",
+   "status": "Bloqueado",
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña \"Despacho a domicilio\" activa.\n5. El usuario toca \"Activar ubicación actual\".\n6. El sistema inicia el flujo de configuración de despacho a domicilio (B2C-26).",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "duration_s": 23.8,
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "\"Retiro en tienda\" queda activa en rojo, \"Despacho a domicilio\" en gris y se inicia el flujo definido en B2C-121.",
    "form_factor": "app",
    "id": "TC-B2C138-APP-008",
    "name": "Verificar que la pestaña \"Retiro en tienda\" se activa e inicia el flujo de retiro [App] [Guest]",
-   "observation": "Al tocar 'Retiro en tienda' queda activa con el ícono en rojo, 'Despacho a domicilio' pasa a gris y se muestra 'Selecciona tu tienda Unimarc' (flujo de B2C-121). Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
-   "observed": "Al tocar 'Retiro en tienda' queda activa con el ícono en rojo, 'Despacho a domicilio' pasa a gris y se muestra 'Selecciona tu tienda Unimarc' (flujo de B2C-121).",
+   "observation": "Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "«Retiro en tienda» queda activa en rojo, «Despacho a domicilio» en gris y se inicia el flujo de B2C-121.",
    "platform": "Android",
    "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)",
    "screenshots": [
@@ -904,25 +929,24 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
      "file": "TC-B2C138-APP-008-android-p04-modal-elige-tu-metodo-de-entrega.png"
     },
     {
-     "caption": "Estado final del caso",
+     "caption": "Estado final",
      "file": "TC-B2C138-APP-008-android.png"
     }
    ],
-   "spec": "tests-app/B2C-138.spec.ts:108",
+   "spec": "tests-app/B2C-138.spec.ts",
    "status": "Aprobado",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña \"Despacho a domicilio\" activa.\n5. El usuario toca la pestaña \"Retiro en tienda\".\n6. El sistema muestra \"Retiro en tienda\" activa en rojo, \"Despacho a domicilio\" en gris e inicia el flujo de retiro en tienda (B2C-121).",
-   "test_data": "v1.0.7, iOS"
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña \"Despacho a domicilio\" activa.\n5. El usuario toca la pestaña \"Retiro en tienda\".\n6. El sistema muestra \"Retiro en tienda\" activa en rojo, \"Despacho a domicilio\" en gris e inicia el flujo de retiro en tienda (B2C-121).",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "duration_s": 23.6,
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "El modal se cierra y el header sigue mostrando ícono + \"Elige una forma de entrega\" + chevron ∨.",
    "form_factor": "app",
    "id": "TC-B2C138-APP-009",
    "name": "Verificar que cerrar el modal con la X mantiene el header en \"Elige una forma de entrega\" [App] [Guest]",
-   "observation": "La X cierra el modal y el navbar sigue mostrando 'Elige una forma de entrega'. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
-   "observed": "La X cierra el modal y el navbar sigue mostrando 'Elige una forma de entrega'.",
+   "observation": "Esperado: el modal se cierra y el header sigue en 'Elige una forma de entrega'. Obtenido: al tocar la ✕ el modal 'Elige tu método de entrega' sigue abierto (2 de 2 intentos en la corrida y 2 de 2 a mano). tests-app/B2C-138.spec.ts:120. Bug: B2C-1479. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "Al tocar la ✕ el modal «Elige tu método de entrega» sigue abierto.",
    "platform": "Android",
    "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)",
    "screenshots": [
@@ -935,14 +959,14 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
      "file": "TC-B2C138-APP-009-android-p04-modal-elige-tu-metodo-de-entrega.png"
     },
     {
-     "caption": "Estado final del caso",
+     "caption": "Estado al fallar la aserción",
      "file": "TC-B2C138-APP-009-android.png"
     }
    ],
-   "spec": "tests-app/B2C-138.spec.ts:120",
-   "status": "Aprobado",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña \"Despacho a domicilio\" activa.\n5. El usuario toca la \"X\" del modal.\n6. El sistema cierra el modal y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.",
-   "test_data": "v1.0.7, iOS"
+   "spec": "tests-app/B2C-138.spec.ts",
+   "status": "Rechazado",
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña \"Despacho a domicilio\" activa.\n5. El usuario toca la \"X\" del modal.\n6. El sistema cierra el modal y muestra en el Store Locator del header ícono + \"Elige una forma de entrega\" + chevron ∨.",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   },
   {
    "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
@@ -980,46 +1004,49 @@ Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en e
    "test_data": "v1.0.7, iOS"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "El modal permanece abierto con la pantalla de error, \"Reintentar\" y \"Volver al Inicio\", y el header sigue mostrando ícono + \"Elige una forma de entrega\" + chevron ∨.",
    "form_factor": "app",
    "id": "TC-B2C138-APP-011",
    "name": "Verificar que un error al cargar el modal muestra la pantalla de error dentro del modal [App] [Guest]",
-   "observation": "Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en el Excel de data. Acción: cargar la herramienta de proxy y el endpoint del Store Locator a forzar con error. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "observation": "Causa: {HERRAMIENTA_PROXY_APP} está en TBD en el Excel de data. Acción: definir la herramienta de proxy de la app para forzar el error en *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "No se ejecutó: falta data de prueba.",
    "platform": "Android",
-   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)\n- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {STORE_LOCATOR_API_ENDPOINT}",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)\n- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema mantiene el modal abierto y muestra en su interior la pantalla de error con el mensaje correspondiente y los botones \"Reintentar\" y \"Volver al Inicio\".",
-   "test_data": "v1.0.7, iOS, {HERRAMIENTA_PROXY_APP}, {STORE_LOCATOR_API_ENDPOINT}"
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema mantiene el modal abierto y muestra en su interior la pantalla de error con el mensaje correspondiente y los botones \"Reintentar\" y \"Volver al Inicio\".",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "El modal carga el selector \"Elige tu método de entrega\" con sus pestañas.",
    "form_factor": "app",
    "id": "TC-B2C138-APP-012",
    "name": "Verificar que \"Reintentar\" vuelve a cargar el selector de método de entrega [App] [Guest]",
-   "observation": "Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en el Excel de data. Acción: cargar la herramienta de proxy y el endpoint del Store Locator a forzar con error. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "observation": "Causa: {HERRAMIENTA_PROXY_APP} está en TBD en el Excel de data. Acción: definir la herramienta de proxy de la app para forzar el error en *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "No se ejecutó: falta data de prueba.",
    "platform": "Android",
-   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)\n- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {STORE_LOCATOR_API_ENDPOINT}",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)\n- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema mantiene el modal abierto y muestra en su interior la pantalla de error con el mensaje correspondiente y los botones \"Reintentar\" y \"Volver al Inicio\".\n5. El usuario desactiva en {HERRAMIENTA_PROXY_APP} el error forzado en {STORE_LOCATOR_API_ENDPOINT}.\n6. El usuario toca \"Reintentar\".\n7. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña \"Despacho a domicilio\" activa.",
-   "test_data": "v1.0.7, iOS, {HERRAMIENTA_PROXY_APP}, {STORE_LOCATOR_API_ENDPOINT}"
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El sistema carga el Home de la App con el Store Locator en el header.\n3. El usuario toca el chevron ∨ del Store Locator en el header.\n4. El sistema mantiene el modal abierto y muestra en su interior la pantalla de error con el mensaje correspondiente y los botones \"Reintentar\" y \"Volver al Inicio\".\n5. El usuario desactiva en {HERRAMIENTA_PROXY_APP} el error forzado en *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc.\n6. El usuario toca \"Reintentar\".\n7. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña \"Despacho a domicilio\" activa.",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador Medium_Phone_API_36.1)",
-   "executed_at": "2026-10-14",
+   "device": "sdk_gphone64_x86_64 (Pixel 4 API 33) · Android 13 · emulador local",
+   "executed_at": "2026-11-09",
    "expected": "El usuario queda en el Home de la App.",
    "form_factor": "app",
    "id": "TC-B2C138-APP-013",
    "name": "Verificar que \"Volver al Inicio\" del error del modal redirige al Home [App] [Guest]",
-   "observation": "Causa: {HERRAMIENTA_PROXY_APP} y {STORE_LOCATOR_API_ENDPOINT} están en TBD en el Excel de data. Acción: cargar la herramienta de proxy y el endpoint del Store Locator a forzar con error. Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "observation": "Causa: {HERRAMIENTA_PROXY_APP} está en TBD en el Excel de data. Acción: definir la herramienta de proxy de la app para forzar el error en *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc y re-ejecutar. Corrida solo Android con la app ya instalada en el emulador (cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador)); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' y se tomó Android=Android. iOS no certificado.",
+   "observed": "No se ejecutó: falta data de prueba.",
    "platform": "Android",
-   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)\n- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request {STORE_LOCATOR_API_ENDPOINT}",
+   "preconditions": "- User type: Guest\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sin método de entrega seleccionado (App recién instalada o con datos borrados)\n- {HERRAMIENTA_PROXY_APP} configurado para devolver error en la request *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/custom/smu-delivery/v1/organizations/f_ecom_bmkg_dev/stores?siteId=Unimarc",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El usuario navega a la PLP equivalente a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno.\n3. El sistema carga la PLP con el Store Locator en el header.\n4. El usuario toca el chevron ∨ del Store Locator en el header.\n5. El sistema mantiene el modal abierto y muestra en su interior la pantalla de error con el mensaje correspondiente y los botones \"Reintentar\" y \"Volver al Inicio\".\n6. El usuario toca \"Volver al Inicio\".\n7. El sistema cierra el modal y redirige al Home de la App.",
-   "test_data": "v1.0.7, iOS, {HERRAMIENTA_PROXY_APP}, https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno, {STORE_LOCATOR_API_ENDPOINT}"
+   "steps": "1. El usuario abre la App cl.smu.unimarcapp.sfcc.qa 1.0 (versionCode 3, ya instalada en el emulador).\n2. El usuario navega a la PLP equivalente a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno.\n3. El sistema carga la PLP con el Store Locator en el header.\n4. El usuario toca el chevron ∨ del Store Locator en el header.\n5. El sistema mantiene el modal abierto y muestra en su interior la pantalla de error con el mensaje correspondiente y los botones \"Reintentar\" y \"Volver al Inicio\".\n6. El usuario toca \"Volver al Inicio\".\n7. El sistema cierra el modal y redirige al Home de la App.",
+   "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional)."
   }
  ]
 }

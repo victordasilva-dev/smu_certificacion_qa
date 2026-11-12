@@ -3,11 +3,11 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-61 |
-| Última actualización | 2026-10-29 |
-| Ejecutado por | Daniel Uñuruco |
+| Última actualización | 2026-11-09 |
+| Ejecutado por | Victor Chirinos |
 | Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
-| Navegador Mobile | chromium |
+| Navegador Mobile | webkit |
 | Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-61 Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
@@ -23,6 +23,7 @@
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-09 | 25 | TC-B2C61-D-001, TC-B2C61-D-006, TC-B2C61-D-007, TC-B2C61-D-009, TC-B2C61-D-010, TC-B2C61-D-011, TC-B2C61-D-012, TC-B2C61-D-013, TC-B2C61-D-014, TC-B2C61-D-015, TC-B2C61-D-017, TC-B2C61-D-019, TC-B2C61-M-003, TC-B2C61-M-004, TC-B2C61-M-005, TC-B2C61-M-006, TC-B2C61-M-007, TC-B2C61-M-009, TC-B2C61-M-010, TC-B2C61-M-011, TC-B2C61-M-012, TC-B2C61-M-013, TC-B2C61-M-014, TC-B2C61-M-015, TC-B2C61-M-019 |
 | 2026-10-29 | 50 | TC-B2C61-D-001, TC-B2C61-D-002, TC-B2C61-D-003, TC-B2C61-D-004, TC-B2C61-D-005, TC-B2C61-D-006, TC-B2C61-D-007, TC-B2C61-D-008, TC-B2C61-D-009, TC-B2C61-D-010, TC-B2C61-D-011, TC-B2C61-D-012, TC-B2C61-D-013, TC-B2C61-D-014, TC-B2C61-D-015, TC-B2C61-D-016, TC-B2C61-D-017, TC-B2C61-D-018, TC-B2C61-D-019, TC-B2C61-D-020, TC-B2C61-D-021, TC-B2C61-D-022, TC-B2C61-D-023, TC-B2C61-D-024, TC-B2C61-D-025, TC-B2C61-M-001, TC-B2C61-M-002, TC-B2C61-M-003, TC-B2C61-M-004, TC-B2C61-M-005, TC-B2C61-M-006, TC-B2C61-M-007, TC-B2C61-M-008, TC-B2C61-M-009, TC-B2C61-M-010, TC-B2C61-M-011, TC-B2C61-M-012, TC-B2C61-M-013, TC-B2C61-M-014, TC-B2C61-M-015, TC-B2C61-M-016, TC-B2C61-M-017, TC-B2C61-M-018, TC-B2C61-M-019, TC-B2C61-M-020, TC-B2C61-M-021, TC-B2C61-M-022, TC-B2C61-M-023, TC-B2C61-M-024, TC-B2C61-M-025 |
 
 ## Detalle por caso de prueba
@@ -32,7 +33,7 @@
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -42,7 +43,7 @@
 - User type: Guest
 - Viewport: Desktop 1440x900
 - Ubicacion: Carrito
-- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto
+- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto
 
 **Data utilizada**
 
@@ -63,11 +64,11 @@ La landing muestra Vilanova 122, Las Condes, sin interrumpir el flujo del usuari
 
 **Resultado obtenido**
 
-No ejecutado: falta data de prueba.
+No se ejecutó: falta data de prueba.
 
 **Observación**
 
-Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con --only.
+Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con --only.
 
 ---
 
@@ -254,7 +255,7 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -265,7 +266,7 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_
 - Viewport: Desktop 1440x900
 - Ubicacion: Carrito
 - La dirección Calle Uno 23, La Florida está seteada como invitado
-- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto
+- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto
 
 **Data utilizada**
 
@@ -283,11 +284,11 @@ La landing sigue mostrando Vilanova 122, Las Condes tras navegar.
 
 **Resultado obtenido**
 
-No ejecutado: falta data de prueba.
+No se ejecutó: falta data de prueba.
 
 **Observación**
 
-Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con --only.
+Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con --only.
 
 ---
 
@@ -296,7 +297,7 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
@@ -306,9 +307,9 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_
 - User type: Logueado
 - Viewport: Desktop 1440x900
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta (cuenta del Excel de data)
+- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com / Avatar1234.
 - La dirección Calle Uno 23, La Florida está seteada en la cuenta
-- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto
+- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto
 
 **Data utilizada**
 
@@ -326,11 +327,11 @@ La landing muestra Vilanova 122, Las Condes.
 
 **Resultado obtenido**
 
-No ejecutado: falta data de prueba.
+No se ejecutó: falta data de prueba.
 
 **Observación**
 
-Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con --only.
+Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con --only.
 
 ---
 
@@ -380,19 +381,19 @@ El producto declarado se muestra disponible en la tienda activa: botón «Agrega
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:138 |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Desktop 1440x900
 - Ubicacion: SRP
-- La dirección activa es A. Las Conder 14791, Lo Barnechea
-- 000000000000674797-UN no tiene stock en la tienda de A. Las Conder 14791, Lo Barnechea
+- La dirección activa es A. Las Condes 14791, Lo Barnechea
+- 000000000000674797-UN no tiene stock en la tienda de A. Las Condes 14791, Lo Barnechea
 
 **Data utilizada**
 
@@ -409,15 +410,17 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 
 **Resultado obtenido**
 
-El shelf del SKU declarado, con la dirección de la otra tienda activa, se muestra con «Agregar» y sin etiqueta de no disponible (idéntico al de la tienda de partida).
+El shelf del SKU en la SRP se muestra con «Agregar» y sin etiqueta de no disponible.
 
 **Observación**
 
-Causa: la precondición «el SKU no tiene stock en la tienda de la dirección declarada» no se verifica en el ambiente: con esa dirección el sitio ofrece el producto con «Agregar» habilitado. Acción: confirmar/cargar en el Excel de data un SKU y una dirección donde el SKU realmente no tenga stock, y re-ejecutar.
+Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.
 
 **Evidencia**
 
 ![Paso 2 — resultados con el shelf del sku](<B2C-61 Evidencias/TC-B2C61-D-009-p02-resultados-con-el-shelf-del-sku.png>)
+
+![Estado al fallar la aserción](<B2C-61 Evidencias/TC-B2C61-D-009.png>)
 
 ---
 
@@ -426,10 +429,11 @@ Causa: la precondición «el SKU no tiene stock en la tienda de la dirección de
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
@@ -437,7 +441,7 @@ Causa: la precondición «el SKU no tiene stock en la tienda de la dirección de
 - Viewport: Desktop 1440x900
 - Ubicacion: SRP
 - La dirección activa es Calle Uno 23, La Florida
-- {SKU_INACTIVO_TIENDA_A} está inactivo para la tienda de Calle Uno 23, La Florida
+- 000000000400254005-UN está inactivo para la tienda de Calle Uno 23, La Florida
 
 **Data utilizada**
 
@@ -445,20 +449,30 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 
 **Pasos ejecutados**
 
-1. El usuario busca {SKU_INACTIVO_TIENDA_A}.
-2. El usuario ingresa a la PDP de {SKU_INACTIVO_TIENDA_A}.
+1. El usuario busca 000000000400254005-UN.
+2. El usuario ingresa a la PDP de 000000000400254005-UN.
 
 **Resultado esperado**
 
-{SKU_INACTIVO_TIENDA_A} no aparece en los resultados y su PDP no se muestra.
+000000000400254005-UN no aparece en los resultados y su PDP no se muestra.
 
 **Resultado obtenido**
 
-No ejecutado: falta data de prueba.
+El SKU aparece en los resultados (1 producto) y su PDP se muestra con «Pronto disponible».
 
 **Observación**
 
-Causa: token(s) en TBD en el Excel de data: {SKU_INACTIVO_TIENDA_A}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con --only.
+Causa: con Calle Uno 23, La Florida activa, 000000000400254005-UN aparece en la SRP y su PDP se abre con «Pronto disponible» y «Ver similares» (presentación de producto sin stock, no de producto inactivo); desde el storefront no se puede confirmar que esté inactivo para esa tienda. Acción: confirmar en BM que el SKU está offline/inactivo para la tienda de Calle Uno 23, La Florida (o cargar uno que lo esté) y re-ejecutar.
+
+**Evidencia**
+
+![Paso 0 — direccion de la tienda a aplicada](<B2C-61 Evidencias/TC-B2C61-D-010-p00-direccion-de-la-tienda-a-aplicada.png>)
+
+![Paso 1 — resultados de la busqueda del sku](<B2C-61 Evidencias/TC-B2C61-D-010-p01-resultados-de-la-busqueda-del-sku.png>)
+
+![Paso 2 — pdp del sku](<B2C-61 Evidencias/TC-B2C61-D-010-p02-pdp-del-sku.png>)
+
+![Estado al fallar la aserción](<B2C-61 Evidencias/TC-B2C61-D-010.png>)
 
 ---
 
@@ -467,11 +481,11 @@ Causa: token(s) en TBD en el Excel de data: {SKU_INACTIVO_TIENDA_A}. Acción: ca
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:152 |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
@@ -491,7 +505,7 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 2. El sistema carga el Home.
 3. El usuario hace clic en el Store Locator del header.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
-5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y hace clic en "Confirmar dirección".
+5. El usuario ingresa la dirección A. Las Condes 14791, Lo Barnechea, la selecciona de las sugerencias y hace clic en "Confirmar dirección".
 6. El sistema muestra el modal "Algunos productos podrían agotarse" (B2C-122).
 7. El usuario hace clic en "Sí, continuar".
 8. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.
@@ -502,11 +516,11 @@ Se muestra el modal de B2C-122 y, tras continuar, 000000000000674797-UN queda co
 
 **Resultado obtenido**
 
-Se mostró el modal «Algunos productos podrían agotarse», pero tras continuar el SKU sigue en el carro como disponible en la nueva tienda (sin marca de no disponible).
+Se mostró el modal de B2C-122; tras continuar el SKU sigue disponible en el carro.
 
 **Observación**
 
-Causa: la precondición «el SKU no tiene stock en la tienda de la dirección nueva» no se verifica: el sitio lo mantiene disponible. Acción: cargar un SKU/dirección sin stock en la nueva tienda y re-ejecutar.
+Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas: tras confirmar la nueva dirección se muestra el modal «Algunos productos podrían agotarse», pero el SKU sigue disponible porque tiene stock en la nueva tienda. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.
 
 **Evidencia**
 
@@ -516,6 +530,8 @@ Causa: la precondición «el SKU no tiene stock en la tienda de la dirección nu
 
 ![Paso 8 — carro tras el cambio de tienda](<B2C-61 Evidencias/TC-B2C61-D-011-p08-carro-tras-el-cambio-de-tienda.png>)
 
+![Estado al fallar la aserción](<B2C-61 Evidencias/TC-B2C61-D-011.png>)
+
 ---
 
 ### TC-B2C61-D-012 - Verificar que al cambiar de tienda un producto que ahora tiene stock se habilita [Desktop] [Guest]
@@ -523,18 +539,18 @@ Causa: la precondición «el SKU no tiene stock en la tienda de la dirección nu
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:171 |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Desktop 1440x900
 - Ubicacion: Carrito
-- La dirección activa es A. Las Conder 14791, Lo Barnechea, donde 000000000000674797-UN no tiene stock
+- La dirección activa es A. Las Condes 14791, Lo Barnechea, donde 000000000000674797-UN no tiene stock
 - El carro está vacío
 
 **Data utilizada**
@@ -556,19 +572,15 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 
 **Resultado obtenido**
 
-En la dirección declarada como «sin stock» el SKU ya se mostraba disponible con «Agregar» habilitado; tras cambiar a la otra tienda sigue disponible (no hay transición).
+En la dirección de partida el SKU ya muestra «Agregar» habilitado.
 
 **Observación**
 
-Causa: la precondición «en la dirección de partida el SKU no tiene stock» no se verifica, por lo que el caso no puede ejercitar el paso de no disponible a disponible. Acción: cargar un SKU/dirección sin stock en la dirección de partida y re-ejecutar.
+Causa: precondición no disponible: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.
 
 **Evidencia**
 
 ![Paso 0 — pdp en la tienda sin stock estado previo](<B2C-61 Evidencias/TC-B2C61-D-012-p00-pdp-en-la-tienda-sin-stock-estado-previo.png>)
-
-![Paso 5 — direccion de la tienda con stock aplicada](<B2C-61 Evidencias/TC-B2C61-D-012-p05-direccion-de-la-tienda-con-stock-aplicada.png>)
-
-![Paso 6 — pdp con agregar habilitado](<B2C-61 Evidencias/TC-B2C61-D-012-p06-pdp-con-agregar-habilitado.png>)
 
 ---
 
@@ -577,18 +589,18 @@ Causa: la precondición «en la dirección de partida el SKU no tiene stock» no
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:191 |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Desktop 1440x900
 - Ubicacion: PDP
-- La dirección activa es A. Las Conder 14791, Lo Barnechea
+- La dirección activa es A. Las Condes 14791, Lo Barnechea
 
 **Data utilizada**
 
@@ -604,11 +616,11 @@ El botón "Agregar" aparece deshabilitado, se muestra "Este producto no esta dis
 
 **Resultado obtenido**
 
-La PDP muestra el producto con «Agregar» habilitado y sin el mensaje «Este producto no esta disponible para tu dirección».
+La PDP muestra «Agregar» habilitado y no el mensaje «Este producto no esta disponible para tu dirección».
 
 **Observación**
 
-Causa: la precondición «el SKU no tiene stock en la tienda de la dirección declarada» no se verifica en el ambiente. Acción: cargar un SKU/dirección sin stock y re-ejecutar.
+Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.
 
 **Evidencia**
 
@@ -621,18 +633,18 @@ Causa: la precondición «el SKU no tiene stock en la tienda de la dirección de
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:204 |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Desktop 1440x900
 - Ubicacion: PDP
-- La dirección activa es A. Las Conder 14791, Lo Barnechea
+- La dirección activa es A. Las Condes 14791, Lo Barnechea
 - 000000000000652899-UN tiene una promoción vigente solo para la tienda de Calle Uno 23, La Florida
 
 **Data utilizada**
@@ -649,11 +661,11 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 
 **Resultado obtenido**
 
-La PDP muestra solo el precio base, igual que en la tienda con la promoción.
+La PDP muestra solo el precio base ($990).
 
 **Observación**
 
-Causa: la precondición «el SKU tiene una promoción vigente solo para la tienda A» no se verifica: ni en la tienda A ni en la otra se observa descuento (ver 015); el resultado no es concluyente. Acción: confirmar/cargar un SKU con promoción vigente solo en la tienda A y re-ejecutar.
+Causa: la precondición «000000000000652899-UN tiene promoción vigente solo en la tienda de Calle Uno 23, La Florida» no se verifica: el SKU muestra $990 sin descuento en ambas tiendas (ver 015), así que el precio base observado no prueba nada. Acción: cargar en BM una promoción vigente solo para la tienda A sobre el SKU y re-ejecutar.
 
 **Evidencia**
 
@@ -666,11 +678,11 @@ Causa: la precondición «el SKU tiene una promoción vigente solo para la tiend
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:217 |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
@@ -694,11 +706,11 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 
 **Resultado obtenido**
 
-La PDP, con la dirección de la tienda A, muestra un único precio base sin descuento.
+La PDP muestra un único precio ($990), sin descuento.
 
 **Observación**
 
-Causa: la precondición «el SKU tiene una promoción vigente en la tienda A» no se observa en el ambiente (el carro también cobra el precio base). Acción: confirmar/cargar un SKU con promoción vigente en la tienda A y re-ejecutar.
+Causa: 000000000000652899-UN no muestra promoción en la tienda de Calle Uno 23, La Florida (precio único $990), igual que en la otra tienda; la promoción declarada no existe o no está vigente en el ambiente. Acción: cargar en BM una promoción vigente solo para la tienda A sobre el SKU y re-ejecutar.
 
 **Evidencia**
 
@@ -841,10 +853,10 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {DIRECCION_T
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
+| Navegador | webkit |
 
 **Precondiciones**
 
@@ -852,7 +864,7 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {DIRECCION_T
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
 - Sesión nueva sin dirección ni tienda seteada
-- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto
+- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto
 
 **Data utilizada**
 
@@ -868,11 +880,11 @@ La landing muestra QA B2C-61 y el Store Locator sigue sin tienda asignada.
 
 **Resultado obtenido**
 
-No ejecutado: falta data de prueba.
+No se ejecutó: falta data de prueba.
 
 **Observación**
 
-Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con --only.
+Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con --only.
 
 ---
 
@@ -881,10 +893,10 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
+| Navegador | webkit |
 
 **Precondiciones**
 
@@ -893,7 +905,7 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_
 - Ubicacion: Carrito
 - La dirección activa es Calle Uno 23, La Florida
 - El carro está vacío
-- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto
+- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto
 
 **Data utilizada**
 
@@ -904,7 +916,7 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 1. El usuario ingresa a {PD_LANDING_SEGMENTO_URL}.
 2. El sistema muestra Vilanova 122, Las Condes.
 3. El usuario toca el Store Locator del header.
-4. El usuario ingresa A. Las Conder 14791, Lo Barnechea y la confirma.
+4. El usuario ingresa A. Las Condes 14791, Lo Barnechea y la confirma.
 5. El usuario revisa la landing sin recargar.
 6. El usuario vuelve a cargar la landing.
 
@@ -914,11 +926,11 @@ Sin recargar sigue Vilanova 122, Las Condes; al volver a cargar la landing se mu
 
 **Resultado obtenido**
 
-No ejecutado: falta data de prueba.
+No se ejecutó: falta data de prueba.
 
 **Observación**
 
-Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con --only.
+Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con --only.
 
 ---
 
@@ -927,10 +939,10 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
+| Navegador | webkit |
 
 **Precondiciones**
 
@@ -938,7 +950,7 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
 - La dirección activa es Calle Uno 23, La Florida
-- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto
+- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto
 
 **Data utilizada**
 
@@ -961,11 +973,11 @@ Se muestra el flujo Sin cobertura (B2C-123) y la landing sigue mostrando Vilanov
 
 **Resultado obtenido**
 
-No ejecutado: falta data de prueba.
+No se ejecutó: falta data de prueba.
 
 **Observación**
 
-Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con --only.
+Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con --only.
 
 ---
 
@@ -974,10 +986,10 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
+| Navegador | webkit |
 
 **Precondiciones**
 
@@ -985,7 +997,7 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
 - La dirección Calle Uno 23, La Florida está seteada como invitado
-- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto
+- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto
 
 **Data utilizada**
 
@@ -1003,11 +1015,11 @@ La landing sigue mostrando Vilanova 122, Las Condes tras navegar.
 
 **Resultado obtenido**
 
-No ejecutado: falta data de prueba.
+No se ejecutó: falta data de prueba.
 
 **Observación**
 
-Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con --only.
+Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con --only.
 
 ---
 
@@ -1016,19 +1028,19 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
+| Navegador | webkit |
 
 **Precondiciones**
 
 - User type: Logueado
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
-- Sesión iniciada con la cuenta (cuenta del Excel de data)
+- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com / Avatar1234.
 - La dirección Calle Uno 23, La Florida está seteada en la cuenta
-- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto
+- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto
 
 **Data utilizada**
 
@@ -1046,11 +1058,11 @@ La landing muestra Vilanova 122, Las Condes.
 
 **Resultado obtenido**
 
-No ejecutado: falta data de prueba.
+No se ejecutó: falta data de prueba.
 
 **Observación**
 
-Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con --only.
+Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con --only.
 
 ---
 
@@ -1100,19 +1112,19 @@ El producto declarado se muestra disponible en la tienda activa: botón «Agrega
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:138 |
+| Navegador | webkit |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Mobile 390x844
 - Ubicacion: SRP
-- La dirección activa es A. Las Conder 14791, Lo Barnechea
-- 000000000000674797-UN no tiene stock en la tienda de A. Las Conder 14791, Lo Barnechea
+- La dirección activa es A. Las Condes 14791, Lo Barnechea
+- 000000000000674797-UN no tiene stock en la tienda de A. Las Condes 14791, Lo Barnechea
 
 **Data utilizada**
 
@@ -1129,15 +1141,17 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 
 **Resultado obtenido**
 
-El shelf del SKU declarado, con la dirección de la otra tienda activa, se muestra con «Agregar» y sin etiqueta de no disponible (idéntico al de la tienda de partida).
+El shelf del SKU en la SRP se muestra con «Agregar» y sin etiqueta de no disponible.
 
 **Observación**
 
-Causa: la precondición «el SKU no tiene stock en la tienda de la dirección declarada» no se verifica en el ambiente: con esa dirección el sitio ofrece el producto con «Agregar» habilitado. Acción: confirmar/cargar en el Excel de data un SKU y una dirección donde el SKU realmente no tenga stock, y re-ejecutar.
+Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.
 
 **Evidencia**
 
 ![Paso 2 — resultados con el shelf del sku](<B2C-61 Evidencias/TC-B2C61-M-009-p02-resultados-con-el-shelf-del-sku.png>)
+
+![Estado al fallar la aserción](<B2C-61 Evidencias/TC-B2C61-M-009.png>)
 
 ---
 
@@ -1146,10 +1160,11 @@ Causa: la precondición «el SKU no tiene stock en la tienda de la dirección de
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
+| Navegador | webkit |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
@@ -1157,7 +1172,7 @@ Causa: la precondición «el SKU no tiene stock en la tienda de la dirección de
 - Viewport: Mobile 390x844
 - Ubicacion: SRP
 - La dirección activa es Calle Uno 23, La Florida
-- {SKU_INACTIVO_TIENDA_A} está inactivo para la tienda de Calle Uno 23, La Florida
+- 000000000400254005-UN está inactivo para la tienda de Calle Uno 23, La Florida
 
 **Data utilizada**
 
@@ -1165,20 +1180,30 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 
 **Pasos ejecutados**
 
-1. El usuario busca {SKU_INACTIVO_TIENDA_A}.
-2. El usuario ingresa a la PDP de {SKU_INACTIVO_TIENDA_A}.
+1. El usuario busca 000000000400254005-UN.
+2. El usuario ingresa a la PDP de 000000000400254005-UN.
 
 **Resultado esperado**
 
-{SKU_INACTIVO_TIENDA_A} no aparece en los resultados y su PDP no se muestra.
+000000000400254005-UN no aparece en los resultados y su PDP no se muestra.
 
 **Resultado obtenido**
 
-No ejecutado: falta data de prueba.
+El SKU aparece en los resultados (1 producto) y su PDP se muestra con «Pronto disponible».
 
 **Observación**
 
-Causa: token(s) en TBD en el Excel de data: {SKU_INACTIVO_TIENDA_A}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con --only.
+Causa: con Calle Uno 23, La Florida activa, 000000000400254005-UN aparece en la SRP y su PDP se abre con «Pronto disponible» y «Ver similares» (presentación de producto sin stock, no de producto inactivo); desde el storefront no se puede confirmar que esté inactivo para esa tienda. Acción: confirmar en BM que el SKU está offline/inactivo para la tienda de Calle Uno 23, La Florida (o cargar uno que lo esté) y re-ejecutar.
+
+**Evidencia**
+
+![Paso 0 — direccion de la tienda a aplicada](<B2C-61 Evidencias/TC-B2C61-M-010-p00-direccion-de-la-tienda-a-aplicada.png>)
+
+![Paso 1 — resultados de la busqueda del sku](<B2C-61 Evidencias/TC-B2C61-M-010-p01-resultados-de-la-busqueda-del-sku.png>)
+
+![Paso 2 — pdp del sku](<B2C-61 Evidencias/TC-B2C61-M-010-p02-pdp-del-sku.png>)
+
+![Estado al fallar la aserción](<B2C-61 Evidencias/TC-B2C61-M-010.png>)
 
 ---
 
@@ -1187,11 +1212,11 @@ Causa: token(s) en TBD en el Excel de data: {SKU_INACTIVO_TIENDA_A}. Acción: ca
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:152 |
+| Navegador | webkit |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
@@ -1211,7 +1236,7 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 2. El sistema carga el Home.
 3. El usuario toca el Store Locator del header.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
-5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y toca "Confirmar dirección".
+5. El usuario ingresa la dirección A. Las Condes 14791, Lo Barnechea, la selecciona de las sugerencias y toca "Confirmar dirección".
 6. El sistema muestra el modal "Algunos productos podrían agotarse" (B2C-122).
 7. El usuario toca "Sí, continuar".
 8. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.
@@ -1222,19 +1247,17 @@ Se muestra el modal de B2C-122 y, tras continuar, 000000000000674797-UN queda co
 
 **Resultado obtenido**
 
-Se mostró el modal «Algunos productos podrían agotarse», pero tras continuar el SKU sigue en el carro como disponible en la nueva tienda (sin marca de no disponible).
+Se mostró el modal de B2C-122; tras continuar el SKU sigue disponible en el carro.
 
 **Observación**
 
-Causa: la precondición «el SKU no tiene stock en la tienda de la dirección nueva» no se verifica: el sitio lo mantiene disponible. Acción: cargar un SKU/dirección sin stock en la nueva tienda y re-ejecutar.
+Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas: tras confirmar la nueva dirección se muestra el modal «Algunos productos podrían agotarse», pero el SKU sigue disponible porque tiene stock en la nueva tienda. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.
 
 **Evidencia**
 
 ![Paso 0 — sku en el carro con la tienda de origen](<B2C-61 Evidencias/TC-B2C61-M-011-p00-sku-en-el-carro-con-la-tienda-de-origen.png>)
 
-![Paso 6 — modal algunos productos podrian agotarse](<B2C-61 Evidencias/TC-B2C61-M-011-p06-modal-algunos-productos-podrian-agotarse.png>)
-
-![Paso 8 — carro tras el cambio de tienda](<B2C-61 Evidencias/TC-B2C61-M-011-p08-carro-tras-el-cambio-de-tienda.png>)
+![Estado al fallar la aserción](<B2C-61 Evidencias/TC-B2C61-M-011.png>)
 
 ---
 
@@ -1243,18 +1266,18 @@ Causa: la precondición «el SKU no tiene stock en la tienda de la dirección nu
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:171 |
+| Navegador | webkit |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Mobile 390x844
 - Ubicacion: Carrito
-- La dirección activa es A. Las Conder 14791, Lo Barnechea, donde 000000000000674797-UN no tiene stock
+- La dirección activa es A. Las Condes 14791, Lo Barnechea, donde 000000000000674797-UN no tiene stock
 - El carro está vacío
 
 **Data utilizada**
@@ -1276,19 +1299,15 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 
 **Resultado obtenido**
 
-En la dirección declarada como «sin stock» el SKU ya se mostraba disponible con «Agregar» habilitado; tras cambiar a la otra tienda sigue disponible (no hay transición).
+En la dirección de partida el SKU ya muestra «Agregar» habilitado.
 
 **Observación**
 
-Causa: la precondición «en la dirección de partida el SKU no tiene stock» no se verifica, por lo que el caso no puede ejercitar el paso de no disponible a disponible. Acción: cargar un SKU/dirección sin stock en la dirección de partida y re-ejecutar.
+Causa: precondición no disponible: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.
 
 **Evidencia**
 
 ![Paso 0 — pdp en la tienda sin stock estado previo](<B2C-61 Evidencias/TC-B2C61-M-012-p00-pdp-en-la-tienda-sin-stock-estado-previo.png>)
-
-![Paso 5 — direccion de la tienda con stock aplicada](<B2C-61 Evidencias/TC-B2C61-M-012-p05-direccion-de-la-tienda-con-stock-aplicada.png>)
-
-![Paso 6 — pdp con agregar habilitado](<B2C-61 Evidencias/TC-B2C61-M-012-p06-pdp-con-agregar-habilitado.png>)
 
 ---
 
@@ -1297,18 +1316,18 @@ Causa: la precondición «en la dirección de partida el SKU no tiene stock» no
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:191 |
+| Navegador | webkit |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Mobile 390x844
 - Ubicacion: PDP
-- La dirección activa es A. Las Conder 14791, Lo Barnechea
+- La dirección activa es A. Las Condes 14791, Lo Barnechea
 
 **Data utilizada**
 
@@ -1324,11 +1343,11 @@ El botón "Agregar" aparece deshabilitado, se muestra "Este producto no esta dis
 
 **Resultado obtenido**
 
-La PDP muestra el producto con «Agregar» habilitado y sin el mensaje «Este producto no esta disponible para tu dirección».
+La PDP muestra «Agregar» habilitado y no el mensaje «Este producto no esta disponible para tu dirección».
 
 **Observación**
 
-Causa: la precondición «el SKU no tiene stock en la tienda de la dirección declarada» no se verifica en el ambiente. Acción: cargar un SKU/dirección sin stock y re-ejecutar.
+Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.
 
 **Evidencia**
 
@@ -1341,18 +1360,18 @@ Causa: la precondición «el SKU no tiene stock en la tienda de la dirección de
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:204 |
+| Navegador | webkit |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
 - User type: Guest
 - Viewport: Mobile 390x844
 - Ubicacion: PDP
-- La dirección activa es A. Las Conder 14791, Lo Barnechea
+- La dirección activa es A. Las Condes 14791, Lo Barnechea
 - 000000000000652899-UN tiene una promoción vigente solo para la tienda de Calle Uno 23, La Florida
 
 **Data utilizada**
@@ -1369,11 +1388,11 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 
 **Resultado obtenido**
 
-La PDP muestra solo el precio base, igual que en la tienda con la promoción.
+La PDP muestra solo el precio base ($990).
 
 **Observación**
 
-Causa: la precondición «el SKU tiene una promoción vigente solo para la tienda A» no se verifica: ni en la tienda A ni en la otra se observa descuento (ver 015); el resultado no es concluyente. Acción: confirmar/cargar un SKU con promoción vigente solo en la tienda A y re-ejecutar.
+Causa: la precondición «000000000000652899-UN tiene promoción vigente solo en la tienda de Calle Uno 23, La Florida» no se verifica: el SKU muestra $990 sin descuento en ambas tiendas (ver 015), así que el precio base observado no prueba nada. Acción: cargar en BM una promoción vigente solo para la tienda A sobre el SKU y re-ejecutar.
 
 **Evidencia**
 
@@ -1386,11 +1405,11 @@ Causa: la precondición «el SKU tiene una promoción vigente solo para la tiend
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:217 |
+| Navegador | webkit |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
@@ -1414,11 +1433,11 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 
 **Resultado obtenido**
 
-La PDP, con la dirección de la tienda A, muestra un único precio base sin descuento.
+La PDP muestra un único precio ($990), sin descuento.
 
 **Observación**
 
-Causa: la precondición «el SKU tiene una promoción vigente en la tienda A» no se observa en el ambiente (el carro también cobra el precio base). Acción: confirmar/cargar un SKU con promoción vigente en la tienda A y re-ejecutar.
+Causa: 000000000000652899-UN no muestra promoción en la tienda de Calle Uno 23, La Florida (precio único $990), igual que en la otra tienda; la promoción declarada no existe o no está vigente en el ambiente. Acción: cargar en BM una promoción vigente solo para la tienda A sobre el SKU y re-ejecutar.
 
 **Evidencia**
 
@@ -1472,11 +1491,11 @@ La PDP muestra la promoción % Unipay con el precio Unipay como ahorro potencial
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:242 |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
@@ -1486,7 +1505,7 @@ La PDP muestra la promoción % Unipay con el precio Unipay como ahorro potencial
 - Sesión nueva sin dirección ni tienda seteada
 - El carro está vacío
 - 000000000000675191-UN tiene stock en la tienda abastecedora de Calle Uno 23, La Florida (warehouseId 400)
-- DevTools abierto en la pestaña Network, filtrando la request (endpoint del basket del Excel de data)
+- DevTools abierto en la pestaña Network, filtrando la request *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/customer/shopper-customers/v1/organizations/f_ecom_bmkg_dev/customers/abk0k1kXsWxHARxbs2xaYYxKs1/baskets
 
 **Data utilizada**
 
@@ -1498,32 +1517,30 @@ Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje
 2. El sistema carga el Home.
 3. El usuario hace clic en el Store Locator del header.
 4. El sistema abre el modal "Elige tu método de entrega" con la pestaña Despacho a domicilio.
-5. El usuario ingresa la dirección Calle Uno 23, La Florida, la selecciona de las sugerencias y hace clic en "Confirmar dirección".
+5. El usuario ingresa la dirección Av. Perú 760, Recoleta, la selecciona de las sugerencias y hace clic en "Confirmar dirección".
 6. El usuario busca 000000000000675191-UN y hace clic en "Agregar".
 7. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.
-8. El usuario revisa en DevTools la respuesta de (endpoint del basket del Excel de data) (basket): dirección de envío y warehouseId.
+8. El usuario revisa en DevTools la respuesta de *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/customer/shopper-customers/v1/organizations/f_ecom_bmkg_dev/customers/abk0k1kXsWxHARxbs2xaYYxKs1/baskets (basket): dirección de envío y warehouseId.
 9. El usuario recarga https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.
-10. El usuario vuelve a revisar la respuesta de (endpoint del basket del Excel de data).
+10. El usuario vuelve a revisar la respuesta de *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/customer/shopper-customers/v1/organizations/f_ecom_bmkg_dev/customers/abk0k1kXsWxHARxbs2xaYYxKs1/baskets.
 
 **Resultado esperado**
 
-El basket contiene 000000000000675191-UN y tiene asociados la dirección de envío Calle Uno 23, La Florida y el warehouseId 400; tras recargar, el basket mantiene la misma dirección y warehouseId.
+El basket contiene 000000000000675191-UN y tiene asociados la dirección de envío Av. Perú 760, Recoleta y el warehouseId 400; tras recargar, el basket mantiene la misma dirección y warehouseId.
 
 **Resultado obtenido**
 
-El basket contiene el SKU y la dirección de envío declarada; la tienda abastecedora asociada es la 581 y no aparece el warehouseId declarado (400).
+En la SRP el SKU aparece con «Pronto disponible» y «Ver similares».
 
 **Observación**
 
-Causa: el warehouseId declarado en el Excel de data no coincide con la tienda abastecedora que el ambiente asocia a la dirección (581); no es posible determinar si el dato está desactualizado o es un defecto. Acción: confirmar el warehouseId vigente de la dirección con el dueño de la data y re-ejecutar.
+Causa: 000000000000675191-UN se muestra «Pronto disponible» (sin «Agregar») con la dirección Av. Perú 760, Recoleta, así que no se puede agregar al carro para revisar el basket. Acción: declarar un SKU con stock en la tienda de Av. Perú 760, Recoleta (o alinear la precondición, que habla de la tienda de Calle Uno 23, La Florida) y re-ejecutar.
 
 **Evidencia**
 
 ![Paso 5 — direccion aplicada en el header](<B2C-61 Evidencias/TC-B2C61-D-017-p05-direccion-aplicada-en-el-header.png>)
 
-![Paso 6 — producto agregado](<B2C-61 Evidencias/TC-B2C61-D-017-p06-producto-agregado.png>)
-
-![Paso 7 — carro con el producto](<B2C-61 Evidencias/TC-B2C61-D-017-p07-carro-con-el-producto.png>)
+![Estado al fallar la aserción](<B2C-61 Evidencias/TC-B2C61-D-017.png>)
 
 ---
 
@@ -1688,18 +1705,18 @@ Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {DIRECCION_T
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | desktop |
 | Viewport | 1440x900 |
 | Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:285 |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
 - User type: Logueado
 - Viewport: Desktop 1440x900
 - Ubicacion: Home
-- Sesión iniciada con la cuenta (cuenta del Excel de data) / (contraseña), sin direcciones guardadas
+- Sesión iniciada con la cuenta vhchirinos+noaddress@avatar-global.com / (contraseña de la cuenta), sin direcciones guardadas
 - Sin dirección ni tienda seteada en el Store Locator (navegación con la tienda por defecto)
 - El carro está vacío
 
@@ -1723,17 +1740,19 @@ El sistema no permite avanzar al pago: solicita seleccionar una dirección o tie
 
 **Resultado obtenido**
 
-Con la cuenta declarada, el header muestra «Elige una forma de entrega», pero el selector «Elige tu método de entrega» lista una dirección guardada; al agregar un producto sin tienda el sitio abre ese selector y el carro queda vacío.
+Al tocar «Agregar» se abre «Elige tu método de entrega» con la dirección guardada Calle Uno 23; el carro queda vacío.
 
 **Observación**
 
-Causa: la precondición «cuenta sin direcciones guardadas» no se cumple (la cuenta, compartida con otra suite, tiene una dirección guardada). Acción: dejar la cuenta sin direcciones (o declarar otra cuenta) y re-ejecutar.
+Causa: la cuenta vhchirinos+noaddress@avatar-global.com tiene una dirección guardada (Calle Uno 23, La Florida) y la precondición pide una cuenta sin direcciones guardadas; además, sin dirección activa «Agregar» abre el Store Locator y el carro queda vacío. Acción: eliminar las direcciones guardadas de la cuenta (o declarar otra sin direcciones) y re-ejecutar.
 
 **Evidencia**
 
 ![Paso 3 — store locator sin direccion ni tienda](<B2C-61 Evidencias/TC-B2C61-D-019-p03-store-locator-sin-direccion-ni-tienda.png>)
 
-![Paso 4 — selector «Elige tu método de entrega» abierto al intentar agregar (la cuenta tiene una dirección guardada)](<B2C-61 Evidencias/TC-B2C61-D-019-p04-producto-agregado.png>)
+![Paso 4 — producto agregado](<B2C-61 Evidencias/TC-B2C61-D-019-p04-producto-agregado.png>)
+
+![Estado al fallar la aserción](<B2C-61 Evidencias/TC-B2C61-D-019.png>)
 
 ---
 
@@ -1742,18 +1761,18 @@ Causa: la precondición «cuenta sin direcciones guardadas» no se cumple (la cu
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-10-29 |
+| Ejecutado | 2026-11-09 |
 | Form factor | mobile |
 | Viewport | 390x844 |
-| Navegador | chromium |
-| Spec | tests/B2C-61.spec.ts:285 |
+| Navegador | webkit |
+| Spec | tests/B2C-61.spec.ts |
 
 **Precondiciones**
 
 - User type: Logueado
 - Viewport: Mobile 390x844
 - Ubicacion: Home
-- Sesión iniciada con la cuenta (cuenta del Excel de data) / (contraseña), sin direcciones guardadas
+- Sesión iniciada con la cuenta vhchirinos+noaddress@avatar-global.com / (contraseña de la cuenta), sin direcciones guardadas
 - Sin dirección ni tienda seteada en el Store Locator (navegación con la tienda por defecto)
 - El carro está vacío
 
@@ -1777,11 +1796,19 @@ El sistema no permite avanzar al pago: solicita seleccionar una dirección o tie
 
 **Resultado obtenido**
 
-Con la cuenta declarada, el header muestra «Elige una forma de entrega», pero el selector «Elige tu método de entrega» lista una dirección guardada; al agregar un producto sin tienda el sitio abre ese selector y el carro queda vacío.
+Al tocar «Agregar» se abre «Elige tu método de entrega» con la dirección guardada Calle Uno 23; el carro queda vacío.
 
 **Observación**
 
-Causa: la precondición «cuenta sin direcciones guardadas» no se cumple (la cuenta, compartida con otra suite, tiene una dirección guardada). Acción: dejar la cuenta sin direcciones (o declarar otra cuenta) y re-ejecutar. (Mobile no se re-ejecutó contra el sitio: es la misma cuenta y el estado se comprobó en Desktop minutos antes.)
+Causa: la cuenta vhchirinos+noaddress@avatar-global.com tiene una dirección guardada (Calle Uno 23, La Florida) y la precondición pide una cuenta sin direcciones guardadas; además, sin dirección activa «Agregar» abre el Store Locator y el carro queda vacío. Acción: eliminar las direcciones guardadas de la cuenta (o declarar otra sin direcciones) y re-ejecutar.
+
+**Evidencia**
+
+![Paso 3 — store locator sin direccion ni tienda](<B2C-61 Evidencias/TC-B2C61-M-019-p03-store-locator-sin-direccion-ni-tienda.png>)
+
+![Paso 4 — producto agregado](<B2C-61 Evidencias/TC-B2C61-M-019-p04-producto-agregado.png>)
+
+![Estado al fallar la aserción](<B2C-61 Evidencias/TC-B2C61-M-019.png>)
 
 ---
 
@@ -2406,15 +2433,15 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
  "header": {
   "browsers": {
    "desktop": "chromium",
-   "mobile": "chromium"
+   "mobile": "webkit"
   },
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
-  "executed_by": "Daniel Uñuruco",
+  "executed_by": "Victor Chirinos",
   "suite": "B2C-61",
   "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-61 Test Cases.xlsx",
   "title": "B2C-61 - Store Locator: disponibilidad y promociones por tienda - Evidencias QA",
-  "updated_at": "2026-10-29"
+  "updated_at": "2026-11-09"
  },
  "history": {
   "2026-10-29": [
@@ -2468,19 +2495,46 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
    "TC-B2C61-M-023",
    "TC-B2C61-M-024",
    "TC-B2C61-M-025"
+  ],
+  "2026-11-09": [
+   "TC-B2C61-D-001",
+   "TC-B2C61-D-006",
+   "TC-B2C61-D-007",
+   "TC-B2C61-D-009",
+   "TC-B2C61-D-010",
+   "TC-B2C61-D-011",
+   "TC-B2C61-D-012",
+   "TC-B2C61-D-013",
+   "TC-B2C61-D-014",
+   "TC-B2C61-D-015",
+   "TC-B2C61-D-017",
+   "TC-B2C61-D-019",
+   "TC-B2C61-M-003",
+   "TC-B2C61-M-004",
+   "TC-B2C61-M-005",
+   "TC-B2C61-M-006",
+   "TC-B2C61-M-007",
+   "TC-B2C61-M-009",
+   "TC-B2C61-M-010",
+   "TC-B2C61-M-011",
+   "TC-B2C61-M-012",
+   "TC-B2C61-M-013",
+   "TC-B2C61-M-014",
+   "TC-B2C61-M-015",
+   "TC-B2C61-M-019"
   ]
  },
  "results": [
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "executed_at": "2026-11-09",
    "expected": "La landing muestra Vilanova 122, Las Condes, sin interrumpir el flujo del usuario al setear la dirección.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-001",
    "name": "Verificar que al setear una dirección se muestra el contenido del segmento de su tienda [Desktop] [Guest]",
-   "observation": "Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
-   "observed": "No ejecutado: falta data de prueba.",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto",
+   "observation": "Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
+   "observed": "No se ejecutó: falta data de prueba.",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario hace clic en el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección Calle Uno 23, La Florida, la selecciona de las sugerencias y hace clic en \"Confirmar dirección\".\n6. El usuario ingresa a {PD_LANDING_SEGMENTO_URL}.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
@@ -2548,14 +2602,14 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "executed_at": "2026-11-09",
    "expected": "La landing sigue mostrando Vilanova 122, Las Condes tras navegar.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-006",
    "name": "Verificar que el segmento del invitado persiste al navegar durante la sesión [Desktop] [Guest]",
-   "observation": "Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
-   "observed": "No ejecutado: falta data de prueba.",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- La dirección Calle Uno 23, La Florida está seteada como invitado\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto",
+   "observation": "Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
+   "observed": "No se ejecutó: falta data de prueba.",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- La dirección Calle Uno 23, La Florida está seteada como invitado\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El usuario navega a una PLP y luego a la landing.\n3. El usuario ingresa a {PD_LANDING_SEGMENTO_URL}.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
@@ -2563,14 +2617,14 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "executed_at": "2026-11-09",
    "expected": "La landing muestra Vilanova 122, Las Condes.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-007",
    "name": "Verificar que el segmento del logueado persiste en su perfil durante la sesión [Desktop] [Logueado]",
-   "observation": "Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
-   "observed": "No ejecutado: falta data de prueba.",
-   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta (cuenta del Excel de data)\n- La dirección Calle Uno 23, La Florida está seteada en la cuenta\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto",
+   "observation": "Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
+   "observed": "No se ejecutó: falta data de prueba.",
+   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com / Avatar1234.\n- La dirección Calle Uno 23, La Florida está seteada en la cuenta\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El usuario navega a una PLP.\n3. El usuario ingresa a {PD_LANDING_SEGMENTO_URL}.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
@@ -2599,21 +2653,25 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "executed_at": "2026-11-09",
    "expected": "000000000000674797-UN se muestra con etiqueta visible de no disponible y sin opción de agregar al carro.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-009",
    "name": "Verificar que un producto sin stock en la tienda activa se muestra no disponible y sin Agregar [Desktop] [Guest]",
-   "observation": "Causa: la precondición «el SKU no tiene stock en la tienda de la dirección declarada» no se verifica en el ambiente: con esa dirección el sitio ofrece el producto con «Agregar» habilitado. Acción: confirmar/cargar en el Excel de data un SKU y una dirección donde el SKU realmente no tenga stock, y re-ejecutar.",
-   "observed": "El shelf del SKU declarado, con la dirección de la otra tienda activa, se muestra con «Agregar» y sin etiqueta de no disponible (idéntico al de la tienda de partida).",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: SRP\n- La dirección activa es A. Las Conder 14791, Lo Barnechea\n- 000000000000674797-UN no tiene stock en la tienda de A. Las Conder 14791, Lo Barnechea",
+   "observation": "Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.",
+   "observed": "El shelf del SKU en la SRP se muestra con «Agregar» y sin etiqueta de no disponible.",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: SRP\n- La dirección activa es A. Las Condes 14791, Lo Barnechea\n- 000000000000674797-UN no tiene stock en la tienda de A. Las Condes 14791, Lo Barnechea",
    "screenshots": [
     {
      "caption": "Paso 2 — resultados con el shelf del sku",
      "file": "TC-B2C61-D-009-p02-resultados-con-el-shelf-del-sku.png"
+    },
+    {
+     "caption": "Estado al fallar la aserción",
+     "file": "TC-B2C61-D-009.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:138",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario busca Lavalozas Quix.\n2. El sistema muestra resultados con el shelf de 000000000000674797-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
@@ -2621,28 +2679,47 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
-   "expected": "{SKU_INACTIVO_TIENDA_A} no aparece en los resultados y su PDP no se muestra.",
+   "executed_at": "2026-11-09",
+   "expected": "000000000400254005-UN no aparece en los resultados y su PDP no se muestra.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-010",
    "name": "Verificar que un producto inactivo para la tienda activa no aparece en catálogo ni en PDP [Desktop] [Guest]",
-   "observation": "Causa: token(s) en TBD en el Excel de data: {SKU_INACTIVO_TIENDA_A}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
-   "observed": "No ejecutado: falta data de prueba.",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: SRP\n- La dirección activa es Calle Uno 23, La Florida\n- {SKU_INACTIVO_TIENDA_A} está inactivo para la tienda de Calle Uno 23, La Florida",
+   "observation": "Causa: con Calle Uno 23, La Florida activa, 000000000400254005-UN aparece en la SRP y su PDP se abre con «Pronto disponible» y «Ver similares» (presentación de producto sin stock, no de producto inactivo); desde el storefront no se puede confirmar que esté inactivo para esa tienda. Acción: confirmar en BM que el SKU está offline/inactivo para la tienda de Calle Uno 23, La Florida (o cargar uno que lo esté) y re-ejecutar.",
+   "observed": "El SKU aparece en los resultados (1 producto) y su PDP se muestra con «Pronto disponible».",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: SRP\n- La dirección activa es Calle Uno 23, La Florida\n- 000000000400254005-UN está inactivo para la tienda de Calle Uno 23, La Florida",
+   "screenshots": [
+    {
+     "caption": "Paso 0 — direccion de la tienda a aplicada",
+     "file": "TC-B2C61-D-010-p00-direccion-de-la-tienda-a-aplicada.png"
+    },
+    {
+     "caption": "Paso 1 — resultados de la busqueda del sku",
+     "file": "TC-B2C61-D-010-p01-resultados-de-la-busqueda-del-sku.png"
+    },
+    {
+     "caption": "Paso 2 — pdp del sku",
+     "file": "TC-B2C61-D-010-p02-pdp-del-sku.png"
+    },
+    {
+     "caption": "Estado al fallar la aserción",
+     "file": "TC-B2C61-D-010.png"
+    }
+   ],
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario busca {SKU_INACTIVO_TIENDA_A}.\n2. El usuario ingresa a la PDP de {SKU_INACTIVO_TIENDA_A}.",
+   "steps": "1. El usuario busca 000000000400254005-UN.\n2. El usuario ingresa a la PDP de 000000000400254005-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "1440x900"
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "executed_at": "2026-11-09",
    "expected": "Se muestra el modal de B2C-122 y, tras continuar, 000000000000674797-UN queda como no disponible para la nueva tienda.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-011",
    "name": "Verificar que al cambiar de tienda un producto sin stock en la nueva tienda queda no disponible [Desktop] [Guest]",
-   "observation": "Causa: la precondición «el SKU no tiene stock en la tienda de la dirección nueva» no se verifica: el sitio lo mantiene disponible. Acción: cargar un SKU/dirección sin stock en la nueva tienda y re-ejecutar.",
-   "observed": "Se mostró el modal «Algunos productos podrían agotarse», pero tras continuar el SKU sigue en el carro como disponible en la nueva tienda (sin marca de no disponible).",
+   "observation": "Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas: tras confirmar la nueva dirección se muestra el modal «Algunos productos podrían agotarse», pero el SKU sigue disponible porque tiene stock en la nueva tienda. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.",
+   "observed": "Se mostró el modal de B2C-122; tras continuar el SKU sigue disponible en el carro.",
    "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- La dirección activa es Calle Uno 23, La Florida\n- El carro contiene 000000000000674797-UN",
    "screenshots": [
     {
@@ -2656,39 +2733,35 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
     {
      "caption": "Paso 8 — carro tras el cambio de tienda",
      "file": "TC-B2C61-D-011-p08-carro-tras-el-cambio-de-tienda.png"
+    },
+    {
+     "caption": "Estado al fallar la aserción",
+     "file": "TC-B2C61-D-011.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:152",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario hace clic en el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y hace clic en \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\" (B2C-122).\n7. El usuario hace clic en \"Sí, continuar\".\n8. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario hace clic en el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección A. Las Condes 14791, Lo Barnechea, la selecciona de las sugerencias y hace clic en \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\" (B2C-122).\n7. El usuario hace clic en \"Sí, continuar\".\n8. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "1440x900"
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "executed_at": "2026-11-09",
    "expected": "000000000000674797-UN se muestra disponible con \"Agregar\" habilitado.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-012",
    "name": "Verificar que al cambiar de tienda un producto que ahora tiene stock se habilita [Desktop] [Guest]",
-   "observation": "Causa: la precondición «en la dirección de partida el SKU no tiene stock» no se verifica, por lo que el caso no puede ejercitar el paso de no disponible a disponible. Acción: cargar un SKU/dirección sin stock en la dirección de partida y re-ejecutar.",
-   "observed": "En la dirección declarada como «sin stock» el SKU ya se mostraba disponible con «Agregar» habilitado; tras cambiar a la otra tienda sigue disponible (no hay transición).",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- La dirección activa es A. Las Conder 14791, Lo Barnechea, donde 000000000000674797-UN no tiene stock\n- El carro está vacío",
+   "observation": "Causa: precondición no disponible: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.",
+   "observed": "En la dirección de partida el SKU ya muestra «Agregar» habilitado.",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Carrito\n- La dirección activa es A. Las Condes 14791, Lo Barnechea, donde 000000000000674797-UN no tiene stock\n- El carro está vacío",
    "screenshots": [
     {
      "caption": "Paso 0 — pdp en la tienda sin stock estado previo",
      "file": "TC-B2C61-D-012-p00-pdp-en-la-tienda-sin-stock-estado-previo.png"
-    },
-    {
-     "caption": "Paso 5 — direccion de la tienda con stock aplicada",
-     "file": "TC-B2C61-D-012-p05-direccion-de-la-tienda-con-stock-aplicada.png"
-    },
-    {
-     "caption": "Paso 6 — pdp con agregar habilitado",
-     "file": "TC-B2C61-D-012-p06-pdp-con-agregar-habilitado.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:171",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario hace clic en el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección Calle Uno 23, La Florida, la selecciona de las sugerencias y hace clic en \"Confirmar dirección\".\n6. El usuario ingresa a la PDP de 000000000000674797-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
@@ -2696,21 +2769,21 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "executed_at": "2026-11-09",
    "expected": "El botón \"Agregar\" aparece deshabilitado, se muestra \"Este producto no esta disponible para tu dirección\" y no se informa disponibilidad en otras tiendas.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-013",
    "name": "Verificar que la PDP de un producto sin stock en la tienda activa deshabilita Agregar con mensaje [Desktop] [Guest]",
-   "observation": "Causa: la precondición «el SKU no tiene stock en la tienda de la dirección declarada» no se verifica en el ambiente. Acción: cargar un SKU/dirección sin stock y re-ejecutar.",
-   "observed": "La PDP muestra el producto con «Agregar» habilitado y sin el mensaje «Este producto no esta disponible para tu dirección».",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: PDP\n- La dirección activa es A. Las Conder 14791, Lo Barnechea",
+   "observation": "Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.",
+   "observed": "La PDP muestra «Agregar» habilitado y no el mensaje «Este producto no esta disponible para tu dirección».",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: PDP\n- La dirección activa es A. Las Condes 14791, Lo Barnechea",
    "screenshots": [
     {
      "caption": "Paso 1 — pdp en la tienda sin stock",
      "file": "TC-B2C61-D-013-p01-pdp-en-la-tienda-sin-stock.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:191",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a la PDP de 000000000000674797-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
@@ -2718,21 +2791,21 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "executed_at": "2026-11-09",
    "expected": "000000000000652899-UN muestra su precio base, sin el descuento de la promoción de la tienda A.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-014",
    "name": "Verificar que solo se muestran las promociones vigentes de la tienda activa [Desktop] [Guest]",
-   "observation": "Causa: la precondición «el SKU tiene una promoción vigente solo para la tienda A» no se verifica: ni en la tienda A ni en la otra se observa descuento (ver 015); el resultado no es concluyente. Acción: confirmar/cargar un SKU con promoción vigente solo en la tienda A y re-ejecutar.",
-   "observed": "La PDP muestra solo el precio base, igual que en la tienda con la promoción.",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: PDP\n- La dirección activa es A. Las Conder 14791, Lo Barnechea\n- 000000000000652899-UN tiene una promoción vigente solo para la tienda de Calle Uno 23, La Florida",
+   "observation": "Causa: la precondición «000000000000652899-UN tiene promoción vigente solo en la tienda de Calle Uno 23, La Florida» no se verifica: el SKU muestra $990 sin descuento en ambas tiendas (ver 015), así que el precio base observado no prueba nada. Acción: cargar en BM una promoción vigente solo para la tienda A sobre el SKU y re-ejecutar.",
+   "observed": "La PDP muestra solo el precio base ($990).",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: PDP\n- La dirección activa es A. Las Condes 14791, Lo Barnechea\n- 000000000000652899-UN tiene una promoción vigente solo para la tienda de Calle Uno 23, La Florida",
    "screenshots": [
     {
      "caption": "Paso 1 — pdp en la tienda sin la promocion",
      "file": "TC-B2C61-D-014-p01-pdp-en-la-tienda-sin-la-promocion.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:204",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a la PDP de 000000000000652899-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
@@ -2740,13 +2813,13 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "executed_at": "2026-11-09",
    "expected": "000000000000652899-UN muestra el precio con el descuento de la promoción de la tienda A.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-015",
    "name": "Verificar que la promoción de la tienda activa se refleja en el precio con descuento [Desktop] [Guest]",
-   "observation": "Causa: la precondición «el SKU tiene una promoción vigente en la tienda A» no se observa en el ambiente (el carro también cobra el precio base). Acción: confirmar/cargar un SKU con promoción vigente en la tienda A y re-ejecutar.",
-   "observed": "La PDP, con la dirección de la tienda A, muestra un único precio base sin descuento.",
+   "observation": "Causa: 000000000000652899-UN no muestra promoción en la tienda de Calle Uno 23, La Florida (precio único $990), igual que en la otra tienda; la promoción declarada no existe o no está vigente en el ambiente. Acción: cargar en BM una promoción vigente solo para la tienda A sobre el SKU y re-ejecutar.",
+   "observed": "La PDP muestra un único precio ($990), sin descuento.",
    "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: PDP\n- La dirección activa es Calle Uno 23, La Florida\n- 000000000000652899-UN tiene una promoción vigente solo para la tienda de Calle Uno 23, La Florida",
    "screenshots": [
     {
@@ -2754,7 +2827,7 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
      "file": "TC-B2C61-D-015-p01-pdp-en-la-tienda-con-la-promocion.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:217",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a la PDP de 000000000000652899-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
@@ -2812,75 +2885,75 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "La landing muestra QA B2C-61 y el Store Locator sigue sin tienda asignada.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-003",
    "name": "Verificar que sin tienda asignada se muestra el contenido por defecto [Mobile] [Guest]",
-   "observation": "Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
-   "observed": "No ejecutado: falta data de prueba.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión nueva sin dirección ni tienda seteada\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto",
+   "observation": "Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
+   "observed": "No se ejecutó: falta data de prueba.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión nueva sin dirección ni tienda seteada\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a {PD_LANDING_SEGMENTO_URL}.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "Sin recargar sigue Vilanova 122, Las Condes; al volver a cargar la landing se muestra {CONTENIDO_SEGMENTO_B}.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-004",
    "name": "Verificar que al cambiar a otra tienda el contenido cambia en la siguiente carga de página [Mobile] [Guest]",
-   "observation": "Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
-   "observed": "No ejecutado: falta data de prueba.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- La dirección activa es Calle Uno 23, La Florida\n- El carro está vacío\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto",
+   "observation": "Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
+   "observed": "No se ejecutó: falta data de prueba.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- La dirección activa es Calle Uno 23, La Florida\n- El carro está vacío\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a {PD_LANDING_SEGMENTO_URL}.\n2. El sistema muestra Vilanova 122, Las Condes.\n3. El usuario toca el Store Locator del header.\n4. El usuario ingresa A. Las Conder 14791, Lo Barnechea y la confirma.\n5. El usuario revisa la landing sin recargar.\n6. El usuario vuelve a cargar la landing.",
+   "steps": "1. El usuario ingresa a {PD_LANDING_SEGMENTO_URL}.\n2. El sistema muestra Vilanova 122, Las Condes.\n3. El usuario toca el Store Locator del header.\n4. El usuario ingresa A. Las Condes 14791, Lo Barnechea y la confirma.\n5. El usuario revisa la landing sin recargar.\n6. El usuario vuelve a cargar la landing.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "Se muestra el flujo Sin cobertura (B2C-123) y la landing sigue mostrando Vilanova 122, Las Condes.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-005",
    "name": "Verificar que al cambiar a una dirección sin cobertura se activa Sin cobertura sin re-asignar segmento [Mobile] [Guest]",
-   "observation": "Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
-   "observed": "No ejecutado: falta data de prueba.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- La dirección activa es Calle Uno 23, La Florida\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto",
+   "observation": "Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
+   "observed": "No se ejecutó: falta data de prueba.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- La dirección activa es Calle Uno 23, La Florida\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección T-551, Futrono, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Aún no llegamos a esta dirección\".\n7. El usuario toca la X o cierra el modal.\n8. El usuario ingresa a {PD_LANDING_SEGMENTO_URL}.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "La landing sigue mostrando Vilanova 122, Las Condes tras navegar.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-006",
    "name": "Verificar que el segmento del invitado persiste al navegar durante la sesión [Mobile] [Guest]",
-   "observation": "Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
-   "observed": "No ejecutado: falta data de prueba.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- La dirección Calle Uno 23, La Florida está seteada como invitado\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto",
+   "observation": "Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
+   "observed": "No se ejecutó: falta data de prueba.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- La dirección Calle Uno 23, La Florida está seteada como invitado\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El usuario navega a una PLP y luego a la landing.\n3. El usuario ingresa a {PD_LANDING_SEGMENTO_URL}.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "La landing muestra Vilanova 122, Las Condes.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-007",
    "name": "Verificar que el segmento del logueado persiste en su perfil durante la sesión [Mobile] [Logueado]",
-   "observation": "Causa: token(s) en TBD en el Excel de data: {CONTENIDO_SEGMENTO_B}, {PD_LANDING_SEGMENTO_URL}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
-   "observed": "No ejecutado: falta data de prueba.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta (cuenta del Excel de data)\n- La dirección Calle Uno 23, La Florida está seteada en la cuenta\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Conder 14791, Lo Barnechea y QA B2C-61 por defecto",
+   "observation": "Causa: {CONTENIDO_SEGMENTO_B} y {PD_LANDING_SEGMENTO_URL} están en TBD en el Excel de data. Acción: cargar la landing de segmentación y el contenido del segmento B (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
+   "observed": "No se ejecutó: falta data de prueba.",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com / Avatar1234.\n- La dirección Calle Uno 23, La Florida está seteada en la cuenta\n- En BM, la landing {PD_LANDING_SEGMENTO_URL} tiene un componente con contenido Vilanova 122, Las Condes para el segmento de la tienda de Calle Uno 23, La Florida, {CONTENIDO_SEGMENTO_B} para la tienda de A. Las Condes 14791, Lo Barnechea y QA B2C-61 por defecto",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El usuario navega a una PLP.\n3. El usuario ingresa a {PD_LANDING_SEGMENTO_URL}.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
@@ -2908,51 +2981,74 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "000000000000674797-UN se muestra con etiqueta visible de no disponible y sin opción de agregar al carro.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-009",
    "name": "Verificar que un producto sin stock en la tienda activa se muestra no disponible y sin Agregar [Mobile] [Guest]",
-   "observation": "Causa: la precondición «el SKU no tiene stock en la tienda de la dirección declarada» no se verifica en el ambiente: con esa dirección el sitio ofrece el producto con «Agregar» habilitado. Acción: confirmar/cargar en el Excel de data un SKU y una dirección donde el SKU realmente no tenga stock, y re-ejecutar.",
-   "observed": "El shelf del SKU declarado, con la dirección de la otra tienda activa, se muestra con «Agregar» y sin etiqueta de no disponible (idéntico al de la tienda de partida).",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: SRP\n- La dirección activa es A. Las Conder 14791, Lo Barnechea\n- 000000000000674797-UN no tiene stock en la tienda de A. Las Conder 14791, Lo Barnechea",
+   "observation": "Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.",
+   "observed": "El shelf del SKU en la SRP se muestra con «Agregar» y sin etiqueta de no disponible.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: SRP\n- La dirección activa es A. Las Condes 14791, Lo Barnechea\n- 000000000000674797-UN no tiene stock en la tienda de A. Las Condes 14791, Lo Barnechea",
    "screenshots": [
     {
      "caption": "Paso 2 — resultados con el shelf del sku",
      "file": "TC-B2C61-M-009-p02-resultados-con-el-shelf-del-sku.png"
+    },
+    {
+     "caption": "Estado al fallar la aserción",
+     "file": "TC-B2C61-M-009.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:138",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario busca Lavalozas Quix.\n2. El sistema muestra resultados con el shelf de 000000000000674797-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
-   "expected": "{SKU_INACTIVO_TIENDA_A} no aparece en los resultados y su PDP no se muestra.",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
+   "expected": "000000000400254005-UN no aparece en los resultados y su PDP no se muestra.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-010",
    "name": "Verificar que un producto inactivo para la tienda activa no aparece en catálogo ni en PDP [Mobile] [Guest]",
-   "observation": "Causa: token(s) en TBD en el Excel de data: {SKU_INACTIVO_TIENDA_A}. Acción: cargar el dato en el Excel de data (responsable de la data de prueba) y re-ejecutar con -\u002donly.",
-   "observed": "No ejecutado: falta data de prueba.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: SRP\n- La dirección activa es Calle Uno 23, La Florida\n- {SKU_INACTIVO_TIENDA_A} está inactivo para la tienda de Calle Uno 23, La Florida",
+   "observation": "Causa: con Calle Uno 23, La Florida activa, 000000000400254005-UN aparece en la SRP y su PDP se abre con «Pronto disponible» y «Ver similares» (presentación de producto sin stock, no de producto inactivo); desde el storefront no se puede confirmar que esté inactivo para esa tienda. Acción: confirmar en BM que el SKU está offline/inactivo para la tienda de Calle Uno 23, La Florida (o cargar uno que lo esté) y re-ejecutar.",
+   "observed": "El SKU aparece en los resultados (1 producto) y su PDP se muestra con «Pronto disponible».",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: SRP\n- La dirección activa es Calle Uno 23, La Florida\n- 000000000400254005-UN está inactivo para la tienda de Calle Uno 23, La Florida",
+   "screenshots": [
+    {
+     "caption": "Paso 0 — direccion de la tienda a aplicada",
+     "file": "TC-B2C61-M-010-p00-direccion-de-la-tienda-a-aplicada.png"
+    },
+    {
+     "caption": "Paso 1 — resultados de la busqueda del sku",
+     "file": "TC-B2C61-M-010-p01-resultados-de-la-busqueda-del-sku.png"
+    },
+    {
+     "caption": "Paso 2 — pdp del sku",
+     "file": "TC-B2C61-M-010-p02-pdp-del-sku.png"
+    },
+    {
+     "caption": "Estado al fallar la aserción",
+     "file": "TC-B2C61-M-010.png"
+    }
+   ],
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario busca {SKU_INACTIVO_TIENDA_A}.\n2. El usuario ingresa a la PDP de {SKU_INACTIVO_TIENDA_A}.",
+   "steps": "1. El usuario busca 000000000400254005-UN.\n2. El usuario ingresa a la PDP de 000000000400254005-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "Se muestra el modal de B2C-122 y, tras continuar, 000000000000674797-UN queda como no disponible para la nueva tienda.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-011",
    "name": "Verificar que al cambiar de tienda un producto sin stock en la nueva tienda queda no disponible [Mobile] [Guest]",
-   "observation": "Causa: la precondición «el SKU no tiene stock en la tienda de la dirección nueva» no se verifica: el sitio lo mantiene disponible. Acción: cargar un SKU/dirección sin stock en la nueva tienda y re-ejecutar.",
-   "observed": "Se mostró el modal «Algunos productos podrían agotarse», pero tras continuar el SKU sigue en el carro como disponible en la nueva tienda (sin marca de no disponible).",
+   "observation": "Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas: tras confirmar la nueva dirección se muestra el modal «Algunos productos podrían agotarse», pero el SKU sigue disponible porque tiene stock en la nueva tienda. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.",
+   "observed": "Se mostró el modal de B2C-122; tras continuar el SKU sigue disponible en el carro.",
    "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- La dirección activa es Calle Uno 23, La Florida\n- El carro contiene 000000000000674797-UN",
    "screenshots": [
     {
@@ -2960,103 +3056,91 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
      "file": "TC-B2C61-M-011-p00-sku-en-el-carro-con-la-tienda-de-origen.png"
     },
     {
-     "caption": "Paso 6 — modal algunos productos podrian agotarse",
-     "file": "TC-B2C61-M-011-p06-modal-algunos-productos-podrian-agotarse.png"
-    },
-    {
-     "caption": "Paso 8 — carro tras el cambio de tienda",
-     "file": "TC-B2C61-M-011-p08-carro-tras-el-cambio-de-tienda.png"
+     "caption": "Estado al fallar la aserción",
+     "file": "TC-B2C61-M-011.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:152",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección A. Las Conder 14791, Lo Barnechea, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\" (B2C-122).\n7. El usuario toca \"Sí, continuar\".\n8. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección A. Las Condes 14791, Lo Barnechea, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El sistema muestra el modal \"Algunos productos podrían agotarse\" (B2C-122).\n7. El usuario toca \"Sí, continuar\".\n8. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "000000000000674797-UN se muestra disponible con \"Agregar\" habilitado.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-012",
    "name": "Verificar que al cambiar de tienda un producto que ahora tiene stock se habilita [Mobile] [Guest]",
-   "observation": "Causa: la precondición «en la dirección de partida el SKU no tiene stock» no se verifica, por lo que el caso no puede ejercitar el paso de no disponible a disponible. Acción: cargar un SKU/dirección sin stock en la dirección de partida y re-ejecutar.",
-   "observed": "En la dirección declarada como «sin stock» el SKU ya se mostraba disponible con «Agregar» habilitado; tras cambiar a la otra tienda sigue disponible (no hay transición).",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- La dirección activa es A. Las Conder 14791, Lo Barnechea, donde 000000000000674797-UN no tiene stock\n- El carro está vacío",
+   "observation": "Causa: precondición no disponible: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.",
+   "observed": "En la dirección de partida el SKU ya muestra «Agregar» habilitado.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Carrito\n- La dirección activa es A. Las Condes 14791, Lo Barnechea, donde 000000000000674797-UN no tiene stock\n- El carro está vacío",
    "screenshots": [
     {
      "caption": "Paso 0 — pdp en la tienda sin stock estado previo",
      "file": "TC-B2C61-M-012-p00-pdp-en-la-tienda-sin-stock-estado-previo.png"
-    },
-    {
-     "caption": "Paso 5 — direccion de la tienda con stock aplicada",
-     "file": "TC-B2C61-M-012-p05-direccion-de-la-tienda-con-stock-aplicada.png"
-    },
-    {
-     "caption": "Paso 6 — pdp con agregar habilitado",
-     "file": "TC-B2C61-M-012-p06-pdp-con-agregar-habilitado.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:171",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario toca el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección Calle Uno 23, La Florida, la selecciona de las sugerencias y toca \"Confirmar dirección\".\n6. El usuario ingresa a la PDP de 000000000000674797-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "El botón \"Agregar\" aparece deshabilitado, se muestra \"Este producto no esta disponible para tu dirección\" y no se informa disponibilidad en otras tiendas.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-013",
    "name": "Verificar que la PDP de un producto sin stock en la tienda activa deshabilita Agregar con mensaje [Mobile] [Guest]",
-   "observation": "Causa: la precondición «el SKU no tiene stock en la tienda de la dirección declarada» no se verifica en el ambiente. Acción: cargar un SKU/dirección sin stock y re-ejecutar.",
-   "observed": "La PDP muestra el producto con «Agregar» habilitado y sin el mensaje «Este producto no esta disponible para tu dirección».",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- La dirección activa es A. Las Conder 14791, Lo Barnechea",
+   "observation": "Causa: el SKU 000000000000674797-UN tiene stock (Agregar habilitado, sin etiqueta de no disponible) con la dirección A. Las Condes 14791, Lo Barnechea, donde la precondición dice que no tiene; se comporta igual en ambas tiendas. Acción: cargar un SKU y un par de direcciones cuyas tiendas difieran realmente en stock, y re-ejecutar.",
+   "observed": "La PDP muestra «Agregar» habilitado y no el mensaje «Este producto no esta disponible para tu dirección».",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- La dirección activa es A. Las Condes 14791, Lo Barnechea",
    "screenshots": [
     {
      "caption": "Paso 1 — pdp en la tienda sin stock",
      "file": "TC-B2C61-M-013-p01-pdp-en-la-tienda-sin-stock.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:191",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a la PDP de 000000000000674797-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "000000000000652899-UN muestra su precio base, sin el descuento de la promoción de la tienda A.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-014",
    "name": "Verificar que solo se muestran las promociones vigentes de la tienda activa [Mobile] [Guest]",
-   "observation": "Causa: la precondición «el SKU tiene una promoción vigente solo para la tienda A» no se verifica: ni en la tienda A ni en la otra se observa descuento (ver 015); el resultado no es concluyente. Acción: confirmar/cargar un SKU con promoción vigente solo en la tienda A y re-ejecutar.",
-   "observed": "La PDP muestra solo el precio base, igual que en la tienda con la promoción.",
-   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- La dirección activa es A. Las Conder 14791, Lo Barnechea\n- 000000000000652899-UN tiene una promoción vigente solo para la tienda de Calle Uno 23, La Florida",
+   "observation": "Causa: la precondición «000000000000652899-UN tiene promoción vigente solo en la tienda de Calle Uno 23, La Florida» no se verifica: el SKU muestra $990 sin descuento en ambas tiendas (ver 015), así que el precio base observado no prueba nada. Acción: cargar en BM una promoción vigente solo para la tienda A sobre el SKU y re-ejecutar.",
+   "observed": "La PDP muestra solo el precio base ($990).",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- La dirección activa es A. Las Condes 14791, Lo Barnechea\n- 000000000000652899-UN tiene una promoción vigente solo para la tienda de Calle Uno 23, La Florida",
    "screenshots": [
     {
      "caption": "Paso 1 — pdp en la tienda sin la promocion",
      "file": "TC-B2C61-M-014-p01-pdp-en-la-tienda-sin-la-promocion.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:204",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a la PDP de 000000000000652899-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "390x844"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "000000000000652899-UN muestra el precio con el descuento de la promoción de la tienda A.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-015",
    "name": "Verificar que la promoción de la tienda activa se refleja en el precio con descuento [Mobile] [Guest]",
-   "observation": "Causa: la precondición «el SKU tiene una promoción vigente en la tienda A» no se observa en el ambiente (el carro también cobra el precio base). Acción: confirmar/cargar un SKU con promoción vigente en la tienda A y re-ejecutar.",
-   "observed": "La PDP, con la dirección de la tienda A, muestra un único precio base sin descuento.",
+   "observation": "Causa: 000000000000652899-UN no muestra promoción en la tienda de Calle Uno 23, La Florida (precio único $990), igual que en la otra tienda; la promoción declarada no existe o no está vigente en el ambiente. Acción: cargar en BM una promoción vigente solo para la tienda A sobre el SKU y re-ejecutar.",
+   "observed": "La PDP muestra un único precio ($990), sin descuento.",
    "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- La dirección activa es Calle Uno 23, La Florida\n- 000000000000652899-UN tiene una promoción vigente solo para la tienda de Calle Uno 23, La Florida",
    "screenshots": [
     {
@@ -3064,7 +3148,7 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
      "file": "TC-B2C61-M-015-p01-pdp-en-la-tienda-con-la-promocion.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:217",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a la PDP de 000000000000652899-UN.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
@@ -3093,31 +3177,27 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
-   "expected": "El basket contiene 000000000000675191-UN y tiene asociados la dirección de envío Calle Uno 23, La Florida y el warehouseId 400; tras recargar, el basket mantiene la misma dirección y warehouseId.",
+   "executed_at": "2026-11-09",
+   "expected": "El basket contiene 000000000000675191-UN y tiene asociados la dirección de envío Av. Perú 760, Recoleta y el warehouseId 400; tras recargar, el basket mantiene la misma dirección y warehouseId.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-017",
    "name": "Verificar que los datos de entrega seleccionados quedan asociados al basket con su warehouseId [Desktop] [Guest]",
-   "observation": "Causa: el warehouseId declarado en el Excel de data no coincide con la tienda abastecedora que el ambiente asocia a la dirección (581); no es posible determinar si el dato está desactualizado o es un defecto. Acción: confirmar el warehouseId vigente de la dirección con el dueño de la data y re-ejecutar.",
-   "observed": "El basket contiene el SKU y la dirección de envío declarada; la tienda abastecedora asociada es la 581 y no aparece el warehouseId declarado (400).",
-   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- Sesión nueva sin dirección ni tienda seteada\n- El carro está vacío\n- 000000000000675191-UN tiene stock en la tienda abastecedora de Calle Uno 23, La Florida (warehouseId 400)\n- DevTools abierto en la pestaña Network, filtrando la request (endpoint del basket del Excel de data)",
+   "observation": "Causa: 000000000000675191-UN se muestra «Pronto disponible» (sin «Agregar») con la dirección Av. Perú 760, Recoleta, así que no se puede agregar al carro para revisar el basket. Acción: declarar un SKU con stock en la tienda de Av. Perú 760, Recoleta (o alinear la precondición, que habla de la tienda de Calle Uno 23, La Florida) y re-ejecutar.",
+   "observed": "En la SRP el SKU aparece con «Pronto disponible» y «Ver similares».",
+   "preconditions": "- User type: Guest\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- Sesión nueva sin dirección ni tienda seteada\n- El carro está vacío\n- 000000000000675191-UN tiene stock en la tienda abastecedora de Calle Uno 23, La Florida (warehouseId 400)\n- DevTools abierto en la pestaña Network, filtrando la request *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/customer/shopper-customers/v1/organizations/f_ecom_bmkg_dev/customers/abk0k1kXsWxHARxbs2xaYYxKs1/baskets",
    "screenshots": [
     {
      "caption": "Paso 5 — direccion aplicada en el header",
      "file": "TC-B2C61-D-017-p05-direccion-aplicada-en-el-header.png"
     },
     {
-     "caption": "Paso 6 — producto agregado",
-     "file": "TC-B2C61-D-017-p06-producto-agregado.png"
-    },
-    {
-     "caption": "Paso 7 — carro con el producto",
-     "file": "TC-B2C61-D-017-p07-carro-con-el-producto.png"
+     "caption": "Estado al fallar la aserción",
+     "file": "TC-B2C61-D-017.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:242",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
-   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario hace clic en el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección Calle Uno 23, La Florida, la selecciona de las sugerencias y hace clic en \"Confirmar dirección\".\n6. El usuario busca 000000000000675191-UN y hace clic en \"Agregar\".\n7. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n8. El usuario revisa en DevTools la respuesta de (endpoint del basket del Excel de data) (basket): dirección de envío y warehouseId.\n9. El usuario recarga https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n10. El usuario vuelve a revisar la respuesta de (endpoint del basket del Excel de data).",
+   "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario hace clic en el Store Locator del header.\n4. El sistema abre el modal \"Elige tu método de entrega\" con la pestaña Despacho a domicilio.\n5. El usuario ingresa la dirección Av. Perú 760, Recoleta, la selecciona de las sugerencias y hace clic en \"Confirmar dirección\".\n6. El usuario busca 000000000000675191-UN y hace clic en \"Agregar\".\n7. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n8. El usuario revisa en DevTools la respuesta de *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/customer/shopper-customers/v1/organizations/f_ecom_bmkg_dev/customers/abk0k1kXsWxHARxbs2xaYYxKs1/baskets (basket): dirección de envío y warehouseId.\n9. El usuario recarga https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n10. El usuario vuelve a revisar la respuesta de *://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/mobify/proxy/api/customer/shopper-customers/v1/organizations/f_ecom_bmkg_dev/customers/abk0k1kXsWxHARxbs2xaYYxKs1/baskets.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "1440x900"
   },
@@ -3183,41 +3263,59 @@ Causa: token(s) en TBD en el Excel de data: {PD_LANDING_SEGMENTO_URL}, {TIENDA_R
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "executed_at": "2026-11-09",
    "expected": "El sistema no permite avanzar al pago: solicita seleccionar una dirección o tienda con cobertura (Store Locator) y no se puede completar la compra mientras no haya una dirección válida.",
    "form_factor": "desktop",
    "id": "TC-B2C61-D-019",
    "name": "Verificar que un usuario sin dirección con productos en el carro no puede avanzar al pago [Desktop] [Logueado]",
-   "observation": "Causa: la precondición «cuenta sin direcciones guardadas» no se cumple (la cuenta, compartida con otra suite, tiene una dirección guardada). Acción: dejar la cuenta sin direcciones (o declarar otra cuenta) y re-ejecutar.",
-   "observed": "Con la cuenta declarada, el header muestra «Elige una forma de entrega», pero el selector «Elige tu método de entrega» lista una dirección guardada; al agregar un producto sin tienda el sitio abre ese selector y el carro queda vacío.",
-   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- Sesión iniciada con la cuenta (cuenta del Excel de data) / (contraseña), sin direcciones guardadas\n- Sin dirección ni tienda seteada en el Store Locator (navegación con la tienda por defecto)\n- El carro está vacío",
+   "observation": "Causa: la cuenta vhchirinos+noaddress@avatar-global.com tiene una dirección guardada (Calle Uno 23, La Florida) y la precondición pide una cuenta sin direcciones guardadas; además, sin dirección activa «Agregar» abre el Store Locator y el carro queda vacío. Acción: eliminar las direcciones guardadas de la cuenta (o declarar otra sin direcciones) y re-ejecutar.",
+   "observed": "Al tocar «Agregar» se abre «Elige tu método de entrega» con la dirección guardada Calle Uno 23; el carro queda vacío.",
+   "preconditions": "- User type: Logueado\n- Viewport: Desktop 1440x900\n- Ubicacion: Home\n- Sesión iniciada con la cuenta vhchirinos+noaddress@avatar-global.com / (contraseña de la cuenta), sin direcciones guardadas\n- Sin dirección ni tienda seteada en el Store Locator (navegación con la tienda por defecto)\n- El carro está vacío",
    "screenshots": [
     {
      "caption": "Paso 3 — store locator sin direccion ni tienda",
      "file": "TC-B2C61-D-019-p03-store-locator-sin-direccion-ni-tienda.png"
     },
     {
-     "caption": "Paso 4 — selector «Elige tu método de entrega» abierto al intentar agregar (la cuenta tiene una dirección guardada)",
+     "caption": "Paso 4 — producto agregado",
      "file": "TC-B2C61-D-019-p04-producto-agregado.png"
+    },
+    {
+     "caption": "Estado al fallar la aserción",
+     "file": "TC-B2C61-D-019.png"
     }
    ],
-   "spec": "tests/B2C-61.spec.ts:285",
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario verifica que el Store Locator no tiene dirección ni tienda seteada.\n4. El usuario busca 000000000000675191-UN y hace clic en \"Agregar\".\n5. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n6. El usuario hace clic en \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n7. El usuario intenta avanzar al pago sin seleccionar dirección ni tienda.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",
    "viewport": "1440x900"
   },
   {
-   "browser": "chromium",
-   "executed_at": "2026-10-29",
+   "browser": "webkit",
+   "executed_at": "2026-11-09",
    "expected": "El sistema no permite avanzar al pago: solicita seleccionar una dirección o tienda con cobertura (Store Locator) y no se puede completar la compra mientras no haya una dirección válida.",
    "form_factor": "mobile",
    "id": "TC-B2C61-M-019",
    "name": "Verificar que un usuario sin dirección con productos en el carro no puede avanzar al pago [Mobile] [Logueado]",
-   "observation": "Causa: la precondición «cuenta sin direcciones guardadas» no se cumple (la cuenta, compartida con otra suite, tiene una dirección guardada). Acción: dejar la cuenta sin direcciones (o declarar otra cuenta) y re-ejecutar. (Mobile no se re-ejecutó contra el sitio: es la misma cuenta y el estado se comprobó en Desktop minutos antes.)",
-   "observed": "Con la cuenta declarada, el header muestra «Elige una forma de entrega», pero el selector «Elige tu método de entrega» lista una dirección guardada; al agregar un producto sin tienda el sitio abre ese selector y el carro queda vacío.",
-   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- Sesión iniciada con la cuenta (cuenta del Excel de data) / (contraseña), sin direcciones guardadas\n- Sin dirección ni tienda seteada en el Store Locator (navegación con la tienda por defecto)\n- El carro está vacío",
-   "spec": "tests/B2C-61.spec.ts:285",
+   "observation": "Causa: la cuenta vhchirinos+noaddress@avatar-global.com tiene una dirección guardada (Calle Uno 23, La Florida) y la precondición pide una cuenta sin direcciones guardadas; además, sin dirección activa «Agregar» abre el Store Locator y el carro queda vacío. Acción: eliminar las direcciones guardadas de la cuenta (o declarar otra sin direcciones) y re-ejecutar.",
+   "observed": "Al tocar «Agregar» se abre «Elige tu método de entrega» con la dirección guardada Calle Uno 23; el carro queda vacío.",
+   "preconditions": "- User type: Logueado\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- Sesión iniciada con la cuenta vhchirinos+noaddress@avatar-global.com / (contraseña de la cuenta), sin direcciones guardadas\n- Sin dirección ni tienda seteada en el Store Locator (navegación con la tienda por defecto)\n- El carro está vacío",
+   "screenshots": [
+    {
+     "caption": "Paso 3 — store locator sin direccion ni tienda",
+     "file": "TC-B2C61-M-019-p03-store-locator-sin-direccion-ni-tienda.png"
+    },
+    {
+     "caption": "Paso 4 — producto agregado",
+     "file": "TC-B2C61-M-019-p04-producto-agregado.png"
+    },
+    {
+     "caption": "Estado al fallar la aserción",
+     "file": "TC-B2C61-M-019.png"
+    }
+   ],
+   "spec": "tests/B2C-61.spec.ts",
    "status": "Bloqueado Data",
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/.\n2. El sistema carga el Home.\n3. El usuario verifica que el Store Locator no tiene dirección ni tienda seteada.\n4. El usuario busca 000000000000675191-UN y toca \"Agregar\".\n5. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/cart.\n6. El usuario toca \"Continuar con la entrega\" y luego \"Continuar\" en el modal de sugeridos si aparece.\n7. El usuario intenta avanzar al pago sin seleccionar dirección ni tienda.",
    "test_data": "Datos del Excel de data referenciados por la fila (cuentas descritas en lenguaje funcional).",

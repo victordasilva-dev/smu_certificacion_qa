@@ -1,6 +1,6 @@
 {
   "flow": "app-home",
-  "version": 1,
+  "version": 2,
   "description": "Home de la app nativa Unimarc (Page Designer, HU B2C-29).",
   "source": {
     "suite": "B2C-29 APP",
@@ -21,12 +21,17 @@
     "Android v1.0.7, invitado (2026-10-16): orden de la Home = banners, 'Los más vendidos', Módulo Bomba (imagen + cuenta regresiva días/horas/minutos/segundos, fondo gris 249 de borde a borde), 'Categorías destacadas', 'Cada día, una ocasión', 'Frescura y calidad', 'Prende la parrilla', 'Chocolates Milka', 'Nuestras marcas', 'Especial Bebidas', 'Contrata la membresía', 'TÉRMINOS Y CONDICIONES UNIMARC' (fin).",
     "El Módulo Bomba ({COMPONENTE_PROGRAMADO}) cuenta 57 días al 2026-10-16: termina el 2026-12-12 ({FECHA_FIN_VIGENCIA}).",
     "Medir fondos: el borde derecho suele estar tapado por la tarjeta de un carrusel que asoma; un bloque de fondo cuenta como 'de extremo a extremo' si alguna de sus filas tiene el mismo color en el borde derecho. El NavBar translúcido (y<300) deja ver el contenido de detrás.",
-    "Sin sesión no se ve ningún carrusel de frecuentes; su título en la app no se conoce (no se pudo entrar con correo)."
+    "Sin sesión no se ve ningún carrusel de frecuentes; su título en la app no se conoce (no se pudo entrar con correo).",
+    "CARRUSEL MY USUALS (B2C-55 APP, Android v1.0.1, 2026-11-11): solo con sesión, al pie del Home entre 'Especial Bebidas' y 'Contrata la membresía'. Título View de ancho completo 'Tus productos mas comprados' (texto centrado, desvío 2 px), botón 'Ver todos' (nombre accesible 'Ver todos mis productos frecuentes') que abre Mis productos frecuentes ('27 productos'), tarjetas product-<sku> de 479 px: se ven 2 y asoma la 3ª. Trae solo 5 SKU (igual que la web, bug B2C-1482). POM: tests-app/pages/MyUsualsCarruselScreen.ts.",
+    "ANDROID RECORTA LAS CAJAS: la tarjeta que asoma por la derecha viene con x=1024 y ancho 56 en el árbol. Para 'tarjeta entera' exigir ancho > 400, no solo x+w <= pantalla.",
+    "EL CARRUSEL LLEGA TARDE: los datos del cliente se cargan después del resto del Home; recorrer el Home en cuanto abre puede llegar al pie sin verlo. MyUsualsCarruselScreen.llevarAVista hace dos pasadas y los ajustes finos con gesto lento (uno rápido arrastra con inercia y se pasa del título).",
+    "CACHÉ DEL HOME: con 'adb emu network delay 10000:10000' el carrusel aparece igual ya cargado; la app guarda el Home entre aperturas, así que el estado de carga no se puede observar con latencia de red del emulador.",
+    "La app v1.0.1 en el emulador Pixel_4_API_33 se corre con APP_YA_INSTALADA=1: {ANDROID_APP_BUILD}=unimarc-v1.0.1.apk no está en el proyecto y sin esa variable el fixture intenta instalarlo y cae con ENOENT."
   ],
   "history": [],
   "page_objects": {
     "HomeScreen.recorrer": "tests-app/pages/HomeScreen.ts",
     "fondosDeExtremoAExtremo": "tests-app/support/pixeles.ts"
   },
-  "last_updated": "2026-10-16T17:30:00Z"
+  "last_updated": "2026-11-11T20:30:00Z"
 }

@@ -5,8 +5,7 @@
  *   node tests-app/support/explorar.ts ios login .qa/explore/guiones/login.ts
  *
  * Abre la app **en la misma plataforma y con el mismo driver con que después corre la suite**
- * —iOS en Mobile Next Cloud, o en el simulador de la Mac con IOS_EN_CLOUD=false; Android en
- * local, o en la nube con ANDROID_EN_CLOUD=true—, y por cada
+ * —iOS en el simulador de la Mac (MacinCloud); Android en el emulador o equipo local—, y por cada
  * estado que se le pida deja en `.qa/explore/<flujo>-<plataforma>/` dos archivos:
  *
  *   01-inicio.json   el árbol de accesibilidad (`screen.viewTree()`), de donde salen los locators
@@ -20,9 +19,8 @@
  *     await marcar('login abierto');
  *   }
  *
- * Existe porque en la nube cada `launch` es una asignación de dispositivo —minutos de cola—, así
- * que explorar un flujo con un comando por pantalla sería lentísimo: el guion recorre el flujo
- * entero en una sola asignación.
+ * Conviene cuando ya se conoce el camino y solo se quieren los árboles de cada pantalla: el guion
+ * recorre el flujo entero en una sola apertura de la app, en vez de un comando por pantalla.
  *
  * Se corre con Node directamente (Node ≥ 22.18 quita los tipos sin transpilar), por eso los
  * imports relativos llevan la extensión `.ts`. `.qa/explore/` está en `.gitignore`: las capturas
@@ -32,10 +30,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { pathToFileURL } from 'url';
 import { android, ios } from 'mobilewright';
-import { MobileNextDriver } from '@mobilewright/driver-mobilenext';
 import { loadDotEnv } from '../../tests/support/dotenv.ts';
 import { loadTestData, token } from '../../tests/support/testData.ts';
-import { TOKENS_APP, enNube, filtroDispositivo } from './plataformaApp.ts';
+import { TOKENS_APP, filtroDispositivo, plataformaDisponible } from './plataformaApp.ts';
 
 loadDotEnv();
 
@@ -56,15 +53,9 @@ if (!bundleId) {
   process.exit(1);
 }
 
-let driver: MobileNextDriver | undefined;
-if (enNube(plataforma)) {
-  const apiKey = process.env.MOBILENEXT_API_KEY?.trim();
-  if (!apiKey) {
-    console.error('Esta plataforma corre en Mobile Next Cloud y falta MOBILENEXT_API_KEY en .env.');
-    process.exit(1);
-  }
-  // Sin subida de reporte: una exploración no es una corrida y no debe aparecer en el dashboard.
-  driver = new MobileNextDriver({ apiKey, testResult: { uploadReport: 'off' } });
+if (!plataformaDisponible(plataforma)) {
+  console.error('iOS se explora en el simulador de una Mac con Xcode (p. ej. MacinCloud): corre este script ahí.');
+  process.exit(1);
 }
 
 const salida = path.resolve(process.cwd(), '.qa', 'explore', `${flujo}-${plataforma}`);
@@ -75,7 +66,6 @@ const device = await launcher.launch({
   bundleId,
   installApps: build ? path.resolve(process.cwd(), build) : undefined,
   deviceName: filtroDispositivo(plataforma),
-  driver,
 });
 const { screen } = device;
 
@@ -89,7 +79,7 @@ async function marcar(etiqueta: string): Promise<void> {
 }
 
 try {
-  console.log(`Explorando ${flujo} en ${plataforma}${driver ? ' (Mobile Next Cloud)' : ' (local)'} -> ${salida}`);
+  console.log(`Explorando ${flujo} en ${plataforma} -> ${salida}`);
   await marcar('inicio');
   if (guion) {
     const mod = await import(pathToFileURL(path.resolve(process.cwd(), guion)).href);

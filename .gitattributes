@@ -1,0 +1,21 @@
+# Archivos del molde de qa-executor: se guardan en LF, igual que en el plugin, para que
+# `qa_bootstrap.py check` no los marque como divergidos por los finales de línea (core.autocrlf).
+mobilewright.config.ts eol=lf
+mobilewright.ios.config.ts eol=lf
+playwright.config.ts eol=lf
+playwright.config.ci.ts eol=lf
+tsconfig.json eol=lf
+tests/pages/BasePage.ts eol=lf
+tests/support/dotenv.ts eol=lf
+tests/support/evidencia.ts eol=lf
+tests/support/fixtures.ts eol=lf
+tests/support/limpiarEvidencia.ts eol=lf
+tests/support/rutasEvidencia.ts eol=lf
+tests/support/testData.ts eol=lf
+tests-app/pages/BaseScreen.ts eol=lf
+tests-app/support/configApp.ts eol=lf
+tests-app/support/evidencia.ts eol=lf
+tests-app/support/explorar.ts eol=lf
+tests-app/support/fixtures.ts eol=lf
+tests-app/support/limpiarEvidenciaApp.ts eol=lf
+tests-app/support/plataformaApp.ts eol=lf

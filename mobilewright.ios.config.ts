@@ -6,11 +6,10 @@ import { configApp } from './tests-app/support/configApp';
  *   npx mobilewright test -c mobilewright.ios.config.ts                              # todos los (iOS)
  *   npx mobilewright test -c mobilewright.ios.config.ts --grep TC-B2C69-APP-004      # un TC
  *
- * Dónde corre lo decide `IOS_EN_CLOUD` en `.env`:
- *  - `true` (por defecto): Mobile Next Cloud, dispositivo real. Pide `MOBILENEXT_API_KEY` y el
- *    `.ipa` **firmado para dispositivo** (ad-hoc, development o enterprise) en `{IOS_APP_BUILD}`:
- *    un `.app` de simulador no se instala en un dispositivo real.
- *  - `false`: simulador de iOS de esta Mac (solo macOS, con Xcode). Pide un simulador arrancado
- *    (`xcrun simctl boot "<nombre>"`) y un `.zip` del `.app` de simulador en `{IOS_APP_BUILD}`.
+ * Corre en el **simulador de iOS de una Mac con Xcode** (por ejemplo, una Mac de MacinCloud): la
+ * suite se clona y se ejecuta en esa Mac. Pide un simulador arrancado (`xcrun simctl boot
+ * "<nombre>"`; `IOS_DEVICE_NAME` filtra cuál) y en `{IOS_APP_BUILD}` un `.zip` del `.app`
+ * compilado para simulador (`zip -r App.zip App.app`). En Windows o Linux el config se niega a
+ * arrancar: ahí no hay simulador de iOS.
  */
 export default configApp('ios');
