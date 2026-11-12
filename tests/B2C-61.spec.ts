@@ -149,6 +149,28 @@ test.describe('B2C-61 — Store Locator: disponibilidad y promociones por tienda
         expect(await sh.agregar.count(), 'sin botón Agregar').toBe(0);
       });
 
+      test(`${id('010')} · Producto inactivo para la tienda activa no aparece en catálogo ni en PDP (${ff})`, async ({ page, testData }) => {
+        const cp = id('010');
+        const sku = tk(testData, 'SKU_INACTIVO_TIENDA_A');
+        await conDireccion(page, tk(testData, 'DIRECCION_DESPACHO_001'));
+        await capturarEvidencia(page, cp, 0, 'dirección de la tienda A aplicada');
+        await buscar(page, ffl, sku);
+        const sh = ShelfProducto.porEnlaceOImagen(page, sku);
+        await sh.root.scrollIntoViewIfNeeded().catch(() => {});
+        await capturarEvidencia(page, cp, 1, 'resultados de la búsqueda del SKU');
+        const enResultados = await sh.root.isVisible().catch(() => false);
+        const pdp = new PDPPage(page);
+        await pdp.irA(sku);
+        await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+        await page.waitForTimeout(3000);
+        await capturarEvidencia(page, cp, 2, 'PDP del SKU');
+        const fichaVisible = await pdp.nombreDelProducto.isVisible().catch(() => false);
+        const ficha = fichaVisible ? (await pdp.textosDeLaFicha()).join(' · ') : '';
+        test.info().annotations.push({ type: 'observado', description: `en resultados=${enResultados}; PDP=${fichaVisible ? ficha.slice(0, 200) : 'no se muestra'}; URL=${page.url()}` });
+        expect(enResultados, 'el SKU no aparece en los resultados').toBe(false);
+        expect(fichaVisible, 'la PDP del SKU no se muestra').toBe(false);
+      });
+
       test(`${id('011')} · Al cambiar de tienda un producto sin stock en la nueva tienda queda no disponible (${ff})`, async ({ page, testData }) => {
         const cp = id('011');
         const sku = tk(testData, 'SKU_STOCK_SOLO_TIENDA_A');
@@ -177,6 +199,10 @@ test.describe('B2C-61 — Store Locator: disponibilidad y promociones por tienda
         await pdp0.abrir(sku);
         await pdp0.capturarEvidencia(cp, 0, 'PDP en la tienda sin stock (estado previo)');
         const prev = { agregar: await pdp0.agregarVisible.isVisible().catch(() => false), texto: NO_DISP.test(await txt(pdp0.core)) };
+        test.info().annotations.push({ type: 'estado-previo', description: `en la tienda "sin stock": Agregar visible=${prev.agregar}, etiqueta no disponible=${prev.texto}` });
+        if (prev.agregar && !prev.texto) {
+          throw new Error('PRECONDICION_NO_DISPONIBLE: el SKU declarado tiene stock (Agregar habilitado) en la dirección de partida, donde la precondición dice que no tiene');
+        }
         await cambiarDireccion(page, tk(testData, 'DIRECCION_DESPACHO_001'));
         await capturarEvidencia(page, cp, 5, 'dirección de la tienda con stock aplicada');
         const pdp = new PDPPage(page);
@@ -185,8 +211,6 @@ test.describe('B2C-61 — Store Locator: disponibilidad y promociones por tienda
         await pdp.capturarEvidencia(cp, 6, 'PDP con Agregar habilitado');
         await expect(pdp.agregarVisible).toBeVisible();
         await expect(pdp.agregarVisible).toBeEnabled();
-        test.info().annotations.push({ type: 'estado-previo', description: `en la tienda "sin stock": Agregar visible=${prev.agregar}, etiqueta no disponible=${prev.texto}` });
-        expect(prev.agregar, 'precondición: sin stock en la dirección de partida').toBe(false);
       });
 
       test(`${id('013')} · PDP sin stock en la tienda activa deshabilita Agregar con mensaje (${ff})`, async ({ page, testData }) => {
@@ -243,8 +267,8 @@ test.describe('B2C-61 — Store Locator: disponibilidad y promociones por tienda
       test(`${id('017')} · Datos de entrega asociados al basket con su warehouseId (${ff})`, async ({ page, testData }) => {
         const cp = id('017');
         const sku = tk(testData, 'SKU_VALID_001');
-        const dir = tk(testData, 'DIRECCION_DESPACHO_001');
-        const wh = tk(testData, 'WAREHOUSE_ID_DESPACHO_001');
+        const dir = tk(testData, 'DIRECCION_DESPACHO_004');
+        const wh =tk(testData, 'WAREHOUSE_ID_DESPACHO_001');
         const baskets: string[] = [];
         page.on('response', async (r: Response) => {
           if (!/\/baskets/.test(r.url()) || !/json/.test(r.headers()['content-type'] ?? '')) return;
@@ -261,17 +285,18 @@ test.describe('B2C-61 — Store Locator: disponibilidad y promociones por tienda
         await page.waitForTimeout(5000);
         await capturarEvidencia(page, cp, 7, 'carro con el producto');
         const antes = baskets.slice(-1)[0] ?? '';
-        const calle = dir.split(',')[0];
+        // El basket guarda la calle como la devuelve el autocompletado ("Avenida Perú 760" para "Av. Perú 760").
+        const calle = new RegExp(dir.split(',')[0].replace(/^(av\.?|avenida|calle)\s+/i, '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
         test.info().annotations.push({ type: 'basket', description: (antes.match(/"c_(deliveryAddressLabel|supplyingStoreId)":"[^"]*"/g) ?? []).join(' ') });
         expect(antes, 'basket con el SKU').toContain(sku.split('-')[0]);
-        expect(antes, 'dirección de envío en el basket').toContain(calle);
+        expect(antes, 'dirección de envío en el basket').toMatch(calle);
         expect(antes, `warehouseId ${wh} en el basket`).toMatch(new RegExp(`"(c_)?(warehouseId|supplyingStoreId|supplyingWarehouseId)":"?${wh}"?[,}]`));
         baskets.length = 0;
         await page.reload({ waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(5000);
         await capturarEvidencia(page, cp, 9, 'carro tras recargar');
         const despues = baskets.slice(-1)[0] ?? antes;
-        expect(despues).toContain(calle);
+        expect(despues).toMatch(calle);
         expect(despues).toMatch(new RegExp(`"(c_)?(warehouseId|supplyingStoreId|supplyingWarehouseId)":"?${wh}"?[,}]`));
       });
     });
