@@ -1,7 +1,7 @@
 {
   "flow": "plp-panel-filtros",
-  "last_updated": "2026-10-07T18:00:00Z",
-  "version": 8,
+  "last_updated": "2026-11-11T21:00:00Z",
+  "version": 9,
   "description": "Panel de filtros de la PLP/SRP/Colección: header, carrusel de orden, secciones colapsables por tipo de filtro, zona de filtros aplicados con chips, botón inferior de aplicar, estado sin resultados. Es el objeto de la HU B2C-71.",
   "source": {
     "suite": "B2C-71",
@@ -279,7 +279,9 @@
     "Mobile: los nombres de producto de la grilla son enlaces a .html, no botones; PLPCategoriaPage.tarjetas cubre ambos.",
     "Nueva sección \"Sellos de advertencia\" en el panel (2026-10-07), ver plp-filtro-sellos-advertencia.",
     "La PLP carnes_vacuno muestra ahora 10 productos en DEV.",
-    "2026-10-09: carnes_vacuno ({PLP_URL}) YA EXPONE LOS 7 TIPOS en orden Ofertas > Estilos > Sellos > Marca > Precio > Tipo de envase > Formato (valores 7/5/4/2/1/1); tiene 10 productos y sigue sin paginacion. OJO: TC-B2C71-D-006 (Aprobado antes) se apoyaba en que esa categoria NO tenia todos los tipos; su precondicion ya no se cumple con esa URL."
+    "2026-10-09: carnes_vacuno ({PLP_URL}) YA EXPONE LOS 7 TIPOS en orden Ofertas > Estilos > Sellos > Marca > Precio > Tipo de envase > Formato (valores 7/5/4/2/1/1); tiene 10 productos y sigue sin paginacion. OJO: TC-B2C71-D-006 (Aprobado antes) se apoyaba en que esa categoria NO tenia todos los tipos; su precondicion ya no se cumple con esa URL.",
+    "APP ANDROID v1.0.1 (B2C-95 APP, 2026-11-11), PLP Categorías → Carnes → Vacuno (12 productos): el panel 'Selecciona tus filtros' muestra primero la tarjeta 'Ofertas 🤩' + '7 productos' + Switch 'Filtrar productos en oferta'. Activar el toggle agrega el chip 'Ofertas' en 'Filtros aplicados' pero el botón queda en 'Mostrar 12 productos' y al confirmar el listado sigue con los 12 (bugs B2C-1483 y B2C-1484). Con Ofertas + Marca 'Fundo Rio Alegre' sí filtra: 4 productos (los 4 de la marca están en oferta). POM: tests-app/pages/FiltroOfertasPanel.ts.",
+    "APP: el Switch trae isChecked en el árbol al abrir el panel, pero tras tocarlo deja de traerlo; el estado se decide por el chip 'Ofertas' de 'Filtros aplicados'. Ese chip desplaza todo el panel hacia abajo: las marcas y la propia tarjeta Ofertas pueden quedar fuera de pantalla y hay que desplazar el panel antes de tocarlas."
   ],
   "page_objects": {
     "exists": true,

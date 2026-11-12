@@ -37,6 +37,22 @@ export class ListadoScreen extends BaseScreen {
     return this.volver;
   }
 
+  /** El título del listado: el primer texto bajo la cabecera (nombre completo de la categoría). */
+  async titulo(): Promise<string> {
+    const caja = await this.volver.boundingBox();
+    const textos: { t: string; y: number }[] = [];
+    const recorrer = (n: any) => {
+      const r = n.rect ?? n.bounds;
+      const t = String(n.text ?? '').trim();
+      if (r && t && /TextView|StaticText/.test(String(n.type ?? '')) && r.y > caja.y + caja.height && t !== '¿Qué estás buscando?') {
+        textos.push({ t, y: r.y });
+      }
+      for (const c of n.children ?? []) recorrer(c);
+    };
+    for (const n of await this.screen.viewTree()) recorrer(n);
+    return textos.sort((a, b) => a.y - b.y)[0]?.t ?? '';
+  }
+
   /** Solo existe en la PLP: es lo que la distingue de la landing. */
   get filtros(): Locator {
     return this.screen.getByRole('button', { name: 'Abrir filtros y ordenamiento' });

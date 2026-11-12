@@ -19,7 +19,6 @@
     "postinstall": "playwright install"
   },
   "devDependencies": {
-    "@mobilewright/driver-mobilenext": "0.0.60",
     "@mobilewright/test": "0.0.60",
     "@playwright/test": "1.63.0",
     "@types/node": "^26.1.1",
