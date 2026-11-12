@@ -381,10 +381,15 @@ export class MetodoEntregaModal {
     await this.confirmacionPin.getByRole('button', { name: /^agregar direcci[óo]n$/i }).click();
   }
 
-  /** Pestaña Retiro en tienda: busca la tienda sin la marca (el buscador no encuentra el nombre completo) y la confirma. */
+  /**
+   * Pestaña Retiro en tienda: busca la tienda sin la marca (el buscador no encuentra el nombre completo) y la confirma.
+   * La lista muestra el nombre con o sin "Unimarc" según el día (sin la marca desde el 2026-11-10).
+   */
   async elegirTienda(nombre: string): Promise<void> {
-    await this.campoBuscarTienda.fill(nombre.replace(/^unimarc\s+/i, ''));
-    await this.root.getByText(nombre, { exact: true }).first().click();
+    const sinMarca = nombre.replace(/^unimarc\s+/i, '');
+    await this.campoBuscarTienda.fill(sinMarca);
+    const escapado = sinMarca.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    await this.root.getByText(new RegExp(`^\\s*(unimarc\\s+)?${escapado}\\s*$`, 'i')).first().click();
     await this.root.getByRole('button', { name: /^confirmar tienda$/i }).click();
   }
 

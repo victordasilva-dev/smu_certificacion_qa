@@ -1,5 +1,3 @@
-import { envBool } from '../../tests/support/dotenv.ts';
-
 /**
  * Lo que distingue a cada plataforma de la app, en un solo sitio: lo leen el config de
  * mobilewright, los fixtures y el script de exploración.
@@ -26,19 +24,15 @@ export const TOKENS_APP = {
 export const SUFIJO = { ios: /\(iOS\)/, android: /\(Android\)/ } as const;
 
 /**
- * ¿Esta plataforma corre en Mobile Next Cloud?
+ * Dónde corre cada plataforma: siempre en local, vía mobilecli.
  *
- * iOS va a la nube por defecto (`IOS_EN_CLOUD=true`): en Windows no hay simulador de iOS, así que
- * ahí la nube es el único camino. En una Mac con Xcode, `IOS_EN_CLOUD=false` lo corre en el
- * simulador local (vía mobilecli), con un `.zip` del `.app` de simulador en `{IOS_APP_BUILD}`.
- * Android corre en local por defecto (emulador o equipo por ADB, vía mobilecli), y
- * `ANDROID_EN_CLOUD=true` lo manda a la nube cuando la máquina no tiene emulador o se quiere
- * certificar en hardware real.
+ * - **Android**: emulador o equipo conectado por ADB, en cualquier sistema operativo.
+ * - **iOS**: el simulador de iOS de una Mac con Xcode (por ejemplo, una Mac de MacinCloud). La
+ *   suite entera se clona y se corre en esa Mac; en Windows no hay simulador de iOS. El build de
+ *   `{IOS_APP_BUILD}` es un `.zip` del `.app` compilado para simulador.
  */
-export function enNube(plataforma: 'ios' | 'android'): boolean {
-  return plataforma === 'ios'
-    ? envBool('IOS_EN_CLOUD', true)
-    : envBool('ANDROID_EN_CLOUD', false);
+export function plataformaDisponible(plataforma: 'ios' | 'android'): boolean {
+  return plataforma === 'android' || process.platform === 'darwin';
 }
 
 /** `IOS_DEVICE_NAME=iPhone 1[56]` → /iPhone 1[56]/i. Vacío → sin filtro. */

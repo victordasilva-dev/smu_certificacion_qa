@@ -2,10 +2,10 @@ import { Page } from '@playwright/test';
 import { test, expect } from './support/fixtures';
 import { LoadedTestData, token } from './support/testData';
 import { DESKTOP, MOBILE } from './support/viewports';
-import { HomePage, MyUsualsPage } from './pages/HomePage';
+import { ComponentePD, HomePage, MyUsualsPage } from './pages/HomePage';
+import { MenuCuenta } from './pages/MenuCuenta';
 import { ShelfProducto } from './pages/ShelfProducto';
 import { HomeSkeletonCarga } from './pages/HomeSkeletonCarga';
-import * as fs from 'fs';
 import { esperarOtp, marcaOtp } from './support/otp';
 import { LoginModal } from './pages/LoginModal';
 import { PaginaHabilitada } from './pages/PaginaHabilitada';
@@ -475,13 +475,11 @@ test.describe('B2C-29 — Home configurable desde Page Designer', () => {
 });
 
 /**
- * Re-corrida 2026-10-22 (M-008 y M-009): {COMPONENTE_SEGMENTADO} es el nombre del componente en Page
- * Designer ('Bienvenida_Diamante'), no un texto visible. Se identifica comparando lo que ve cada
- * cuenta en el Home móvil: lo que ve la cuenta del segmento y no la de fuera del segmento es el
- * componente segmentado. M-008 deja la lista de la cuenta del segmento en un archivo y M-009 la usa.
+ * Re-corrida 2026-11-09: los componentes que declaran las filas son nombres de Page Designer
+ * ("Home_Banner", "Bienvenida_Diamante"), que el storefront no pinta. Se identifican en el estado
+ * que el SSR deja en `#mobify-data` (`HomePage.componentesPageDesigner`), que refleja la sesión con
+ * que se cargó la página: tras iniciar o cerrar sesión se recarga antes de leerlo.
  */
-const SEG29 = '.qa/run/seg29.json';
-
 async function entrarConCodigo(page: Page, correo: string): Promise<void> {
   const home = await new PaginaHabilitada(page).goto();
   await home.cookies.aceptarSiAparece();
@@ -496,42 +494,90 @@ async function entrarConCodigo(page: Page, correo: string): Promise<void> {
   await page.waitForTimeout(5000);
 }
 
-/** Encabezados y textos de bloque visibles del Home, para comparar entre cuentas. */
-async function bloquesDelHome(page: Page): Promise<string[]> {
-  return page.evaluate(() => {
-    const vis = (e: Element) => !!((e as HTMLElement).offsetWidth || (e as HTMLElement).offsetHeight);
-    const t = [...document.querySelectorAll('h1,h2,h3,h4,[role=heading],img[alt]')].filter(vis)
-      .map((e) => ((e as HTMLElement).innerText || e.getAttribute('alt') || '').trim().replace(/\s+/g, ' ').slice(0, 70)).filter(Boolean);
-    return [...new Set(t)];
+/**
+ * El componente de Page Designer con ese nombre tal como lo resuelve el servidor para la sesión en
+ * curso (navegación del cliente a la Home), o null si la sesión no lo recibe.
+ */
+async function componenteEnHome(page: Page, nombre: string): Promise<ComponentePD | null> {
+  const pd = await new HomePage(page).componentesParaLaSesion();
+  test.info().annotations.push({ type: 'componentes de la sesión', description: pd.filter((c) => c.nombre).map((c) => c.nombre).join(' | ') });
+  return pd.find((c) => c.nombre === nombre && c.visible) ?? null;
+}
+
+for (const [tipo, vp, ff] of [['D', DESKTOP, 'Desktop'], ['M', MOBILE, 'Mobile']] as const) {
+  test.describe(`B2C-29 — Componentes de Page Designer (${ff}, 2026-11-09)`, () => {
+    test.use(vp);
+    test.describe.configure({ timeout: 420000 });
+    const id = tipo === 'D' ? { link: 'D-013', seg: 'D-017' } : { link: 'M-015', seg: 'M-019' };
+
+    test(`TC-B2C29-${id.link} · Un banner con link configurado redirige al destino definido en Page Designer (${ff})`, async ({ page, testData }) => {
+      const cp = `TC-B2C29-${id.link}`;
+      const nombre = token(testData, 'COMPONENTE_CON_LINK')!;
+      const destino = new URL(token(testData, 'URL_DESTINO_COMPONENTE')!);
+      const home = await new HomePage(page).goto();
+      await home.cookies.aceptarSiAparece();
+      const pd = await home.componentesPageDesigner();
+      const raiz = pd.findIndex((c) => c.nombre === nombre);
+      const items = raiz < 0 ? [] : pd.slice(raiz + 1).filter((c) => c.tipo === 'smu.bannerItem');
+      const conLink = items.find((c) => c.ctaUrl === destino.pathname);
+      if (!conLink) throw new Error(`PRECONDICION_NO_DISPONIBLE: ${nombre} no tiene un slide con link a ${destino.pathname} en Page Designer`);
+      // Acotado al contenedor de {COMPONENTE_CON_LINK}: otros componentes de la Home también enlazan a ese destino.
+      const banner = page.locator(`main div.component[id="${pd[raiz].id}"] a[href="${destino.pathname}"]:has(img)`).first();
+      await banner.scrollIntoViewIfNeeded();
+      await home.capturarEvidencia(cp, 3, `${nombre} en la Home`);
+      await banner.click();
+      await page.waitForURL((u) => u.pathname === destino.pathname, { timeout: 60000 });
+      await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => {});
+      await home.capturarEvidencia(cp, 4, 'pagina de destino');
+      test.info().annotations.push({ type: 'componente', description: `${nombre} (${conLink.id}) → ${conLink.ctaUrl}; URL final ${page.url()}` });
+      expect(new URL(page.url()).pathname, 'navega al destino de Page Designer').toBe(destino.pathname);
+      await expect(page.getByRole('heading').first(), 'la página de destino carga').toBeVisible({ timeout: 30000 });
+      await expect(page.getByText(/algo sali[oó] mal|error inesperado|no encontrad/i)).toHaveCount(0);
+    });
+
+    test(`TC-B2C29-${id.seg} · Un componente segmentado para logueados solo se muestra con sesión iniciada (${ff})`, async ({ page, testData }) => {
+      const cp = `TC-B2C29-${id.seg}`;
+      const nombre = token(testData, 'COMPONENTE_SEGMENTO_LOGUEADO')!;
+      const correo = token(testData, 'USER_AUTH_001')!.split(' / ')[0];
+      const home = await new HomePage(page).goto();
+      await home.cookies.aceptarSiAparece();
+      const invitado = await componenteEnHome(page, nombre);
+      await home.capturarEvidencia(cp, 3, 'Home como invitado');
+      await entrarConCodigo(page, correo);
+      const logueado = await componenteEnHome(page, nombre);
+      await home.capturarEvidencia(cp, 5, 'Home con sesión iniciada');
+      await new MenuCuenta(page).cerrarSesion();
+      const cerrada = await componenteEnHome(page, nombre);
+      await home.capturarEvidencia(cp, 6, 'Home tras cerrar sesión');
+      test.info().annotations.push({ type: 'componente', description: `${nombre}: invitado=${!!invitado}, logueado=${!!logueado}${logueado ? ` (${logueado.id})` : ''}, tras cerrar=${!!cerrada}` });
+      expect(invitado, `${nombre} no se muestra como invitado`).toBeNull();
+      expect(logueado, `${nombre} se muestra con sesión iniciada`).not.toBeNull();
+      expect(cerrada, `${nombre} vuelve a ocultarse al cerrar sesión`).toBeNull();
+    });
   });
 }
 
-test.describe('B2C-29 — Componentes segmentados (Mobile, 2026-10-22)', () => {
+test.describe('B2C-29 — Componentes segmentados (Mobile, 2026-11-09)', () => {
   test.use(MOBILE);
   test.describe.configure({ timeout: 420000 });
 
   test('TC-B2C29-M-008 · Un usuario del segmento configurado ve el componente segmentado [Logueado] (Mobile)', async ({ page, testData }) => {
     const cp = 'TC-B2C29-M-008';
-    const correo = token(testData, 'COMPRADOR_SEGMENTO_USER')!;
-    await entrarConCodigo(page, correo);
-    const bloques = await bloquesDelHome(page);
-    fs.mkdirSync('.qa/run', { recursive: true });
-    fs.writeFileSync(SEG29, JSON.stringify({ segmento: bloques }));
-    test.info().annotations.push({ type: 'bloques del segmento', description: bloques.join(' | ') });
-    await new HomePage(page).capturarEvidencia(cp);
+    const nombre = token(testData, 'COMPONENTE_SEGMENTADO')!;
+    await entrarConCodigo(page, token(testData, 'COMPRADOR_SEGMENTO_USER')!);
+    const comp = await componenteEnHome(page, nombre);
+    await new HomePage(page).capturarEvidencia(cp, 4, 'Home de la cuenta del segmento');
+    test.info().annotations.push({ type: 'componente', description: `${nombre}: ${comp ? `recibido (${comp.id}, ${comp.tipo})` : 'no recibido'}` });
+    expect(comp, `la Home muestra ${nombre}`).not.toBeNull();
   });
 
   test('TC-B2C29-M-009 · Un usuario fuera del segmento no ve el componente y no queda espacio reservado [Logueado] (Mobile)', async ({ page, testData }) => {
     const cp = 'TC-B2C29-M-009';
-    const correo = token(testData, 'COMPRADOR_FUERA_SEGMENTO_USER')!;
-    await entrarConCodigo(page, correo);
-    const fuera = await bloquesDelHome(page);
-    const seg: string[] = fs.existsSync(SEG29) ? JSON.parse(fs.readFileSync(SEG29, 'utf-8')).segmento : [];
-    const extras = seg.filter((b) => !fuera.includes(b));
-    test.info().annotations.push({ type: 'bloques fuera del segmento', description: fuera.join(' | ') });
-    test.info().annotations.push({ type: 'solo los ve el segmento', description: extras.join(' | ') || '(ninguno)' });
-    await new HomePage(page).capturarEvidencia(cp);
-    expect(seg.length, 'hay una lectura de la cuenta del segmento (M-008)').toBeGreaterThan(0);
-    expect(extras.some((b) => /diamante|bienvenid/i.test(b)), `la cuenta del segmento ve un bloque «Bienvenida Diamante» que la cuenta fuera del segmento no ve (diferencias: ${extras.join(', ') || 'ninguna'})`).toBe(true);
+    const nombre = token(testData, 'COMPONENTE_SEGMENTADO')!;
+    await entrarConCodigo(page, token(testData, 'COMPRADOR_FUERA_SEGMENTO_USER')!);
+    const comp = await componenteEnHome(page, nombre);
+    await new HomePage(page).capturarEvidencia(cp, 4, 'Home de la cuenta fuera del segmento');
+    test.info().annotations.push({ type: 'componente', description: `${nombre}: ${comp ? `recibido (${comp.id})` : 'no recibido'}` });
+    expect(comp, `la Home no muestra ${nombre}`).toBeNull();
   });
 });
