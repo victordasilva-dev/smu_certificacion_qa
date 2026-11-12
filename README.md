@@ -1,6 +1,6 @@
 # Suite QA — Playwright + mobilewright
 
-Proyecto de automatización generado por el plugin **qa-executor**. La web corre con Playwright (`tests/`); los TC de app nativa (`-APP-`), con mobilewright (`tests-app/`): Android en el emulador o equipo local, e iOS en el simulador de una Mac con Xcode (MacinCloud), donde se clona y se corre la suite. Los Test Cases y la data de prueba **no viven aquí**: viven en Excel, en el workspace QA que apunta `QA_WORKSPACE_DIR` del `.env`. Este repositorio guarda el código que ejecuta esos casos.
+Proyecto de automatización generado por el plugin **qa-executor**. La web corre con Playwright (`tests/`); los TC de app nativa (`-APP-`), con mobilewright (`tests-app/`): Android en el emulador o equipo local, e iOS en el simulador de una Mac con Xcode (p. ej. MacinCloud), donde se clona y se corre la suite. Los Test Cases y la data de prueba **no viven aquí**: viven en Excel, en el workspace QA que apunta `QA_WORKSPACE_DIR` del `.env`. Este repositorio guarda el código que ejecuta esos casos.
 
 El flujo completo —leer la planilla, explorar, generar los specs, correr, escribir el veredicto de vuelta, actualizar el reporte de evidencia de la HU (`evidencias/<HU> Evidencias.md`) y abrir los bugs en Jira— lo conduce la skill. Aquí solo está lo que la skill produce y lo que hace falta para correrlo a mano.
 
@@ -25,6 +25,7 @@ cp .env.example .env              # y completar QA_WORKSPACE_DIR
 | `DESKTOP_BROWSER` / `MOBILE_BROWSER` | Motor por form-factor: `chromium`, `firefox`, `webkit`. `MOBILE_BROWSER` no admite firefox |
 | `IOS_DEVICE_NAME` / `IOS_OS_VERSION` / `ANDROID_DEVICE_NAME` / `ANDROID_OS_VERSION` | Filtro opcional de dispositivo (regex de modelo; `17`, `26.0` o `>=17 <19`) |
 | `APP_ANIMACIONES` | `off` apaga las animaciones del sistema en el dispositivo (vacío = no se tocan) |
+| `APP_YA_INSTALADA` (por comando) | `1` no reinstala el build antes de cada caso: usa la app ya instalada en el dispositivo |
 
 El **ambiente no está aquí**: `BASE_URL` es data de la suite y sale del Excel vía `tests/data.json`. Definirlo en dos sitios los desincroniza en silencio y la suite termina certificando el ambiente equivocado.
 
@@ -118,16 +119,19 @@ En `playwright-cli`, `--browser=chrome` significa el Chrome de Google instalado,
 `playwright-cli` usa binarios propios: `npx playwright-cli install-browser chrome-for-testing`.
 
 **`iOS corre en el simulador de iOS, que solo existe en macOS con Xcode`**
-El config de iOS se niega a arrancar fuera de una Mac a propósito. Clona la suite en la Mac (MacinCloud), arranca un simulador (`xcrun simctl boot "<nombre>"`) y corre ahí.
+El config de iOS se niega a arrancar fuera de una Mac a propósito. Clona la suite en la Mac (p. ej. MacinCloud), arranca un simulador (`xcrun simctl boot "<nombre>"`) y corre ahí.
 
 **`device allocation timed out after …ms (use.allocationTimeout)`**
-No hay un dispositivo disponible que cumpla el filtro: emulador o simulador apagado, o un `*_DEVICE_NAME`/`*_OS_VERSION` que nada cumple (`npx mobilecli devices` lista lo que se ve). Es un impedimento de ambiente, no un defecto de la app.
+No hay un dispositivo disponible que cumpla el filtro: emulador o simulador apagado, o un `*_DEVICE_NAME`/`*_OS_VERSION` que nada cumple. `npx mobilecli devices` lista lo que se ve. Es un impedimento de ambiente, no un defecto de la app.
 
 **`failed to dump UI … no XML content found in uiautomator dump`**
 Android no pudo leer el árbol de la pantalla porque algo animaba (un splash, un carrusel). Es de ambiente y suele resolverlo el reintento; si se repite, `APP_ANIMACIONES=off` en `.env`.
 
 **El caso de Android pasa pero no hay video**
 Con `DEBUG=mw:*` se ve `adb: error: cannot create …mp4: Not a directory`: la ruta supera los 260 caracteres que admite `adb` en Windows. Mueve el proyecto a una ruta más corta (≤ 110 caracteres).
+
+**`ENOENT … .apk` al arrancar cada caso de Android**
+El build de `{ANDROID_APP_BUILD}` no está en la ruta indicada. Si la app correcta ya está instalada en el dispositivo, corre con `APP_YA_INSTALADA=1`.
 
 **`Playwright Test did not expect test.describe() to be called here` después de subir mobilewright**
 Quedaron dos versiones de Playwright: alinea `@playwright/test` con la que fija `@mobilewright/test` (`npm ls playwright-core` debe mostrar una sola).
