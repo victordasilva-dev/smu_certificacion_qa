@@ -22,6 +22,11 @@
  * Conviene cuando ya se conoce el camino y solo se quieren los árboles de cada pantalla: el guion
  * recorre el flujo entero en una sola apertura de la app, en vez de un comando por pantalla.
  *
+ * Como la suite, instala antes el build de `{*_APP_BUILD}`; con `APP_YA_INSTALADA=1` explora sobre
+ * la app que ya está en el dispositivo (sin el .apk/.zip a mano, o para no reinstalarlo):
+ *
+ *   APP_YA_INSTALADA=1 npm run app:explorar -- android login .qa/explore/guiones/login.ts
+ *
  * Se corre con Node directamente (Node ≥ 22.18 quita los tipos sin transpilar), por eso los
  * imports relativos llevan la extensión `.ts`. `.qa/explore/` está en `.gitignore`: las capturas
  * pueden mostrar data de la cuenta de prueba.
@@ -64,7 +69,7 @@ await fs.promises.mkdir(salida, { recursive: true });
 const launcher = plataforma === 'ios' ? ios : android;
 const device = await launcher.launch({
   bundleId,
-  installApps: build ? path.resolve(process.cwd(), build) : undefined,
+  installApps: build && !process.env.APP_YA_INSTALADA ? path.resolve(process.cwd(), build) : undefined,
   deviceName: filtroDispositivo(plataforma),
 });
 const { screen } = device;

@@ -1,13 +1,17 @@
 {
  "flow": "cucarda-shelf",
- "last_updated": "2026-09-21T17:15:00Z",
- "version": 1,
+ "last_updated": "2026-11-12T18:00:00Z",
+ "version": 2,
  "description": "Cucarda (label promocional) de la shelf de producto: su render, posicion, estilo y las reglas de configuracion que la alimentan desde Business Manager (atributos Label_* / c_cucarda*) mas los JOB1/JOB2 que los propagan al catalogo.",
  "source": {
   "suite": "B2C-65",
   "hu": "B2C-65",
   "tc_file": "Casos de Prueba/Para Ejecutar/B2C-65 Test Cases.xlsx",
-  "test_cases": ["TC-65-D-002", "TC-65-D-005", "TC-65-M-005"],
+  "test_cases": [
+   "TC-65-D-002",
+   "TC-65-D-005",
+   "TC-65-M-005"
+  ],
   "last_sync": "2026-09-21T17:15:00Z"
  },
  "navigation": {
@@ -47,6 +51,7 @@
   "intercepts_useful": []
  },
  "observations": [
+  "CORRIDA APP 2026-11-12 (Android): 001/002/004-008/010 Aprobado, 009 Rechazado (B2C-1490), 003/012/013/014 Bloqueado Data, 011 Pendiente (compara iOS vs Android).",
   "ESTILO OBSERVADO DE LA CUCARDA (Desktop 1280x900, SRP q=carne, identico en las 7 que aparecen): texto '🍗 Semana del pollo' (19 caracteres, con emoji de icono embebido en el texto), color de texto rgb(27,94,32) = #1B5E20, fondo rgb(212,245,221) = #D4F5DD, font-size 12px, font-weight 500, border-radius 4px, max-width 180px, overflow hidden. Recuadro de 135x22 px en dx=8, dy=3 respecto de la imagen de 192x192: esquina superior izquierda.",
   "LA CUCARDA Y FAVORITOS NO SE SOLAPAN: la cucarda ocupa x 8..143 y el boton de favoritos x 152..184 dentro de la misma imagen de 192 px. Verificado por interseccion de recuadros en las 7 shelves con cucarda.",
   "EL ICONO NO ES UN NODO APARTE: 'Label_Icono' llega como emoji dentro del propio texto de la cucarda ('🍗 Semana del pollo'), no como <svg> ni <img> propio. Un TC que busque el icono como elemento separado no lo va a encontrar.",
@@ -64,5 +69,15 @@
   "class": "ShelfProducto",
   "nota": "Se extendio el POM de [[shelf-producto]] con cucardasDetalladas(), imagenLlenaElContenedor() y porSku(); no se creo una clase nueva porque la cucarda es un slot del mismo shelf."
  },
- "history": []
+ "history": [],
+ "app": {
+  "screen_object": "tests-app/pages/CucardaShelf.ts; spec tests-app/B2C-65.spec.ts (Android, app v1.0.1, emulador Pixel_4_API_33 1080x2280)",
+  "render": "Shelf = ViewGroup identifier product-<SKU>. Cucarda = TextView con el texto COMPLETO del label en dx 45, dy 36 del shelf (44 px de alto); el truncado con '…' solo se ve en la captura. Favoritos = Button 'Agregar a mis productos'/'Quitar de mis productos' en x 375..463 del shelf. Sin cucarda: ningun TextView en la franja superior; precios en dy 391 con o sin cucarda.",
+  "datos_2026_11_12": "Vacuno: 028616-KGV 'Cyber'; 666285-UN y 666200-UN 'Promocion Lleva 2 unidades por Monto' (se ve 'Promocion Lleva 2 u…', bug B2C-1490); 029403-KG 'Promocion en Carnes' sin stock; 662457-UN y 029400-KG sin cucarda. 028616 aparece en la SRP 'carne' (73 productos) pero no en los carruseles del Home. El buscador de la app muestra el shelf completo (no hay shelf simplificada).",
+  "trampas": [
+   "El encabezado fijo de PLP/SRP (buscador + chips, hasta y~890 en PLP) tapa la franja superior del shelf sin sacarlo del arbol: aceptar el shelf solo si su boton de Favoritos esta en el arbol.",
+   "Tras Enter en el buscador el teclado ya se cerro: un KEYCODE_BACK vuelve a la pantalla anterior.",
+   "'Quitar del carro' en el shelf NO persiste (al relanzar la app el producto vuelve al carro); para limpiar, 'Eliminar <producto>' en la pantalla Mi carro (cart-open)."
+  ]
+ }
 }

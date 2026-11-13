@@ -25,7 +25,7 @@ cp .env.example .env              # y completar QA_WORKSPACE_DIR
 | `DESKTOP_BROWSER` / `MOBILE_BROWSER` | Motor por form-factor: `chromium`, `firefox`, `webkit`. `MOBILE_BROWSER` no admite firefox |
 | `IOS_DEVICE_NAME` / `IOS_OS_VERSION` / `ANDROID_DEVICE_NAME` / `ANDROID_OS_VERSION` | Filtro opcional de dispositivo (regex de modelo; `17`, `26.0` o `>=17 <19`) |
 | `APP_ANIMACIONES` | `off` apaga las animaciones del sistema en el dispositivo (vacío = no se tocan) |
-| `APP_YA_INSTALADA` (por comando) | `1` no reinstala el build antes de cada caso: usa la app ya instalada en el dispositivo |
+| `APP_YA_INSTALADA` (por comando) | `1` no reinstala el build antes de cada caso ni al explorar (`npm run app:explorar`): usa la app ya instalada en el dispositivo |
 
 El **ambiente no está aquí**: `BASE_URL` es data de la suite y sale del Excel vía `tests/data.json`. Definirlo en dos sitios los desincroniza en silencio y la suite termina certificando el ambiente equivocado.
 
