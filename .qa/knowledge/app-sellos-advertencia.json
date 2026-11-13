@@ -1,0 +1,57 @@
+{
+ "flow": "app-sellos-advertencia",
+ "last_updated": "2026-11-12T16:45:00Z",
+ "version": 1,
+ "description": "Seccion 'Sellos de advertencia' del panel 'Selecciona tus filtros' de la app (HU B2C-103). Screen Object: tests-app/pages/SellosAdvertenciaPanel.ts (extiende FiltroOfertasPanel). Ver [[plp-filtro-sellos-advertencia]] (web) y [[app-ordenamiento]].",
+ "source": {
+  "suite": "B2C-103 APP",
+  "tc_file": "Casos de Prueba/Para Ejecutar/SP1/Pendiente iOS/B2C-103 APP Test Cases.xlsx",
+  "test_cases": [
+   "TC-B2C103-APP-001",
+   "TC-B2C103-APP-002",
+   "TC-B2C103-APP-003",
+   "TC-B2C103-APP-004",
+   "TC-B2C103-APP-005",
+   "TC-B2C103-APP-006",
+   "TC-B2C103-APP-007",
+   "TC-B2C103-APP-008"
+  ]
+ },
+ "navigation": {
+  "entry": "Categorias > Carnes > Vacuno (PLP 12 productos) > boton 'Abrir filtros y ordenamiento'",
+  "dispositivo": "emulador Pixel_4_API_33, 1080x2280, Android 13, app v1.0.1 ya instalada"
+ },
+ "selectors": {
+  "preferred": [
+   {
+    "description": "Seccion colapsable",
+    "selector": "Button label 'Sellos de advertencia' (con sellos marcados: 'Sellos de advertencia, N' = badge)",
+    "type": "viewTree"
+   },
+   {
+    "description": "Opciones",
+    "selector": "CheckBox label = nombre del sello, isChecked fiable",
+    "type": "viewTree"
+   },
+   {
+    "description": "Chips de Filtros aplicados (arriba del panel)",
+    "selector": "Button label 'Quitar filtro <sello>'; tambien Button 'Limpiar'",
+    "type": "viewTree"
+   },
+   {
+    "description": "Marcas expandida",
+    "selector": "Button 'Marcas' / 'Marcas, N'; buscador '¿Qué marca necesitas?' y CheckBox por marca",
+    "type": "viewTree"
+   }
+  ],
+  "fallback": [],
+  "deprecated": []
+ },
+ "observations": [
+  "ORDEN EN LA APP (v1.0.1): Sin sellos > No alto en calorias > No alto en azucares > No alto en sodio > No alto en grasas saturadas; no respeta el orden fijo de la HU -> bug B2C-1489. 'No alto en alcohol' no aparece (sin productos en Vacuno).",
+  "Vacuno: 'No alto en azucares' = 2 productos (ambos Fundo Rio Alegre), y esos 2 tambien son 'No alto en sodio' (conteo 2 con uno o los dos sellos). Fundo Rio Alegre sola = 4. Argentina Uruguay + azucares = 0 y el boton 'Mostrar 0 productos' queda deshabilitado.",
+  "El panel se desplaza solo al marcar: badge y casillas solo estan en el arbol si estan en pantalla; leerlos fuera de vista da 0/vacio (falso negativo del script). verSeccion() antes de leer.",
+  "Tocar 'Marcas' estando expandida la cierra: decidir por la presencia del buscador/casillas debajo.",
+  "Desde qa-executor 1.15.1 (PR #5 del plugin) explorar.ts respeta APP_YA_INSTALADA: APP_YA_INSTALADA=1 npm run app:explorar -- android <flujo> <guion> explora sobre la app ya instalada."
+ ]
+}
