@@ -3,12 +3,12 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-35 |
-| Última actualización | 2026-11-10 |
+| Última actualización | 2026-11-13 |
 | Ejecutado por | Victor Chirinos |
 | Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
 | Navegador Mobile | webkit |
-| Origen de los TC | Casos de Prueba/Para Ejecutar/SP1/B2C-35 Test Cases.xlsx |
+| Origen de los TC | Casos de Prueba/Ejecutados/SP1/B2C-35 Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
 ## Resumen de resultados
@@ -17,14 +17,15 @@
 |---|---|
 | Bloqueado Data | 14 |
 | Bloqueado | 6 |
-| Aprobado | 4 |
+| Aprobado | 5 |
 | Rechazado | 2 |
-| **Total** | **26** |
+| **Total** | **27** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-13 | 1 | TC-B2C35-D-015 |
 | 2026-11-10 | 10 | TC-B2C35-D-001, TC-B2C35-D-009, TC-B2C35-M-009, TC-B2C35-M-020, TC-B2C35-M-029, TC-B2C35-M-030, TC-B2C35-M-040, TC-B2C35-M-041, TC-B2C35-M-042, TC-B2C35-M-043 |
 | 2026-11-03 | 20 | TC-B2C35-D-001, TC-B2C35-D-004, TC-B2C35-D-005, TC-B2C35-D-008, TC-B2C35-D-009, TC-B2C35-D-010, TC-B2C35-D-014, TC-B2C35-M-003, TC-B2C35-M-004, TC-B2C35-M-009, TC-B2C35-M-014, TC-B2C35-M-018, TC-B2C35-M-020, TC-B2C35-M-023, TC-B2C35-M-024, TC-B2C35-M-025, TC-B2C35-M-026, TC-B2C35-M-028, TC-B2C35-M-032, TC-B2C35-M-033 |
 
@@ -1228,6 +1229,51 @@ Causa: {PLP_URL_SIN_SEO} es /category/bebes-y-ninos, la categoría top misma, y 
 
 ---
 
+### TC-B2C35-D-015 - Al volver de la PDP con atras del navegador, la PLP restaura el scroll exacto sin recargar
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
+| Form factor | desktop |
+| Viewport | 1440x900 |
+| Navegador | chromium |
+
+**Precondiciones**
+
+- Viewport: Desktop 1440x900
+
+**Data utilizada**
+
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; PLP usada: Carnes > Cerdo (/category/carnes_cerdo)
+
+**Pasos ejecutados**
+
+1. Hacer scroll y entrar a una PDP.
+2. Presionar atras del navegador.
+
+**Resultado esperado**
+
+El scroll se restaura exactamente y la tarjeta queda visible, sin recargar toda la pagina.
+
+**Resultado obtenido**
+
+Con la PLP desplazada a 700 se abrió la ficha de "Lomo centro de cerdo Super Cerdo al vacío 800 g"; al volver con atrás, el scroll quedó en 700, la página no se recargó y la tarjeta quedó visible en la misma posición.
+
+**Observación**
+
+Re-test 2026-11-13 de B2C-763: corregido. Al volver de la PDP con atrás, el scroll se restauró exacto (700 → 700), sin recargar, con la tarjeta de origen visible. El test() del spec espera la URL /product/ y la PDP abre ahora como /<slug>/<SKU>.html: se condujo con el CLI.
+
+**Evidencia**
+
+![Paso 1 — PLP desplazada a 700](<B2C-35 Evidencias/TC-B2C35-D-015-p01-PLP-Cerdo-desplazada-a-700.png>)
+
+![Paso 1 — PDP abierta desde la tarjeta](<B2C-35 Evidencias/TC-B2C35-D-015-p01-PDP-abierta-desde-la-tarjeta.png>)
+
+![Paso 2 — PLP tras volver: scroll en 700 y tarjeta visible](<B2C-35 Evidencias/TC-B2C35-D-015-p02-PLP-tras-volver-con-atras.png>)
+
+---
+
 <!-- qa-evidence-state
 {
  "header": {
@@ -1239,9 +1285,9 @@ Causa: {PLP_URL_SIN_SEO} es /category/bebes-y-ninos, la categoría top misma, y 
   "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
   "executed_by": "Victor Chirinos",
   "suite": "B2C-35",
-  "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-35 Test Cases.xlsx",
+  "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-35 Test Cases.xlsx",
   "title": "B2C-35 - Product List Page (PLP) N2 y N3 - Evidencias QA",
-  "updated_at": "2026-11-10"
+  "updated_at": "2026-11-13"
  },
  "history": {
   "2026-11-03": [
@@ -1277,6 +1323,9 @@ Causa: {PLP_URL_SIN_SEO} es /category/bebes-y-ninos, la categoría top misma, y 
    "TC-B2C35-M-041",
    "TC-B2C35-M-042",
    "TC-B2C35-M-043"
+  ],
+  "2026-11-13": [
+   "TC-B2C35-D-015"
   ]
  },
  "results": [
@@ -1863,6 +1912,35 @@ Causa: {PLP_URL_SIN_SEO} es /category/bebes-y-ninos, la categoría top misma, y 
    "steps": "1. El usuario ingresa a https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebes-y-ninos.\n2. El sistema carga la PLP con el listado de productos.\n3. El usuario hace scroll hasta el final de la página.",
    "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {PLP_URL_SIN_SEO} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/bebes-y-ninos",
    "viewport": "390x844"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-13",
+   "expected": "El scroll se restaura exactamente y la tarjeta queda visible, sin recargar toda la pagina.",
+   "form_factor": "desktop",
+   "id": "TC-B2C35-D-015",
+   "name": "Al volver de la PDP con atras del navegador, la PLP restaura el scroll exacto sin recargar",
+   "observation": "Re-test 2026-11-13 de B2C-763: corregido. Al volver de la PDP con atrás, el scroll se restauró exacto (700 → 700), sin recargar, con la tarjeta de origen visible. El test() del spec espera la URL /product/ y la PDP abre ahora como /<slug>/<SKU>.html: se condujo con el CLI.",
+   "observed": "Con la PLP desplazada a 700 se abrió la ficha de \"Lomo centro de cerdo Super Cerdo al vacío 800 g\"; al volver con atrás, el scroll quedó en 700, la página no se recargó y la tarjeta quedó visible en la misma posición.",
+   "preconditions": "- Viewport: Desktop 1440x900",
+   "screenshots": [
+    {
+     "caption": "Paso 1 — PLP desplazada a 700",
+     "file": "TC-B2C35-D-015-p01-PLP-Cerdo-desplazada-a-700.png"
+    },
+    {
+     "caption": "Paso 1 — PDP abierta desde la tarjeta",
+     "file": "TC-B2C35-D-015-p01-PDP-abierta-desde-la-tarjeta.png"
+    },
+    {
+     "caption": "Paso 2 — PLP tras volver: scroll en 700 y tarjeta visible",
+     "file": "TC-B2C35-D-015-p02-PLP-tras-volver-con-atras.png"
+    }
+   ],
+   "status": "Aprobado",
+   "steps": "1. Hacer scroll y entrar a una PDP.\n2. Presionar atras del navegador.",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; PLP usada: Carnes > Cerdo (/category/carnes_cerdo)",
+   "viewport": "1440x900"
   }
  ]
 }

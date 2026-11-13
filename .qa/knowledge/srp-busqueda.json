@@ -1,6 +1,6 @@
 {
   "flow": "srp-busqueda",
-  "last_updated": "2026-11-03",
+  "last_updated": "2026-11-13",
   "version": 2,
   "description": "Search Results Page (SRP) del storefront: acceso desde el buscador, titulo con el termino, contador, chips de categoria, grilla de shelves, barra de filtros y orden, estados de carga (skeleton), sin resultados (SRP-014) y error (SRP-012). Es el objeto de la HU B2C-18.",
   "source": {
@@ -175,7 +175,11 @@
     "2026-11-03: ni \"leche\" (Desktop y Mobile) renderiza Banner circular bajo el título, ni \"aceite\"/\"aceites\" ningún banner por matchmode: D-018, D-027 y M-025 siguen Bloqueado por configuración de content assets.",
     "2026-11-03: al confirmar una tienda de Retiro como invitado se abre el drawer \"¡Hola, ingresa aquí!\" y deja el header aria-hidden: getByRole no encuentra el Store Locator hasta cerrarlo. LoginModal.cerrarSiAparece() lo cierra (lo usa fijarRetiro en tests/B2C-18.spec.ts).",
     "2026-11-03: con retiro en Unimarc Las Condes la etiqueta del shelf sin stock es \"No disponible\" (sin método activo era \"Pronto disponible\").",
-    "2026-11-03 (B2C-101 pendientes): 'paan de molde', 'paan molde' y 'pan de molde' ya traen panes de molde (103, 103 y 66 productos); D-002/M-002 Aprobado. 'leche entera' trae 9 productos y ninguno se llama exactamente asi (Leche Soprole entera natural 1 L abre la lista): D-005/M-005 siguen Bloqueado Data."
+    "2026-11-03 (B2C-101 pendientes): 'paan de molde', 'paan molde' y 'pan de molde' ya traen panes de molde (103, 103 y 66 productos); D-002/M-002 Aprobado. 'leche entera' trae 9 productos y ninguno se llama exactamente asi (Leche Soprole entera natural 1 L abre la lista): D-005/M-005 siguen Bloqueado Data.",
+    {
+      "date": "2026-11-13",
+      "note": "La SRP pide sus banners al Shopper Experience API: /contents/srp-term-banners (banners por termino, matchmode strict/similar), /contents/<termino>-srp-grid-banner y /contents/<termino>-srp-banner-circular. En DEV los tres responden 404 para 'aceite' y 'aceites' (Desktop chromium y Mobile webkit): no hay asset configurado y la SRP no renderiza banner. Comprobar estas llamadas con `requests` de playwright-cli antes de declarar un Rechazado de banner."
+    }
   ],
   "page_objects": {
     "exists": true,

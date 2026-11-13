@@ -2,9 +2,6 @@
   "name": "qa-automation-suite",
   "private": true,
   "version": "1.0.0",
-  "engines": {
-    "node": ">=22.18.0"
-  },
   "scripts": {
     "test": "playwright test",
     "test:desktop": "playwright test --project=desktop",
@@ -22,7 +19,6 @@
     "@mobilewright/test": "0.0.60",
     "@playwright/test": "1.63.0",
     "@types/node": "^26.1.1",
-    "googleapis": "^188.0.0",
     "mobilewright": "0.0.60",
     "typescript": "^7.0.2"
   }
