@@ -1,7 +1,7 @@
 {
  "flow": "home-page-designer",
- "last_updated": "2026-11-10T15:00:00Z",
- "version": 5,
+ "last_updated": "2026-11-12T15:00:00Z",
+ "version": 6,
  "source": {
   "suite": "B2C-29",
   "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-29 WEB Test Cases.xlsx",
@@ -101,6 +101,7 @@
   "nota": "Modela el Home como pagina de componentes: los cuenta por encabezado visible y expone el carrusel My Usuals y su CTA."
  },
  "observations": [
+  "CORRIDA 2026-11-12 B2C-55 BM: BM-001/002/004 Aprobado; BM-003 Bloqueado Data (vhchirinos+frecuentes_outsegment tiene exactamente 5 frecuentes y My Usuals exige mas de 5). Se agrego un My Usuals de prueba en Main Content (id 21d8b1b1bf801386158cb58546) y se elimino al final. {MY_USUALS_TITULO_30} mide 33 caracteres, no 30.",
   "CORRIDA 2026-11-10 (13 pendientes de SP1): D-013/M-015 Aprobado; los otros 11 en Bloqueado Data.",
   "NOMBRES DE PAGE DESIGNER EN DEV al 2026-11-10: solo 4 componentes tienen nombre: 'Unimarc Home' (home-page), 'Home_Banner' (tb-banner-hp, slides tb-banner-b1..b3-hp + uno sin id semantico), 'Modulo Bomba' (hp-bomba-hw), 'Carrusel_Banner' (tb-banner-t4-hp). Se leen de #mobify-data (SSR, invitado) o de shopper-experience /pages/home-page (con el token de la sesion; HomePage.componentesParaLaSesion).",
   "Bienvenida_Diamante NO LO RECIBE NINGUNA SESION (invitado, +comprador, +noaddress del segmento, +segundo fuera de segmento). La data lo usa a la vez para 'solo logueados' (D-017/M-019) y 'segmento Diamante' (M-008/M-009). Por decision del usuario los 4 quedaron Bloqueado Data, sin bug, igual que el criterio del 2026-10-07.",
@@ -141,5 +142,12 @@
   "suite": "B2C-29",
   "fecha": "2026-10-09",
   "resultado": "8 pendientes: 1 Aprobado (D-010), 7 Bloqueado Data"
+ },
+ "business_manager": {
+  "login": "{BM_URL}/default/ViewApplication-DisplayWelcomePage -> account.demandware.com: usuario, 'Log in', contraseña, 'Log in' -> verify.salesforce.com pide aprobar Salesforce Authenticator (paso del usuario). La sesion de BM expira en ~30 min de inactividad y vuelve a pedir Authenticator; una URL de BM sin el contexto app=__bm_* tambien manda al login.",
+  "popups": "BM abre modales de webinar de Salesforce (dialog con button 'Close'), tambien en Page Designer; reaparecen al navegar. Cerrarlos antes de cada captura.",
+  "page_designer": "Merchant Tools: seleccionar sitio 'Unimarc' (combobox 'Site', listbox 'Available Sites'), luego ViewLdsBusinessManagerScreen-PageDesigner#/edit/page/home-page. El locale arranca en 'default' (inactivo); los atributos (Titulo) son por locale: cambiar a 'Spanish (Chile)' antes de leer o editar. Agregar componente: panel Components, arrastrar con mouse (mousedown/move/up) al canvas; el drag de playwright-cli no funciona entre frames. 'Apply' guarda y, como la pagina esta Online, publica. Settings > Schedule and Targeting > Custom Targeting: Customer Group (ej. 'Clientes MyUsuals'), Locales, Display From/To. Borrar: boton 'Remove <componente>' en el arbol de Page Structure + OK.",
+  "cache": "Los cambios de Page Designer NO llegan al storefront por si solos (28 min sin reflejarse el 2026-11-12): invalidar Administration > Sites > Manage Sites > Unimarc > Cache > 'Entire Page Cache for Site' (ViewChannelPageCache-Start?RepositoryUUID=394b832697228ede9bd49012cf con app=__bm_admin;site=Unimarc). Con eso se ve en segundos. Afecta a todo dev: pedir visto bueno al usuario.",
+  "my_usuals_original": "Home tiene un 'Mis Usuales (My Usuals)' (id 8173ed521e9723ebacd9c457f3) dentro del segundo Container, titulo 'Tus productos mas comprados', maximo 5; no tocarlo."
  }
 }

@@ -27,6 +27,7 @@
   "entradas_N1_desktop": "[role=dialog] button:has(svg):has(img) — RENDER DESKTOP: el modal no es un chakra-modal (no existe .chakra-modal__body) y las entradas N1 son la columna izquierda de botones con svg E imagen a la vez; las tarjetas N2 llevan imagen sin svg y las hojas N3 ninguna. El selector de Mobile (cabeceras_N1) no falla aqui: devuelve CERO, que se lee como 'el menu no ofrece categorias' teniendo catorce. Locator tolerante a los dos form-factors en ModalCategorias.entradasN1"
  },
  "observations": [
+  "CORRIDA 2026-11-12 B2C-73 BM: BM-001 Bloqueado Data (Pan es N2); BM-002 Aprobado con observacion (Despensa ya sin fullimage, decision del usuario); BM-003 Aprobado (Frutas y Verduras sobre Carnes, orden restaurado). Menu Desktop: entradas N1 = [role=dialog] button:has(svg):has(img); el hover a una N1 con el comando hover de playwright-cli no cambia el panel, hace falta mousemove real.",
   "NO HAY ENLACES <a> dentro del modal: absolutamente todo son <button> con navegacion por JS. Buscar por getByRole('link') no encuentra nada.",
   "Como pildoras, cabeceras N1 y tarjetas N2 son todas <button>, hay que distinguirlas por ESTRUCTURA: la cabecera N1 lleva svg y no lleva img; la tarjeta N2 lleva img; las pildoras viven en el hermano inmediato del header. Distinguirlas por coordenada Y es fragil y falla mientras el modal renderiza.",
   "EL MODAL RENDERIZA EN DOS TIEMPOS: primero el armazon y despues el cuerpo. Hay que esperar a que exista alguna tarjeta N2 ('.chakra-modal__body button:has(img)') antes de medir nada; si se mide antes, el carrusel reporta 1 sola pildora y el cuerpo scrollHeight == clientHeight, y las aserciones fallan sin que exista defecto.",
@@ -92,5 +93,11 @@
   "suite": "B2C-21",
   "fecha": "2026-09-09",
   "resultado": "15 Aprobado, 1 Rechazado (M-015, bug B2C-756), 5 Fuera de alcance (APP)"
+ },
+ "business_manager": {
+  "catalogo": "BM Merchant Tools (sitio Unimarc) > Products and Catalogs > Catalogs > unimarc-storefront-catalog: lista las N1 (17, paginadas de a 10; 'All' las muestra todas). El orden del menu Categorias sale de este orden: seleccionar el checkbox de una fila y usar las flechas de la columna Sorting (button 'Submit' x4: arriba del todo, subir, bajar, abajo del todo). Se guarda al instante.",
+  "imagenes": "Edit de la categoria > Category Attributes > Presentation Attributes: 'Thumbnail Image' (icono del listado N1) y 'Standard Image' (el fullimage/banner del panel N2). Al 2026-11-12 Despensa no tiene Standard Image (su panel sale sin banner) y Carnes / Frutas y Verduras si.",
+  "cache": "Tras cambiar el catalogo hay que invalidar 'Entire Page Cache for Site' de Unimarc para verlo en el menu (ver [[home-page-designer]] business_manager.cache).",
+  "datos": "{BM_CATEGORY_SIN_THUMBNAIL} = 'Pan' es N2 (panaderia-y-pasteleria_pan), no N1. {BM_CATEGORY_SIN_FULLIMAGE} = 'Despensa' (N1, ya sin Standard Image)."
  }
 }
