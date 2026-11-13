@@ -41,7 +41,7 @@ export class ListadoDelSku extends BasePage {
     await super.goto();
     await this.cookies.aceptarSiAparece();
     const migas = this.page.locator('[data-testid="sf-crumb-item"] a');
-    await this.page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+    // Sin `networkidle`: la analítica del sitio nunca deja la red quieta y la espera vencía siempre.
     await migas.first().waitFor({ state: 'attached', timeout: 20000 }).catch(() => {});
     const hrefs = await migas.evaluateAll((a) => a.map((x) => x.getAttribute('href') ?? ''));
     const categoria = hrefs.filter((h) => h.startsWith('/category/')).pop() ?? null;
@@ -112,11 +112,22 @@ export class ListadoDelSku extends BasePage {
     return enfocado;
   }
 
-  /** Los botones de la shelf llegan por SSR y tardan en hidratarse: se espera a que la red calme. */
+  /** Vuelve a cargar el listado (p. ej. para verlo con el carro ya armado). */
+  async recargar(): Promise<void> {
+    await this.page.reload();
+    await this.esperarListado();
+  }
+
+  /**
+   * Los botones de la shelf llegan por SSR y tardan en hidratarse. Se espera a la shelf del SKU y
+   * a su control de carro ("Agregar" o el stepper), no a `networkidle`, que en este sitio no llega.
+   */
   private async esperarListado(): Promise<void> {
     await this.cookies.aceptarSiAparece();
-    await this.page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
-    await this.page.waitForTimeout(2500);
-    await this.shelf.root.scrollIntoViewIfNeeded().catch(() => {});
+    const shelf = this.shelf;
+    await shelf.root.waitFor({ state: 'visible', timeout: 30000 }).catch(() => {});
+    await shelf.agregar.or(shelf.aumentar).first().waitFor({ state: 'visible', timeout: 15000 }).catch(() => {});
+    await this.page.waitForTimeout(1500);
+    await shelf.root.scrollIntoViewIfNeeded().catch(() => {});
   }
 }
