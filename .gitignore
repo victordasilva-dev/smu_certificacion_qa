@@ -17,6 +17,10 @@ __pycache__/
 *.ipa
 
 # Artefactos pesados de Playwright (no se suben a GitHub: pasan el límite de 100 MB)
+# Trazas y videos de las corridas: se quedan locales; en el repo van el .md y los PNG
+evidencias/**/*.zip
+evidencias/**/*.zip.*
+evidencias/**/*.webm
 
 # Locales, sensibles o temporales (no se suben a GitHub)
 tools/
@@ -26,7 +30,4 @@ tools/
 .qa/*.png
 .qa/*.txt
 
-
-# Traza de B2C-26 D-013 (193,7 MB): supera el limite de GitHub; se sube partida en evidencias/.../trace.zip.parte-*
-evidencias/B2C-26 Evidencias/TC-B2C26-D-013-run-1/trace.zip
 scripts/
