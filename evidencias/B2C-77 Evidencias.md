@@ -3,12 +3,12 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-77 |
-| Última actualización | 2026-10-30 |
-| Ejecutado por | Daniel Uñuruco |
-| Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ (DEV) |
+| Última actualización | 2026-11-13 |
+| Ejecutado por | Victor Chirinos |
+| Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
-| Navegador Mobile | chromium |
-| Origen de los TC | Casos de Prueba/Para Ejecutar/SP1/B2C-77 Test Cases.xlsx |
+| Navegador Mobile | webkit |
+| Origen de los TC | Casos de Prueba/Ejecutados/SP1/B2C-77 Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
 ## Resumen de resultados
@@ -16,14 +16,15 @@
 | Estado | Casos |
 |---|---|
 | Bloqueado Data | 8 |
-| Aprobado | 4 |
+| Aprobado | 5 |
 | Rechazado | 2 |
-| **Total** | **14** |
+| **Total** | **15** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-13 | 1 | TC-B2C77-M-015 |
 | 2026-10-30 | 14 | TC-B2C77-D-005, TC-B2C77-D-006, TC-B2C77-D-007, TC-B2C77-D-008, TC-B2C77-D-011, TC-B2C77-D-012, TC-B2C77-D-014, TC-B2C77-M-008, TC-B2C77-M-009, TC-B2C77-M-010, TC-B2C77-M-011, TC-B2C77-M-012, TC-B2C77-M-014, TC-B2C77-M-016 |
 
 ## Detalle por caso de prueba
@@ -643,20 +644,62 @@ Verificado el 2026-10-30 con {TABS_COLECCIONES} = 'Nuestras marcas' (Home, Mobil
 
 ---
 
+### TC-B2C77-M-015 - Verificar que el carrusel de la tab activa no supera el máximo de productos [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Spec | tests/B2C-77.spec.ts:886 |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: Home
+- El componente T4 está publicado en el Home
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.
+2. El sistema carga el Home con el componente Tabs + Carrusel (T4).
+3. El usuario desliza el carrusel hasta el final y cuenta los productos.
+
+**Resultado esperado**
+
+El carrusel muestra como máximo 12 productos (valor por defecto) aunque la colección tenga más.
+
+**Resultado obtenido**
+
+El carrusel de la tab activa no supera el máximo de productos configurado.
+
+**Evidencia**
+
+![Paso 2 — tab amada masa activa](<B2C-77 Evidencias/TC-B2C77-M-015-p02-tab-amada-masa-activa.png>)
+
+---
+
 <!-- qa-evidence-state
 {
  "header": {
   "browsers": {
    "desktop": "chromium",
-   "mobile": "chromium"
+   "mobile": "webkit"
   },
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
-  "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ (DEV)",
-  "executed_by": "Daniel Uñuruco",
+  "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
+  "executed_by": "Victor Chirinos",
   "suite": "B2C-77",
-  "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-77 Test Cases.xlsx",
+  "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-77 Test Cases.xlsx",
   "title": "B2C-77 - Evidencias QA (casos que estaban Pendiente / Bloqueado Data - corrida del 2026-10-30)",
-  "updated_at": "2026-10-30"
+  "updated_at": "2026-11-13"
  },
  "history": {
   "2026-10-30": [
@@ -674,6 +717,9 @@ Verificado el 2026-10-30 con {TABS_COLECCIONES} = 'Nuestras marcas' (Home, Mobil
    "TC-B2C77-M-012",
    "TC-B2C77-M-014",
    "TC-B2C77-M-016"
+  ],
+  "2026-11-13": [
+   "TC-B2C77-M-015"
   ]
  },
  "results": [
@@ -935,6 +981,27 @@ Verificado el 2026-10-30 con {TABS_COLECCIONES} = 'Nuestras marcas' (Home, Mobil
    "status": "Aprobado",
    "steps": "1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.\n2. El sistema carga el Home con el componente Tabs + Carrusel (T4).\n3. El usuario toca la primera tab.\n4. El sistema muestra en el carrusel los productos de esa tab.\n5. El usuario desliza el carrusel hasta el final y registra los productos.\n6. El usuario abre la PLP de la colección configurada para esa tab según {TABS_COLECCIONES} y verifica que cada producto registrado aparece en ella.\n7. El usuario repite los pasos 3 a 6 para cada tab, deslizando la fila de tabs para llegar a las que están fuera de pantalla.",
    "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {TABS_COLECCIONES} = TBD",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-13",
+   "expected": "El carrusel muestra como máximo 12 productos (valor por defecto) aunque la colección tenga más.",
+   "form_factor": "mobile",
+   "id": "TC-B2C77-M-015",
+   "name": "Verificar que el carrusel de la tab activa no supera el máximo de productos [Mobile] [Guest]",
+   "observed": "El carrusel de la tab activa no supera el máximo de productos configurado.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: Home\n- El componente T4 está publicado en el Home",
+   "screenshots": [
+    {
+     "caption": "Paso 2 — tab amada masa activa",
+     "file": "TC-B2C77-M-015-p02-tab-amada-masa-activa.png"
+    }
+   ],
+   "spec": "tests/B2C-77.spec.ts:886",
+   "status": "Aprobado",
+   "steps": "1. El usuario ingresa a {BASE_URL} desde el navegador del dispositivo móvil.\n2. El sistema carga el Home con el componente Tabs + Carrusel (T4).\n3. El usuario desliza el carrusel hasta el final y cuenta los productos.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
    "viewport": "390x844"
   }
  ]

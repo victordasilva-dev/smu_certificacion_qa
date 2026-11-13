@@ -3,19 +3,20 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-72 APP |
-| Última actualización | 2026-10-21 |
-| Ejecutado por | Daniel Uñuruco |
-| Ambiente | App Unimarc v1.0.7 (DEV) |
-| Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-72 APP Test Cases.xlsx |
+| Última actualización | 2026-11-13 |
+| Ejecutado por | Victor Chirinos |
+| Ambiente | App Unimarc (DEV) · cl.smu.unimarcapp.sfcc.qa |
+| Dispositivo Android | sdk_gphone64_x86_64 (Pixel_4_API_33) · Android 13 · emulador · app instalada (actualizada 11-11-2026) |
+| Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/Pendiente IOS/B2C-72 APP Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
 ## Resumen de resultados
 
 | Estado | Casos |
 |---|---|
-| Bloqueado Data | 16 |
+| Bloqueado Data | 15 |
+| Aprobado | 3 |
 | Fuera de Alcance | 3 |
-| Aprobado | 2 |
 | Rechazado | 1 |
 | **Total** | **22** |
 
@@ -23,6 +24,7 @@
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-13 | 1 | TC-B2C72-APP-012 |
 | 2026-10-21 | 22 | TC-B2C72-APP-001, TC-B2C72-APP-002, TC-B2C72-APP-003, TC-B2C72-APP-004, TC-B2C72-APP-005, TC-B2C72-APP-008, TC-B2C72-APP-009, TC-B2C72-APP-010, TC-B2C72-APP-011, TC-B2C72-APP-012, TC-B2C72-APP-013, TC-B2C72-APP-014, TC-B2C72-APP-015, TC-B2C72-APP-016, TC-B2C72-APP-017, TC-B2C72-APP-018, TC-B2C72-APP-019, TC-B2C72-APP-020, TC-B2C72-APP-021, TC-B2C72-BM-016, TC-B2C72-BM-017, TC-B2C72-BM-018 |
 
 ## Detalle por caso de prueba
@@ -497,13 +499,11 @@ Revisado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paque
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-21 |
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
 | Form factor | app |
-| Navegador | — |
 | Plataforma | Android |
-| Dispositivo | Pixel 6 (emulador) · Android 14 |
-| Spec | tests-app/B2C-72.spec.ts |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel_4_API_33) · Android 13 · emulador · app instalada (actualizada 11-11-2026) |
 
 **Precondiciones**
 
@@ -515,15 +515,11 @@ Revisado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paque
 
 **Data utilizada**
 
-{APP_BUILD} = v1.0.7
-
-{BM_ADMIN_PASSWORD} = (contraseña de la cuenta)
-
-{BM_ADMIN_USER} = e_jmoran@smu.cl
-
-{BM_PD_PATH} = https://development-na01-smu.demandware.net/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dUnimarc/ViewLdsBusinessManagerScreen-PageDesigner?SelectedMenuItem=content_pages&CurrentMenuItemId=content
-
-{USER_AUTH_001} = daunuruco+comprador@avatar-global.com
+- {APP_BUILD}
+- {BM_PD_PATH}
+- {BM_ADMIN_USER}
+- {BM_ADMIN_PASSWORD}
+- {USER_AUTH_001}
 
 **Pasos ejecutados**
 
@@ -537,11 +533,17 @@ Se muestra el carrusel con su título centrado y las mismas imágenes circulares
 
 **Resultado obtenido**
 
-Causa: el caso exige iniciar sesión con {USER_AUTH_001}, que es un correo, y el login de la app pide RUT (el Excel de data no trae el RUT de la cuenta) y cambiar el carrusel en Page Designer ({BM_PD_PATH}) con la cuenta de administrador {BM_ADMIN_USER}, una modificación del contenido publicado en DEV que no se hace desde la automatización sin autorización. Acción: declarar el RUT de la cuenta y coordinar el cambio en Page Designer.
+La cuenta logueada ve el carrusel con hasta 3 imágenes circulares por slide y los mismos 7 elementos que el invitado.
 
 **Observación**
 
-Revisado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paquete com.smuapp.unimarc) por indicación del usuario: la planilla no declara 'Plataforma:'. Causa: el caso exige iniciar sesión con {USER_AUTH_001}, que es un correo, y el login de la app pide RUT (el Excel de data no trae el RUT de la cuenta) y cambiar el carrusel en Page Designer ({BM_PD_PATH}) con la cuenta de administrador {BM_ADMIN_USER}, una modificación del contenido publicado en DEV que no se hace desde la automatización sin autorización. Acción: declarar el RUT de la cuenta y coordinar el cambio en Page Designer. Re-verificado en vivo el 2026-10-21.
+El test() de la suite busca el título «Categorías destacadas», que hoy dice «Popular Categories»; se condujo con mobilecli.
+
+**Evidencia**
+
+![Paso 1 — logueado](<B2C-72 APP Evidencias/B2C-1363-p01-logueado.png>)
+
+![Paso 2 — deslizado](<B2C-72 APP Evidencias/B2C-1363-p02-deslizado.png>)
 
 ---
 
@@ -1121,14 +1123,14 @@ Revisado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paque
  "header": {
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "devices": {
-   "Android": "Pixel 6 (emulador) · Android 14"
+   "android": "sdk_gphone64_x86_64 (Pixel_4_API_33) · Android 13 · emulador · app instalada (actualizada 11-11-2026)"
   },
-  "environment": "App Unimarc v1.0.7 (DEV)",
-  "executed_by": "Daniel Uñuruco",
+  "environment": "App Unimarc (DEV) · cl.smu.unimarcapp.sfcc.qa",
+  "executed_by": "Victor Chirinos",
   "suite": "B2C-72 APP",
-  "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-72 APP Test Cases.xlsx",
+  "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/Pendiente IOS/B2C-72 APP Test Cases.xlsx",
   "title": "Carrusel de imágenes circulares en la app (Android)",
-  "updated_at": "2026-10-21"
+  "updated_at": "2026-11-13"
  },
  "history": {
   "2026-10-21": [
@@ -1154,6 +1156,9 @@ Revisado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paque
    "TC-B2C72-BM-016",
    "TC-B2C72-BM-017",
    "TC-B2C72-BM-018"
+  ],
+  "2026-11-13": [
+   "TC-B2C72-APP-012"
   ]
  },
  "results": [
@@ -1347,21 +1352,29 @@ Revisado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paque
    "test_data": "{APP_BUILD} = v1.0.7\n{BM_ADMIN_PASSWORD} = (contraseña de la cuenta)\n{BM_ADMIN_USER} = e_jmoran@smu.cl\n{BM_PD_PATH} = https://development-na01-smu.demandware.net/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dUnimarc/ViewLdsBusinessManagerScreen-PageDesigner?SelectedMenuItem=content_pages&CurrentMenuItemId=content\n{FECHA_HORA_FIN_CARRUSEL} = None\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com"
   },
   {
-   "browser": "—",
-   "device": "Pixel 6 (emulador) · Android 14",
-   "executed_at": "2026-10-21",
+   "device": "sdk_gphone64_x86_64 (Pixel_4_API_33) · Android 13 · emulador · app instalada (actualizada 11-11-2026)",
+   "executed_at": "2026-11-13",
    "expected": "Se muestra el carrusel con su título centrado y las mismas imágenes circulares que ve el invitado, hasta 3 por slide.",
    "form_factor": "app",
    "id": "TC-B2C72-APP-012",
    "name": "Verificar que un usuario logueado ve el carrusel sin segmentación [App] [Logueado]",
-   "observation": "Revisado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paquete com.smuapp.unimarc) por indicación del usuario: la planilla no declara 'Plataforma:'. Causa: el caso exige iniciar sesión con {USER_AUTH_001}, que es un correo, y el login de la app pide RUT (el Excel de data no trae el RUT de la cuenta) y cambiar el carrusel en Page Designer ({BM_PD_PATH}) con la cuenta de administrador {BM_ADMIN_USER}, una modificación del contenido publicado en DEV que no se hace desde la automatización sin autorización. Acción: declarar el RUT de la cuenta y coordinar el cambio en Page Designer. Re-verificado en vivo el 2026-10-21.",
-   "observed": "Causa: el caso exige iniciar sesión con {USER_AUTH_001}, que es un correo, y el login de la app pide RUT (el Excel de data no trae el RUT de la cuenta) y cambiar el carrusel en Page Designer ({BM_PD_PATH}) con la cuenta de administrador {BM_ADMIN_USER}, una modificación del contenido publicado en DEV que no se hace desde la automatización sin autorización. Acción: declarar el RUT de la cuenta y coordinar el cambio en Page Designer.",
+   "observation": "El test() de la suite busca el título «Categorías destacadas», que hoy dice «Popular Categories»; se condujo con mobilecli.",
+   "observed": "La cuenta logueada ve el carrusel con hasta 3 imágenes circulares por slide y los mismos 7 elementos que el invitado.",
    "platform": "Android",
    "preconditions": "- User type: Logueado\n- Viewport: App iOS/Android\n- Ubicacion: Home de la App\n- Sesión iniciada con la cuenta {USER_AUTH_001}\n- En Page Designer ({BM_PD_PATH}) el carrusel \"Carrusel + imagen circular con título\" está publicado en el Home sin targeting de grupo de clientes",
-   "spec": "tests-app/B2C-72.spec.ts",
-   "status": "Bloqueado Data",
+   "screenshots": [
+    {
+     "caption": "Paso 1 — logueado",
+     "file": "B2C-1363-p01-logueado.png"
+    },
+    {
+     "caption": "Paso 2 — deslizado",
+     "file": "B2C-1363-p02-deslizado.png"
+    }
+   ],
+   "status": "Aprobado",
    "steps": "1. El usuario abre la App {APP_BUILD}.\n2. El sistema carga el Home de la App.\n3. El usuario revisa el carrusel.",
-   "test_data": "{APP_BUILD} = v1.0.7\n{BM_ADMIN_PASSWORD} = (contraseña de la cuenta)\n{BM_ADMIN_USER} = e_jmoran@smu.cl\n{BM_PD_PATH} = https://development-na01-smu.demandware.net/on/demandware.store/Sites-Site/default%3bapp%3d__bm_merchant%3bsite%3dUnimarc/ViewLdsBusinessManagerScreen-PageDesigner?SelectedMenuItem=content_pages&CurrentMenuItemId=content\n{USER_AUTH_001} = daunuruco+comprador@avatar-global.com"
+   "test_data": "- {APP_BUILD}\n- {BM_PD_PATH}\n- {BM_ADMIN_USER}\n- {BM_ADMIN_PASSWORD}\n- {USER_AUTH_001}"
   },
   {
    "browser": "—",

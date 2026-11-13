@@ -3,11 +3,11 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-63 APP |
-| Última actualización | 2026-10-15 |
+| Última actualización | 2026-11-13 |
 | Ejecutado por | Victor Chirinos |
-| Ambiente | App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV |
-| Dispositivo Android | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
-| Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-63 APP Test Cases.xlsx |
+| Ambiente | App Unimarc (DEV) · cl.smu.unimarcapp.sfcc.qa |
+| Dispositivo Android | sdk_gphone64_x86_64 (Pixel_4_API_33) · Android 13 · emulador · app instalada (actualizada 11-11-2026) |
+| Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/Pendiente IOS/B2C-63 APP Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
 ## Resumen de resultados
@@ -15,13 +15,14 @@
 | Estado | Casos |
 |---|---|
 | Bloqueado | 17 |
-| Bloqueado Data | 1 |
+| Rechazado | 1 |
 | **Total** | **18** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-13 | 1 | TC-B2C63-APP-007 |
 | 2026-10-15 | 18 | TC-B2C63-APP-001, TC-B2C63-APP-002, TC-B2C63-APP-003, TC-B2C63-APP-004, TC-B2C63-APP-005, TC-B2C63-APP-006, TC-B2C63-APP-007, TC-B2C63-APP-008, TC-B2C63-APP-009, TC-B2C63-APP-010, TC-B2C63-APP-011, TC-B2C63-APP-012, TC-B2C63-APP-013, TC-B2C63-APP-014, TC-B2C63-APP-015, TC-B2C63-APP-016, TC-B2C63-APP-017, TC-B2C63-APP-018 |
 
 ## Detalle por caso de prueba
@@ -343,30 +344,33 @@ Causa: en la app v1.0.7 (APK del 06-10) el componente 'Completa la promo' no apa
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-15 |
+| Estado | Rechazado |
+| Ejecutado | 2026-11-13 |
 | Form factor | app |
 | Plataforma | Android |
-| Dispositivo | sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1) |
+| Dispositivo | sdk_gphone64_x86_64 (Pixel_4_API_33) · Android 13 · emulador · app instalada (actualizada 11-11-2026) |
+| Spec | tests-app/B2C-63-50-pendientes.spec.ts:33 |
 
 **Precondiciones**
 
 - User type: Logueado
 - Viewport: App iOS/Android
 - Ubicacion: Resultados de búsqueda
-- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com
+- Sesión iniciada con la cuenta {USER_AUTH_001}
 - Método de entrega activo (Despacho a domicilio o Retiro en tienda con cobertura)
-- 000000000664214001-UN tiene una promo "Completa la promo" 2x1 vigente (mismo SKU, sin código especial)
+- {SKU_COMPLETA_PROMO_2X1} tiene una promo "Completa la promo" 2x1 vigente (mismo SKU, sin código especial)
 
 **Data utilizada**
 
-v1.0.7, 000000000664214001-UN, vhchirinos+comprador@avatar-global.com
+- {APP_BUILD} = TBD
+- {SKU_COMPLETA_PROMO_2X1} = TBD
+- {USER_AUTH_001} = girolamo_coppo@hotmail.com / Avatar1234.
 
 **Pasos ejecutados**
 
-1. El usuario abre la App v1.0.7.
-2. El usuario busca 000000000664214001-UN y toca "Buscar" en el teclado.
-3. El sistema muestra los resultados con el shelf de 000000000664214001-UN.
+1. El usuario abre la App {APP_BUILD}.
+2. El usuario busca {SKU_COMPLETA_PROMO_2X1} y toca "Buscar" en el teclado.
+3. El sistema muestra los resultados con el shelf de {SKU_COMPLETA_PROMO_2X1}.
 4. El usuario toca "Agregar" en el shelf.
 5. El sistema agrega la unidad y muestra el toast "Agrega 1 y ahorra más" con la barra de progreso en 1 de 2.
 
@@ -374,9 +378,17 @@ v1.0.7, 000000000664214001-UN, vhchirinos+comprador@avatar-global.com
 
 Se muestra el toast "Agrega 1 y ahorra más" con la barra de progreso.
 
-**Observación**
+**Resultado obtenido**
 
-Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y en la app v1.0.7 el login solo acepta RUT. Acción: declarar una cuenta con RUT y contraseña. Además, el componente 'Completa la promo' no aparece en v1.0.7 (ver los demás TC). Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' (y {APP_PLATFORM} = iOS en las filas 012-018): se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).
+Se agrega la unidad, pero en lugar del toast «Agrega 1 y ahorra más» con barra de progreso aparece un tooltip «Te falta 1 para la promo» sin barra.
+
+**Evidencia**
+
+![Android · Paso 2 — shelf de 000000000664214001 un en los resultados](<B2C-63 APP Evidencias/TC-B2C63-APP-007-android-p02-shelf-de-000000000664214001-un-en-los-resultados.png>)
+
+![Android · Paso 6 — shelf tras agregar](<B2C-63 APP Evidencias/TC-B2C63-APP-007-android-p06-shelf-tras-agregar.png>)
+
+![Paso 3 — tras agregar 2](<B2C-63 APP Evidencias/B2C-1364-p03-tras-agregar-2.png>)
 
 ---
 
@@ -979,14 +991,14 @@ Causa: en la app v1.0.7 (APK del 06-10) el componente 'Completa la promo' no apa
  "header": {
   "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "devices": {
-   "android": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)"
+   "android": "sdk_gphone64_x86_64 (Pixel_4_API_33) · Android 13 · emulador · app instalada (actualizada 11-11-2026)"
   },
-  "environment": "App Unimarc v1.0.7 (com.smuapp.unimarc) contra DEV",
+  "environment": "App Unimarc (DEV) · cl.smu.unimarcapp.sfcc.qa",
   "executed_by": "Victor Chirinos",
   "suite": "B2C-63 APP",
-  "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-63 APP Test Cases.xlsx",
+  "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/Pendiente IOS/B2C-63 APP Test Cases.xlsx",
   "title": "B2C-63 APP - Completa la promo - Evidencias QA",
-  "updated_at": "2026-10-15"
+  "updated_at": "2026-11-13"
  },
  "history": {
   "2026-10-15": [
@@ -1008,6 +1020,9 @@ Causa: en la app v1.0.7 (APK del 06-10) el componente 'Completa la promo' no apa
    "TC-B2C63-APP-016",
    "TC-B2C63-APP-017",
    "TC-B2C63-APP-018"
+  ],
+  "2026-11-13": [
+   "TC-B2C63-APP-007"
   ]
  },
  "results": [
@@ -1186,18 +1201,33 @@ Causa: en la app v1.0.7 (APK del 06-10) el componente 'Completa la promo' no apa
    "test_data": "v1.0.7, 000000000664214001-UN"
   },
   {
-   "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
-   "executed_at": "2026-10-15",
+   "device": "sdk_gphone64_x86_64 (Pixel_4_API_33) · Android 13 · emulador · app instalada (actualizada 11-11-2026)",
+   "executed_at": "2026-11-13",
    "expected": "Se muestra el toast \"Agrega 1 y ahorra más\" con la barra de progreso.",
    "form_factor": "app",
    "id": "TC-B2C63-APP-007",
    "name": "Verificar que un usuario logueado ve el toast al agregar desde el shelf [App] [Logueado]",
-   "observation": "Causa: {USER_AUTH_001} (vhchirinos+comprador@avatar-global.com) es un correo y en la app v1.0.7 el login solo acepta RUT. Acción: declarar una cuenta con RUT y contraseña. Además, el componente 'Completa la promo' no aparece en v1.0.7 (ver los demás TC). Corrida solo Android (build v1.0.7, com.smuapp.unimarc); la fila dice 'Viewport: App iOS/Android' sin 'Plataforma:' (y {APP_PLATFORM} = iOS en las filas 012-018): se tomó como Android. iOS queda Pendiente (sin MOBILENEXT_API_KEY ni .ipa).",
+   "observed": "Se agrega la unidad, pero en lugar del toast «Agrega 1 y ahorra más» con barra de progreso aparece un tooltip «Te falta 1 para la promo» sin barra.",
    "platform": "Android",
-   "preconditions": "- User type: Logueado\n- Viewport: App iOS/Android\n- Ubicacion: Resultados de búsqueda\n- Sesión iniciada con la cuenta vhchirinos+comprador@avatar-global.com\n- Método de entrega activo (Despacho a domicilio o Retiro en tienda con cobertura)\n- 000000000664214001-UN tiene una promo \"Completa la promo\" 2x1 vigente (mismo SKU, sin código especial)",
-   "status": "Bloqueado Data",
-   "steps": "1. El usuario abre la App v1.0.7.\n2. El usuario busca 000000000664214001-UN y toca \"Buscar\" en el teclado.\n3. El sistema muestra los resultados con el shelf de 000000000664214001-UN.\n4. El usuario toca \"Agregar\" en el shelf.\n5. El sistema agrega la unidad y muestra el toast \"Agrega 1 y ahorra más\" con la barra de progreso en 1 de 2.",
-   "test_data": "v1.0.7, 000000000664214001-UN, vhchirinos+comprador@avatar-global.com"
+   "preconditions": "- User type: Logueado\n- Viewport: App iOS/Android\n- Ubicacion: Resultados de búsqueda\n- Sesión iniciada con la cuenta {USER_AUTH_001}\n- Método de entrega activo (Despacho a domicilio o Retiro en tienda con cobertura)\n- {SKU_COMPLETA_PROMO_2X1} tiene una promo \"Completa la promo\" 2x1 vigente (mismo SKU, sin código especial)",
+   "screenshots": [
+    {
+     "caption": "Android · Paso 2 — shelf de 000000000664214001 un en los resultados",
+     "file": "TC-B2C63-APP-007-android-p02-shelf-de-000000000664214001-un-en-los-resultados.png"
+    },
+    {
+     "caption": "Android · Paso 6 — shelf tras agregar",
+     "file": "TC-B2C63-APP-007-android-p06-shelf-tras-agregar.png"
+    },
+    {
+     "caption": "Paso 3 — tras agregar 2",
+     "file": "B2C-1364-p03-tras-agregar-2.png"
+    }
+   ],
+   "spec": "tests-app/B2C-63-50-pendientes.spec.ts:33",
+   "status": "Rechazado",
+   "steps": "1. El usuario abre la App {APP_BUILD}.\n2. El usuario busca {SKU_COMPLETA_PROMO_2X1} y toca \"Buscar\" en el teclado.\n3. El sistema muestra los resultados con el shelf de {SKU_COMPLETA_PROMO_2X1}.\n4. El usuario toca \"Agregar\" en el shelf.\n5. El sistema agrega la unidad y muestra el toast \"Agrega 1 y ahorra más\" con la barra de progreso en 1 de 2.",
+   "test_data": "- {APP_BUILD} = TBD\n- {SKU_COMPLETA_PROMO_2X1} = TBD\n- {USER_AUTH_001} = girolamo_coppo@hotmail.com / Avatar1234."
   },
   {
    "device": "sdk_gphone64_x86_64 · Android 16 (emulador local Medium_Phone_API_36.1)",
