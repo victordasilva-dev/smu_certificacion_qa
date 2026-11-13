@@ -3,7 +3,7 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-18 |
-| Última actualización | 2026-11-03 |
+| Última actualización | 2026-11-13 |
 | Ejecutado por | Victor Chirinos |
 | Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
@@ -15,15 +15,16 @@
 
 | Estado | Casos |
 |---|---|
-| Aprobado | 5 |
-| Bloqueado | 5 |
-| Bloqueado Data | 5 |
-| **Total** | **15** |
+| Bloqueado Data | 11 |
+| Aprobado | 6 |
+| Bloqueado | 4 |
+| **Total** | **21** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-13 | 12 | TC-B2C18-D-015, TC-B2C18-D-017, TC-B2C18-D-018, TC-B2C18-D-019, TC-B2C18-D-020, TC-B2C18-D-026, TC-B2C18-M-008, TC-B2C18-M-009, TC-B2C18-M-014, TC-B2C18-M-017, TC-B2C18-M-018, TC-B2C18-M-019 |
 | 2026-11-03 | 15 | TC-B2C18-D-013, TC-B2C18-D-014, TC-B2C18-D-015, TC-B2C18-D-016, TC-B2C18-D-018, TC-B2C18-D-026, TC-B2C18-D-027, TC-B2C18-M-008, TC-B2C18-M-009, TC-B2C18-M-011, TC-B2C18-M-012, TC-B2C18-M-013, TC-B2C18-M-014, TC-B2C18-M-015, TC-B2C18-M-025 |
 
 ## Detalle por caso de prueba
@@ -140,7 +141,7 @@ Con retiro en Unimarc Las Condes, la SRP de "leche" muestra un producto con la e
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-11-03 |
+| Ejecutado | 2026-11-13 |
 | Form factor | desktop |
 | Viewport | 1280x900 |
 | Navegador | chromium |
@@ -151,11 +152,7 @@ Storefront Unimarc activo en Desktop 1280×900. SRP cargada con despacho a domic
 
 **Data utilizada**
 
-- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-- {BROWSER}: Chrome
-- {SEARCH_TERM_001}: leche
-- {TIENDA_RETIRO_001}: Unimarc Las Condes
-- {VIEWPORT}: 1440x900
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {SEARCH_TERM_001}: leche; {TIENDA_RETIRO_001}: Unimarc Las Condes; {VIEWPORT}: 1440x900
 
 **Pasos ejecutados**
 
@@ -170,9 +167,13 @@ Storefront Unimarc activo en Desktop 1280×900. SRP cargada con despacho a domic
 
 Al cambiar el método de entrega desde la SRP, los productos actualizan su disponibilidad según el nuevo método (stock de la tienda de retiro seleccionada). La actualización ocurre sin salir de la SRP.
 
+**Resultado obtenido**
+
+No se ejecutó: el caso quedó bloqueado por data antes de generar su test().
+
 **Observación**
 
-Causa: el caso parte con despacho a domicilio activo y la columna Test data no declara ninguna dirección (solo {SEARCH_TERM_001} y {TIENDA_RETIRO_001}); elegir una del Excel de data a criterio propio dejaría el veredicto sin significado. Acción requerida: referenciar en la fila del TC el token de la dirección de despacho con que debe correrse (p. ej. {DIRECCION_DESPACHO_002}).
+Causa: la precondición pide la SRP con despacho a domicilio activo y la fila no declara una dirección de despacho (solo {TIENDA_RETIRO_001} para el retiro); como invitado el header dice "Elige una forma de entrega", sin método activo. Acción: declarar en el Excel de data una dirección con cobertura y referenciarla como token en la fila.
 
 ---
 
@@ -237,8 +238,8 @@ Causa: el Sponsor Banner (tipo 2) configurado para la SRP de "leche" se renderiz
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado |
-| Ejecutado | 2026-11-03 |
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-13 |
 | Form factor | desktop |
 | Viewport | 1280x900 |
 | Navegador | chromium |
@@ -249,10 +250,7 @@ Storefront Unimarc activo en Desktop 1280×900. Al menos un content asset de tip
 
 **Data utilizada**
 
-- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-- {BROWSER}: Chrome
-- {SEARCH_BANNER_STRICT_001}: aceite
-- {VIEWPORT}: 1440x900
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {SEARCH_BANNER_STRICT_001}: aceite; {VIEWPORT}: 1440x900
 
 **Pasos ejecutados**
 
@@ -269,17 +267,15 @@ Con matchmode 'strict', el banner se muestra únicamente cuando el término de b
 
 **Resultado obtenido**
 
-Las SRP de "aceite" y de "aceites" (2 productos cada una) no renderizan ningún banner: no hay banner que pueda aparecer o dejar de aparecer.
+No se ejecutó: el caso quedó bloqueado por data antes de generar su test().
 
 **Observación**
 
-Causa: el caso exige un content asset de banner configurado en BM con matchmode strict para {SEARCH_BANNER_STRICT_001} = "aceite", y la SRP de ese término no renderiza ningún banner (re-verificado el 2026-11-03). Acción requerida: configurar en DEV el content asset de banner con matchmode strict para el término de prueba.
+Causa: el content asset de banners por término no existe en el ambiente: la SRP de "aceite" pide /contents/srp-term-banners y responde 404 (también aceite-srp-grid-banner y aceite-srp-banner-circular), y no se renderiza ningún banner. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'strict'), o declarar un término que ya lo tenga.
 
 **Evidencia**
 
-![Paso 1 — srp de aceite sin banner](<B2C-18 Evidencias/TC-B2C18-D-018-p01-srp-de-aceite-sin-banner.png>)
-
-![Paso 2 — srp de aceites sin banner](<B2C-18 Evidencias/TC-B2C18-D-018-p02-srp-de-aceites-sin-banner.png>)
+![SRP de "aceite" sin banner (asset srp-term-banners responde 404)](<B2C-18 Evidencias/TC-B2C18-D-018-p01-SRP-aceite-sin-banner.png>)
 
 ---
 
@@ -287,11 +283,12 @@ Causa: el caso exige un content asset de banner configurado en BM con matchmode 
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-11-03 |
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
 | Form factor | desktop |
 | Viewport | 1280x900 |
 | Navegador | chromium |
+| Spec | tests/B2C-18.spec.ts:787 |
 
 **Precondiciones**
 
@@ -299,9 +296,7 @@ Storefront Unimarc activo en Desktop 1280×900. SRP cargada con un término de b
 
 **Data utilizada**
 
-- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-- {BROWSER}: Chrome
-- {VIEWPORT}: 1440x900
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {VIEWPORT}: 1280x900; {SEARCH_TERM_50+_SKUS}: pan molde
 
 **Pasos ejecutados**
 
@@ -317,9 +312,23 @@ Storefront Unimarc activo en Desktop 1280×900. SRP cargada con un término de b
 
 El componente de paginación muestra: página 1 resaltada como activa, números de páginas disponibles visibles y flecha (›) hacia la página siguiente. La estructura visual del componente es correcta.
 
+**Resultado obtenido**
+
+La SRP de "pan molde" muestra 103 productos. Al final del listado, el componente de paginación (debajo de la grilla) muestra la página 1 activa, las páginas 2 y 3 y la flecha "Página siguiente" habilitada.
+
 **Observación**
 
-Causa: el caso exige una búsqueda con más de 50 resultados y la columna Test data no declara ningún término que la cumpla (el ejemplo de la precondición, "leche", devuelve hoy 48 productos en DEV). Acción requerida: referenciar en la fila un token de término con más de 50 resultados (el Excel de data ya tiene {SEARCH_TERM_50+_SKUS} = "pan molde", pero esta fila no lo declara).
+Ejecutado con {SEARCH_TERM_50+_SKUS} = "pan molde" (103 productos, 3 páginas).
+
+**Evidencia**
+
+![Paso 2 — srp de pan molde con 103 productos](<B2C-18 Evidencias/TC-B2C18-D-026-p02-srp-de-pan-molde-con-103-productos.png>)
+
+![Paso 4 — componente de paginacion debajo del listado](<B2C-18 Evidencias/TC-B2C18-D-026-p04-componente-de-paginacion-debajo-del-listado.png> "ancho completo")
+
+![Paso 7 — pagina 1 activa 3 paginas y flecha siguiente](<B2C-18 Evidencias/TC-B2C18-D-026-p07-pagina-1-activa-3-paginas-y-flecha-siguiente.png>)
+
+![Estado final del caso](<B2C-18 Evidencias/TC-B2C18-D-026.png> "ancho completo")
 
 ---
 
@@ -376,7 +385,7 @@ Causa: el caso exige un content asset Banner circular asociado al slot de la SRP
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-11-03 |
+| Ejecutado | 2026-11-13 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
@@ -387,7 +396,7 @@ Storefront Unimarc activo en Mobile 390×844. SRP cargada con un término de bú
 
 **Data utilizada**
 
-- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
 
 **Pasos ejecutados**
 
@@ -400,9 +409,13 @@ Storefront Unimarc activo en Mobile 390×844. SRP cargada con un término de bú
 
 La SRP Mobile carga hasta 50 productos en la carga inicial con estructura correcta. (Cobertura detallada: B2C-59.)
 
+**Resultado obtenido**
+
+No se ejecutó: el caso quedó bloqueado por data antes de generar su test().
+
 **Observación**
 
-Causa: el caso exige una búsqueda con más de 50 resultados y la columna Test data no declara ningún término que la cumpla (el ejemplo de la precondición, "leche", devuelve hoy 48 productos en DEV). Acción requerida: referenciar en la fila un token de término con más de 50 resultados (el Excel de data ya tiene {SEARCH_TERM_50+_SKUS} = "pan molde", pero esta fila no lo declara).
+Causa: la precondición pide un término con más de 50 resultados y la columna Test data no declara ningún término de búsqueda (solo {BASE_URL}). Acción: declarar en el Excel de data un término con más de 50 resultados y referenciarlo como token en la fila.
 
 ---
 
@@ -411,7 +424,7 @@ Causa: el caso exige una búsqueda con más de 50 resultados y la columna Test d
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-11-03 |
+| Ejecutado | 2026-11-13 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
@@ -422,7 +435,7 @@ Storefront Unimarc activo en Mobile 390×844. SRP cargada con un término de bú
 
 **Data utilizada**
 
-- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
 
 **Pasos ejecutados**
 
@@ -437,9 +450,13 @@ Storefront Unimarc activo en Mobile 390×844. SRP cargada con un término de bú
 
 Al llegar al final del listado aparece el indicador de carga '…'. El sistema carga automáticamente el siguiente bloque de productos. El scroll infinito funciona correctamente en Mobile.
 
+**Resultado obtenido**
+
+No se ejecutó: el caso quedó bloqueado por data antes de generar su test().
+
 **Observación**
 
-Causa: el caso exige una búsqueda con más de 50 resultados y la columna Test data no declara ningún término que la cumpla (el ejemplo de la precondición, "leche", devuelve hoy 48 productos en DEV). Acción requerida: referenciar en la fila un token de término con más de 50 resultados (el Excel de data ya tiene {SEARCH_TERM_50+_SKUS} = "pan molde", pero esta fila no lo declara).
+Causa: la precondición pide un término con más de 50 resultados y la columna Test data no declara ningún término de búsqueda (solo {BASE_URL}). Acción: declarar en el Excel de data un término con más de 50 resultados y referenciarlo como token en la fila.
 
 ---
 
@@ -598,7 +615,7 @@ Con retiro en Unimarc Las Condes, la SRP Mobile de "leche" muestra un producto c
 | Campo | Valor |
 |---|---|
 | Estado | Bloqueado Data |
-| Ejecutado | 2026-11-03 |
+| Ejecutado | 2026-11-13 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
@@ -609,9 +626,7 @@ Storefront Unimarc activo en Mobile 390×844. SRP cargada con despacho activo. O
 
 **Data utilizada**
 
-- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-- {SEARCH_TERM_001}: leche
-- {TIENDA_RETIRO_001}: Unimarc Las Condes
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SEARCH_TERM_001}: leche; {TIENDA_RETIRO_001}: Unimarc Las Condes
 
 **Pasos ejecutados**
 
@@ -625,9 +640,13 @@ Storefront Unimarc activo en Mobile 390×844. SRP cargada con despacho activo. O
 
 Al cambiar el método de entrega, la SRP Mobile actualiza la disponibilidad de productos. La actualización ocurre sin salir de la SRP.
 
+**Resultado obtenido**
+
+No se ejecutó: el caso quedó bloqueado por data antes de generar su test().
+
 **Observación**
 
-Causa: el caso parte con despacho a domicilio activo y la columna Test data no declara ninguna dirección (solo {SEARCH_TERM_001} y {TIENDA_RETIRO_001}); elegir una del Excel de data a criterio propio dejaría el veredicto sin significado. Acción requerida: referenciar en la fila del TC el token de la dirección de despacho con que debe correrse (p. ej. {DIRECCION_DESPACHO_002}).
+Causa: la precondición pide la SRP con despacho a domicilio activo y la fila no declara una dirección de despacho (solo {TIENDA_RETIRO_001} para el retiro); como invitado el header dice "Elige una forma de entrega", sin método activo. Acción: declarar en el Excel de data una dirección con cobertura y referenciarla como token en la fila.
 
 ---
 
@@ -727,6 +746,253 @@ Causa: el caso exige un content asset Banner circular asociado al slot de la SRP
 
 ---
 
+### TC-B2C18-D-017 - Verificar que la posición del componente de monetización en la SRP es configurable desde BM sin deploy [Desktop] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-13 |
+| Form factor | desktop |
+| Viewport | 1280x900 |
+| Navegador | chromium |
+
+**Precondiciones**
+
+Storefront Unimarc activo en Desktop 1280×900. Componentes de monetización configurados en BM para la categoría de la búsqueda de prueba (al menos un tipo: Sponsor Products, Sponsor Banner o Sponsor Carrusel). User type: Guest.
+
+**Data utilizada**
+
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {SEARCH_TERM_001}: leche; {VIEWPORT}: 1440x900
+
+**Pasos ejecutados**
+
+1. En BM, configurar la posición del componente de monetización como 'inicio' para la categoría de prueba. Guardar sin deploy.
+2. Acceder a la SRP en Desktop y verificar que el componente aparece al inicio del listado.
+3. En BM, cambiar la posición a 'medio'. Guardar sin deploy.
+4. Actualizar la SRP y verificar que el componente se desplazó al medio del listado.
+5. En BM, cambiar la posición a 'final'. Guardar sin deploy.
+6. Actualizar la SRP y verificar que el componente aparece al final del listado.
+
+**Resultado esperado**
+
+La posición del componente de monetización cambia correctamente según la configuración de BM (inicio/medio/final). Los cambios se aplican sin deploy en cada modificación.
+
+**Resultado obtenido**
+
+No se ejecutó: el caso quedó bloqueado por data antes de generar su test().
+
+**Observación**
+
+Causa: los pasos 1, 3 y 5 cambian la posición del componente de monetización en Business Manager y la fila no declara {BM_URL} ni la cuenta de BM; además la SRP de "leche" no muestra ningún componente de monetización configurado. Acción: declarar los tokens de BM y la categoría con el componente configurado, o mover los pasos de BM a una HU de BM.
+
+---
+
+### TC-B2C18-D-019 - Verificar que con matchmode 'similar' el banner se muestra cuando la búsqueda tiene hasta 1 variación respecto al término configurado [Desktop] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-13 |
+| Form factor | desktop |
+| Viewport | 1280x900 |
+| Navegador | chromium |
+
+**Precondiciones**
+
+Storefront Unimarc activo en Desktop 1280×900. Content asset de tipo banner configurado en BM con matchmode 'similar' vinculado a un término (ej. 'aceite'). User type: Guest.
+
+**Data utilizada**
+
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {SEARCH_BANNER_STRICT_001}: aceite; {VIEWPORT}: 1440x900
+
+**Pasos ejecutados**
+
+1. Navegar al Home con viewport Desktop 1280×900.
+2. Buscar una variación del término configurado con 1 diferencia (ej. 'aceite' → 'aceites').
+3. Acceder a la SRP.
+4. Verificar que el banner configurado para 'aceite' se muestra en la SRP (matchmode similar acepta hasta 1 variación).
+
+**Resultado esperado**
+
+Con matchmode 'similar', el banner se muestra cuando la búsqueda tiene hasta 1 variación respecto al término configurado. El banner es visible en la SRP para la variación del término.
+
+**Resultado obtenido**
+
+No se ejecutó: el caso quedó bloqueado por data antes de generar su test().
+
+**Observación**
+
+Causa: el content asset de banners por término no existe en el ambiente: la SRP de "aceites" pide /contents/srp-term-banners y responde 404 (también aceites-srp-grid-banner y aceites-srp-banner-circular), y no se renderiza ningún banner. El token se llama STRICT y el caso pide un banner con matchmode 'similar'. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'similar'), o declarar un término que ya lo tenga.
+
+**Evidencia**
+
+![SRP de "aceites" sin banner (asset srp-term-banners responde 404)](<B2C-18 Evidencias/TC-B2C18-D-019-p01-SRP-aceites-sin-banner.png>)
+
+---
+
+### TC-B2C18-D-020 - Verificar que sin coincidencia con ningún término configurado no se muestra ningún banner en la SRP [Desktop] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-13 |
+| Form factor | desktop |
+| Viewport | 1280x900 |
+| Navegador | chromium |
+
+**Precondiciones**
+
+Storefront Unimarc activo en Desktop 1280×900. Al menos un content asset de tipo banner configurado en BM, vinculado a un término de búsqueda específico (ej. término = 'aceite', matchmode = 'strict'). User type: Guest.
+
+**Data utilizada**
+
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {SEARCH_BANNER_STRICT_001}: aceite; {VIEWPORT}: 1440x900
+
+**Pasos ejecutados**
+
+1. Navegar al Home con viewport Desktop 1280×900.
+2. Buscar un término que no coincida con ningún content asset de banner configurado (ej. 'azúcar' cuando el banner está configurado solo para 'aceite').
+3. Acceder a la SRP.
+4. Verificar que no se muestra ningún banner en la SRP.
+
+**Resultado esperado**
+
+No se muestra ningún banner en la SRP cuando el término de búsqueda no coincide con ningún término configurado en los content assets de banners.
+
+**Resultado obtenido**
+
+No se ejecutó: el caso quedó bloqueado por data antes de generar su test().
+
+**Observación**
+
+Causa: el content asset de banners por término no existe en el ambiente: la SRP de "aceite" pide /contents/srp-term-banners y responde 404 (también aceite-srp-grid-banner y aceite-srp-banner-circular), y no se renderiza ningún banner. Sin ningún banner configurado, "no se muestra banner" se cumple siempre y el caso no prueba nada; además la fila no declara el término sin coincidencia. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'strict'), o declarar un término que ya lo tenga.
+
+---
+
+### TC-B2C18-M-017 - Verificar que con matchmode 'strict' el banner configurado se muestra solo cuando el término de búsqueda coincide exactamente [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-13 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+
+**Precondiciones**
+
+Storefront Unimarc activo en Mobile 390×844. Al menos un content asset de tipo banner configurado en BM, vinculado a un término de búsqueda específico (ej. término = 'aceite', matchmode = 'strict'). User type: Guest.
+
+**Data utilizada**
+
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SEARCH_BANNER_STRICT_001}: aceite
+
+**Pasos ejecutados**
+
+1. Navegar al Home con viewport Mobile 390×844.
+2. Buscar el término exacto configurado (ej. 'aceite') y verificar que el banner se muestra.
+3. Buscar una variación (ej. 'aceites') y verificar que el banner NO se muestra.
+
+**Resultado esperado**
+
+El banner se muestra con el término exacto. No se muestra con una variación. Matchmode 'strict' funciona correctamente en Mobile.
+
+**Resultado obtenido**
+
+No se ejecutó: el caso quedó bloqueado por data antes de generar su test().
+
+**Observación**
+
+Causa: el content asset de banners por término no existe en el ambiente: la SRP de "aceite" pide /contents/srp-term-banners y responde 404 (también aceite-srp-grid-banner y aceite-srp-banner-circular), y no se renderiza ningún banner. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'strict'), o declarar un término que ya lo tenga.
+
+**Evidencia**
+
+![SRP Mobile de "aceite" sin banner (asset srp-term-banners responde 404)](<B2C-18 Evidencias/TC-B2C18-M-017-p01-SRP-aceite-sin-banner.png>)
+
+---
+
+### TC-B2C18-M-018 - Verificar que con matchmode 'similar' el banner se muestra cuando la búsqueda tiene hasta 1 variación respecto al término configurado [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-13 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+
+**Precondiciones**
+
+Storefront Unimarc activo en Mobile 390×844. Content asset de tipo banner con matchmode 'similar' configurado para un término. User type: Guest.
+
+**Data utilizada**
+
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SEARCH_BANNER_STRICT_001}: aceite
+
+**Pasos ejecutados**
+
+1. Navegar al Home con viewport Mobile 390×844.
+2. Buscar una variación del término con 1 diferencia (ej. 'aceites').
+3. Acceder a la SRP.
+4. Verificar que el banner del término 'aceite' se muestra en la SRP.
+
+**Resultado esperado**
+
+El banner se muestra en Mobile para una variación con 1 diferencia. Matchmode 'similar' funciona correctamente.
+
+**Resultado obtenido**
+
+No se ejecutó: el caso quedó bloqueado por data antes de generar su test().
+
+**Observación**
+
+Causa: el content asset de banners por término no existe en el ambiente: la SRP de "aceites" pide /contents/srp-term-banners y responde 404 (también aceites-srp-grid-banner y aceites-srp-banner-circular), y no se renderiza ningún banner. El token se llama STRICT y el caso pide un banner con matchmode 'similar'. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'similar'), o declarar un término que ya lo tenga.
+
+**Evidencia**
+
+![SRP Mobile de "aceites" sin banner (asset srp-term-banners responde 404)](<B2C-18 Evidencias/TC-B2C18-M-018-p01-SRP-aceites-sin-banner.png>)
+
+---
+
+### TC-B2C18-M-019 - Verificar que sin coincidencia con ningún término configurado no se muestra ningún banner en la SRP [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-13 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+
+**Precondiciones**
+
+Storefront Unimarc activo en Mobile 390×844. Al menos un content asset de tipo banner configurado en BM, vinculado a un término de búsqueda específico (ej. término = 'aceite', matchmode = 'strict'). User type: Guest.
+
+**Data utilizada**
+
+{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SEARCH_BANNER_STRICT_001}: aceite
+
+**Pasos ejecutados**
+
+1. Navegar al Home con viewport Mobile 390×844.
+2. Buscar un término que no coincida con ningún content asset de banner.
+3. Acceder a la SRP.
+4. Verificar que no se muestra ningún banner.
+
+**Resultado esperado**
+
+No se muestra ningún banner en la SRP Mobile cuando el término no coincide con los términos configurados.
+
+**Resultado obtenido**
+
+No se ejecutó: el caso quedó bloqueado por data antes de generar su test().
+
+**Observación**
+
+Causa: el content asset de banners por término no existe en el ambiente: la SRP de "aceite" pide /contents/srp-term-banners y responde 404 (también aceite-srp-grid-banner y aceite-srp-banner-circular), y no se renderiza ningún banner. Sin ningún banner configurado, "no se muestra banner" se cumple siempre y el caso no prueba nada; además la fila no declara el término sin coincidencia. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'strict'), o declarar un término que ya lo tenga.
+
+---
+
 <!-- qa-evidence-state
 {
  "header": {
@@ -740,7 +1006,7 @@ Causa: el caso exige un content asset Banner circular asociado al slot de la SRP
   "suite": "B2C-18",
   "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-18 WEB Test Cases.xlsx",
   "title": "B2C-18 - Search Results Page (SRP) - Evidencias QA",
-  "updated_at": "2026-11-03"
+  "updated_at": "2026-11-13"
  },
  "history": {
   "2026-11-03": [
@@ -759,6 +1025,20 @@ Causa: el caso exige un content asset Banner circular asociado al slot de la SRP
    "TC-B2C18-M-014",
    "TC-B2C18-M-015",
    "TC-B2C18-M-025"
+  ],
+  "2026-11-13": [
+   "TC-B2C18-D-015",
+   "TC-B2C18-D-017",
+   "TC-B2C18-D-018",
+   "TC-B2C18-D-019",
+   "TC-B2C18-D-020",
+   "TC-B2C18-D-026",
+   "TC-B2C18-M-008",
+   "TC-B2C18-M-009",
+   "TC-B2C18-M-014",
+   "TC-B2C18-M-017",
+   "TC-B2C18-M-018",
+   "TC-B2C18-M-019"
   ]
  },
  "results": [
@@ -836,16 +1116,17 @@ Causa: el caso exige un content asset Banner circular asociado al slot de la SRP
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-11-03",
+   "executed_at": "2026-11-13",
    "expected": "Al cambiar el método de entrega desde la SRP, los productos actualizan su disponibilidad según el nuevo método (stock de la tienda de retiro seleccionada). La actualización ocurre sin salir de la SRP.",
    "form_factor": "desktop",
    "id": "TC-B2C18-D-015",
    "name": "Verificar que cambiar el método de entrega desde la SRP actualiza la disponibilidad de productos sin salir de la SRP [Desktop] [Guest]",
-   "observation": "Causa: el caso parte con despacho a domicilio activo y la columna Test data no declara ninguna dirección (solo {SEARCH_TERM_001} y {TIENDA_RETIRO_001}); elegir una del Excel de data a criterio propio dejaría el veredicto sin significado. Acción requerida: referenciar en la fila del TC el token de la dirección de despacho con que debe correrse (p. ej. {DIRECCION_DESPACHO_002}).",
+   "observation": "Causa: la precondición pide la SRP con despacho a domicilio activo y la fila no declara una dirección de despacho (solo {TIENDA_RETIRO_001} para el retiro); como invitado el header dice \"Elige una forma de entrega\", sin método activo. Acción: declarar en el Excel de data una dirección con cobertura y referenciarla como token en la fila.",
+   "observed": "No se ejecutó: el caso quedó bloqueado por data antes de generar su test().",
    "preconditions": "Storefront Unimarc activo en Desktop 1280×900. SRP cargada con despacho a domicilio activo. Opción de cambio de método de entrega disponible desde la SRP. User type: Guest.",
    "status": "Bloqueado Data",
    "steps": "1. Navegar al Home con viewport Desktop 1280×900 con despacho a domicilio activo.\n2. Acceder a la SRP con un término de búsqueda (ej. 'leche').\n3. Localizar la opción de cambio de método de entrega en la SRP.\n4. Cambiar el método a 'Retiro en tienda' y seleccionar una tienda.\n5. Verificar que la SRP actualiza la disponibilidad de los productos según el stock de la tienda seleccionada.\n6. Confirmar que no es necesario recargar la página o navegar fuera de la SRP.",
-   "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {BROWSER}: Chrome\n- {SEARCH_TERM_001}: leche\n- {TIENDA_RETIRO_001}: Unimarc Las Condes\n- {VIEWPORT}: 1440x900",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {SEARCH_TERM_001}: leche; {TIENDA_RETIRO_001}: Unimarc Las Condes; {VIEWPORT}: 1440x900",
    "viewport": "1280x900"
   },
   {
@@ -884,41 +1165,59 @@ Causa: el caso exige un content asset Banner circular asociado al slot de la SRP
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-11-03",
+   "executed_at": "2026-11-13",
    "expected": "Con matchmode 'strict', el banner se muestra únicamente cuando el término de búsqueda coincide exactamente con el configurado ('aceite'). Una variación ('aceites') no activa el banner.",
    "form_factor": "desktop",
    "id": "TC-B2C18-D-018",
    "name": "Verificar que con matchmode 'strict' el banner configurado se muestra solo cuando el término de búsqueda coincide exactamente [Desktop] [Guest]",
-   "observation": "Causa: el caso exige un content asset de banner configurado en BM con matchmode strict para {SEARCH_BANNER_STRICT_001} = \"aceite\", y la SRP de ese término no renderiza ningún banner (re-verificado el 2026-11-03). Acción requerida: configurar en DEV el content asset de banner con matchmode strict para el término de prueba.",
-   "observed": "Las SRP de \"aceite\" y de \"aceites\" (2 productos cada una) no renderizan ningún banner: no hay banner que pueda aparecer o dejar de aparecer.",
+   "observation": "Causa: el content asset de banners por término no existe en el ambiente: la SRP de \"aceite\" pide /contents/srp-term-banners y responde 404 (también aceite-srp-grid-banner y aceite-srp-banner-circular), y no se renderiza ningún banner. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'strict'), o declarar un término que ya lo tenga.",
+   "observed": "No se ejecutó: el caso quedó bloqueado por data antes de generar su test().",
    "preconditions": "Storefront Unimarc activo en Desktop 1280×900. Al menos un content asset de tipo banner configurado en BM, vinculado a un término de búsqueda específico (ej. término = 'aceite', matchmode = 'strict'). User type: Guest.",
    "screenshots": [
     {
-     "caption": "Paso 1 — srp de aceite sin banner",
-     "file": "TC-B2C18-D-018-p01-srp-de-aceite-sin-banner.png"
-    },
-    {
-     "caption": "Paso 2 — srp de aceites sin banner",
-     "file": "TC-B2C18-D-018-p02-srp-de-aceites-sin-banner.png"
+     "caption": "SRP de \"aceite\" sin banner (asset srp-term-banners responde 404)",
+     "file": "TC-B2C18-D-018-p01-SRP-aceite-sin-banner.png"
     }
    ],
-   "status": "Bloqueado",
+   "status": "Bloqueado Data",
    "steps": "1. Navegar al Home con viewport Desktop 1280×900.\n2. Buscar el término exacto configurado en el content asset (ej. 'aceite').\n3. Acceder a la SRP.\n4. Verificar que el banner configurado para 'aceite' se muestra en la SRP.\n5. Buscar una variación del término (ej. 'aceites').\n6. Verificar que el banner NO se muestra para la variación (matchmode strict).",
-   "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {BROWSER}: Chrome\n- {SEARCH_BANNER_STRICT_001}: aceite\n- {VIEWPORT}: 1440x900",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {SEARCH_BANNER_STRICT_001}: aceite; {VIEWPORT}: 1440x900",
    "viewport": "1280x900"
   },
   {
    "browser": "chromium",
-   "executed_at": "2026-11-03",
+   "executed_at": "2026-11-13",
    "expected": "El componente de paginación muestra: página 1 resaltada como activa, números de páginas disponibles visibles y flecha (›) hacia la página siguiente. La estructura visual del componente es correcta.",
    "form_factor": "desktop",
    "id": "TC-B2C18-D-026",
    "name": "Verificar que el componente de paginación muestra la página 1 activa, los números de página disponibles y la flecha de navegación [Desktop] [Guest]",
-   "observation": "Causa: el caso exige una búsqueda con más de 50 resultados y la columna Test data no declara ningún término que la cumpla (el ejemplo de la precondición, \"leche\", devuelve hoy 48 productos en DEV). Acción requerida: referenciar en la fila un token de término con más de 50 resultados (el Excel de data ya tiene {SEARCH_TERM_50+_SKUS} = \"pan molde\", pero esta fila no lo declara).",
+   "observation": "Ejecutado con {SEARCH_TERM_50+_SKUS} = \"pan molde\" (103 productos, 3 páginas).",
+   "observed": "La SRP de \"pan molde\" muestra 103 productos. Al final del listado, el componente de paginación (debajo de la grilla) muestra la página 1 activa, las páginas 2 y 3 y la flecha \"Página siguiente\" habilitada.",
    "preconditions": "Storefront Unimarc activo en Desktop 1280×900. SRP cargada con un término de búsqueda que retorna más de 50 productos (ej. 'leche'). User type: Guest.",
-   "status": "Bloqueado Data",
+   "screenshots": [
+    {
+     "caption": "Paso 2 — srp de pan molde con 103 productos",
+     "file": "TC-B2C18-D-026-p02-srp-de-pan-molde-con-103-productos.png"
+    },
+    {
+     "caption": "Paso 4 — componente de paginacion debajo del listado",
+     "file": "TC-B2C18-D-026-p04-componente-de-paginacion-debajo-del-listado.png",
+     "full_width": true
+    },
+    {
+     "caption": "Paso 7 — pagina 1 activa 3 paginas y flecha siguiente",
+     "file": "TC-B2C18-D-026-p07-pagina-1-activa-3-paginas-y-flecha-siguiente.png"
+    },
+    {
+     "caption": "Estado final del caso",
+     "file": "TC-B2C18-D-026.png",
+     "full_width": true
+    }
+   ],
+   "spec": "tests/B2C-18.spec.ts:787",
+   "status": "Aprobado",
    "steps": "1. Navegar al Home con viewport Desktop 1280×900.\n2. Buscar un término que devuelva más de 50 resultados.\n3. Acceder a la SRP y desplazarse hasta el final del listado de productos.\n4. Verificar que el componente de paginación se muestra debajo del listado.\n5. Verificar que la página 1 aparece resaltada/activa.\n6. Verificar que se visualizan los números de páginas disponibles.\n7. Verificar que se muestra la flecha (›) de navegación hacia la página siguiente.",
-   "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {BROWSER}: Chrome\n- {VIEWPORT}: 1440x900",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {VIEWPORT}: 1280x900; {SEARCH_TERM_50+_SKUS}: pan molde",
    "viewport": "1280x900"
   },
   {
@@ -944,30 +1243,32 @@ Causa: el caso exige un content asset Banner circular asociado al slot de la SRP
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-11-03",
+   "executed_at": "2026-11-13",
    "expected": "La SRP Mobile carga hasta 50 productos en la carga inicial con estructura correcta. (Cobertura detallada: B2C-59.)",
    "form_factor": "mobile",
    "id": "TC-B2C18-M-008",
    "name": "Verificar que la SRP muestra hasta 50 productos en la carga inicial con estructura de shelf correcta [Mobile] [Guest]",
-   "observation": "Causa: el caso exige una búsqueda con más de 50 resultados y la columna Test data no declara ningún término que la cumpla (el ejemplo de la precondición, \"leche\", devuelve hoy 48 productos en DEV). Acción requerida: referenciar en la fila un token de término con más de 50 resultados (el Excel de data ya tiene {SEARCH_TERM_50+_SKUS} = \"pan molde\", pero esta fila no lo declara).",
+   "observation": "Causa: la precondición pide un término con más de 50 resultados y la columna Test data no declara ningún término de búsqueda (solo {BASE_URL}). Acción: declarar en el Excel de data un término con más de 50 resultados y referenciarlo como token en la fila.",
+   "observed": "No se ejecutó: el caso quedó bloqueado por data antes de generar su test().",
    "preconditions": "Storefront Unimarc activo en Mobile 390×844. SRP cargada con un término de búsqueda que retorna más de 50 productos (ej. 'leche'). User type: Guest.",
    "status": "Bloqueado Data",
    "steps": "1. Navegar al Home con viewport Mobile 390×844.\n2. Buscar un término que devuelva más de 50 resultados.\n3. Verificar que la SRP carga hasta 50 productos en la carga inicial.\n4. Examinar la estructura de al menos 3 productos: imagen, nombre, precio, precio oferta (si aplica) y botón 'Agregar al carro'.",
-   "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
    "viewport": "390x844"
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-11-03",
+   "executed_at": "2026-11-13",
    "expected": "Al llegar al final del listado aparece el indicador de carga '…'. El sistema carga automáticamente el siguiente bloque de productos. El scroll infinito funciona correctamente en Mobile.",
    "form_factor": "mobile",
    "id": "TC-B2C18-M-009",
    "name": "Verificar que el scroll infinito en la SRP carga el siguiente bloque de productos con indicador de carga al llegar al final [Mobile] [Guest]",
-   "observation": "Causa: el caso exige una búsqueda con más de 50 resultados y la columna Test data no declara ningún término que la cumpla (el ejemplo de la precondición, \"leche\", devuelve hoy 48 productos en DEV). Acción requerida: referenciar en la fila un token de término con más de 50 resultados (el Excel de data ya tiene {SEARCH_TERM_50+_SKUS} = \"pan molde\", pero esta fila no lo declara).",
+   "observation": "Causa: la precondición pide un término con más de 50 resultados y la columna Test data no declara ningún término de búsqueda (solo {BASE_URL}). Acción: declarar en el Excel de data un término con más de 50 resultados y referenciarlo como token en la fila.",
+   "observed": "No se ejecutó: el caso quedó bloqueado por data antes de generar su test().",
    "preconditions": "Storefront Unimarc activo en Mobile 390×844. SRP cargada con un término de búsqueda que retorna más de 50 productos (ej. 'leche'). User type: Guest.",
    "status": "Bloqueado Data",
    "steps": "1. Navegar al Home con viewport Mobile 390×844.\n2. Buscar un término que devuelva más de 50 resultados.\n3. Desplazarse (scroll) hasta el final del listado de los 50 productos iniciales.\n4. Verificar que aparece el indicador de carga '…' al llegar al final.\n5. Verificar que el sistema carga automáticamente el siguiente bloque de productos.\n6. Confirmar que el scroll infinito funciona sin necesidad de acción explícita del usuario.",
-   "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
    "viewport": "390x844"
   },
   {
@@ -1078,16 +1379,17 @@ Causa: el caso exige un content asset Banner circular asociado al slot de la SRP
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-11-03",
+   "executed_at": "2026-11-13",
    "expected": "Al cambiar el método de entrega, la SRP Mobile actualiza la disponibilidad de productos. La actualización ocurre sin salir de la SRP.",
    "form_factor": "mobile",
    "id": "TC-B2C18-M-014",
    "name": "Verificar que cambiar el método de entrega desde la SRP actualiza la disponibilidad de productos sin salir de la SRP [Mobile] [Guest]",
-   "observation": "Causa: el caso parte con despacho a domicilio activo y la columna Test data no declara ninguna dirección (solo {SEARCH_TERM_001} y {TIENDA_RETIRO_001}); elegir una del Excel de data a criterio propio dejaría el veredicto sin significado. Acción requerida: referenciar en la fila del TC el token de la dirección de despacho con que debe correrse (p. ej. {DIRECCION_DESPACHO_002}).",
+   "observation": "Causa: la precondición pide la SRP con despacho a domicilio activo y la fila no declara una dirección de despacho (solo {TIENDA_RETIRO_001} para el retiro); como invitado el header dice \"Elige una forma de entrega\", sin método activo. Acción: declarar en el Excel de data una dirección con cobertura y referenciarla como token en la fila.",
+   "observed": "No se ejecutó: el caso quedó bloqueado por data antes de generar su test().",
    "preconditions": "Storefront Unimarc activo en Mobile 390×844. SRP cargada con despacho activo. Opción de cambio de método disponible desde la SRP. User type: Guest.",
    "status": "Bloqueado Data",
    "steps": "1. Navegar al Home con viewport Mobile 390×844 con despacho activo.\n2. Acceder a la SRP con 'leche'.\n3. Cambiar el método a 'Retiro en tienda' seleccionando una tienda.\n4. Verificar que la SRP actualiza la disponibilidad según el stock de la tienda.\n5. Confirmar que no es necesario salir de la SRP.",
-   "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {SEARCH_TERM_001}: leche\n- {TIENDA_RETIRO_001}: Unimarc Las Condes",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SEARCH_TERM_001}: leche; {TIENDA_RETIRO_001}: Unimarc Las Condes",
    "viewport": "390x844"
   },
   {
@@ -1143,6 +1445,114 @@ Causa: el caso exige un content asset Banner circular asociado al slot de la SRP
    "status": "Bloqueado",
    "steps": "1. Navegar al Home con viewport Mobile 390×844.\n2. Buscar un término cuya SRP tenga content asset Banner circular.\n3. Verificar que el banner circular se muestra debajo del título.\n4. Verificar imagen circular y nombre del banner.\n5. Hacer tap en el banner y verificar que navega al destino configurado.",
    "test_data": "- {BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {SEARCH_TERM_001}: leche",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-13",
+   "expected": "La posición del componente de monetización cambia correctamente según la configuración de BM (inicio/medio/final). Los cambios se aplican sin deploy en cada modificación.",
+   "form_factor": "desktop",
+   "id": "TC-B2C18-D-017",
+   "name": "Verificar que la posición del componente de monetización en la SRP es configurable desde BM sin deploy [Desktop] [Guest]",
+   "observation": "Causa: los pasos 1, 3 y 5 cambian la posición del componente de monetización en Business Manager y la fila no declara {BM_URL} ni la cuenta de BM; además la SRP de \"leche\" no muestra ningún componente de monetización configurado. Acción: declarar los tokens de BM y la categoría con el componente configurado, o mover los pasos de BM a una HU de BM.",
+   "observed": "No se ejecutó: el caso quedó bloqueado por data antes de generar su test().",
+   "preconditions": "Storefront Unimarc activo en Desktop 1280×900. Componentes de monetización configurados en BM para la categoría de la búsqueda de prueba (al menos un tipo: Sponsor Products, Sponsor Banner o Sponsor Carrusel). User type: Guest.",
+   "status": "Bloqueado Data",
+   "steps": "1. En BM, configurar la posición del componente de monetización como 'inicio' para la categoría de prueba. Guardar sin deploy.\n2. Acceder a la SRP en Desktop y verificar que el componente aparece al inicio del listado.\n3. En BM, cambiar la posición a 'medio'. Guardar sin deploy.\n4. Actualizar la SRP y verificar que el componente se desplazó al medio del listado.\n5. En BM, cambiar la posición a 'final'. Guardar sin deploy.\n6. Actualizar la SRP y verificar que el componente aparece al final del listado.",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {SEARCH_TERM_001}: leche; {VIEWPORT}: 1440x900",
+   "viewport": "1280x900"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-13",
+   "expected": "Con matchmode 'similar', el banner se muestra cuando la búsqueda tiene hasta 1 variación respecto al término configurado. El banner es visible en la SRP para la variación del término.",
+   "form_factor": "desktop",
+   "id": "TC-B2C18-D-019",
+   "name": "Verificar que con matchmode 'similar' el banner se muestra cuando la búsqueda tiene hasta 1 variación respecto al término configurado [Desktop] [Guest]",
+   "observation": "Causa: el content asset de banners por término no existe en el ambiente: la SRP de \"aceites\" pide /contents/srp-term-banners y responde 404 (también aceites-srp-grid-banner y aceites-srp-banner-circular), y no se renderiza ningún banner. El token se llama STRICT y el caso pide un banner con matchmode 'similar'. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'similar'), o declarar un término que ya lo tenga.",
+   "observed": "No se ejecutó: el caso quedó bloqueado por data antes de generar su test().",
+   "preconditions": "Storefront Unimarc activo en Desktop 1280×900. Content asset de tipo banner configurado en BM con matchmode 'similar' vinculado a un término (ej. 'aceite'). User type: Guest.",
+   "screenshots": [
+    {
+     "caption": "SRP de \"aceites\" sin banner (asset srp-term-banners responde 404)",
+     "file": "TC-B2C18-D-019-p01-SRP-aceites-sin-banner.png"
+    }
+   ],
+   "status": "Bloqueado Data",
+   "steps": "1. Navegar al Home con viewport Desktop 1280×900.\n2. Buscar una variación del término configurado con 1 diferencia (ej. 'aceite' → 'aceites').\n3. Acceder a la SRP.\n4. Verificar que el banner configurado para 'aceite' se muestra en la SRP (matchmode similar acepta hasta 1 variación).",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {SEARCH_BANNER_STRICT_001}: aceite; {VIEWPORT}: 1440x900",
+   "viewport": "1280x900"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-13",
+   "expected": "No se muestra ningún banner en la SRP cuando el término de búsqueda no coincide con ningún término configurado en los content assets de banners.",
+   "form_factor": "desktop",
+   "id": "TC-B2C18-D-020",
+   "name": "Verificar que sin coincidencia con ningún término configurado no se muestra ningún banner en la SRP [Desktop] [Guest]",
+   "observation": "Causa: el content asset de banners por término no existe en el ambiente: la SRP de \"aceite\" pide /contents/srp-term-banners y responde 404 (también aceite-srp-grid-banner y aceite-srp-banner-circular), y no se renderiza ningún banner. Sin ningún banner configurado, \"no se muestra banner\" se cumple siempre y el caso no prueba nada; además la fila no declara el término sin coincidencia. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'strict'), o declarar un término que ya lo tenga.",
+   "observed": "No se ejecutó: el caso quedó bloqueado por data antes de generar su test().",
+   "preconditions": "Storefront Unimarc activo en Desktop 1280×900. Al menos un content asset de tipo banner configurado en BM, vinculado a un término de búsqueda específico (ej. término = 'aceite', matchmode = 'strict'). User type: Guest.",
+   "status": "Bloqueado Data",
+   "steps": "1. Navegar al Home con viewport Desktop 1280×900.\n2. Buscar un término que no coincida con ningún content asset de banner configurado (ej. 'azúcar' cuando el banner está configurado solo para 'aceite').\n3. Acceder a la SRP.\n4. Verificar que no se muestra ningún banner en la SRP.",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {BROWSER}: Chrome; {SEARCH_BANNER_STRICT_001}: aceite; {VIEWPORT}: 1440x900",
+   "viewport": "1280x900"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-13",
+   "expected": "El banner se muestra con el término exacto. No se muestra con una variación. Matchmode 'strict' funciona correctamente en Mobile.",
+   "form_factor": "mobile",
+   "id": "TC-B2C18-M-017",
+   "name": "Verificar que con matchmode 'strict' el banner configurado se muestra solo cuando el término de búsqueda coincide exactamente [Mobile] [Guest]",
+   "observation": "Causa: el content asset de banners por término no existe en el ambiente: la SRP de \"aceite\" pide /contents/srp-term-banners y responde 404 (también aceite-srp-grid-banner y aceite-srp-banner-circular), y no se renderiza ningún banner. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'strict'), o declarar un término que ya lo tenga.",
+   "observed": "No se ejecutó: el caso quedó bloqueado por data antes de generar su test().",
+   "preconditions": "Storefront Unimarc activo en Mobile 390×844. Al menos un content asset de tipo banner configurado en BM, vinculado a un término de búsqueda específico (ej. término = 'aceite', matchmode = 'strict'). User type: Guest.",
+   "screenshots": [
+    {
+     "caption": "SRP Mobile de \"aceite\" sin banner (asset srp-term-banners responde 404)",
+     "file": "TC-B2C18-M-017-p01-SRP-aceite-sin-banner.png"
+    }
+   ],
+   "status": "Bloqueado Data",
+   "steps": "1. Navegar al Home con viewport Mobile 390×844.\n2. Buscar el término exacto configurado (ej. 'aceite') y verificar que el banner se muestra.\n3. Buscar una variación (ej. 'aceites') y verificar que el banner NO se muestra.",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SEARCH_BANNER_STRICT_001}: aceite",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-13",
+   "expected": "El banner se muestra en Mobile para una variación con 1 diferencia. Matchmode 'similar' funciona correctamente.",
+   "form_factor": "mobile",
+   "id": "TC-B2C18-M-018",
+   "name": "Verificar que con matchmode 'similar' el banner se muestra cuando la búsqueda tiene hasta 1 variación respecto al término configurado [Mobile] [Guest]",
+   "observation": "Causa: el content asset de banners por término no existe en el ambiente: la SRP de \"aceites\" pide /contents/srp-term-banners y responde 404 (también aceites-srp-grid-banner y aceites-srp-banner-circular), y no se renderiza ningún banner. El token se llama STRICT y el caso pide un banner con matchmode 'similar'. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'similar'), o declarar un término que ya lo tenga.",
+   "observed": "No se ejecutó: el caso quedó bloqueado por data antes de generar su test().",
+   "preconditions": "Storefront Unimarc activo en Mobile 390×844. Content asset de tipo banner con matchmode 'similar' configurado para un término. User type: Guest.",
+   "screenshots": [
+    {
+     "caption": "SRP Mobile de \"aceites\" sin banner (asset srp-term-banners responde 404)",
+     "file": "TC-B2C18-M-018-p01-SRP-aceites-sin-banner.png"
+    }
+   ],
+   "status": "Bloqueado Data",
+   "steps": "1. Navegar al Home con viewport Mobile 390×844.\n2. Buscar una variación del término con 1 diferencia (ej. 'aceites').\n3. Acceder a la SRP.\n4. Verificar que el banner del término 'aceite' se muestra en la SRP.",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SEARCH_BANNER_STRICT_001}: aceite",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-13",
+   "expected": "No se muestra ningún banner en la SRP Mobile cuando el término no coincide con los términos configurados.",
+   "form_factor": "mobile",
+   "id": "TC-B2C18-M-019",
+   "name": "Verificar que sin coincidencia con ningún término configurado no se muestra ningún banner en la SRP [Mobile] [Guest]",
+   "observation": "Causa: el content asset de banners por término no existe en el ambiente: la SRP de \"aceite\" pide /contents/srp-term-banners y responde 404 (también aceite-srp-grid-banner y aceite-srp-banner-circular), y no se renderiza ningún banner. Sin ningún banner configurado, \"no se muestra banner\" se cumple siempre y el caso no prueba nada; además la fila no declara el término sin coincidencia. Acción: configurar y publicar en BM el content asset srp-term-banners con un banner para el término declarado en {SEARCH_BANNER_STRICT_001} (matchmode 'strict'), o declarar un término que ya lo tenga.",
+   "observed": "No se ejecutó: el caso quedó bloqueado por data antes de generar su test().",
+   "preconditions": "Storefront Unimarc activo en Mobile 390×844. Al menos un content asset de tipo banner configurado en BM, vinculado a un término de búsqueda específico (ej. término = 'aceite', matchmode = 'strict'). User type: Guest.",
+   "status": "Bloqueado Data",
+   "steps": "1. Navegar al Home con viewport Mobile 390×844.\n2. Buscar un término que no coincida con ningún content asset de banner.\n3. Acceder a la SRP.\n4. Verificar que no se muestra ningún banner.",
+   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SEARCH_BANNER_STRICT_001}: aceite",
    "viewport": "390x844"
   }
  ]
