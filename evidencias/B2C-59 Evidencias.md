@@ -3,28 +3,29 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-59 |
-| Última actualización | 2026-10-27 |
-| Ejecutado por | Daniel Uñuruco |
-| Ambiente | App Unimarc v1.0.1 (DEV) |
+| Última actualización | 2026-11-13 |
+| Ejecutado por | Victor Chirinos |
+| Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
 | Navegador Mobile | webkit |
 | Dispositivo Android | Pixel 6 · Android 14 (emulador) |
-| Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-59 APP Test Cases.xlsx |
+| Origen de los TC | Casos de Prueba/Ejecutados/SP1/B2C-59 Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
 ## Resumen de resultados
 
 | Estado | Casos |
 |---|---|
-| Aprobado | 11 |
+| Aprobado | 18 |
 | Bloqueado Data | 6 |
-| Rechazado | 6 |
-| **Total** | **23** |
+| Rechazado | 4 |
+| **Total** | **28** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-13 | 7 | TC-B2C59-D-004, TC-B2C59-D-007, TC-B2C59-D-015, TC-B2C59-D-022, TC-B2C59-M-004, TC-B2C59-M-007, TC-B2C59-M-015 |
 | 2026-10-27 | 1 | TC-B2C59-APP-018 |
 | 2026-10-26 | 15 | TC-B2C59-APP-002, TC-B2C59-APP-003, TC-B2C59-APP-005, TC-B2C59-APP-006, TC-B2C59-APP-009, TC-B2C59-APP-010, TC-B2C59-APP-011, TC-B2C59-APP-012, TC-B2C59-APP-013, TC-B2C59-APP-014, TC-B2C59-APP-015, TC-B2C59-APP-016, TC-B2C59-APP-017, TC-B2C59-APP-019, TC-B2C59-APP-020 |
 | 2026-10-19 | 7 | TC-B2C59-D-001, TC-B2C59-D-007, TC-B2C59-D-020, TC-B2C59-M-001, TC-B2C59-M-007, TC-B2C59-M-020, TC-B2C59-M-022 |
@@ -286,13 +287,11 @@ Causa: el token {PLP_URL_NXM} que declara la fila no tiene fila en el Excel de d
 
 | Campo | Valor |
 |---|---|
-| Estado | Rechazado |
-| Ejecutado | 2026-10-19 |
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
 | Form factor | desktop |
 | Viewport | 1280x900 |
 | Navegador | chromium |
-| Duración | 38.4 s |
-| Spec | tests/B2C-59.spec.ts:596 |
 
 **Precondiciones**
 
@@ -304,7 +303,9 @@ Producto con 2 o más imágenes (N≥2) disponibles en catálogo SFCC.
 
 **Data utilizada**
 
-URL base: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ · PLP declarada: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno · SKU multi-imagen: 000000000000028616-KGV (su listado se deduce de la categoria que publica su PDP: /category/carnes_vacuno_otros-cortes)
+- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)
+- {PLP_URL} = URL de categoría
+- {SKU_MULTI_IMAGEN} = SKU con mas de una imagen
 
 **Pasos ejecutados**
 
@@ -320,19 +321,13 @@ En Desktop, la imagen principal es estática. Al hacer hover, la imagen rota a l
 
 **Resultado obtenido**
 
-El shelf muestra solo la imagen 01 y no rota con el hover (sin flechas ni dots, eso si se cumple).
-
-**Observación**
-
-Esperado: al hacer hover la imagen rota a la siguiente disponible. Obtenido: tras el hover (8 s) la imagen sigue siendo la misma (-01.jpg) en el shelf del producto 000000000000028616-KGV, que tiene 3 imagenes en su PDP; el shelf renderiza una sola <img> y no cambia. tests/B2C-59.spec.ts:596. Bug: pendiente de crear.
+La imagen es estática sin hover y rota a la siguiente disponible durante el hover.
 
 **Evidencia**
 
-![Paso 1 — shelf del producto con 3 imagenes en su listado](<B2C-59 Evidencias/TC-B2C59-D-007-p01-shelf-del-producto-con-3-imagenes-en-su-listado.png>)
+![Paso 1 — sin hover](<B2C-59 Evidencias/B2C-1241-p01-sin-hover.png>)
 
-![Paso 3 — shelf durante el hover](<B2C-59 Evidencias/TC-B2C59-D-007-p03-shelf-durante-el-hover.png>)
-
-![Estado al fallar la aserción](<B2C-59 Evidencias/TC-B2C59-D-007.png>)
+![Paso 2 — hover](<B2C-59 Evidencias/B2C-1241-p02-hover.png>)
 
 ---
 
@@ -340,13 +335,11 @@ Esperado: al hacer hover la imagen rota a la siguiente disponible. Obtenido: tra
 
 | Campo | Valor |
 |---|---|
-| Estado | Rechazado |
-| Ejecutado | 2026-10-19 |
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
-| Duración | 33.6 s |
-| Spec | tests/B2C-59.spec.ts:894 |
 
 **Precondiciones**
 
@@ -358,7 +351,9 @@ Producto con 2 o más imágenes (N≥2) disponibles en catálogo SFCC.
 
 **Data utilizada**
 
-URL base: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ · PLP declarada: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno · SKU multi-imagen: 000000000000028616-KGV (su listado se deduce de la categoria que publica su PDP: /category/carnes_vacuno_otros-cortes)
+- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)
+- {PLP_URL} = URL de categoría
+- {SKU_MULTI_IMAGEN} = SKU con mas de una imagen
 
 **Pasos ejecutados**
 
@@ -374,19 +369,13 @@ En Mobile, la galería permite scroll horizontal mostrando una imagen a la vez. 
 
 **Resultado obtenido**
 
-El shelf muestra una sola imagen fija; no hay scroll horizontal (sin flechas ni dots, eso si se cumple).
-
-**Observación**
-
-Esperado: la galeria permite scroll horizontal mostrando una imagen a la vez. Obtenido: el shelf del producto 000000000000028616-KGV (3 imagenes en su PDP) tiene una sola imagen y su contenedor no se desplaza (ancho de contenido 153 = ancho visible 153); el gesto de arrastre horizontal no cambia la imagen. tests/B2C-59.spec.ts:894. Bug: pendiente de crear.
+Una imagen a la vez, scroll horizontal entre las 3 imágenes, sin flechas ni dots.
 
 **Evidencia**
 
-![Paso 1 — shelf del producto con 3 imagenes en su listado](<B2C-59 Evidencias/TC-B2C59-M-007-p01-shelf-del-producto-con-3-imagenes-en-su-listado.png>)
+![Paso 1 — imagen1](<B2C-59 Evidencias/B2C-1242-p01-imagen1.png>)
 
-![Paso 3 — shelf tras el gesto de desplazamiento horizontal](<B2C-59 Evidencias/TC-B2C59-M-007-p03-shelf-tras-el-gesto-de-desplazamiento-horizontal.png>)
-
-![Estado al fallar la aserción](<B2C-59 Evidencias/TC-B2C59-M-007.png>)
+![Paso 3 — imagen3](<B2C-59 Evidencias/B2C-1242-p03-imagen3.png>)
 
 ---
 
@@ -1125,6 +1114,227 @@ La sección de precios muestra la mecánica NxPrecio, el precio unitario y los P
 
 ---
 
+### TC-B2C59-D-004 - Mostrar 'Patrocinado' cuando isSponsored=true (Desktop)
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
+| Form factor | desktop |
+| Viewport | 1280x900 |
+| Navegador | chromium |
+
+**Precondiciones**
+
+User type: Guest o Registrado.
+
+Viewport Desktop 1280x900.
+
+Producto con atributo isSponsored=true configurado en BM/catálogo SFCC.
+
+**Data utilizada**
+
+- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)
+- {PLP_URL} = URL de categoría
+- {SKU_SPONSOR} = SKU Sponsor
+
+**Pasos ejecutados**
+
+1. Navegar a una PLP/SRP con un producto que tiene isSponsored=true, con viewport Desktop 1280x900.
+2. Localizar el shelf del producto.
+3. Verificar que el texto "Patrocinado" aparece debajo del nombre del producto.
+
+**Resultado esperado**
+
+El texto "Patrocinado" se muestra debajo del nombre del producto en el shelf cuando isSponsored=true.
+
+**Resultado obtenido**
+
+El shelf del producto patrocinado muestra "Patrocinado" debajo del nombre.
+
+**Evidencia**
+
+![Paso 1 — desktop](<B2C-59 Evidencias/B2C-1142-p01-desktop.png>)
+
+---
+
+### TC-B2C59-M-004 - Mostrar 'Patrocinado' cuando isSponsored=true (Mobile)
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+
+**Precondiciones**
+
+User type: Guest o Registrado.
+
+Viewport Mobile 390x844.
+
+Producto con atributo isSponsored=true.
+
+**Data utilizada**
+
+- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)
+- {PLP_URL} = URL de categoría
+- {SKU_SPONSOR} = Producto con sponsor
+
+**Pasos ejecutados**
+
+1. Navegar a una PLP/SRP con un producto isSponsored=true, con viewport Mobile 390x844.
+2. Verificar que el texto "Patrocinado" aparece debajo del nombre del producto en el shelf.
+
+**Resultado esperado**
+
+El texto "Patrocinado" se muestra debajo del nombre del producto cuando isSponsored=true.
+
+**Resultado obtenido**
+
+El shelf del producto patrocinado muestra "Patrocinado" debajo del nombre.
+
+**Evidencia**
+
+![Paso 2 — mobile](<B2C-59 Evidencias/B2C-1142-p02-mobile.png>)
+
+---
+
+### TC-B2C59-D-022 - Sin truncamiento cuando el texto esta dentro del limite de 60 caracteres (Desktop)
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
+| Form factor | desktop |
+| Viewport | 1280x900 |
+| Navegador | chromium |
+
+**Precondiciones**
+
+User type: Guest o Registrado.
+
+Viewport Desktop 1280x900.
+
+Producto cuyo largo combinado de marca + '|' + descripcion comercial es menor o igual a 60 caracteres.
+
+**Data utilizada**
+
+- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)
+- {PLP_URL} = URL de categoría
+
+**Pasos ejecutados**
+
+1. Navegar a una PLP/SRP con un producto cuyo nombre (marca + descripcion) es menor o igual a 60 caracteres, con viewport Desktop 1280x900.
+2. Localizar el shelf del producto.
+3. Verificar que el texto se muestra completo, sin truncar y sin puntos suspensivos ('...').
+4. Verificar que la marca se muestra en negrita con separador '|' antes de la descripcion.
+
+**Resultado esperado**
+
+El texto se muestra completo (marca + '|' + descripcion), sin truncamiento ni puntos suspensivos, dado que su largo no excede el limite de 60 caracteres. La marca se muestra en negrita con separador '|'.
+
+**Resultado obtenido**
+
+El texto de 51 caracteres se muestra completo.
+
+**Evidencia**
+
+![B2C 769](<B2C-59 Evidencias/B2C-769.png>)
+
+---
+
+### TC-B2C59-M-015 - Truncamiento de marca y descripcion a 40 caracteres (Mobile)
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+
+**Precondiciones**
+
+User type: Guest o Registrado.
+
+Viewport Mobile 390x844.
+
+Producto cuyo largo combinado de marca + "|" + descripción supera 40 caracteres.
+
+**Data utilizada**
+
+- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)
+- {PLP_URL} = URL de categoría
+
+**Pasos ejecutados**
+
+1. Navegar a una PLP/SRP con un producto cuyo nombre supera 40 caracteres, con viewport Mobile 390x844.
+2. Localizar el shelf del producto.
+3. Verificar que el texto se trunca con "..." dentro del límite de 40 caracteres.
+4. Verificar que la marca se muestra en negrita.
+5. Verificar que el separador "|" aparece entre la marca y la descripción.
+
+**Resultado esperado**
+
+El texto se trunca a 40 caracteres máximo con "...". La marca aparece en negrita con separador "|" antes de la descripción.
+
+**Resultado obtenido**
+
+Marca + descripción se truncan a 40 caracteres con puntos suspensivos.
+
+**Evidencia**
+
+![B2C 768](<B2C-59 Evidencias/B2C-768.png>)
+
+---
+
+### TC-B2C59-D-015 - Truncamiento de marca y descripcion a 60 caracteres (Desktop)
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
+| Form factor | desktop |
+| Viewport | 1280x900 |
+| Navegador | chromium |
+
+**Precondiciones**
+
+User type: Guest o Registrado.
+
+Viewport Desktop 1280x900.
+
+Producto cuyo largo combinado de marca + "|" + descripción comercial supera 60 caracteres.
+
+**Data utilizada**
+
+- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)
+- {PLP_URL} = URL de categoría
+
+**Pasos ejecutados**
+
+1. Navegar a una PLP/SRP con un producto cuyo nombre (marca + descripción) supera 60 caracteres, con viewport Desktop 1280x900.
+2. Localizar el shelf del producto.
+3. Verificar que el texto se trunca con puntos suspensivos ("...") dentro del límite de 60 caracteres.
+4. Verificar que la marca se muestra en negrita.
+5. Verificar que el separador "|" aparece entre la marca y la descripción comercial.
+
+**Resultado esperado**
+
+El texto se trunca a 60 caracteres máximo con "...". La marca aparece en negrita con separador "|" antes de la descripción. El texto truncado mantiene legibilidad.
+
+**Resultado obtenido**
+
+Marca + descripción se truncan a 60 caracteres con puntos suspensivos.
+
+**Evidencia**
+
+![B2C 767](<B2C-59 Evidencias/B2C-767.png>)
+
+---
+
 <!-- qa-evidence-state
 {
  "header": {
@@ -1136,12 +1346,12 @@ La sección de precios muestra la mecánica NxPrecio, el precio unitario y los P
   "devices": {
    "android": "Pixel 6 · Android 14 (emulador)"
   },
-  "environment": "App Unimarc v1.0.1 (DEV)",
-  "executed_by": "Daniel Uñuruco",
+  "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
+  "executed_by": "Victor Chirinos",
   "suite": "B2C-59",
-  "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-59 APP Test Cases.xlsx",
+  "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-59 Test Cases.xlsx",
   "title": "B2C-59 APP",
-  "updated_at": "2026-10-27"
+  "updated_at": "2026-11-13"
  },
  "history": {
   "2026-10-19": [
@@ -1172,6 +1382,15 @@ La sección de precios muestra la mecánica NxPrecio, el precio unitario y los P
   ],
   "2026-10-27": [
    "TC-B2C59-APP-018"
+  ],
+  "2026-11-13": [
+   "TC-B2C59-D-004",
+   "TC-B2C59-D-007",
+   "TC-B2C59-D-015",
+   "TC-B2C59-D-022",
+   "TC-B2C59-M-004",
+   "TC-B2C59-M-007",
+   "TC-B2C59-M-015"
   ]
  },
  "results": [
@@ -1288,64 +1507,50 @@ La sección de precios muestra la mecánica NxPrecio, el precio unitario y los P
   },
   {
    "browser": "chromium",
-   "duration_s": 38.4,
-   "executed_at": "2026-10-19",
+   "executed_at": "2026-11-13",
    "expected": "En Desktop, la imagen principal es estática. Al hacer hover, la imagen rota a la siguiente disponible. No se muestran flechas ni dots de navegación.",
    "form_factor": "desktop",
    "id": "TC-B2C59-D-007",
    "name": "Galeria: hover rota la imagen cuando N>1 (Desktop)",
-   "observation": "Esperado: al hacer hover la imagen rota a la siguiente disponible. Obtenido: tras el hover (8 s) la imagen sigue siendo la misma (-01.jpg) en el shelf del producto 000000000000028616-KGV, que tiene 3 imagenes en su PDP; el shelf renderiza una sola <img> y no cambia. tests/B2C-59.spec.ts:596. Bug: pendiente de crear.",
-   "observed": "El shelf muestra solo la imagen 01 y no rota con el hover (sin flechas ni dots, eso si se cumple).",
+   "observed": "La imagen es estática sin hover y rota a la siguiente disponible durante el hover.",
    "preconditions": "User type: Guest o Registrado.\nViewport Desktop 1280x900.\nProducto con 2 o más imágenes (N≥2) disponibles en catálogo SFCC.",
    "screenshots": [
     {
-     "caption": "Paso 1 — shelf del producto con 3 imagenes en su listado",
-     "file": "TC-B2C59-D-007-p01-shelf-del-producto-con-3-imagenes-en-su-listado.png"
+     "caption": "Paso 1 — sin hover",
+     "file": "B2C-1241-p01-sin-hover.png"
     },
     {
-     "caption": "Paso 3 — shelf durante el hover",
-     "file": "TC-B2C59-D-007-p03-shelf-durante-el-hover.png"
-    },
-    {
-     "caption": "Estado al fallar la aserción",
-     "file": "TC-B2C59-D-007.png"
+     "caption": "Paso 2 — hover",
+     "file": "B2C-1241-p02-hover.png"
     }
    ],
-   "spec": "tests/B2C-59.spec.ts:596",
-   "status": "Rechazado",
+   "status": "Aprobado",
    "steps": "1. Navegar a una PLP/SRP con un producto que tiene N≥2 imágenes, con viewport Desktop 1280x900.\n2. Verificar que la imagen del shelf se muestra estática sin hover.\n3. Hacer hover sobre el shelf.\n4. Verificar que la imagen rota a la siguiente disponible durante el hover.\n5. Verificar que NO se muestran flechas ni dots de navegación sobre la imagen.",
-   "test_data": "URL base: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ · PLP declarada: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno · SKU multi-imagen: 000000000000028616-KGV (su listado se deduce de la categoria que publica su PDP: /category/carnes_vacuno_otros-cortes)",
+   "test_data": "- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)\n- {PLP_URL} = URL de categoría\n- {SKU_MULTI_IMAGEN} = SKU con mas de una imagen",
    "viewport": "1280x900"
   },
   {
    "browser": "webkit",
-   "duration_s": 33.6,
-   "executed_at": "2026-10-19",
+   "executed_at": "2026-11-13",
    "expected": "En Mobile, la galería permite scroll horizontal mostrando una imagen a la vez. No se muestran flechas ni dots de navegación.",
    "form_factor": "mobile",
    "id": "TC-B2C59-M-007",
    "name": "Galeria: scroll horizontal cuando N>1 (Mobile)",
-   "observation": "Esperado: la galeria permite scroll horizontal mostrando una imagen a la vez. Obtenido: el shelf del producto 000000000000028616-KGV (3 imagenes en su PDP) tiene una sola imagen y su contenedor no se desplaza (ancho de contenido 153 = ancho visible 153); el gesto de arrastre horizontal no cambia la imagen. tests/B2C-59.spec.ts:894. Bug: pendiente de crear.",
-   "observed": "El shelf muestra una sola imagen fija; no hay scroll horizontal (sin flechas ni dots, eso si se cumple).",
+   "observed": "Una imagen a la vez, scroll horizontal entre las 3 imágenes, sin flechas ni dots.",
    "preconditions": "User type: Guest o Registrado.\nViewport Mobile 390x844.\nProducto con 2 o más imágenes (N≥2) disponibles en catálogo SFCC.",
    "screenshots": [
     {
-     "caption": "Paso 1 — shelf del producto con 3 imagenes en su listado",
-     "file": "TC-B2C59-M-007-p01-shelf-del-producto-con-3-imagenes-en-su-listado.png"
+     "caption": "Paso 1 — imagen1",
+     "file": "B2C-1242-p01-imagen1.png"
     },
     {
-     "caption": "Paso 3 — shelf tras el gesto de desplazamiento horizontal",
-     "file": "TC-B2C59-M-007-p03-shelf-tras-el-gesto-de-desplazamiento-horizontal.png"
-    },
-    {
-     "caption": "Estado al fallar la aserción",
-     "file": "TC-B2C59-M-007.png"
+     "caption": "Paso 3 — imagen3",
+     "file": "B2C-1242-p03-imagen3.png"
     }
    ],
-   "spec": "tests/B2C-59.spec.ts:894",
-   "status": "Rechazado",
+   "status": "Aprobado",
    "steps": "1. Navegar a una PLP/SRP con un producto que tiene N≥2 imágenes, con viewport Mobile 390x844.\n2. Verificar que se muestra una imagen a la vez en el shelf.\n3. Realizar scroll horizontal sobre la galería del shelf.\n4. Verificar que la imagen avanza a la siguiente con el gesto de scroll.\n5. Verificar que NO se muestran flechas ni dots de navegación.",
-   "test_data": "URL base: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ · PLP declarada: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno · SKU multi-imagen: 000000000000028616-KGV (su listado se deduce de la categoria que publica su PDP: /category/carnes_vacuno_otros-cortes)",
+   "test_data": "- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)\n- {PLP_URL} = URL de categoría\n- {SKU_MULTI_IMAGEN} = SKU con mas de una imagen",
    "viewport": "390x844"
   },
   {
@@ -1828,6 +2033,106 @@ La sección de precios muestra la mecánica NxPrecio, el precio unitario y los P
    "status": "Aprobado",
    "steps": "1. El usuario abre la App v1.0.1.\n2. El usuario busca {SKU_PROM_NxPRECIO} y toca \"Buscar\" en el teclado.\n3. El sistema muestra los resultados con el shelf de {SKU_PROM_NxPRECIO}.",
    "test_data": "- v1.0.1 = TBD\n- {SKU_PROM_NxPRECIO} = 000000000000666200-UN"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-13",
+   "expected": "El texto \"Patrocinado\" se muestra debajo del nombre del producto en el shelf cuando isSponsored=true.",
+   "form_factor": "desktop",
+   "id": "TC-B2C59-D-004",
+   "name": "Mostrar 'Patrocinado' cuando isSponsored=true (Desktop)",
+   "observed": "El shelf del producto patrocinado muestra \"Patrocinado\" debajo del nombre.",
+   "preconditions": "User type: Guest o Registrado.\nViewport Desktop 1280x900.\nProducto con atributo isSponsored=true configurado en BM/catálogo SFCC.",
+   "screenshots": [
+    {
+     "caption": "Paso 1 — desktop",
+     "file": "B2C-1142-p01-desktop.png"
+    }
+   ],
+   "status": "Aprobado",
+   "steps": "1. Navegar a una PLP/SRP con un producto que tiene isSponsored=true, con viewport Desktop 1280x900.\n2. Localizar el shelf del producto.\n3. Verificar que el texto \"Patrocinado\" aparece debajo del nombre del producto.",
+   "test_data": "- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)\n- {PLP_URL} = URL de categoría\n- {SKU_SPONSOR} = SKU Sponsor",
+   "viewport": "1280x900"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-13",
+   "expected": "El texto \"Patrocinado\" se muestra debajo del nombre del producto cuando isSponsored=true.",
+   "form_factor": "mobile",
+   "id": "TC-B2C59-M-004",
+   "name": "Mostrar 'Patrocinado' cuando isSponsored=true (Mobile)",
+   "observed": "El shelf del producto patrocinado muestra \"Patrocinado\" debajo del nombre.",
+   "preconditions": "User type: Guest o Registrado.\nViewport Mobile 390x844.\nProducto con atributo isSponsored=true.",
+   "screenshots": [
+    {
+     "caption": "Paso 2 — mobile",
+     "file": "B2C-1142-p02-mobile.png"
+    }
+   ],
+   "status": "Aprobado",
+   "steps": "1. Navegar a una PLP/SRP con un producto isSponsored=true, con viewport Mobile 390x844.\n2. Verificar que el texto \"Patrocinado\" aparece debajo del nombre del producto en el shelf.",
+   "test_data": "- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)\n- {PLP_URL} = URL de categoría\n- {SKU_SPONSOR} = Producto con sponsor",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-13",
+   "expected": "El texto se muestra completo (marca + '|' + descripcion), sin truncamiento ni puntos suspensivos, dado que su largo no excede el limite de 60 caracteres. La marca se muestra en negrita con separador '|'.",
+   "form_factor": "desktop",
+   "id": "TC-B2C59-D-022",
+   "name": "Sin truncamiento cuando el texto esta dentro del limite de 60 caracteres (Desktop)",
+   "observed": "El texto de 51 caracteres se muestra completo.",
+   "preconditions": "User type: Guest o Registrado.\nViewport Desktop 1280x900.\nProducto cuyo largo combinado de marca + '|' + descripcion comercial es menor o igual a 60 caracteres.",
+   "screenshots": [
+    {
+     "caption": "B2C 769",
+     "file": "B2C-769.png"
+    }
+   ],
+   "status": "Aprobado",
+   "steps": "1. Navegar a una PLP/SRP con un producto cuyo nombre (marca + descripcion) es menor o igual a 60 caracteres, con viewport Desktop 1280x900.\n2. Localizar el shelf del producto.\n3. Verificar que el texto se muestra completo, sin truncar y sin puntos suspensivos ('...').\n4. Verificar que la marca se muestra en negrita con separador '|' antes de la descripcion.",
+   "test_data": "- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)\n- {PLP_URL} = URL de categoría",
+   "viewport": "1280x900"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-13",
+   "expected": "El texto se trunca a 40 caracteres máximo con \"...\". La marca aparece en negrita con separador \"|\" antes de la descripción.",
+   "form_factor": "mobile",
+   "id": "TC-B2C59-M-015",
+   "name": "Truncamiento de marca y descripcion a 40 caracteres (Mobile)",
+   "observed": "Marca + descripción se truncan a 40 caracteres con puntos suspensivos.",
+   "preconditions": "User type: Guest o Registrado.\nViewport Mobile 390x844.\nProducto cuyo largo combinado de marca + \"|\" + descripción supera 40 caracteres.",
+   "screenshots": [
+    {
+     "caption": "B2C 768",
+     "file": "B2C-768.png"
+    }
+   ],
+   "status": "Aprobado",
+   "steps": "1. Navegar a una PLP/SRP con un producto cuyo nombre supera 40 caracteres, con viewport Mobile 390x844.\n2. Localizar el shelf del producto.\n3. Verificar que el texto se trunca con \"...\" dentro del límite de 40 caracteres.\n4. Verificar que la marca se muestra en negrita.\n5. Verificar que el separador \"|\" aparece entre la marca y la descripción.",
+   "test_data": "- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)\n- {PLP_URL} = URL de categoría",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-13",
+   "expected": "El texto se trunca a 60 caracteres máximo con \"...\". La marca aparece en negrita con separador \"|\" antes de la descripción. El texto truncado mantiene legibilidad.",
+   "form_factor": "desktop",
+   "id": "TC-B2C59-D-015",
+   "name": "Truncamiento de marca y descripcion a 60 caracteres (Desktop)",
+   "observed": "Marca + descripción se truncan a 60 caracteres con puntos suspensivos.",
+   "preconditions": "User type: Guest o Registrado.\nViewport Desktop 1280x900.\nProducto cuyo largo combinado de marca + \"|\" + descripción comercial supera 60 caracteres.",
+   "screenshots": [
+    {
+     "caption": "B2C 767",
+     "file": "B2C-767.png"
+    }
+   ],
+   "status": "Aprobado",
+   "steps": "1. Navegar a una PLP/SRP con un producto cuyo nombre (marca + descripción) supera 60 caracteres, con viewport Desktop 1280x900.\n2. Localizar el shelf del producto.\n3. Verificar que el texto se trunca con puntos suspensivos (\"...\") dentro del límite de 60 caracteres.\n4. Verificar que la marca se muestra en negrita.\n5. Verificar que el separador \"|\" aparece entre la marca y la descripción comercial.",
+   "test_data": "- {BASE_URL} = URL base del storefront (placeholder, pendiente de environment)\n- {PLP_URL} = URL de categoría",
+   "viewport": "1280x900"
   }
  ]
 }

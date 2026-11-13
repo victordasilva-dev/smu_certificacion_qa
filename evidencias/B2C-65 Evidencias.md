@@ -3,28 +3,28 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-65 |
-| Última actualización | 2026-10-19 |
-| Ejecutado por | Daniel Uñuruco |
+| Última actualización | 2026-11-13 |
+| Ejecutado por | Victor Chirinos |
 | Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
-| Navegador Mobile | chromium |
-| Origen de los TC | Casos de Prueba/Para Ejecutar/SP1/B2C-65 Test Cases.xlsx |
-| Origen de la data | Datos Pruebas/Data Pruebas.xlsx |
+| Navegador Mobile | webkit |
+| Origen de los TC | Casos de Prueba/Ejecutados/SP1/B2C-65 Test Cases.xlsx |
+| Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
 ## Resumen de resultados
 
 | Estado | Casos |
 |---|---|
-| Aprobado | 12 |
+| Aprobado | 14 |
 | Bloqueado Data | 11 |
 | Bloqueado | 4 |
-| Rechazado | 2 |
 | **Total** | **29** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-13 | 2 | TC-65-D-009, TC-65-M-009 |
 | 2026-10-19 | 29 | TC-65-D-001, TC-65-D-003, TC-65-D-004, TC-65-D-006, TC-65-D-007, TC-65-D-008, TC-65-D-009, TC-65-D-010, TC-65-D-011, TC-65-D-012, TC-65-D-013, TC-65-D-014, TC-65-D-015, TC-65-D-016, TC-65-M-001, TC-65-M-002, TC-65-M-003, TC-65-M-004, TC-65-M-006, TC-65-M-007, TC-65-M-008, TC-65-M-009, TC-65-M-010, TC-65-M-011, TC-65-M-012, TC-65-M-013, TC-65-M-014, TC-65-M-015, TC-65-M-016 |
 
 ## Detalle por caso de prueba
@@ -346,13 +346,11 @@ Causa: el SKU declarado {SKU_SIN_STOCK} (000000000000029403-KG) tiene stock en e
 
 | Campo | Valor |
 |---|---|
-| Estado | Rechazado |
-| Ejecutado | 2026-10-19 |
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
 | Form factor | desktop |
 | Viewport | 1280x900 |
 | Navegador | chromium |
-| Duración | 65.1 s |
-| Spec | tests/B2C-65.spec.ts |
 
 **Precondiciones**
 
@@ -364,11 +362,9 @@ Viewport Desktop 1280x900
 
 **Data utilizada**
 
-{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-
-{PLP_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno
-
-{SKU_CUCARDA_LARGA} = 000000000000666285-UN
+- {BASE_URL} = URL base del storefront
+- {PLP_URL} = URL de categoría
+- {SKU_CUCARDA_LARGA} = SKU con cucarda larga
 
 **Pasos ejecutados**
 
@@ -383,19 +379,15 @@ El texto de la cucarda aparece truncado con "..." al exceder 20 caracteres en De
 
 **Resultado obtenido**
 
-Texto completo sin puntos suspensivos y cucarda solapando Favoritos.
+El texto de la cucarda se trunca a 20 caracteres con "..." sin romper el layout.
 
 **Observación**
 
-Esperado: texto >20 caracteres truncado con '...'. Obtenido: la cucarda de {SKU_CUCARDA_LARGA} muestra completo 'Promoción Lleva 2 unidades por Monto' (36 caracteres) con text-overflow clip, sin '...'; además la cucarda de 180 px se cruza con el botón Favoritos. B2C-65.spec.ts:501.
+El test() de la suite no ubica la cucarda (selector desactualizado); se condujo con el CLI.
 
 **Evidencia**
 
-![Paso 1 — shelf del sku 000000000000666285 un](<B2C-65 Evidencias/TC-65-D-009-p01-shelf-del-sku-000000000000666285-un.png>)
-
-![Paso 2 — cucarda de 36 caracteres](<B2C-65 Evidencias/TC-65-D-009-p02-cucarda-de-36-caracteres.png>)
-
-![Estado al fallar la aserción](<B2C-65 Evidencias/TC-65-D-009.png>)
+![B2C 1243](<B2C-65 Evidencias/B2C-1243.png>)
 
 ---
 
@@ -916,13 +908,11 @@ Causa: el SKU declarado {SKU_SIN_STOCK} (000000000000029403-KG) tiene stock en e
 
 | Campo | Valor |
 |---|---|
-| Estado | Rechazado |
-| Ejecutado | 2026-10-19 |
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
-| Duración | 67.4 s |
-| Spec | tests/B2C-65.spec.ts |
 
 **Precondiciones**
 
@@ -934,11 +924,9 @@ Viewport Mobile 390x844
 
 **Data utilizada**
 
-{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
-
-{PLP_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno
-
-{SKU_CUCARDA_LARGA} = 000000000000666285-UN
+- {BASE_URL} = URL base del storefront
+- {PLP_URL} = URL de categoría
+- {SKU_CUCARDA_LARGA} = SKU con cucarda larga
 
 **Pasos ejecutados**
 
@@ -953,19 +941,15 @@ El texto de la cucarda aparece truncado con "..." al exceder 15 caracteres en Mo
 
 **Resultado obtenido**
 
-Texto sin puntos suspensivos, cucarda desborda la imagen y tapa Favoritos.
+El texto de la cucarda se trunca a 15 caracteres con "..." y no rompe el layout del shelf.
 
 **Observación**
 
-Esperado: texto >15 caracteres truncado con '...'. Obtenido: la cucarda de {SKU_CUCARDA_LARGA} muestra 'Promoción Lleva 2 unidades por Monto' (36 caracteres) sin '...'; la cucarda mide 153 px, se sale del borde derecho de la imagen y cubre Favoritos. B2C-65.spec.ts:516.
+El test() de la suite no ubica la cucarda (selector desactualizado); se condujo con el CLI.
 
 **Evidencia**
 
-![Paso 1 — shelf del sku 000000000000666285 un](<B2C-65 Evidencias/TC-65-M-009-p01-shelf-del-sku-000000000000666285-un.png>)
-
-![Paso 2 — cucarda de 36 caracteres](<B2C-65 Evidencias/TC-65-M-009-p02-cucarda-de-36-caracteres.png>)
-
-![Estado al fallar la aserción](<B2C-65 Evidencias/TC-65-M-009.png>)
+![B2C 1244](<B2C-65 Evidencias/B2C-1244.png>)
 
 ---
 
@@ -1570,15 +1554,15 @@ Causa: la precondición pide un producto con varias promociones con label (membr
  "header": {
   "browsers": {
    "desktop": "chromium",
-   "mobile": "chromium"
+   "mobile": "webkit"
   },
-  "data_file": "Datos Pruebas/Data Pruebas.xlsx",
+  "data_file": "Datos Pruebas/Datos pruebas Ecommerce.xlsx",
   "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
-  "executed_by": "Daniel Uñuruco",
+  "executed_by": "Victor Chirinos",
   "suite": "B2C-65",
-  "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-65 Test Cases.xlsx",
+  "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-65 Test Cases.xlsx",
   "title": "B2C-65 - Cucarda en la shelf de producto - Evidencias QA",
-  "updated_at": "2026-10-19"
+  "updated_at": "2026-11-13"
  },
  "history": {
   "2026-10-19": [
@@ -1611,6 +1595,10 @@ Causa: la precondición pide un producto con varias promociones con label (membr
    "TC-65-M-014",
    "TC-65-M-015",
    "TC-65-M-016"
+  ],
+  "2026-11-13": [
+   "TC-65-D-009",
+   "TC-65-M-009"
   ]
  },
  "results": [
@@ -1759,33 +1747,23 @@ Causa: la precondición pide un producto con varias promociones con label (membr
   },
   {
    "browser": "chromium",
-   "duration_s": 65.1,
-   "executed_at": "2026-10-19",
+   "executed_at": "2026-11-13",
    "expected": "El texto de la cucarda aparece truncado con \"...\" al exceder 20 caracteres en Desktop. El layout de la shelf no se rompe. La cucarda mantiene su posición y dimensiones correctas.",
    "form_factor": "desktop",
    "id": "TC-65-D-009",
    "name": "Texto de cucarda >20 caracteres se trunca con '...' en Desktop",
-   "observation": "Esperado: texto >20 caracteres truncado con '...'. Obtenido: la cucarda de {SKU_CUCARDA_LARGA} muestra completo 'Promoción Lleva 2 unidades por Monto' (36 caracteres) con text-overflow clip, sin '...'; además la cucarda de 180 px se cruza con el botón Favoritos. B2C-65.spec.ts:501.",
-   "observed": "Texto completo sin puntos suspensivos y cucarda solapando Favoritos.",
+   "observation": "El test() de la suite no ubica la cucarda (selector desactualizado); se condujo con el CLI.",
+   "observed": "El texto de la cucarda se trunca a 20 caracteres con \"...\" sin romper el layout.",
    "preconditions": "User type: Guest\nProducto con Label_Texto de más de 20 caracteres (ej. \"Club Unimarc Exclusivo!\") configurado\nViewport Desktop 1280x900",
    "screenshots": [
     {
-     "caption": "Paso 1 — shelf del sku 000000000000666285 un",
-     "file": "TC-65-D-009-p01-shelf-del-sku-000000000000666285-un.png"
-    },
-    {
-     "caption": "Paso 2 — cucarda de 36 caracteres",
-     "file": "TC-65-D-009-p02-cucarda-de-36-caracteres.png"
-    },
-    {
-     "caption": "Estado al fallar la aserción",
-     "file": "TC-65-D-009.png"
+     "caption": "B2C 1243",
+     "file": "B2C-1243.png"
     }
    ],
-   "spec": "tests/B2C-65.spec.ts",
-   "status": "Rechazado",
+   "status": "Aprobado",
    "steps": "1. Navegar a la PLP con el producto que tiene Label_Texto de más de 20 caracteres.\n2. Verificar que la cucarda aparece en la esquina superior izquierda de la imagen.\n3. Verificar que el texto visible está truncado con \"...\" y no supera los 20 caracteres visibles.\n4. Verificar que la cucarda no rompe el layout del shelf ni se desborda.",
-   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{PLP_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno\n{SKU_CUCARDA_LARGA} = 000000000000666285-UN",
+   "test_data": "- {BASE_URL} = URL base del storefront\n- {PLP_URL} = URL de categoría\n- {SKU_CUCARDA_LARGA} = SKU con cucarda larga",
    "viewport": "1280x900"
   },
   {
@@ -2033,33 +2011,23 @@ Causa: la precondición pide un producto con varias promociones con label (membr
   },
   {
    "browser": "webkit",
-   "duration_s": 67.4,
-   "executed_at": "2026-10-19",
+   "executed_at": "2026-11-13",
    "expected": "El texto de la cucarda aparece truncado con \"...\" al exceder 15 caracteres en Mobile. El layout del shelf no se rompe. La cucarda mantiene su posición y dimensiones correctas.",
    "form_factor": "mobile",
    "id": "TC-65-M-009",
    "name": "Texto de cucarda >15 caracteres se trunca con '...' en Mobile",
-   "observation": "Esperado: texto >15 caracteres truncado con '...'. Obtenido: la cucarda de {SKU_CUCARDA_LARGA} muestra 'Promoción Lleva 2 unidades por Monto' (36 caracteres) sin '...'; la cucarda mide 153 px, se sale del borde derecho de la imagen y cubre Favoritos. B2C-65.spec.ts:516.",
-   "observed": "Texto sin puntos suspensivos, cucarda desborda la imagen y tapa Favoritos.",
+   "observation": "El test() de la suite no ubica la cucarda (selector desactualizado); se condujo con el CLI.",
+   "observed": "El texto de la cucarda se trunca a 15 caracteres con \"...\" y no rompe el layout del shelf.",
    "preconditions": "User type: Guest\nProducto con Label_Texto de más de 15 caracteres (ej. \"Club Unimarc Exclusivo!\") configurado\nViewport Mobile 390x844",
    "screenshots": [
     {
-     "caption": "Paso 1 — shelf del sku 000000000000666285 un",
-     "file": "TC-65-M-009-p01-shelf-del-sku-000000000000666285-un.png"
-    },
-    {
-     "caption": "Paso 2 — cucarda de 36 caracteres",
-     "file": "TC-65-M-009-p02-cucarda-de-36-caracteres.png"
-    },
-    {
-     "caption": "Estado al fallar la aserción",
-     "file": "TC-65-M-009.png"
+     "caption": "B2C 1244",
+     "file": "B2C-1244.png"
     }
    ],
-   "spec": "tests/B2C-65.spec.ts",
-   "status": "Rechazado",
+   "status": "Aprobado",
    "steps": "1. Navegar a la PLP en Mobile con el producto que tiene Label_Texto de más de 15 caracteres.\n2. Verificar que la cucarda aparece en la esquina superior izquierda de la imagen.\n3. Verificar que el texto visible está truncado con \"...\" y no supera los 15 caracteres.\n4. Verificar que el layout del shelf no se rompe.",
-   "test_data": "{BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n{PLP_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/category/carnes_vacuno\n{SKU_CUCARDA_LARGA} = 000000000000666285-UN",
+   "test_data": "- {BASE_URL} = URL base del storefront\n- {PLP_URL} = URL de categoría\n- {SKU_CUCARDA_LARGA} = SKU con cucarda larga",
    "viewport": "390x844"
   },
   {

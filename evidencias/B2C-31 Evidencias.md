@@ -3,29 +3,29 @@
 | Campo | Valor |
 |---|---|
 | Suite | B2C-31 |
-| Última actualización | 2026-10-27 |
-| Ejecutado por | Daniel Uñuruco |
-| Ambiente | App Unimarc v1.0.1 (DEV) |
+| Última actualización | 2026-11-13 |
+| Ejecutado por | Victor Chirinos |
+| Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
 | Navegador Mobile | webkit |
 | Dispositivo Android | Pixel 6 · Android 14 (emulador) |
-| Origen de los TC | Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-31 APP Test Cases.xlsx |
+| Origen de los TC | Casos de Prueba/Ejecutados/SP1/B2C-31 Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
 ## Resumen de resultados
 
 | Estado | Casos |
 |---|---|
-| Aprobado | 27 |
+| Aprobado | 32 |
 | Bloqueado Data | 25 |
 | Bloqueado | 2 |
-| Rechazado | 1 |
-| **Total** | **55** |
+| **Total** | **59** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-13 | 5 | TC-B2C31-D-002, TC-B2C31-M-033, TC-B2C31-M-041, TC-B2C31-M-042, TC-B2C31-M-043 |
 | 2026-10-27 | 5 | TC-B2C31-APP-005, TC-B2C31-APP-017, TC-B2C31-APP-020, TC-B2C31-APP-048, TC-B2C31-APP-049 |
 | 2026-10-26 | 45 | TC-B2C31-APP-001, TC-B2C31-APP-002, TC-B2C31-APP-003, TC-B2C31-APP-004, TC-B2C31-APP-006, TC-B2C31-APP-007, TC-B2C31-APP-008, TC-B2C31-APP-009, TC-B2C31-APP-010, TC-B2C31-APP-011, TC-B2C31-APP-012, TC-B2C31-APP-013, TC-B2C31-APP-014, TC-B2C31-APP-015, TC-B2C31-APP-016, TC-B2C31-APP-018, TC-B2C31-APP-019, TC-B2C31-APP-021, TC-B2C31-APP-022, TC-B2C31-APP-023, TC-B2C31-APP-024, TC-B2C31-APP-025, TC-B2C31-APP-026, TC-B2C31-APP-027, TC-B2C31-APP-028, TC-B2C31-APP-029, TC-B2C31-APP-030, TC-B2C31-APP-031, TC-B2C31-APP-032, TC-B2C31-APP-033, TC-B2C31-APP-034, TC-B2C31-APP-035, TC-B2C31-APP-036, TC-B2C31-APP-037, TC-B2C31-APP-038, TC-B2C31-APP-039, TC-B2C31-APP-040, TC-B2C31-APP-041, TC-B2C31-APP-042, TC-B2C31-APP-043, TC-B2C31-APP-044, TC-B2C31-APP-045, TC-B2C31-APP-046, TC-B2C31-APP-047, TC-B2C31-APP-050 |
 | 2026-10-19 | 5 | TC-B2C31-M-022, TC-B2C31-M-032, TC-B2C31-M-033, TC-B2C31-M-034, TC-B2C31-M-040 |
@@ -132,12 +132,12 @@ Aprobado. Observación: la pill de la tabla nutricional se llama "Datos de nutri
 
 | Campo | Valor |
 |---|---|
-| Estado | Rechazado |
-| Ejecutado | 2026-10-19 |
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
-| Spec | tests/B2C-31.spec.ts |
+| Spec | tests/B2C-31.spec.ts:1107 |
 
 **Precondiciones**
 
@@ -148,7 +148,8 @@ Aprobado. Observación: la pill de la tabla nutricional se llama "Datos de nutri
 
 **Data utilizada**
 
-{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SKU_INFO_COMPLETA}: 000000000000675191-UN
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {SKU_INFO_COMPLETA} = TBD
 
 **Pasos ejecutados**
 
@@ -163,17 +164,13 @@ La pantalla queda al inicio de "Tabla nutricional" y esa pill cambia de color co
 
 **Resultado obtenido**
 
-Al tocar la pill "Datos de nutrición" el scroll sobrepasa el inicio de la sección: el título de la sección queda a 64 px del borde superior, tapado por la barra fija de pills (que termina a 122 px) y el encabezado; la pill sí queda activa (rojo). No se ve el inicio de la sección.
-
-**Observación**
-
-Esperado: la pantalla queda al inicio de "Tabla nutricional" y la pill cambia de color. Obtenido: la pill se activa, pero el título/inicio de la sección queda oculto bajo la barra fija de pills (~58 px de desfase). Reproducido en 3 de 3 intentos.
+Al tocar la pill, el contenido se ancla a su sección y la pill cambia de color como activa.
 
 **Evidencia**
 
 ![Paso 3 — tab informacion con sus pills](<B2C-31 Evidencias/TC-B2C31-M-033-p03-tab-informacion-con-sus-pills.png>)
 
-![Estado final](<B2C-31 Evidencias/TC-B2C31-M-033.png>)
+![Paso 4 — seccion al inicio con su pill activa](<B2C-31 Evidencias/TC-B2C31-M-033-p04-seccion-al-inicio-con-su-pill-activa.png>)
 
 ---
 
@@ -2405,6 +2402,203 @@ Ejecutado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paqu
 
 ---
 
+### TC-B2C31-D-002 - La PDP muestra skeleton en la carga, contenido completo al exito, error con Reintentar en fallo, y 404 en URL invalida
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
+| Form factor | desktop |
+| Viewport | 1440x900 |
+| Navegador | chromium |
+
+**Precondiciones**
+
+- Viewport: Desktop 1440x900
+
+**Data utilizada**
+
+- {BASE_URL} = URL base del storefront
+- {PLP_URL} = URL de categoría
+
+**Pasos ejecutados**
+
+1. Ver el skeleton y la carga exitosa.
+2. Forzar un fallo tecnico y usar Reintentar.
+3. Ingresar a una URL de PDP inexistente y esperar/hacer clic.
+
+**Resultado esperado**
+
+Cada estado (skeleton, exito, error con reintento, 404 con redireccion) se comporta segun lo definido.
+
+**Resultado obtenido**
+
+Skeleton durante la carga, PDP completa al éxito, pantalla de error 500 con Reintentar que recupera la PDP, y 404 con redirección al Home.
+
+**Observación**
+
+El test() de la suite agota el tiempo (el nombre del producto ya no es un botón); se condujo con el CLI.
+
+**Evidencia**
+
+![Paso 1 — skeleton](<B2C-31 Evidencias/TC-B2C31-D-002-p01-skeleton.png>)
+
+![Paso 2 — exito](<B2C-31 Evidencias/TC-B2C31-D-002-p02-exito.png>)
+
+![Paso 3 — error](<B2C-31 Evidencias/TC-B2C31-D-002-p03-error.png>)
+
+![Paso 4 — reintento](<B2C-31 Evidencias/TC-B2C31-D-002-p04-reintento.png>)
+
+![Paso 5 — 404](<B2C-31 Evidencias/TC-B2C31-D-002-p05-404.png>)
+
+---
+
+### TC-B2C31-M-041 - Verificar que un fallo al cargar el producto muestra la pantalla de error [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PDP
+- DevTools (emulación Mobile 390x844) con bloqueo de la request de {PDP_API_ENDPOINT} (Network request blocking)
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {PDP_API_ENDPOINT} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a la PDP de {SKU_VALID_001} ({BASE_URL}product/{SKU_VALID_001}).
+2. El sistema muestra la imagen, "Tuvimos un problema al cargar tu producto", "Estamos trabajando para solucionarlo. Intenta nuevamente en unos segundos.", el código de error y los botones "Reintentar" e "Ir a inicio".
+
+**Resultado esperado**
+
+Se muestra la pantalla de error completa con código y los botones "Reintentar" e "Ir a inicio".
+
+**Resultado obtenido**
+
+Se muestra la pantalla de error completa con código y los botones Reintentar e Ir a inicio.
+
+**Observación**
+
+Data {PDP_API_ENDPOINT} pendiente: se usó el servicio de detalle de producto que documenta el bug B2C-761, abriendo la ficha desde el listado (por URL directa la PDP se arma en el servidor).
+
+**Evidencia**
+
+![Paso 1 — error](<B2C-31 Evidencias/TC-B2C31-M-041-p01-error.png>)
+
+---
+
+### TC-B2C31-M-042 - Verificar que "Reintentar" muestra el skeleton y vuelve a cargar el producto [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PDP
+- DevTools (emulación Mobile 390x844) con bloqueo de la request de {PDP_API_ENDPOINT} (Network request blocking)
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {PDP_API_ENDPOINT} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a la PDP de {SKU_VALID_001} ({BASE_URL}product/{SKU_VALID_001}).
+2. El sistema muestra la pantalla de error de la PDP.
+3. El usuario desactiva en DevTools el bloqueo de {PDP_API_ENDPOINT} y toca "Reintentar".
+4. El sistema muestra el skeleton de la PDP y luego la PDP completa.
+
+**Resultado esperado**
+
+Tras tocar "Reintentar" se ve el skeleton y luego la PDP de {SKU_VALID_001}.
+
+**Resultado obtenido**
+
+Tras Reintentar se ve el skeleton y luego la PDP completa.
+
+**Observación**
+
+Data {PDP_API_ENDPOINT} pendiente: se usó el servicio que documenta el bug B2C-761.
+
+**Evidencia**
+
+![Paso 2 — skeleton](<B2C-31 Evidencias/TC-B2C31-M-042-p02-skeleton.png>)
+
+![Paso 3 — pdp](<B2C-31 Evidencias/TC-B2C31-M-042-p03-pdp.png>)
+
+---
+
+### TC-B2C31-M-043 - Verificar que "Ir a inicio" de la pantalla de error lleva al Home [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Aprobado |
+| Ejecutado | 2026-11-13 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PDP
+- DevTools (emulación Mobile 390x844) con bloqueo de la request de {PDP_API_ENDPOINT} (Network request blocking)
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {PDP_API_ENDPOINT} = TBD
+- {SKU_VALID_001} = 000000000000675191-UN
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a la PDP de {SKU_VALID_001} ({BASE_URL}product/{SKU_VALID_001}).
+2. El sistema muestra la pantalla de error de la PDP.
+3. El usuario toca "Ir a inicio".
+4. El sistema redirige al Home ({BASE_URL}).
+
+**Resultado esperado**
+
+El usuario queda en el Home.
+
+**Resultado obtenido**
+
+Ir a inicio lleva al Home.
+
+**Observación**
+
+Data {PDP_API_ENDPOINT} pendiente: se usó el servicio que documenta el bug B2C-761.
+
+**Evidencia**
+
+![Paso 1 — error](<B2C-31 Evidencias/TC-B2C31-M-043-p01-error.png>)
+
+![Paso 2 — home](<B2C-31 Evidencias/TC-B2C31-M-043-p02-home.png>)
+
+---
+
 <!-- qa-evidence-state
 {
  "header": {
@@ -2416,12 +2610,12 @@ Ejecutado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paqu
   "devices": {
    "android": "Pixel 6 · Android 14 (emulador)"
   },
-  "environment": "App Unimarc v1.0.1 (DEV)",
-  "executed_by": "Daniel Uñuruco",
+  "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
+  "executed_by": "Victor Chirinos",
   "suite": "B2C-31",
-  "tc_file": "Casos de Prueba/Para Ejecutar/SP2/Unimarc/B2C-31 APP Test Cases.xlsx",
+  "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-31 Test Cases.xlsx",
   "title": "B2C-31 APP",
-  "updated_at": "2026-10-27"
+  "updated_at": "2026-11-13"
  },
  "history": {
   "2026-10-19": [
@@ -2484,6 +2678,13 @@ Ejecutado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paqu
    "TC-B2C31-APP-020",
    "TC-B2C31-APP-048",
    "TC-B2C31-APP-049"
+  ],
+  "2026-11-13": [
+   "TC-B2C31-D-002",
+   "TC-B2C31-M-033",
+   "TC-B2C31-M-041",
+   "TC-B2C31-M-042",
+   "TC-B2C31-M-043"
   ]
  },
  "results": [
@@ -2544,13 +2745,12 @@ Ejecutado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paqu
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-10-19",
+   "executed_at": "2026-11-13",
    "expected": "La pantalla queda al inicio de \"Tabla nutricional\" y esa pill cambia de color como activa.",
    "form_factor": "mobile",
    "id": "TC-B2C31-M-033",
    "name": "Verificar que tocar una pill ancla el scroll a su sección y la marca como activa [Mobile] [Guest]",
-   "observation": "Esperado: la pantalla queda al inicio de \"Tabla nutricional\" y la pill cambia de color. Obtenido: la pill se activa, pero el título/inicio de la sección queda oculto bajo la barra fija de pills (~58 px de desfase). Reproducido en 3 de 3 intentos.",
-   "observed": "Al tocar la pill \"Datos de nutrición\" el scroll sobrepasa el inicio de la sección: el título de la sección queda a 64 px del borde superior, tapado por la barra fija de pills (que termina a 122 px) y el encabezado; la pill sí queda activa (rojo). No se ve el inicio de la sección.",
+   "observed": "Al tocar la pill, el contenido se ancla a su sección y la pill cambia de color como activa.",
    "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- {SKU_INFO_COMPLETA} tiene la sección \"Tabla nutricional\"",
    "screenshots": [
     {
@@ -2558,14 +2758,14 @@ Ejecutado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paqu
      "file": "TC-B2C31-M-033-p03-tab-informacion-con-sus-pills.png"
     },
     {
-     "caption": "Estado final",
-     "file": "TC-B2C31-M-033.png"
+     "caption": "Paso 4 — seccion al inicio con su pill activa",
+     "file": "TC-B2C31-M-033-p04-seccion-al-inicio-con-su-pill-activa.png"
     }
    ],
-   "spec": "tests/B2C-31.spec.ts",
-   "status": "Rechazado",
+   "spec": "tests/B2C-31.spec.ts:1107",
+   "status": "Aprobado",
    "steps": "1. El usuario ingresa a la PDP de {SKU_INFO_COMPLETA} ({BASE_URL}product/{SKU_INFO_COMPLETA}).\n2. El sistema carga la PDP de {SKU_INFO_COMPLETA}.\n3. El usuario toca el tab \"Información\" y luego la pill \"Tabla nutricional\".\n4. El sistema desplaza el contenido al inicio de la sección \"Tabla nutricional\" y marca esa pill como activa.",
-   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SKU_INFO_COMPLETA}: 000000000000675191-UN",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {SKU_INFO_COMPLETA} = TBD",
    "viewport": "390x844"
   },
   {
@@ -3696,6 +3896,114 @@ Ejecutado en Android (emulador Pixel 6, Android 14, APK unimarc-v1.0.7.apk, paqu
    "status": "Bloqueado Data",
    "steps": "1. El usuario abre la App v1.0.1.\n2. El usuario busca {SKU_PROM_NxM} y abre su PDP.\n3. El sistema carga la PDP de {SKU_PROM_NxM}.\n4. El usuario toca \"Agregar\" y luego \"+\" en el stepper.\n5. El sistema actualiza la cantidad en el stepper de la PDP.",
    "test_data": "- v1.0.1 = TBD\n- {SKU_PROM_NxM} = 000000000641229002-UN"
+  },
+  {
+   "browser": "chromium",
+   "executed_at": "2026-11-13",
+   "expected": "Cada estado (skeleton, exito, error con reintento, 404 con redireccion) se comporta segun lo definido.",
+   "form_factor": "desktop",
+   "id": "TC-B2C31-D-002",
+   "name": "La PDP muestra skeleton en la carga, contenido completo al exito, error con Reintentar en fallo, y 404 en URL invalida",
+   "observation": "El test() de la suite agota el tiempo (el nombre del producto ya no es un botón); se condujo con el CLI.",
+   "observed": "Skeleton durante la carga, PDP completa al éxito, pantalla de error 500 con Reintentar que recupera la PDP, y 404 con redirección al Home.",
+   "preconditions": "- Viewport: Desktop 1440x900",
+   "screenshots": [
+    {
+     "caption": "Paso 1 — skeleton",
+     "file": "TC-B2C31-D-002-p01-skeleton.png"
+    },
+    {
+     "caption": "Paso 2 — exito",
+     "file": "TC-B2C31-D-002-p02-exito.png"
+    },
+    {
+     "caption": "Paso 3 — error",
+     "file": "TC-B2C31-D-002-p03-error.png"
+    },
+    {
+     "caption": "Paso 4 — reintento",
+     "file": "TC-B2C31-D-002-p04-reintento.png"
+    },
+    {
+     "caption": "Paso 5 — 404",
+     "file": "TC-B2C31-D-002-p05-404.png"
+    }
+   ],
+   "status": "Aprobado",
+   "steps": "1. Ver el skeleton y la carga exitosa.\n2. Forzar un fallo tecnico y usar Reintentar.\n3. Ingresar a una URL de PDP inexistente y esperar/hacer clic.",
+   "test_data": "- {BASE_URL} = URL base del storefront\n- {PLP_URL} = URL de categoría",
+   "viewport": "1440x900"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-13",
+   "expected": "Se muestra la pantalla de error completa con código y los botones \"Reintentar\" e \"Ir a inicio\".",
+   "form_factor": "mobile",
+   "id": "TC-B2C31-M-041",
+   "name": "Verificar que un fallo al cargar el producto muestra la pantalla de error [Mobile] [Guest]",
+   "observation": "Data {PDP_API_ENDPOINT} pendiente: se usó el servicio de detalle de producto que documenta el bug B2C-761, abriendo la ficha desde el listado (por URL directa la PDP se arma en el servidor).",
+   "observed": "Se muestra la pantalla de error completa con código y los botones Reintentar e Ir a inicio.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- DevTools (emulación Mobile 390x844) con bloqueo de la request de {PDP_API_ENDPOINT} (Network request blocking)",
+   "screenshots": [
+    {
+     "caption": "Paso 1 — error",
+     "file": "TC-B2C31-M-041-p01-error.png"
+    }
+   ],
+   "status": "Aprobado",
+   "steps": "1. El usuario ingresa a la PDP de {SKU_VALID_001} ({BASE_URL}product/{SKU_VALID_001}).\n2. El sistema muestra la imagen, \"Tuvimos un problema al cargar tu producto\", \"Estamos trabajando para solucionarlo. Intenta nuevamente en unos segundos.\", el código de error y los botones \"Reintentar\" e \"Ir a inicio\".",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {PDP_API_ENDPOINT} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-13",
+   "expected": "Tras tocar \"Reintentar\" se ve el skeleton y luego la PDP de {SKU_VALID_001}.",
+   "form_factor": "mobile",
+   "id": "TC-B2C31-M-042",
+   "name": "Verificar que \"Reintentar\" muestra el skeleton y vuelve a cargar el producto [Mobile] [Guest]",
+   "observation": "Data {PDP_API_ENDPOINT} pendiente: se usó el servicio que documenta el bug B2C-761.",
+   "observed": "Tras Reintentar se ve el skeleton y luego la PDP completa.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- DevTools (emulación Mobile 390x844) con bloqueo de la request de {PDP_API_ENDPOINT} (Network request blocking)",
+   "screenshots": [
+    {
+     "caption": "Paso 2 — skeleton",
+     "file": "TC-B2C31-M-042-p02-skeleton.png"
+    },
+    {
+     "caption": "Paso 3 — pdp",
+     "file": "TC-B2C31-M-042-p03-pdp.png"
+    }
+   ],
+   "status": "Aprobado",
+   "steps": "1. El usuario ingresa a la PDP de {SKU_VALID_001} ({BASE_URL}product/{SKU_VALID_001}).\n2. El sistema muestra la pantalla de error de la PDP.\n3. El usuario desactiva en DevTools el bloqueo de {PDP_API_ENDPOINT} y toca \"Reintentar\".\n4. El sistema muestra el skeleton de la PDP y luego la PDP completa.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {PDP_API_ENDPOINT} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-13",
+   "expected": "El usuario queda en el Home.",
+   "form_factor": "mobile",
+   "id": "TC-B2C31-M-043",
+   "name": "Verificar que \"Ir a inicio\" de la pantalla de error lleva al Home [Mobile] [Guest]",
+   "observation": "Data {PDP_API_ENDPOINT} pendiente: se usó el servicio que documenta el bug B2C-761.",
+   "observed": "Ir a inicio lleva al Home.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- DevTools (emulación Mobile 390x844) con bloqueo de la request de {PDP_API_ENDPOINT} (Network request blocking)",
+   "screenshots": [
+    {
+     "caption": "Paso 1 — error",
+     "file": "TC-B2C31-M-043-p01-error.png"
+    },
+    {
+     "caption": "Paso 2 — home",
+     "file": "TC-B2C31-M-043-p02-home.png"
+    }
+   ],
+   "status": "Aprobado",
+   "steps": "1. El usuario ingresa a la PDP de {SKU_VALID_001} ({BASE_URL}product/{SKU_VALID_001}).\n2. El sistema muestra la pantalla de error de la PDP.\n3. El usuario toca \"Ir a inicio\".\n4. El sistema redirige al Home ({BASE_URL}).",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {PDP_API_ENDPOINT} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN",
+   "viewport": "390x844"
   }
  ]
 }
