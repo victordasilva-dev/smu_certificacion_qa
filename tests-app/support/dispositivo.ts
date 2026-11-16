@@ -122,7 +122,7 @@ export async function tocarNodo(n: { x: number; y: number; w: number; h: number 
 }
 
 /**
- * Toca una coordenada **medida a mano en un Android** (p. ej. el «+» del carro en 626,421).
+ * Toca una coordenada **medida a mano en un Android** (p. ej. un botón que el árbol no expone).
  * En Android es el `input tap` de siempre; en iOS lanza `SoloAndroidError`, porque esa coordenada
  * no apunta a nada en un iPhone. Cada uso es una deuda: reemplazarlo por un locator.
  */
