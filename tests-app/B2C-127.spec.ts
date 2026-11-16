@@ -5,6 +5,7 @@ import { TabBar } from './pages/TabBar';
 import { tolerante } from './support/tolerante';
 import { arrancarInvitado, elegirDireccion, invitadoConDireccion, agregarAlCarro } from './support/entregaApp';
 import { nodos, tiene, tocarEscalado } from './support/sesionOtp';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-127 — Dirección sin horarios disponibles (app nativa, Android, build v1.0.1).
@@ -18,7 +19,7 @@ const patron = (dir: string) => new RegExp(`${dir.match(/\d+/)?.[0] ?? ''}.*${di
 const SIN_HORARIOS = /Por ahora no hay horarios disponibles/i;
 
 test.describe.configure({ timeout: 600000 });
-test.describe(`B2C-127 — Dirección sin horarios (${PLATAFORMA})`, () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-127 — Dirección sin horarios (${PLATAFORMA})`, () => {
   /** Invitado sin carro → Detalles de {DIRECCION_SIN_SLA} → «Agregar dirección» → modal sin horarios. */
   async function hastaSinHorarios(screen: Screen, device: any, bundleId: string, p: any, testData: any, cp: string) {
     await arrancarInvitado(screen, device, bundleId, p);
@@ -46,7 +47,7 @@ test.describe(`B2C-127 — Dirección sin horarios (${PLATAFORMA})`, () => {
     const det = await hastaSinHorarios(screen, device, bundleId!, p, testData, cp);
     await tol(() => screen.getByRole('button', { name: /Continuar con esta direcci[oó]n/ }).first().tap());
     await pausa(8000);
-    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { tocarEscalado(1000, 201); await pausa(3000); }
+    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { await tocarEscalado(1000, 201); await pausa(3000); }
     await det.capturarEvidencia(cp, 10, 'Home tras continuar con la dirección');
     const loc = (await screen.getByTestId('delivery-open').getText().catch(() => '')) || '';
     test.info().annotations.push({ type: 'header', description: loc.replace(/\s+/g, ' ') });
@@ -60,7 +61,7 @@ test.describe(`B2C-127 — Dirección sin horarios (${PLATAFORMA})`, () => {
     const det = await hastaSinHorarios(screen, device, bundleId!, p, testData, cp);
     await tol(() => screen.getByRole('button', { name: /Continuar con esta direcci[oó]n/ }).first().tap());
     await pausa(8000);
-    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { tocarEscalado(1000, 201); await pausa(3000); }
+    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { await tocarEscalado(1000, 201); await pausa(3000); }
     const tabs = await tol(() => new TabBar(screen, p).waitUntilReady());
     await agregarAlCarro(screen, p, tabs, token(testData, 'SKU_VALID_001')!);
     await det.capturarEvidencia(cp, 10, 'producto agregado al carro');
@@ -82,12 +83,12 @@ test.describe(`B2C-127 — Dirección sin horarios (${PLATAFORMA})`, () => {
     await det.capturarEvidencia(cp, 9, 'modal Algunos productos podrían agotarse');
     await tol(() => screen.getByRole('button', { name: 'Sí, continuar' }).tap());
     await pausa(6000);
-    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { tocarEscalado(1000, 201); await pausa(3000); }
+    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { await tocarEscalado(1000, 201); await pausa(3000); }
     await det.capturarEvidencia(cp, 11, 'tras Sí, continuar');
     expect(tiene(await nodos(screen), SIN_HORARIOS), 'luego aparece el modal «Por ahora no hay horarios disponibles»').toBe(true);
     await tol(() => screen.getByRole('button', { name: /Continuar con esta direcci[oó]n/ }).first().tap());
     await pausa(8000);
-    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { tocarEscalado(1000, 201); await pausa(3000); }
+    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { await tocarEscalado(1000, 201); await pausa(3000); }
     const loc = (await screen.getByTestId('delivery-open').getText().catch(() => '')) || '';
     expect(loc, 'la dirección queda con el aviso «Sin horarios disponibles»').toMatch(/Sin horarios disponibles/i);
     await det.capturarEvidencia(cp);

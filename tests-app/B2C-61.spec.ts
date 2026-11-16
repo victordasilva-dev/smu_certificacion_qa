@@ -11,7 +11,8 @@ import { tolerante } from './support/tolerante';
 import { fijarDireccionInvitado, agregarDesdePdp } from './support/invitadoConCarro';
 import { nodos, tiene, sesion } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
-import { execSync } from 'child_process';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-61 — Segmentación por tienda: stock, promociones y Unipay (app nativa, Android, build v1.0.1).
@@ -58,7 +59,7 @@ async function cambiarDireccion(screen: Screen, p: any, dir: string): Promise<vo
 }
 
 test.describe.configure({ timeout: 900000 });
-test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C61-APP-008 · Un producto con stock en la tienda activa se muestra disponible [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C61-APP-008';
     const sku = token(testData, 'SKU_STOCK_SOLO_TIENDA_A')!;
@@ -107,8 +108,8 @@ test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
     const antes = await abrirPdp(screen, p, sku);
     if (!(await textosDe(screen)).some((x) => /pronto disponible/i.test(x))) throw BD('{SKU_STOCK_SOLO_TIENDA_A} tiene stock en la tienda de {DIRECCION_OTRA_TIENDA}; la precondición pide que no lo tenga');
     await antes.capturarEvidencia(cp, 2, 'PDP sin stock en la tienda de la dirección actual');
-    await tol(() => screen.goBack());
-    await tol(() => screen.goBack());
+    await tol(() => disp.volver());
+    await tol(() => disp.volver());
     await cambiarDireccion(screen, p, token(testData, 'DIRECCION_DESPACHO_001')!);
     const pdp = await abrirPdp(screen, p, sku);
     await pdp.capturarEvidencia(cp, 5, 'PDP tras cambiar a {DIRECCION_DESPACHO_001}');
@@ -168,7 +169,7 @@ test.describe(`B2C-61 — Segmentación por tienda (${PLATAFORMA})`, () => {
     const sku = token(testData, 'SKU_VALID_001')!;
     const correo = token(testData, 'SIN_DIRECCION_USER')!.split('/')[0].trim();
     await device.terminateApp(bundleId!);
-    execSync(`adb shell pm clear ${bundleId}`, { timeout: 30000 });
+    await disp.borrarDatosApp(bundleId);
     await device.launchApp(bundleId!);
     await asegurarApp(screen);
     await sesion(screen, p, cp, correo, /QA/i);

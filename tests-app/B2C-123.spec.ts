@@ -8,6 +8,7 @@ import { AgotarseModal } from './pages/AgotarseModal';
 import { DetalleDireccionScreen } from './pages/DetalleDireccionScreen';
 import { tolerante } from './support/tolerante';
 import { agregarAlCarro, arrancarInvitado, calle, elegirDireccion, invitadoConDireccion, visibleEn } from './support/entregaApp';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-123 — Sin cobertura (app nativa): el modal "Aún no llegamos a esta dirección".
@@ -29,7 +30,7 @@ function escapar(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-test.describe(`B2C-123 — Sin cobertura (${PLATAFORMA})`, () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-123 — Sin cobertura (${PLATAFORMA})`, () => {
   test.describe.configure({ timeout: 360000 });
 
   /** Pasos 1–6: invitado (sin dirección o con la del TC) → Store Locator → {DIRECCION_SIN_COBERTURA} → "Aún no llegamos". */

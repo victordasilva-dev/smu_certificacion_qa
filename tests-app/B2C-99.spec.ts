@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -11,6 +10,8 @@ import { nodos, tiene, tocarEscalado, sesion, esperarCodigo, ingresarCodigo } fr
 import { asegurarApp } from './support/appLista';
 import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
 import { DetalleDireccionScreen } from './pages/DetalleDireccionScreen';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-99 — Detalles de la dirección y ajuste del PIN (app nativa, Android, build v1.0.1).
@@ -34,7 +35,7 @@ async function llenarCampo(screen: Screen, etiqueta: string, n: number): Promise
   const campo = screen.getByPlaceholder(etiqueta, { exact: false }).first();
   await tol(() => campo.tap());
   await pausa(1000);
-  execSync(`adb shell input text '${'a'.repeat(n)}'`, { timeout: 30000 });
+  await disp.escribir('a'.repeat(n), 30000);
   await pausa(1500);
   const nodosEdit = (await nodos(screen)).filter((x) => /EditText/i.test(x.type));
   const largos = nodosEdit.map((x) => (x.label || '').length);
@@ -42,14 +43,14 @@ async function llenarCampo(screen: Screen, etiqueta: string, n: number): Promise
 }
 
 test.describe.configure({ timeout: 600000 });
-test.describe(`B2C-99 — Detalles de la dirección (${PLATAFORMA})`, () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-99 — Detalles de la dirección (${PLATAFORMA})`, () => {
   test(`TC-B2C99-APP-001 · La pantalla Detalles de la dirección muestra todos sus elementos [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C99-APP-001';
     const det = await aDetalles(screen, device, bundleId!, p, token(testData, 'DIRECCION_DESPACHO_001')!);
     await pausa(3000);
     await det.capturarEvidencia(cp, 6, 'pantalla Detalles de la dirección');
     const arriba = await textos(screen);
-    execSync('adb shell input swipe 360 1200 360 500 400', { timeout: 15000 });
+    await disp.deslizarFijo(360, 1200, 360, 500, 400, { base: [720, 1600], timeout: 15000 });
     await pausa(1500);
     const t = [...arriba, ...(await textos(screen))];
     test.info().annotations.push({ type: 'textos', description: t.slice(0, 60).join(' | ') });
@@ -93,17 +94,17 @@ test.describe(`B2C-99 — Detalles de la dirección (${PLATAFORMA})`, () => {
       await pausa(3000);
       let quedaron: number;
       if (n === '006') {
-        await tol(() => screen.getByType('android.widget.EditText').last().tap());
+        await tol(() => disp.campoDeTexto(screen).last().tap());
         await pausa(1000);
-        execSync(`adb shell input text '${'a'.repeat(max + 10)}'`, { timeout: 60000 });
+        await disp.escribir('a'.repeat(max + 10), 60000);
         await pausa(2000);
-        tocarEscalado(847, 2330);   // oculta el teclado para leer el contador
+        await tocarEscalado(847, 2330);   // oculta el teclado para leer el contador
         await pausa(2000);
         test.info().annotations.push({ type: 'contador', description: (await textos(screen)).filter((x) => /caracteres|Instrucc/i.test(x)).join(' | ') });
         const cont = (await textos(screen)).map((x) => /(\d+)\s*\/\s*300 caracteres/.exec(x)).find(Boolean);
         quedaron = cont ? Number(cont[1]) : 0;
       } else quedaron = await llenarCampo(screen, etiqueta, max + 10);
-      execSync('adb shell input keyevent 4', { timeout: 15000 });
+      await disp.atras();
       await pausa(1500);
       await det.capturarEvidencia(cp, 7, `campo ${nombre} tras escribir ${max + 10} caracteres`);
       test.info().annotations.push({ type: 'caracteres', description: `${quedaron} de ${max + 10}` });
@@ -199,7 +200,7 @@ test.describe(`B2C-99 — Detalles de la dirección (${PLATAFORMA})`, () => {
     return det;
   }
   // El PIN es un marcador del mapa: se lo arrastra con un toque largo (un swipe corto solo desplaza el mapa).
-  const arrastrar = async (dy: number, desde = 560) => { execSync(`adb shell input swipe 360 ${desde} 360 ${desde - dy} 2000`, { timeout: 20000 }); await pausa(3000); };
+  const arrastrar = async (dy: number, desde = 560) => { await disp.deslizarFijo(360, desde, 360, desde - dy, 2000, { base: [720, 1600] }); await pausa(3000); };
   const botonContinuar = async (screen: Screen) => {
     let v: any = null;
     const rec = (n: any) => { if (/Continuar con detalles de la direcci[oó]n/.test(n.label ?? n.text ?? '') && /Button/i.test(String(n.type))) v = n; for (const c of n.children ?? []) rec(c); };
@@ -208,7 +209,7 @@ test.describe(`B2C-99 — Detalles de la dirección (${PLATAFORMA})`, () => {
   };
   /** «Ajustar» y la X del toast de alerta (la X del banner «Importante» es otra). */
   const ajustarToast = async (screen: Screen) => { await tol(() => screen.getByText(/^Ajustar$/).first().tap()); await pausa(3500); };
-  const cerrarToast = async () => { tocarEscalado(940, 1293); await pausa(3000); };   // X del toast
+  const cerrarToast = async () => { await tocarEscalado(940, 1293); await pausa(3000); };   // X del toast
   const hayToast = async (screen: Screen) => screen.getByText(/fuera del radio/i).first().isVisible().catch(() => false);
   /** Espera hasta 12 s a que el toast desaparezca (el árbol de accesibilidad lo conserva un momento). */
   const toastCerrado = async (screen: Screen) => { for (let i = 0; i < 8; i++) { if (!(await hayToast(screen))) return true; await pausa(1500); } return false; };
@@ -340,13 +341,13 @@ test.describe(`B2C-99 — Detalles de la dirección (${PLATAFORMA})`, () => {
   });
   /** En el modal «Dirección manual» cambia la numeración por `nuevo` y continúa. */
   async function cambiarNumeracion(screen: Screen, nuevo: string) {
-    await tol(() => screen.getByType('android.widget.EditText').last().tap());
+    await tol(() => disp.campoDeTexto(screen).last().tap());
     await pausa(800);
-    execSync('adb shell input keyevent KEYCODE_MOVE_END', { timeout: 15000 });
-    for (let i = 0; i < 6; i++) execSync('adb shell input keyevent KEYCODE_DEL', { timeout: 15000 });
-    execSync(`adb shell input text '${nuevo}'`, { timeout: 15000 });
+    await disp.tecla('fin');
+    for (let i = 0; i < 6; i++) await disp.tecla('borrar');
+    await disp.escribir(nuevo);
     await pausa(1000);
-    tocarEscalado(847, 2330);   // oculta el teclado
+    await tocarEscalado(847, 2330);   // oculta el teclado
     await pausa(1500);
     await tol(() => screen.getByText(/Continuar con detalles de la direcci[oó]n/).first().tap());
     await pausa(7000);
@@ -372,14 +373,14 @@ test.describe(`B2C-99 — Detalles de la dirección (${PLATAFORMA})`, () => {
     const det = await aDetalles(screen, device, bundleId!, p, token(testData, 'DIRECCION_DESPACHO_001')!);
     await pausa(3000);
     await tol(() => screen.getByPlaceholder('Dpto 910', { exact: false }).first().tap());
-    execSync(`adb shell input text 'Dpto910'`, { timeout: 15000 });
+    await disp.escribir('Dpto910');
     await pausa(800);
-    tocarEscalado(847, 2330);
+    await tocarEscalado(847, 2330);
     await pausa(1500);
     await tol(() => screen.getByPlaceholder('Pololo', { exact: false }).first().tap());
-    execSync(`adb shell input text 'Casa'`, { timeout: 15000 });
+    await disp.escribir('Casa');
     await pausa(800);
-    tocarEscalado(847, 2330);
+    await tocarEscalado(847, 2330);
     await pausa(1500);
     await tol(() => screen.getByRole('button', { name: 'Trabajo' }).tap());
     await pausa(1000);

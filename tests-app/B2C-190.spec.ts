@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -11,6 +10,8 @@ import { tolerante } from './support/tolerante';
 import { agregarDesdePdp } from './support/invitadoConCarro';
 import { esperarCodigo, ingresarCodigo, nodos, sesion } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-190 — Recibe alguien más: registro, edición y eliminación del tercero en Mis Envíos (app nativa, Android, v1.0.1).
@@ -23,17 +24,18 @@ const tol = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
 const pausa = (ms: number) => new Promise((s) => setTimeout(s, ms));
 const textos = async (screen: Screen) => (await nodos(screen)).map((n) => n.label).filter(Boolean);
 const util = (t: string[]) => t.filter((x) => !/^Notificaci|Timbre|Modo|^$/.test(x));
-const RES = '.qa/run/res190.json';
+/** Veredictos de la corrida, uno por plataforma: correr iOS no pisa los de Android. */
+const RES = () => `.qa/run/res190${disp.esIos() ? '-ios' : ''}.json`;
 const guardar = (cp: string, status: string, obs: string) => {
-  const r = fs.existsSync(RES) ? JSON.parse(fs.readFileSync(RES, 'utf-8')) : {};
+  const r = fs.existsSync(RES()) ? JSON.parse(fs.readFileSync(RES(), 'utf-8')) : {};
   r[cp] = { status, obs };
-  fs.writeFileSync(RES, JSON.stringify(r, null, 1));
+  fs.writeFileSync(RES(), JSON.stringify(r, null, 1));
 };
 let nCap = 0;
-const cap = (cp: string, slug: string) => {
+const cap = async (cp: string, slug: string) => {
   fs.mkdirSync('test-results/evidence', { recursive: true });
-  const f = `test-results/evidence/${cp}-android-p${String(++nCap).padStart(2, '0')}-${slug}.png`;
-  fs.writeFileSync(f, execSync('adb exec-out screencap -p', { maxBuffer: 20 * 1024 * 1024, timeout: 30000 }));
+  const f = `test-results/evidence/${cp}-${disp.plataforma()}-p${String(++nCap).padStart(2, '0')}-${slug}.png`;
+  fs.writeFileSync(f, (await disp.captura()));
 };
 const verif = async (cp: string, fn: () => Promise<[boolean | null, string]>) => {
   if (process.env.SOLO_190 && !process.env.SOLO_190.split(',').includes(cp)) return;
@@ -41,18 +43,17 @@ const verif = async (cp: string, fn: () => Promise<[boolean | null, string]>) =>
   try { const [ok, obs] = await fn(); guardar(cp, ok === null ? 'REVISAR' : ok ? 'Aprobado' : 'Rechazado', obs); }
   catch (e) { guardar(cp, 'ERROR', String(e).slice(0, 200) + ' @ ' + String((e as Error).stack ?? '').split('\n').filter((l) => /B2C-190\.spec/.test(l)).slice(0, 2).join(' ; ').slice(0, 200)); }
 };
-const teclado = () => /mInputShown=true/.test(execSync('adb shell dumpsys input_method', { timeout: 15000 }).toString());
-const [AW, AH] = (() => { const wm = execSync('adb shell wm size', { timeout: 15000 }).toString(); const m = /(\d+)x(\d+)/.exec(wm.split('Override size:').pop() ?? wm); return m ? [Number(m[1]), Number(m[2])] : [720, 1600]; })();
-/** Coordenada pensada para 720x1600 (Samsung SM-A075M), escalada a la pantalla en uso. */
-const sx = (x: number) => Math.round((x * AW) / 720);
-const sy = (y: number) => Math.round((y * AH) / 1600);
-const swipe = (x1: number, y1: number, x2: number, y2: number, ms: number) => execSync(`adb shell input swipe ${sx(x1)} ${sy(y1)} ${sx(x2)} ${sy(y2)} ${ms}`, { timeout: 15000 });
+const teclado = async () => (await disp.tecladoVisible());
+/** Coordenadas pensadas para 720x1600 (Samsung SM-A075M), escaladas a la pantalla en uso. */
+const BASE: [number, number] = [720, 1600];
+const swipe = (x1: number, y1: number, x2: number, y2: number, ms: number) =>
+  disp.deslizarFijo(x1, y1, x2, y2, ms, { base: BASE, escalarAndroid: true, timeout: 15000 });
 // BACK con el teclado abierto solo lo cierra; no depende de dónde dibuje cada equipo su barra de navegación.
-const ocultarTeclado = async () => { if (teclado()) { execSync('adb shell input keyevent 4', { timeout: 15000 }); await pausa(1200); } };
+const ocultarTeclado = async () => { if (await teclado()) { await disp.atras(); await pausa(1200); } };
 const sinTilde = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
 
 test.describe.configure({ timeout: 3300000 });
-test.describe('B2C-190 — Recibe alguien más (Android)', () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-190 — Recibe alguien más (${PLATAFORMA})`, () => {
   test('LOG · TC-B2C190-APP (001-022)', async ({ screen, plataforma: p, testData }) => {
     // APP-022 (fase `compra`) se corre con la cuenta OneClick que declara su fila; el resto, con {USER_AUTH_001}.
     const COMPRA = process.env.FASE_190 === 'compra';
@@ -70,7 +71,7 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
     const nav = new NavBar(screen, p);
     const tabs = new TabBar(screen, p);
 
-    const volverHome = async () => { for (let i = 0; i < 5 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { execSync('adb shell input keyevent 4', { timeout: 15000 }); await pausa(1500); } };
+    const volverHome = async () => { for (let i = 0; i < 5 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { await disp.atras(); await pausa(1500); } };
     const home = async () => { await volverHome(); await tol(() => screen.getByTestId('tab-Home').tap()); await pausa(2500); };
     const activo = async () => { await home(); return ((await screen.getByTestId('delivery-open').getText().catch(() => '')) || '').replace(/\s+/g, ' ').trim(); };
 
@@ -107,7 +108,7 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
           if (!(await b.isVisible().catch(() => false))) { if ((await textos(screen)).some((x) => /carro est[aá] vac[ií]o/i.test(x)) || i > 6) break; await pausa(2500); continue; }
           await tol(() => b.tap()).catch(() => {}); await pausa(2500);
         }
-        await tol(() => screen.goBack()); await pausa(2000);
+        await tol(() => disp.volver()); await pausa(2000);
       }
     };
     const agregar = async (sku: string, unid = 1) => {
@@ -115,8 +116,8 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
       await home();
       if (unid > 1) {
         await tol(() => tabs.tapFloatingPill()); await pausa(6000);
-        for (let u = 1; u < unid; u++) { execSync(`adb shell input tap ${sx(626)} ${sy(421)}`, { timeout: 15000 }); await pausa(2000); }
-        await pausa(2000); await tol(() => screen.goBack()); await pausa(2000);
+        for (let u = 1; u < unid; u++) { await disp.tocarEscalado(626, 421, BASE); await pausa(2000); }
+        await pausa(2000); await tol(() => disp.volver()); await pausa(2000);
       }
     };
     const aMisEnvios = async () => {
@@ -127,7 +128,7 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
       await tol(() => screen.getByText('Datos de entrega').first().waitFor({ state: 'visible', timeout: 30000 }));
     };
     const snap = async () => {
-      swipe(360, 500, 360, 1100, 400); await pausa(1200);
+      await swipe(360, 500, 360, 1100, 400); await pausa(1200);
       const t = util(await textos(screen));
       const i0 = t.indexOf('Datos de entrega');
       const rest = t.slice(i0 + 1);
@@ -172,7 +173,7 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
       await tol(() => m.elegirDireccionGuardada(g.etiqueta)); await pausa(5000);
       return resolver(cp);
     };
-    const prep = async (nombre: string, fn: () => Promise<any>) => { try { const r = await fn(); guardar(`PREP:${nombre}`, 'info', JSON.stringify(r ?? '')); } catch (e) { guardar(`PREP:${nombre}`, 'error', String(e).slice(0, 250) + ' @ ' + String((e as Error).stack ?? '').split('\n').filter((l) => /tests-app/.test(l)).slice(0, 3).join(' ; ').slice(0, 300)); fs.writeFileSync(`.qa/run/prep190-${nombre}.png`, execSync('adb exec-out screencap -p', { maxBuffer: 20 * 1024 * 1024, timeout: 30000 })); } };
+    const prep = async (nombre: string, fn: () => Promise<any>) => { try { const r = await fn(); guardar(`PREP:${nombre}`, 'info', JSON.stringify(r ?? '')); } catch (e) { guardar(`PREP:${nombre}`, 'error', String(e).slice(0, 250) + ' @ ' + String((e as Error).stack ?? '').split('\n').filter((l) => /tests-app/.test(l)).slice(0, 3).join(' ; ').slice(0, 300)); fs.writeFileSync(`.qa/run/prep190-${nombre}.png`, (await disp.captura())); } };
 
     const FASE = process.env.FASE_190 ?? 'todo';
     const D = (k: string) => token(testData, k)!;
@@ -186,20 +187,20 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
     const tocarCampo = async (c: Campo) => {
       await ocultarTeclado();
       let n = await nodoDe(ID[c]);
-      for (let i = 0; i < 3 && !n; i++) { swipe(360, 900, 360, 500, 300); await pausa(800); n = await nodoDe(ID[c]); }
+      for (let i = 0; i < 3 && !n; i++) { await swipe(360, 900, 360, 500, 300); await pausa(800); n = await nodoDe(ID[c]); }
       if (!n) throw new Error(`campo ${c} fuera del árbol de accesibilidad`);
-      execSync(`adb shell input tap ${Math.round(n.x + n.w / 2)} ${Math.round(n.y + n.h / 2)}`, { timeout: 15000 });
+      await disp.tocar(n.x + n.w / 2, n.y + n.h / 2);
       await pausa(900);
     };
     const escribir = async (c: Campo, v: string) => {
       await tocarCampo(c);
       try { await screen.getByTestId(ID[c]).fill(v, { timeout: 6000 }); }
-      catch { execSync(`adb shell input text '${v.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ /g, '%s').replace(/'/g, '')}'`, { timeout: 20000 }); }
+      catch { await disp.escribir(v.normalize('NFD').replace(/[̀-ͯ]/g, '')); }
       await pausa(600); await ocultarTeclado();
     };
     const llenar = async (v: Partial<Record<Campo, string>>) => { for (const c of ['rut', 'nom', 'ape', 'tel'] as Campo[]) if (v[c] !== undefined && v[c] !== '') await escribir(c, v[c]!); };
     const salir = async (desde: Campo) => { const sig: Campo = desde === 'tel' ? 'ape' : desde === 'ape' ? 'nom' : desde === 'nom' ? 'ape' : 'nom'; await tocarCampo(sig); await ocultarTeclado(); await pausa(800); };
-    const abrirModal = async () => { for (let i = 0; i < 4 && !(await screen.getByText('¿Recibe alguien más?').first().isVisible().catch(() => false)); i++) { swipe(360, 1100, 360, 500, 400); await pausa(1200); } await tol(() => screen.getByText('¿Recibe alguien más?').first().tap()); await tol(() => screen.getByTestId(ID.rut).waitFor({ state: 'visible', timeout: 20000 })); await pausa(1000); };
+    const abrirModal = async () => { for (let i = 0; i < 4 && !(await screen.getByText('¿Recibe alguien más?').first().isVisible().catch(() => false)); i++) { await swipe(360, 1100, 360, 500, 400); await pausa(1200); } await tol(() => screen.getByText('¿Recibe alguien más?').first().tap()); await tol(() => screen.getByTestId(ID.rut).waitFor({ state: 'visible', timeout: 20000 })); await pausa(1000); };
     const cerrarTercero = async () => { await ocultarTeclado(); await tol(() => screen.getByRole('button', { name: 'Cerrar' }).first().tap()); await pausa(2500); };
     const valores = async () => { const ns = await nodos(screen); const g = (id: string) => ns.find((n) => n.id === id)?.label ?? ''; return { rut: g(ID.rut), nom: g(ID.nom), ape: g(ID.ape), tel: g(ID.tel) }; };
     const cta = async () => screen.getByTestId('receiver-submit').isEnabled().catch(() => null);
@@ -215,7 +216,7 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
         await abrirModal();
         await llenar({ rut: rutOk, nom: nomOk, ape: apeOk, tel: telOk, ...valores_ });
         if (valores_[campo] === '') { await tocarCampo(campo); }
-        await salir(campo); cap(cp, 'campo-invalido');
+        await salir(campo); await cap(cp, 'campo-invalido');
         const e = (await errores()); const c = await cta(); const v = await valores();
         await cerrarTercero();
         const nombreCampo = { rut: 'RUT', nom: 'Nombre', ape: 'Apellido', tel: 'Teléfono' }[campo];
@@ -235,14 +236,14 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
 
     if (FASE === 'todo' || FASE === 'validaciones') {
       await verif('TC-B2C190-APP-001', async () => {
-        swipe(360, 1100, 360, 500, 400); await pausa(1200);
+        await swipe(360, 1100, 360, 500, 400); await pausa(1200);
         const op = screen.getByText('¿Recibe alguien más?').first();
-        const vis = await op.isVisible().catch(() => false); cap('TC-B2C190-APP-001', 'opcion-recibe-alguien-mas');
-        await op.tap(); await pausa(2500); const abre = await screen.getByTestId(ID.rut).isVisible().catch(() => false); cap('TC-B2C190-APP-001', 'modal-abierto'); await cerrarTercero();
+        const vis = await op.isVisible().catch(() => false); await cap('TC-B2C190-APP-001', 'opcion-recibe-alguien-mas');
+        await op.tap(); await pausa(2500); const abre = await screen.getByTestId(ID.rut).isVisible().catch(() => false); await cap('TC-B2C190-APP-001', 'modal-abierto'); await cerrarTercero();
         return [vis && abre, `Despacho a domicilio sin tercero: opción «¿Recibe alguien más?» visible: ${vis}; al tocarla abre el modal: ${abre}.`];
       });
       await verif('TC-B2C190-APP-003', async () => {
-        await abrirModal(); cap('TC-B2C190-APP-003', 'modal');
+        await abrirModal(); await cap('TC-B2C190-APP-003', 'modal');
         const ns = await nodos(screen); const t = ns.map((n) => n.label);
         const vals = await valores(); const habil = await cta();
         const checks = { titulo: t.some((x) => /^¿Recibe alguien más\?$/.test(x)), texto: t.some((x) => /Por tu seguridad, deber[aá]s completar todos los datos para validar la identidad de quien recibe/.test(x)), prefijo: t.includes('+569'), cerrar: ns.some((n) => n.label === 'Cerrar'), recibireYo: t.includes('Lo recibiré yo'), guardar: t.some((x) => /Guardar datos de tercero/.test(x)) };
@@ -259,9 +260,9 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
       await validacion('TC-B2C190-APP-021', 'tel', { tel: '' }, true, 'Teléfono vacío (se entra y se sale).');
       await verif('TC-B2C190-APP-018', async () => {
         await abrirModal();
-        await llenar({ nom: nomOk, ape: apeOk, tel: telOk, rut: D('RUT_DV_INVALIDO') }); await salir('rut'); cap('TC-B2C190-APP-018', 'error-visible');
+        await llenar({ nom: nomOk, ape: apeOk, tel: telOk, rut: D('RUT_DV_INVALIDO') }); await salir('rut'); await cap('TC-B2C190-APP-018', 'error-visible');
         const e1 = (await errores());
-        await escribir('rut', rutOk); await salir('rut'); cap('TC-B2C190-APP-018', 'corregido');
+        await escribir('rut', rutOk); await salir('rut'); await cap('TC-B2C190-APP-018', 'corregido');
         const e2 = (await errores()); const c = await cta();
         await cerrarTercero();
         return [e1.includes('RUT') && e2.length === 0 && c === true, `Con DV inválido el error bajo RUT: ${e1.includes('RUT')}. Tras reemplazar por «${rutOk}» quedan errores: ${e2.join(', ') || 'ninguno'}; Guardar habilitado: ${c}.`];
@@ -275,14 +276,14 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
         desde = new Date(Date.now() - 30000);
         await tol(() => screen.getByTestId('receiver-submit').tap());
         await tol(() => screen.getByText('Autenticación requerida').first().waitFor({ state: 'visible', timeout: 40000 }));
-        cap('TC-B2C190-APP-004', 'modal-otp');
+        await cap('TC-B2C190-APP-004', 'modal-otp');
         const t = util(await textos(screen));
         let llego = true; try { codigo = await esperarCodigo('TC-B2C190-APP-004', correo, desde); } catch { llego = false; }
         return [llego && t.some((x) => /Autenticaci[oó]n requerida/.test(x)), `Tras «Guardar datos de terceros» el app abrió «Autenticación requerida» y el código llegó al correo del comprador: ${llego}. NO verificable desde la automatización: que el teléfono del tercero (${D('TELEFONO_TERCERO')}) no reciba SMS ni notificación (el número no es controlado por QA).`];
       });
       await verif('TC-B2C190-APP-005', async () => {
         await ocultarTeclado(); await ingresarCodigo(screen, codigo); await pausa(6000);
-        const t = util(await textos(screen)); cap('TC-B2C190-APP-005', 'resumen-del-tercero');
+        const t = util(await textos(screen)); await cap('TC-B2C190-APP-005', 'resumen-del-tercero');
         const resumen = t.some((x) => x.includes(nomOk)) && t.some((x) => x.includes(telOk)) && t.some((x) => /^Editar$/.test(x));
         const sinOpcion = !t.some((x) => /^¿Recibe alguien más\?$/.test(x));
         const toast = t.some((x) => /datos de quien recibir[aá] tu compra se guardaron correctamente/i.test(x));
@@ -290,13 +291,13 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
       });
       const abrirEditar = async () => { await tol(() => screen.getByText(/^Editar$/).first().tap()); await tol(() => screen.getByTestId(ID.rut).waitFor({ state: 'visible', timeout: 20000 })); await pausa(1200); };
       await verif('TC-B2C190-APP-007', async () => {
-        await abrirEditar(); cap('TC-B2C190-APP-007', 'modal-edicion'); const v = await valores();
+        await abrirEditar(); await cap('TC-B2C190-APP-007', 'modal-edicion'); const v = await valores();
         const lim = (s: string) => s.replace(/[.\s]/g, '');
         const ok = lim(v.rut).includes(lim(rutOk).replace('-', '')) || lim(v.rut) === lim(rutOk);
         return [ok && v.nom === nomOk && v.ape === apeOk && v.tel.replace(/\D/g, '').endsWith(telOk), `Precargado: RUT «${v.rut}» (esperado ${rutOk}), Nombre «${v.nom}», Apellido «${v.ape}», Teléfono «${v.tel}» (esperado ${telOk} tras +569).`];
       });
       await verif('TC-B2C190-APP-019', async () => {
-        await escribir('nom', D('NOMBRE_CON_NUMEROS')); await salir('nom'); cap('TC-B2C190-APP-019', 'nombre-invalido-en-edicion');
+        await escribir('nom', D('NOMBRE_CON_NUMEROS')); await salir('nom'); await cap('TC-B2C190-APP-019', 'nombre-invalido-en-edicion');
         const e = (await errores()); const c = await cta();
         return [e.includes('Nombre') && c === false, `En edición con Nombre «${D('NOMBRE_CON_NUMEROS')}»: error bajo: ${e.join(', ') || 'ninguno'}; Guardar habilitado: ${c}.`];
       });
@@ -304,13 +305,13 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
         await escribir('nom', D('NOMBRE_TERCERO_2')); await escribir('tel', tel8(D('TELEFONO_TERCERO_2'))); await ocultarTeclado();
         await tol(() => screen.getByTestId('receiver-submit').tap()); await pausa(2500);
         const pideOtp = (await textos(screen)).some((x) => /Autenticaci[oó]n requerida/.test(x));
-        await pausa(4000); const t = util(await textos(screen)); cap('TC-B2C190-APP-008', 'tras-guardar-la-edicion');
+        await pausa(4000); const t = util(await textos(screen)); await cap('TC-B2C190-APP-008', 'tras-guardar-la-edicion');
         const ok = !pideOtp && t.some((x) => x.includes(D('NOMBRE_TERCERO_2'))) && t.some((x) => x.includes(tel8(D('TELEFONO_TERCERO_2'))));
         return [ok, `Se pidió OTP: ${pideOtp}. Mis Envíos muestra «${D('NOMBRE_TERCERO_2')}»: ${t.some((x) => x.includes(D('NOMBRE_TERCERO_2')))}; teléfono nuevo: ${t.some((x) => x.includes(tel8(D('TELEFONO_TERCERO_2'))))}.`];
       });
       await verif('TC-B2C190-APP-020', async () => {
         await volverHome(); await tol(() => screen.getByTestId('tab-Home').tap()); await pausa(2000);
-        await aMisEnvios(); const t = util(await textos(screen)); cap('TC-B2C190-APP-020', 'mis-envios-de-vuelta');
+        await aMisEnvios(); const t = util(await textos(screen)); await cap('TC-B2C190-APP-020', 'mis-envios-de-vuelta');
         const ok = t.some((x) => x.includes(D('NOMBRE_TERCERO_2'))) && t.some((x) => /^Editar$/.test(x));
         return [ok, `Tras salir al Home y volver a Mis Envíos con «Continuar con la entrega»: resumen del tercero visible: ${ok}. Textos: ${t.slice(0, 22).join(' | ')}.`];
       });
@@ -318,7 +319,7 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
         await tol(() => screen.getByText(/^Editar$/).first().tap()); await tol(() => screen.getByTestId('receiver-self').waitFor({ state: 'visible', timeout: 20000 }));
         await tol(() => screen.getByTestId('receiver-self').tap()); await pausa(1500);
         const pideOtp = (await textos(screen)).some((x) => /Autenticaci[oó]n requerida/.test(x));
-        await pausa(3500); const t = util(await textos(screen)); cap('TC-B2C190-APP-010', 'tras-lo-recibire-yo');
+        await pausa(3500); const t = util(await textos(screen)); await cap('TC-B2C190-APP-010', 'tras-lo-recibire-yo');
         const toast = t.some((x) => /Los datos fueron eliminados correctamente/i.test(x));
         const vuelve = t.some((x) => /^¿Recibe alguien más\?$/.test(x)) && !t.some((x) => /^Editar$/.test(x));
         return [!pideOtp && toast && vuelve, `Se pidió OTP: ${pideOtp}; toast de eliminación: ${toast}; vuelve «¿Recibe alguien más?» sin resumen: ${vuelve}.`];
@@ -341,8 +342,8 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
         await tol(() => screen.getByTestId('receiver-submit').tap());
         await tol(() => screen.getByText('Autenticación requerida').first().waitFor({ state: 'visible', timeout: 40000 }));
         await ingresarCodigo(screen, await esperarCodigo('TC-B2C190-APP-005', correo, desde), 0);
-        const ms = await verToast(/datos de quien recibir[aá] tu compra se guardaron correctamente/i); cap('TC-B2C190-APP-005', 'toast-guardado');
-        await pausa(4000); const t = util(await textos(screen)); cap('TC-B2C190-APP-005', 'resumen-del-tercero');
+        const ms = await verToast(/datos de quien recibir[aá] tu compra se guardaron correctamente/i); await cap('TC-B2C190-APP-005', 'toast-guardado');
+        await pausa(4000); const t = util(await textos(screen)); await cap('TC-B2C190-APP-005', 'resumen-del-tercero');
         const resumen = t.some((x) => x.includes(nomOk)) && t.some((x) => x.includes(telOk)) && t.some((x) => /^Editar$/.test(x));
         const sinOpcion = !t.some((x) => /^¿Recibe alguien más\?$/.test(x));
         return [resumen && sinOpcion && ms >= 0, `Resumen con nombre y teléfono y «Editar»: ${resumen}; sin «¿Recibe alguien más?»: ${sinOpcion}; toast «Los datos de quien recibirá tu compra se guardaron correctamente.»: ${ms >= 0 ? `visto a los ${(ms / 1000).toFixed(1)} s de validar` : 'no apareció en 9 s'}.`];
@@ -350,9 +351,9 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
       await verif('TC-B2C190-APP-010', async () => {
         await tol(() => screen.getByText(/^Editar$/).first().tap()); await tol(() => screen.getByTestId('receiver-self').waitFor({ state: 'visible', timeout: 20000 }));
         await tol(() => screen.getByTestId('receiver-self').tap());
-        const ms = await verToast(/Los datos fueron eliminados correctamente/i); cap('TC-B2C190-APP-010', 'toast-eliminado');
+        const ms = await verToast(/Los datos fueron eliminados correctamente/i); await cap('TC-B2C190-APP-010', 'toast-eliminado');
         const pideOtp = (await textos(screen)).some((x) => /Autenticaci[oó]n requerida/.test(x));
-        await pausa(3000); const t = util(await textos(screen)); cap('TC-B2C190-APP-010', 'tras-lo-recibire-yo');
+        await pausa(3000); const t = util(await textos(screen)); await cap('TC-B2C190-APP-010', 'tras-lo-recibire-yo');
         const vuelve = t.some((x) => /^¿Recibe alguien más\?$/.test(x)) && !t.some((x) => /^Editar$/.test(x));
         return [!pideOtp && ms >= 0 && vuelve, `Se pidió OTP: ${pideOtp}; toast «Los datos fueron eliminados correctamente»: ${ms >= 0 ? `visto a los ${(ms / 1000).toFixed(1)} s de tocar «Lo recibiré yo»` : 'no apareció en 9 s'}; vuelve «¿Recibe alguien más?» sin resumen: ${vuelve}.`];
       });
@@ -384,12 +385,12 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
         await tol(() => screen.getByTestId('receiver-submit').tap());
         await tol(() => screen.getByText('Autenticación requerida').first().waitFor({ state: 'visible', timeout: 40000 }));
         await ingresarCodigo(screen, await esperarCodigo(cp, correo, desde));
-        cap(cp, 'mis-envios-con-tercero');
+        await cap(cp, 'mis-envios-con-tercero');
         return util(await textos(screen)).filter((x) => x.includes(nomOk) || /^Editar$/.test(x));
       });
       await prep('compra-ir-a-pagar', async () => {
         await tol(() => screen.getByText('Ir a pagar').first().tap()); await pausa(9000);
-        cap(cp, 'mi-pago');
+        await cap(cp, 'mi-pago');
         return util(await textos(screen)).slice(0, 60);
       });
     }
@@ -401,11 +402,11 @@ test.describe('B2C-190 — Recibe alguien más (Android)', () => {
         await aMisEnvios();
         const t = util(await textos(screen));
         const enRetiro = t.some((x) => x.includes(corta(t1)));
-        swipe(360, 1100, 360, 500, 400); await pausa(1200);
+        await swipe(360, 1100, 360, 500, 400); await pausa(1200);
         const op = screen.getByText('¿Recibe alguien más?').first();
-        const vis = await op.isVisible().catch(() => false); cap('TC-B2C190-APP-002', 'retiro-opcion-recibe-alguien-mas');
+        const vis = await op.isVisible().catch(() => false); await cap('TC-B2C190-APP-002', 'retiro-opcion-recibe-alguien-mas');
         let abre = false;
-        if (vis) { await op.tap(); await pausa(2500); abre = await screen.getByTestId(ID.rut).isVisible().catch(() => false); cap('TC-B2C190-APP-002', 'modal-abierto'); await cerrarTercero(); }
+        if (vis) { await op.tap(); await pausa(2500); abre = await screen.getByTestId(ID.rut).isVisible().catch(() => false); await cap('TC-B2C190-APP-002', 'modal-abierto'); await cerrarTercero(); }
         return [enRetiro && vis && abre, `Retiro en tienda ${t1} en Mis Envíos: ${enRetiro}; opción «¿Recibe alguien más?» visible: ${vis}; al tocarla abre el modal: ${abre}.`];
       });
       await prep('volver-a-base', () => fijarBase('TC-B2C190-APP-002'));

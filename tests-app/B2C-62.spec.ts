@@ -6,6 +6,7 @@ import type { ListadoScreen } from './pages/ListadoScreen';
 import { tolerante } from './support/tolerante';
 import { asegurarApp } from './support/appLista';
 import { HomeScreen } from './pages/HomeScreen';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-62 — Precios y promociones del shelf en la app (resultados de búsqueda).
@@ -87,8 +88,8 @@ async function abrirShelf(screen: any, p: any, cp: string, sku: string): Promise
 
 const sku = (testData: any, k: string) => token(testData, k)!;
 
-test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
-  test('TC-B2C62-APP-001 · Sin promoción el shelf muestra el precio normal en CLP [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-62 — Precios y promociones del shelf (${PLATAFORMA})`, () => {
+  test(`TC-B2C62-APP-001 · Sin promoción el shelf muestra el precio normal en CLP [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-001';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_SIN_PROMO'));
     expect(precio.precios.length, 'un único precio').toBe(1);
@@ -98,7 +99,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-002 · Sin promoción el shelf muestra el PPUM con la unidad estándar [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-002 · Sin promoción el shelf muestra el PPUM con la unidad estándar [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-002';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_SIN_PROMO'));
     expect(precio.ppum.length, `el shelf muestra el PPUM (label: ${precio.label})`).toBeGreaterThan(0);
@@ -106,7 +107,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-003 · El PPUM se calcula sobre el precio efectivo mostrado [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-003 · El PPUM se calcula sobre el precio efectivo mostrado [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-003';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_PRECIO_OFERTA'));
     expect(precio.ppum.length, 'el shelf muestra el PPUM').toBeGreaterThan(0);
@@ -117,7 +118,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-004 · Un producto pesable muestra el precio por kg y el PPUM [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-004 · Un producto pesable muestra el precio por kg y el PPUM [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-004';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_PESABLE'));
     expect(precio.precios.length, 'muestra el precio').toBeGreaterThan(0);
@@ -127,7 +128,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-005 · Con % de descuento se muestran etiqueta %, precio promo y "Antes" tachado [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-005 · Con % de descuento se muestran etiqueta %, precio promo y "Antes" tachado [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-005';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_PROM_PCT_DESCUENTO'));
     expect(precio.pct, 'etiqueta con el %').not.toBeNull();
@@ -137,7 +138,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-006 · Con precio fijo se muestra el % calculado aunque no sea redondo [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-006 · Con precio fijo se muestra el % calculado aunque no sea redondo [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-006';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_PROM_PRECIO_FIJO'));
     expect(precio.pct, 'etiqueta con el %').not.toBeNull();
@@ -147,7 +148,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-007 · Con promo NxM se muestran la etiqueta, el precio "$X c/u" y los PPUM [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-007 · Con promo NxM se muestran la etiqueta, el precio "$X c/u" y los PPUM [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-007';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_PROM_NxM'));
     expect(precio.compuesto, 'precio compuesto "3x2 a $X"').toMatch(/^\d+x\d+ a \$/);
@@ -156,7 +157,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-008 · Con promo NxPrecio se muestran la etiqueta, el precio unitario y los PPUM [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-008 · Con promo NxPrecio se muestran la etiqueta, el precio unitario y los PPUM [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-008';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_PROM_NxPRECIO'));
     expect(precio.compuesto, 'precio compuesto "Lleva N por $X"').toMatch(/^\d+ por \$/);
@@ -165,7 +166,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-010 · Una promo de membresía se muestra como precio fijo efectivo [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-010 · Una promo de membresía se muestra como precio fijo efectivo [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-010';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_PRECIO_MIEMBRO'));
     expect(precio.pct, 'no se muestra como pill %').toBeNull();
@@ -174,7 +175,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-011 · Una promo de medio de pago se muestra como precio fijo efectivo [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-011 · Una promo de medio de pago se muestra como precio fijo efectivo [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-011';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_PRECIO_UNIPAY'));
     await srp.capturarEvidencia(cp);
@@ -182,14 +183,14 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     expect(precio.pct, 'no se muestra como pill %').toBeNull();
   });
 
-  test('TC-B2C62-APP-012 · Con profundización la promo de membresía se calcula sobre el precio rebajado [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-012 · Con profundización la promo de membresía se calcula sobre el precio rebajado [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-012';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_OFERTA_MEMBRESIA'));
     await srp.capturarEvidencia(cp);
     if (precio.precios.length < 2 || precio.antes === null) throw BD(`{SKU_OFERTA_MEMBRESIA} no muestra precio de membresía junto a la oferta (label: ${precio.label})`);
   });
 
-  test('TC-B2C62-APP-017 · Los shelves de la PLP no muestran precios $0 ni promos duplicadas o incompletas [Guest] (Android)', async ({ screen, plataforma: p }) => {
+  test(`TC-B2C62-APP-017 · Los shelves de la PLP no muestran precios $0 ni promos duplicadas o incompletas [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p }) => {
     const cp = 'TC-B2C62-APP-017';
     const tabs = await tolerante(() => new TabBar(screen, p).waitUntilReady());
     await tabs.capturarEvidencia(cp, 1, 'app abierta en el Home');
@@ -212,7 +213,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await plp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-018 · Sin promo el shelf muestra un solo precio [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-018 · Sin promo el shelf muestra un solo precio [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-018';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_SIN_PROMO'));
     expect(precio.precios.length, 'un único precio (lista)').toBe(1);
@@ -220,7 +221,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-019 · Con oferta el shelf muestra oferta destacada y lista tachado [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-019 · Con oferta el shelf muestra oferta destacada y lista tachado [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-019';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_PRECIO_OFERTA'));
     expect(precio.precios.length, 'precio de oferta (el precio lista va aparte, tachado)').toBe(1);
@@ -230,7 +231,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-020 · Con oferta y membresía el shelf muestra membresía como 1er precio y 3 precios como máximo [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-020 · Con oferta y membresía el shelf muestra membresía como 1er precio y 3 precios como máximo [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-020';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_OFERTA_MEMBRESIA'));
     await srp.capturarEvidencia(cp);
@@ -238,7 +239,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     expect(precio.precios.length + (precio.antes ? 1 : 0), 'nunca más de 3 precios').toBeLessThanOrEqual(3);
   });
 
-  test('TC-B2C62-APP-021 · Con NxM o NxPrecio el precio compuesto se muestra como precio destacado [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-021 · Con NxM o NxPrecio el precio compuesto se muestra como precio destacado [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-021';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_PROM_NxPRECIO'));
     expect(precio.compuesto, 'precio compuesto destacado ("Lleva 2 por $X")').not.toBeNull();
@@ -246,7 +247,7 @@ test.describe('B2C-62 — Precios y promociones del shelf (Android)', () => {
     await srp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C62-APP-022 · Con Membresía, Unipay y Banco Estado a la vez el 1er precio es Membresía [Guest] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C62-APP-022 · Con Membresía, Unipay y Banco Estado a la vez el 1er precio es Membresía [Guest] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C62-APP-022';
     const { srp, precio } = await abrirShelf(screen, p, cp, sku(testData, 'SKU_TRES_PRECIOS'));
     await srp.capturarEvidencia(cp);

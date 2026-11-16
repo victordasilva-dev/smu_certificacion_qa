@@ -68,7 +68,11 @@ export class CategoriasModal extends BaseScreen {
    */
   async tapPrimeraN1(): Promise<ListadoScreen> {
     const chips = await this.todas.boundingBox();
-    const filas = await this.screen.getByType('android.view.ViewGroup').all();
+    const filas = await this.segun({
+      android: this.screen.getByType('android.view.ViewGroup'),
+      // XCUITest expone las vistas genéricas de React Native como `Other`: confirmar en el simulador.
+      ios: this.screen.getByType('Other'),
+    }).all();
     for (const fila of filas) {
       const c = await fila.boundingBox({ timeout: 0 }).catch(() => null);
       if (c && c.x === 0 && c.width >= 1000 && c.height < 150 && c.y > chips.y + chips.height) {

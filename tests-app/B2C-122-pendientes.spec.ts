@@ -6,6 +6,7 @@ import { AgotarseModal, PromptLogin } from './pages/AgotarseModal';
 import { agregarAlCarro, calle, elegirDireccion, invitadoConDireccion } from './support/entregaApp';
 import { escribirTexto, esperarCodigo, ingresarCodigo } from './support/sesionOtp';
 import { tolerante } from './support/tolerante';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-122 — TC 010 (invitado que inicia sesión desde el prompt de «Sí, continuar», app nativa,
@@ -45,7 +46,7 @@ test.describe('B2C-122 — invitado que inicia sesión desde el prompt (Android)
     await r(() => expect(prompt.titulo, 'se muestra el prompt de inicio de sesión').toBeVisible({ timeout: 60000 }));
     await r(() => prompt.capturarEvidencia(cp, 4, 'prompt de inicio de sesión'));
     // Inicio de sesión con la cuenta (correo + OTP).
-    const campo = screen.getByType('android.widget.EditText').first();
+    const campo = disp.campoDeTexto(screen).first();
     await r(() => campo.waitFor({ state: 'visible', timeout: 25000 }));
     const desde = new Date(Date.now() - 30000);
     await escribirTexto(campo, correo);

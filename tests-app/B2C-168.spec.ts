@@ -4,6 +4,7 @@ import { CarroScreen } from './pages/CarroScreen';
 import { HomeScreen } from './pages/HomeScreen';
 import { tolerante } from './support/tolerante';
 import { agregarAlCarro, arrancarInvitado, visibleEn } from './support/entregaApp';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-168 — Fusión de carros invitado → logueado (app nativa).
@@ -19,7 +20,7 @@ import { agregarAlCarro, arrancarInvitado, visibleEn } from './support/entregaAp
 
 const PLATAFORMA = 'Android' as const;
 
-test.describe(`B2C-168 — Fusión de carros (${PLATAFORMA})`, () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-168 — Fusión de carros (${PLATAFORMA})`, () => {
   test.describe.configure({ timeout: 300000 });
 
   test(`TC-B2C168-APP-001 · Inicia sesión o regístrate desde el carro abre el modal de inicio de sesión [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {

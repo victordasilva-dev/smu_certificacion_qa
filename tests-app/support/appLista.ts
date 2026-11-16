@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { abrirApp, atras, cerrarApp, esIos, tocarEscalado } from './dispositivo';
 
 /**
  * Deja la app abierta y con la barra de pestañas visible antes de `sesion()`.
@@ -7,18 +7,10 @@ import { execSync } from 'child_process';
  * pulsa «atrás». En un emulador lento la app sigue en el splash cuando ocurre eso, y «atrás» la
  * cierra: el helper la relanza, vuelve a cerrarla, y tras seis vueltas el caso cae sin haber
  * probado nada. Aquí solo se lanza la app si no tiene el foco y, una vez en primer plano, se
- * espera —sin pulsar «atrás»— a que aparezcan las pestañas. El adb usa ANDROID_SERIAL.
+ * espera —sin pulsar «atrás»— a que aparezcan las pestañas. Las acciones de dispositivo van por
+ * `./dispositivo` (adb en Android, con ANDROID_SERIAL; mobilewright en iOS).
  */
-const PAQUETE = 'cl.smu.unimarcapp.sfcc.qa';
 const dormir = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-/** Toca una coordenada pensada para 1080x2400 (Pixel 6) escalándola a la resolución del dispositivo en uso. */
-function tocarPestaña(x: number, y: number): void {
-  const wm = execSync('adb shell wm size', { timeout: 15000 }).toString();
-  const m = /(\d+)x(\d+)/.exec(wm.split('Override size:').pop() ?? wm);
-  const [w, h] = m ? [Number(m[1]), Number(m[2])] : [1080, 2400];
-  execSync(`adb shell input tap ${Math.round((x * w) / 1080)} ${Math.round((y * h) / 2400)}`, { timeout: 15000 });
-}
 
 export async function asegurarApp(screen: any, maxMs = 420000): Promise<void> {
   const fin = Date.now() + maxMs;
@@ -32,7 +24,8 @@ export async function asegurarApp(screen: any, maxMs = 420000): Promise<void> {
     // ("could not get idle state"). Si el volcado falla, lo único que puede estar a la vista es esa Home
     // (la PDP y el resto sí se vuelcan): se pasa a «Mi cuenta» tocando su pestaña por coordenadas.
     if (fallaDump && Date.now() - inicio > 15000) {
-      tocarPestaña(900, 2232);
+      if (esIos()) await screen.getByTestId('tab-Mi cuenta').tap().catch(() => undefined);
+      else await tocarEscalado(900, 2232);
       await dormir(4000);
       continue;
     }
@@ -44,18 +37,18 @@ export async function asegurarApp(screen: any, maxMs = 420000): Promise<void> {
     // que cerrar, se fuerza el cierre y se relanza (la sesión queda guardada en el dispositivo).
     if (!reiniciada && Date.now() - inicio > 240000) {
       reiniciada = true;
-      execSync(`adb shell am force-stop ${PAQUETE}`, { timeout: 15000 });
+      await cerrarApp();
       await dormir(2000);
       ultimoLanzamiento = 0;
     }
     if (Date.now() - ultimoLanzamiento > 30000) {
-      execSync(`adb shell monkey -p ${PAQUETE} -c android.intent.category.LAUNCHER 1`, { timeout: 15000 });
+      await abrirApp();
       ultimoLanzamiento = Date.now();
     }
     // Si el caso anterior dejó la app dentro de una PDP (sin barra de pestañas) no hay splash que
     // proteger: se vuelve con «atrás». Solo se pulsa si la PDP está a la vista.
     if (await screen.getByTestId('pdp-gallery-page').isVisible().catch(() => false)) {
-      execSync('adb shell input keyevent 4', { timeout: 15000 });
+      await atras();
       await dormir(2500);
       continue;
     }

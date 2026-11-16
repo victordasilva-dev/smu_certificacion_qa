@@ -7,6 +7,7 @@ import { HomeScreen } from './pages/HomeScreen';
 import { MiCuentaScreen } from './pages/MiCuentaScreen';
 import { rutaEvidencia } from '../tests/support/rutasEvidencia';
 import { proporcionRojiza } from './support/pixeles';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-23 — NavBar de la app.
@@ -19,7 +20,7 @@ import { proporcionRojiza } from './support/pixeles';
  * Los que piden cuenta, dirección o condición de despacho, checkout o el content asset de BM vacío
  * quedan en Bloqueado Data; el 009 (página 404/500) en Bloqueado; los BM, Fuera de Alcance.
  */
-for (const plataforma of ['Android'] as const) {
+for (const plataforma of AMBAS) {
   test.describe(`B2C-23 — NavBar (${plataforma})`, () => {
     test(`TC-B2C23-APP-001 · Estructura y composicion del NavBar (${plataforma})`, async ({ screen, plataforma: p }) => {
       const cp = 'TC-B2C23-APP-001';

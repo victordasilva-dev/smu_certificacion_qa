@@ -9,7 +9,7 @@ import { PdpScreen } from '../pages/PdpScreen';
 import { CarroScreen } from '../pages/CarroScreen';
 import { MetodoEntregaModal } from '../pages/MetodoEntregaModal';
 import { DetalleDireccionScreen } from '../pages/DetalleDireccionScreen';
-import { borrarDatosApp } from './grabacionAndroid';
+import { borrarDatosApp, volver } from './dispositivo';
 import { tolerante } from './tolerante';
 
 /** Con las animaciones del Home uiautomator a veces no vuelca la pantalla: se reintenta hasta 30 veces. */
@@ -61,7 +61,7 @@ export async function fijarDireccionInvitado(screen: Screen, device: any, bundle
   const nav = new NavBar(screen, p);
   for (let intento = 1; ; intento++) {
     await device.terminateApp(bundleId);
-    borrarDatosApp(bundleId, process.env.ANDROID_SERIAL);
+    await borrarDatosApp(bundleId);
     await device.launchApp(bundleId);
     await esperarTabBar(tabs);
     await tol(() => nav.tapMetodoDeEntrega());
@@ -85,7 +85,7 @@ export async function agregarDesdePdp(screen: Screen, p: Plataforma, sku: string
   const pdp = await tol(() => new PdpScreen(screen, p).waitUntilReady());
   await tol(() => pdp.agregar.tap());
   await visibleEn(tabs.floatingPill, 20000);
-  await tol(() => screen.goBack());
+  await tol(() => volver());
 }
 
 /** Abre el carro con el Floating Pill. */

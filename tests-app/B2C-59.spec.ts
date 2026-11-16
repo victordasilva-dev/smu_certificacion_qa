@@ -8,7 +8,7 @@ import type { ListadoScreen } from './pages/ListadoScreen';
 import sharp from 'sharp';
 import { diferenciaMedia, proporcionClara } from './support/pixeles';
 import { tolerante } from './support/tolerante';
-import { borrarDatosApp } from './support/adbAndroid';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-59 — Shelf de producto en la app (resultados de búsqueda).
@@ -137,14 +137,14 @@ test.describe('B2C-59 — Shelf de producto (Android)', () => {
     const pdp = (await nodos(screen)).some((x) => /Descripción|Información|Agregar|Guardar en listas/i.test(x.label) && x.type !== 'TabBar') && !(await plp.filtros.isVisible().catch(() => false));
     await plp.capturarEvidencia(cp, 4, 'tras tocar la imagen');
     expect(pdp, 'tocar la imagen abre la PDP').toBe(true);
-    await tolerante(() => screen.goBack());
+    await tolerante(() => disp.volver());
     await dormir(2500);
     await tolerante(() => expect(plp.filtros, 'al volver se regresa a la PLP de origen').toBeVisible({ timeout: 15000 }));
     await tolerante(() => screen.getByText(new RegExp(nombre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))).first().tap());
     await dormir(3000);
     await plp.capturarEvidencia(cp, 6, 'tras tocar el nombre');
     expect(!(await plp.filtros.isVisible().catch(() => false)), 'tocar el nombre abre la PDP').toBe(true);
-    await tolerante(() => screen.goBack());
+    await tolerante(() => disp.volver());
     await dormir(2500);
     await tolerante(() => expect(plp.filtros, 'al volver se regresa a la PLP de origen').toBeVisible({ timeout: 15000 }));
     await plp.capturarEvidencia(cp);
@@ -275,7 +275,7 @@ test.describe('B2C-59 — Shelf de producto (Android)', () => {
     const cp = 'TC-B2C59-APP-017';
     // Carro vacío de partida: el carro del invitado persiste entre corridas.
     await device.terminateApp(bundleId!).catch(() => {});
-    borrarDatosApp(bundleId!, process.env.ANDROID_SERIAL);
+    await disp.borrarDatosApp(bundleId!);
     await device.launchApp(bundleId!);
     const s = sku(testData, 'SKU_VALID_001');
     const { srp } = await abrirShelf(screen, p, cp, s);

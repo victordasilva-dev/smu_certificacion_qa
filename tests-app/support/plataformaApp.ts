@@ -20,6 +20,13 @@ export const TOKENS_APP = {
   android: { bundle: 'ANDROID_PACKAGE', build: 'ANDROID_APP_BUILD' },
 } as const;
 
+/**
+ * Las dos plataformas, con la grafía del sufijo del título. Un TC con `Plataforma: Ambas` es un
+ * `test()` por plataforma: `for (const PLATAFORMA of AMBAS) test(`… (${PLATAFORMA})`, …)`.
+ */
+export const AMBAS = ['Android', 'iOS'] as const;
+export type PlataformaTitulo = (typeof AMBAS)[number];
+
 /** Sufijo del título del `test()` que lo enruta al project de cada plataforma. */
 export const SUFIJO = { ios: /\(iOS\)/, android: /\(Android\)/ } as const;
 

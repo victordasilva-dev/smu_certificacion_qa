@@ -1,6 +1,6 @@
-import { execSync } from 'child_process';
 import type { Locator } from 'mobilewright';
 import { BaseScreen } from './BaseScreen';
+import * as disp from '../support/dispositivo';
 
 /**
  * Cucarda (label promocional) del shelf de producto en la app (HU B2C-65). Verificado en Android,
@@ -62,9 +62,9 @@ export class CucardaShelf extends BaseScreen {
       previo = firma;
       if (!s && quietas >= 3) return undefined;
       if (s && s.y < 1300 && (await this.franja(sku))?.favorito) return s;
-      if (s && s.y >= 1300) execSync(`adb shell input swipe 540 1500 540 ${1500 - (s.y - 700)} 700`, { timeout: 20000 });
-      else if (s) execSync('adb shell input swipe 540 1000 540 1500 700', { timeout: 20000 }); // tapado por el encabezado: se baja un poco
-      else execSync(`adb shell input swipe 540 ${paso[0]} 540 ${paso[1]} 700`, { timeout: 20000 });
+      if (s && s.y >= 1300) await disp.deslizarFijo(540, 1500, 540, 1500 - (s.y - 700), 700);
+      else if (s) await disp.deslizarFijo(540, 1000, 540, 1500, 700); // tapado por el encabezado: se baja un poco
+      else await disp.deslizarFijo(540, paso[0], 540, paso[1], 700);
       await dormir(1700);
     }
     return undefined;

@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
 import { PdpScreen } from './pages/PdpScreen';
@@ -8,6 +7,7 @@ import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
 import { DetalleDireccionScreen } from './pages/DetalleDireccionScreen';
 import { asegurarApp } from './support/appLista';
 import { tolerante } from './support/tolerante';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-123 (010–012, cuenta {COMPRADOR_DIRECCION_SIN_COBERTURA_USER}) y B2C-144 (027, cuenta
@@ -22,19 +22,20 @@ import { tolerante } from './support/tolerante';
 
 const r = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
 const pausa = (ms: number) => new Promise((s) => setTimeout(s, ms));
-const tocar = (x: number, y: number) => execSync(`adb shell input tap ${x} ${y}`, { timeout: 15000 });
+/** Coordenadas medidas a mano en Android: en iOS `tocarFijo` falla en vez de tocar cualquier cosa. */
+const tocar = (x: number, y: number) => disp.tocarFijo(x, y);
 const TAB_HOME: [number, number] = [176, 2230];
 const TAB_CUENTA: [number, number] = [900, 2232];
 
 /** Deja la app como invitado en la pestaña Mi cuenta. */
 async function comoInvitado(screen: any, p: any) {
   await asegurarApp(screen);
-  tocar(...TAB_CUENTA);
+  await tocar(...TAB_CUENTA);
   await pausa(3500);
   if ((await r(() => nodos(screen))).some((x) => /^Hola, /.test(x.label))) {
     await r(() => new MiCuentaScreen(screen, p).cerrarSesion()).catch(() => undefined);
     await pausa(3000);
-    tocar(...TAB_CUENTA);
+    await tocar(...TAB_CUENTA);
     await pausa(3500);
     if ((await r(() => nodos(screen))).some((x) => /^Hola, /.test(x.label))) throw new Error('la sesión no se cerró');
   }
@@ -52,7 +53,7 @@ test.describe('B2C-123 / B2C-144 — cuentas sin cobertura y sin dirección (And
     }
     await r(() => screen.getByText('Iniciar sesión').first().tap());
     await pausa(3500);
-    const campo = screen.getByType('android.widget.EditText').first();
+    const campo = disp.campoDeTexto(screen).first();
     await r(() => campo.waitFor({ state: 'visible', timeout: 25000 }));
     await escribirTexto(campo, correo);
     await pausa(1500);
@@ -70,13 +71,13 @@ test.describe('B2C-123 / B2C-144 — cuentas sin cobertura y sin dirección (And
     const cp = 'TC-B2C144-APP-027';
     const correo = token(testData, 'SIN_DIRECCION_USER')!.split(' / ')[0];
     await comoInvitado(screen, p);
-    tocar(...TAB_HOME);
+    await tocar(...TAB_HOME);
     await pausa(7000);
     await r(() => new PdpScreen(screen, p).capturarEvidencia(cp, 2, 'Home del invitado sin dirección'));
-    tocar(...TAB_CUENTA);
+    await tocar(...TAB_CUENTA);
     await pausa(3500);
     await sesion(screen, p, cp, correo, /Hola, QA/);
-    tocar(...TAB_HOME);
+    await tocar(...TAB_HOME);
     await pausa(8000);
     await r(() => new PdpScreen(screen, p).capturarEvidencia(cp, 4, 'Home tras iniciar sesión con la cuenta sin direcciones'));
   });
@@ -88,9 +89,9 @@ test.describe('B2C-123 / B2C-144 — cuentas sin cobertura y sin dirección (And
     await asegurarApp(screen);
     await sesion(screen, p, cp, correo, /Hola, QA/);
     // Precondición (autorizada por el usuario): despacho a Calle Uno 23, La Florida en la cuenta sin direcciones.
-    tocar(...TAB_HOME);
+    await tocar(...TAB_HOME);
     await pausa(7000);
-    tocar(1012, 192);
+    await tocar(1012, 192);
     await pausa(3000);
     const modal = await r(() => new MetodoEntregaModal(screen, p).waitUntilReady());
     await modal.elegirSugerencia(direccion, /^Calle Uno 23/i);
@@ -100,16 +101,16 @@ test.describe('B2C-123 / B2C-144 — cuentas sin cobertura y sin dirección (And
     const otp = await tolerante(() => screen.getByText(/Autenticación requerida/).waitFor({ state: 'visible', timeout: 25000 }).then(() => true, () => false), 30);
     if (otp) await ingresarCodigo(screen, await esperarCodigo(cp, correo, desde));
     await pausa(12000);
-    tocar(...TAB_HOME);
+    await tocar(...TAB_HOME);
     await pausa(9000);
     await r(() => new PdpScreen(screen, p).capturarEvidencia(cp, 2, 'Home con despacho a Calle Uno 23 y el navbar de la cuenta con membresía'));
   });
 
   test('LIMPIEZA-B2C144-015 · Elimina Calle Uno 23 de la cuenta sin direcciones (Android)', async ({ screen, plataforma: p }) => {
     await asegurarApp(screen);
-    tocar(...TAB_HOME);
+    await tocar(...TAB_HOME);
     await pausa(7000);
-    tocar(1012, 192);
+    await tocar(1012, 192);
     await pausa(3000);
     const modal = await r(() => new MetodoEntregaModal(screen, p).waitUntilReady());
     await pausa(2000);

@@ -66,7 +66,11 @@ export class ListadoScreen extends BaseScreen {
   /** Abre la PLP de la primera N2 del carrusel de la landing (el chip que sigue a "Todo"). */
   async tapPrimeraSubcategoria(): Promise<ListadoScreen> {
     const caja = await this.chipTodo.boundingBox();
-    const chips = await this.screen.getByType('android.view.ViewGroup').all();
+    const chips = await this.segun({
+      android: this.screen.getByType('android.view.ViewGroup'),
+      // XCUITest expone las vistas genéricas de React Native como `Other`: confirmar en el simulador.
+      ios: this.screen.getByType('Other'),
+    }).all();
     for (const chip of chips) {
       const c = await chip.boundingBox({ timeout: 0 }).catch(() => null);
       if (c && Math.abs(c.y + c.height / 2 - (caja.y + caja.height / 2)) < 20 && c.x > caja.x + caja.width) {

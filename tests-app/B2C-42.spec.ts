@@ -11,6 +11,7 @@ import { asegurarApp } from './support/appLista';
 import { agregarDesdePdp, abrirCarro } from './support/invitadoConCarro';
 import { agregarAlCarro, volverAlHome, arrancarInvitado } from './support/entregaApp';
 import { NavBar } from './pages/NavBar';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-42 — Contratación y renovación de la membresía desde el carro (app nativa).
@@ -99,7 +100,7 @@ async function abrirCarroConSku(screen: Screen, device: any, bundleId: string, p
     if (!enCarro) await dormir(2500);
   }
   if (!enCarro) {
-    await tol(() => screen.goBack());
+    await tol(() => disp.volver());
     await agregarDesdePdp(screen, p, sku);
     carro = await abrirCarro(screen, p);
     await dormir(2500);

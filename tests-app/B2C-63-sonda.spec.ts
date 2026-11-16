@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import { execSync } from 'child_process';
 import { test } from './support/fixtures';
 import { token } from '../tests/support/testData';
 import { TabBar } from './pages/TabBar';
@@ -8,6 +7,7 @@ import { tolerante } from './support/tolerante';
 import { fijarDireccionInvitado } from './support/invitadoConCarro';
 import { nodos } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
 
 const r = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
 const pausa = (ms: number) => new Promise((s) => setTimeout(s, ms));
@@ -23,7 +23,7 @@ test.describe('B2C-63 sonda (Android)', () => {
       const ns = await nodos(screen);
       ns.filter((n) => /^product-\d/.test(n.id)).forEach((n) => { if (!vistos.includes(n.id)) vistos.push(n.id); });
       if (ns.some((n) => n.id.includes(sku))) { hallado = i; break; }
-      execSync('adb shell input swipe 360 1250 360 450 400', { timeout: 15000 }); await pausa(1200);
+      await disp.deslizarFijo(360, 1250, 360, 450, 400, { base: [720, 1600], timeout: 15000 }); await pausa(1200);
     }
     fs.writeFileSync('.qa/probe63-home.txt', `scrolls=${hallado}\nproductos vistos (${vistos.length}):\n` + vistos.join('\n'));
     // chip «Combina la promo» en los resultados
@@ -36,10 +36,10 @@ test.describe('B2C-63 sonda (Android)', () => {
     const ns = await nodos(screen);
     const chip = ns.find((n) => /Combina la promo/i.test(n.label));
     fs.writeFileSync('.qa/probe63-chip.txt', JSON.stringify(chip ?? null));
-    if (chip) { execSync(`adb shell input tap ${Math.round(chip.x + chip.w / 2)} ${Math.round(chip.y + chip.h / 2)}`, { timeout: 15000 }); await pausa(3500); }
+    if (chip) { await disp.tocar(chip.x + chip.w / 2, chip.y + chip.h / 2); await pausa(3500); }
     const m = await nodos(screen);
     fs.writeFileSync('.qa/probe63-modal.txt', m.map((x) => `${x.type}|${x.id}|${x.label}|${x.x},${x.y},${x.w}x${x.h}`).join('\n'));
     fs.mkdirSync('test-results/evidence', { recursive: true });
-    fs.writeFileSync('test-results/evidence/TC-B2C63-APP-SONDA-android-modal.png', execSync('adb exec-out screencap -p', { maxBuffer: 20 * 1024 * 1024, timeout: 30000 }));
+    fs.writeFileSync(`test-results/evidence/TC-B2C63-APP-SONDA-${disp.plataforma()}-modal.png`, (await disp.captura()));
   });
 });

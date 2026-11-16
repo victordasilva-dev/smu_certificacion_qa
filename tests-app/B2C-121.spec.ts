@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -12,6 +11,8 @@ import { agregarAlCarro, arrancarInvitado, invitadoConDireccion, visibleEn } fro
 import { nodos, tiene, tocarEscalado, sesion, esperarCodigo, ingresarCodigo } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
 import { agregarDesdePdp } from './support/invitadoConCarro';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-121 — Store Locator, pestaña Retiro en tienda (app nativa, Android, build v1.0.1).
@@ -44,7 +45,7 @@ async function buscarTienda(screen: Screen, texto: string) {
 const filaTienda = (screen: Screen, nombre: string) => screen.getByText(new RegExp(`^${nombre.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\. `, 'i')).first();
 
 test.describe.configure({ timeout: 600000 });
-test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C121-APP-001 · Sin tienda de retiro seteada se muestra el buscador, el mapa y el listado de tiendas [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p }) => {
     const cp = 'TC-B2C121-APP-001';
     await arrancarInvitado(screen, device, bundleId!, p);
@@ -78,7 +79,7 @@ test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
     await arrancarInvitado(screen, device, bundleId!, p);
     const modal = await abrirRetiro(screen, p);
     await buscarTienda(screen, token(testData, 'BUSQUEDA_TIENDA_SIN_RESULTADO')!);
-    tocarEscalado(847, 2330);   // oculta el teclado para ver el mensaje completo
+    await tocarEscalado(847, 2330);   // oculta el teclado para ver el mensaje completo
     await pausa(2000);
     await modal.capturarEvidencia(cp, 7, 'búsqueda sin coincidencias');
     await expect(screen.getByText(/Parece que hoy no encontramos/).first(), 'mensaje de tienda no encontrada').toBeVisible({ timeout: 15000 });
@@ -88,14 +89,18 @@ test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C121-APP-008 · Activar mi ubicación sin permisos muestra la solicitud de permiso [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p }) => {
     const cp = 'TC-B2C121-APP-008';
     await arrancarInvitado(screen, device, bundleId!, p);
-    for (const perm of ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']) { try { execSync(`adb shell pm revoke ${bundleId} android.permission.${perm}`, { timeout: 15000 }); } catch { /* ya sin permiso */ } }
+    await disp.permisoUbicacion(false, bundleId!);
     const modal = await abrirRetiro(screen, p);
     await tol(() => screen.getByText(/Activar mi ubicaci[oó]n actual/).first().tap());
     await pausa(4000);
-    const foco = execSync('adb shell dumpsys window | grep mCurrentFocus || true', { timeout: 15000 }).toString();
+    const foco = (await disp.ventanaConFoco());
     await modal.capturarEvidencia(cp, 8, 'tras tocar «Activar mi ubicación actual»');
-    expect(/permissioncontroller|GrantPermissions/i.test(foco), 'el sistema muestra el diálogo de permiso de ubicación').toBe(true);
-    execSync('adb shell input keyevent 4', { timeout: 15000 });
+    // Android: la ventana con foco es la del controlador de permisos. iOS: la alerta del sistema se dibuja sobre la app.
+    const dialogo = disp.esIos()
+      ? await screen.getByText(/Permitir|Allow/i).first().isVisible().catch(() => false)
+      : /permissioncontroller|GrantPermissions/i.test(foco);
+    expect(dialogo, 'el sistema muestra el diálogo de permiso de ubicación').toBe(true);
+    await disp.atras();
   });
 
   test(`TC-B2C121-APP-011 · Al seleccionar una tienda se abre su tarjeta con mapa, distancia y Confirmar tienda [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
@@ -136,7 +141,7 @@ test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
     await pausa(6000);
     await new NavBar(screen, p).capturarEvidencia(cp, 8, 'tras confirmar la tienda');
     expect(tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i), 'la app pregunta si desea iniciar sesión').toBe(true);
-    tocarEscalado(1000, 201);   // X del prompt de login
+    await tocarEscalado(1000, 201);   // X del prompt de login
     await pausa(3000);
     const loc = (await screen.getByTestId('delivery-open').getText().catch(() => '')) || '';
     expect(loc, `${tienda} queda seteada como punto de retiro`).toMatch(new RegExp(localidad(tienda), 'i'));
@@ -177,7 +182,7 @@ test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
     const modal = await abrirRetiro(screen, p);
     await modal.elegirTienda(tienda, localidad(tienda));
     await pausa(6000);
-    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { tocarEscalado(1000, 201); await pausa(3000); }
+    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { await tocarEscalado(1000, 201); await pausa(3000); }
     const nav = new NavBar(screen, p);
     await nav.capturarEvidencia(cp, 8, 'header tras confirmar la tienda');
     const loc = (await screen.getByTestId('delivery-open').getText().catch(() => '')) || '';
@@ -194,7 +199,7 @@ test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
     const m1 = await abrirRetiro(screen, p);
     await m1.elegirTienda(tienda, localidad(tienda));
     await pausa(6000);
-    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { tocarEscalado(1000, 201); await pausa(3000); }
+    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { await tocarEscalado(1000, 201); await pausa(3000); }
     const modal = await abrirRetiro(screen, p);
     await modal.capturarEvidencia(cp, 6, 'listado con la tienda de retiro seteada');
     const filas = (await textos(screen)).filter((x) => /^Unimarc .+\. /.test(x));
@@ -206,7 +211,7 @@ test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
   test(`TC-B2C121-APP-010 · Con permiso concedido las tiendas se ordenan por cercanía y muestran los km [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p }) => {
     const cp = 'TC-B2C121-APP-010';
     await arrancarInvitado(screen, device, bundleId!, p);
-    for (const perm of ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']) execSync(`adb shell pm grant ${bundleId} android.permission.${perm}`, { timeout: 15000 });
+    await disp.permisoUbicacion(true, bundleId!);
     const modal = await abrirRetiro(screen, p);
     await tol(() => screen.getByText(/Activar mi ubicaci[oó]n actual/).first().tap());
     await pausa(10000);
@@ -222,7 +227,7 @@ test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
     const modal = await abrirRetiro(screen, p);
     await tol(() => screen.getByText(/^Ir al mapa$/).first().tap());
     await pausa(6000);
-    tocarEscalado(540, 1440);   // pin de tienda visible en el mapa
+    await tocarEscalado(540, 1440);   // pin de tienda visible en el mapa
     await pausa(3000);
     await modal.capturarEvidencia(cp, 8, 'tras tocar un pin del mapa');
     const t = await textos(screen);
@@ -233,7 +238,7 @@ test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
   async function conSesion(screen: Screen, device: any, bundleId: string, p: any, cp: string, usuario: string, saludo: RegExp, limpiar: boolean): Promise<void> {
     if (limpiar) {
       await device.terminateApp(bundleId);
-      execSync(`adb shell pm clear ${bundleId}`, { timeout: 30000 });
+      await disp.borrarDatosApp(bundleId);
       await device.launchApp(bundleId);
     }
     await asegurarApp(screen);
@@ -262,7 +267,7 @@ test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
       await tol(() => b.tap()).catch(() => {});
       await pausa(2500);
     }
-    await tol(() => screen.goBack());
+    await tol(() => disp.volver());
     await pausa(2000);
   }
   const correoDe = (td: any, k: string) => token(td, k)!.split('/')[0].trim();
@@ -278,7 +283,7 @@ test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
     expect(t.some((x) => /^Ir al mapa$/.test(x)), 'botón «Ir al mapa»').toBe(true);
     expect(t.some((x) => /Activar mi ubicaci[oó]n actual/.test(x)), 'link «Activar mi ubicación actual»').toBe(true);
     await modal.capturarEvidencia(cp);
-    await tol(() => screen.goBack());
+    await tol(() => disp.volver());
   });
 
   test(`TC-B2C121-APP-019 · Un logueado que confirma una tienda debe validar OTP antes de setearla [Logueado] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
@@ -334,7 +339,7 @@ test.describe(`B2C-121 — Retiro en tienda (${PLATAFORMA})`, () => {
     await conSesion(screen, device, bundleId!, p, cp, usuario, /Karl|Comprador/i, false);
     // Si el producto ya está en el carro de la cuenta la PDP muestra «En carro» y no «Agregar».
     await agregarDesdePdp(screen, p, token(testData, 'SKU_VALID_001')!).catch(() => undefined);
-    for (let i = 0; i < 5 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { await tol(() => screen.goBack()); await pausa(1500); }
+    for (let i = 0; i < 5 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { await tol(() => disp.volver()); await pausa(1500); }
     await tol(() => screen.getByTestId('tab-Home').tap());
     await pausa(3000);
     // Con carro la app muestra el modal «Algunos productos podrían agotarse» al confirmar la tienda.

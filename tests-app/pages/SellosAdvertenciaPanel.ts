@@ -1,6 +1,6 @@
-import { execSync } from 'child_process';
 import type { Locator } from 'mobilewright';
 import { FiltroOfertasPanel, type NodoPanel } from './FiltroOfertasPanel';
+import * as disp from '../support/dispositivo';
 
 /**
  * Sección «Sellos de advertencia» del panel «Selecciona tus filtros» de la app (HU B2C-103).
@@ -14,10 +14,11 @@ import { FiltroOfertasPanel, type NodoPanel } from './FiltroOfertasPanel';
  * - El panel se desplaza solo al marcar: las coordenadas salen siempre del árbol recién volcado.
  */
 const dormir = (ms: number) => new Promise((r) => setTimeout(r, ms));
+/** Desplaza el panel con coordenadas medidas en Android; en iOS, `deslizarFijo` las escala. */
 const swipe = (x1: number, y1: number, x2: number, y2: number, ms = 700) =>
-  execSync(`adb shell input swipe ${x1} ${y1} ${x2} ${y2} ${ms}`, { timeout: 20000 });
+  disp.deslizarFijo(x1, y1, x2, y2, ms);
 const tocar = (n: NodoPanel) =>
-  execSync(`adb shell input tap ${Math.round(n.x + n.w / 2)} ${Math.round(n.y + n.h / 2)}`, { timeout: 15000 });
+  disp.tocar(n.x + n.w / 2, n.y + n.h / 2);
 
 /** Franja vertical del panel donde un nodo se puede tocar sin caer en el encabezado ni en «Mostrar». */
 const ZONA = { desde: 420, hasta: 1960 };
@@ -43,15 +44,15 @@ export class SellosAdvertenciaPanel extends FiltroOfertasPanel {
 
   /** Lleva el panel hasta arriba del todo (donde viven «Filtros aplicados» y sus chips). */
   async irArriba(): Promise<void> {
-    for (let i = 0; i < 4; i++) { swipe(540, 700, 540, 1700, 600); await dormir(900); }
+    for (let i = 0; i < 4; i++) { await swipe(540, 700, 540, 1700, 600); await dormir(900); }
   }
 
   /** Desplaza el panel hasta que la sección quede en la mitad superior. */
   async verSeccion(): Promise<NodoPanel> {
     let b = await this.botonSellos();
     for (let i = 0; i < 6 && !(b && b.y > ZONA.desde && b.y < 1100); i++) {
-      if (b && b.y >= 1100) swipe(540, 1600, 540, 1100, 700);
-      else swipe(540, 900, 540, 1400, 700);
+      if (b && b.y >= 1100) await swipe(540, 1600, 540, 1100, 700);
+      else await swipe(540, 900, 540, 1400, 700);
       await dormir(1200);
       b = await this.botonSellos();
     }
@@ -60,7 +61,7 @@ export class SellosAdvertenciaPanel extends FiltroOfertasPanel {
   }
 
   async abrirSellos(): Promise<void> {
-    tocar(await this.verSeccion());
+    await tocar(await this.verSeccion());
     await dormir(3000);
   }
 
@@ -82,7 +83,7 @@ export class SellosAdvertenciaPanel extends FiltroOfertasPanel {
       for (const c of await this.casillasVisibles()) {
         if (!lista.some((l) => l.nombre === c.label)) lista.push({ nombre: c.label, marcada: Boolean(c.checked) });
       }
-      swipe(540, 1700, 540, 1200, 700);
+      await swipe(540, 1700, 540, 1200, 700);
       await dormir(1200);
     }
     return lista;
@@ -93,12 +94,12 @@ export class SellosAdvertenciaPanel extends FiltroOfertasPanel {
     await this.verSeccion();
     let c = (await this.casillasVisibles()).find((x) => x.label === nombre && x.y > ZONA.desde && x.y < ZONA.hasta - 60);
     for (let i = 0; i < 5 && !c; i++) {
-      swipe(540, 1700, 540, 1250, 700);
+      await swipe(540, 1700, 540, 1250, 700);
       await dormir(1200);
       c = (await this.casillasVisibles()).find((x) => x.label === nombre && x.y > ZONA.desde && x.y < ZONA.hasta - 60);
     }
     if (!c) throw new Error(`La sección no muestra el sello «${nombre}»`);
-    tocar(c);
+    await tocar(c);
     await dormir(3500);
   }
 
@@ -121,7 +122,7 @@ export class SellosAdvertenciaPanel extends FiltroOfertasPanel {
     await this.irArriba();
     const c = (await this.nodos()).find((x) => x.type === 'Button' && x.label === `Quitar filtro ${nombre}`);
     if (!c) throw new Error(`No hay chip «${nombre}» en «Filtros aplicados»`);
-    tocar(c);
+    await tocar(c);
     await dormir(3500);
   }
 
@@ -135,7 +136,7 @@ export class SellosAdvertenciaPanel extends FiltroOfertasPanel {
     if (!c) {
       let m = (await this.nodos()).find((x) => x.type === 'Button' && /^Marcas/.test(x.label));
       for (let i = 0; i < 6 && !(m && m.y > ZONA.desde && m.y < 1500); i++) {
-        swipe(540, 1700, 540, 1200, 700);
+        await swipe(540, 1700, 540, 1200, 700);
         await dormir(1200);
         m = (await this.nodos()).find((x) => x.type === 'Button' && /^Marcas/.test(x.label));
       }
@@ -145,16 +146,16 @@ export class SellosAdvertenciaPanel extends FiltroOfertasPanel {
       // ve nada de eso está cerrada. Tocarla estando abierta la cerraría.
       const n = await this.nodos();
       const abierta = n.some((x) => x.y > m!.y && x.y < m!.y + 500 && (/Qué marca necesitas/.test(x.label) || x.type === 'CheckBox' || x.type === 'EditText'));
-      if (!c && !abierta) { tocar(m); await dormir(3000); }
+      if (!c && !abierta) { await tocar(m); await dormir(3000); }
     }
     for (let i = 0; i < 6 && !c; i++) {
       c = await casilla();
       if (c) break;
-      swipe(540, 1700, 540, 1250, 700);
+      await swipe(540, 1700, 540, 1250, 700);
       await dormir(1200);
     }
     if (!c) throw new Error(`«Marcas» no lista la marca «${nombre}»`);
-    tocar(c);
+    await tocar(c);
     await dormir(3500);
   }
 }

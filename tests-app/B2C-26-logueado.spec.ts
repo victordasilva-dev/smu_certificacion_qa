@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import * as fs from 'fs';
 import type { Screen } from 'mobilewright';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -12,6 +12,7 @@ import type { ListadoScreen } from './pages/ListadoScreen';
 import { tolerante } from './support/tolerante';
 import { sesion, esperarCodigo, ingresarCodigo, nodos, tiene } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-26 — Store Locator en la app, casos [Logueado] (008, 019, 033).
@@ -47,7 +48,7 @@ async function storeLocator(screen: Screen): Promise<string | null> {
   }
   return null;
 }
-const foto = (n: string) => execSync(`adb exec-out screencap -p > .qa/run/${n}.png`, { timeout: 20000 });
+const foto = async (n: string) => fs.writeFileSync(`.qa/run/${n}.png`, await disp.captura());
 
 test.describe.configure({ timeout: 900000 });
 test.describe('B2C-26 — Store Locator logueado (Android)', () => {
@@ -61,7 +62,7 @@ test.describe('B2C-26 — Store Locator logueado (Android)', () => {
     await nav.capturarEvidencia(cp, 2, 'Home con el Store Locator');
     await tol(() => nav.tapMetodoDeEntrega());
     // Cuadros inmediatos tras el toque: el skeleton dura un instante.
-    for (let i = 0; i < 3; i++) foto(`apk-008-f${i}`);
+    for (let i = 0; i < 3; i++) await foto(`apk-008-f${i}`);
     const modal = await tol(() => new MetodoEntregaModal(screen, p).waitUntilReady());
     await dormir(2000);
     await modal.capturarEvidencia(cp, 4, 'modal con la dirección activa y las guardadas');
@@ -124,7 +125,7 @@ test.describe('B2C-26 — Store Locator logueado (Android)', () => {
     vistas.PDP = await storeLocator(screen);
     await pdp.capturarEvidencia(cp, 4, 'PDP');
     // La PDP no tiene barra de pestañas: se vuelve con «atrás» hasta verla.
-    for (let i = 0; i < 3 && !(await screen.getByTestId('tab-Buscar').isVisible().catch(() => false)); i++) { await screen.goBack(); await dormir(2000); }
+    for (let i = 0; i < 3 && !(await screen.getByTestId('tab-Buscar').isVisible().catch(() => false)); i++) { await disp.volver(); await dormir(2000); }
     const tabs = await tol(() => new TabBar(screen, p).waitUntilReady());
     await tol(() => tabs.tapBuscar());
     const buscar = await tol(() => new BuscarScreen(screen, p).waitUntilReady());

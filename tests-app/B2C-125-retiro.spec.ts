@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -8,6 +7,8 @@ import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
 import { tolerante } from './support/tolerante';
 import { esperarCodigo, ingresarCodigo, nodos, sesion } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-125 APP-018 y APP-020 — OTP al cambiar la tienda de retiro (app nativa, Android).
@@ -17,23 +18,24 @@ const tol = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
 const pausa = (ms: number) => new Promise((s) => setTimeout(s, ms));
 const textos = async (screen: Screen) => (await nodos(screen)).map((n) => n.label).filter(Boolean);
 const util = (t: string[]) => t.filter((x) => !/^Notificaci|Timbre|Modo|^$/.test(x));
-const RES = '.qa/run/res125r.json';
+/** Veredictos de la corrida, uno por plataforma: correr iOS no pisa los de Android. */
+const RES = () => `.qa/run/res125r${disp.esIos() ? '-ios' : ''}.json`;
 const guardar = (cp: string, status: string, obs: string) => {
-  const r = fs.existsSync(RES) ? JSON.parse(fs.readFileSync(RES, 'utf-8')) : {};
+  const r = fs.existsSync(RES()) ? JSON.parse(fs.readFileSync(RES(), 'utf-8')) : {};
   r[cp] = { status, obs };
-  fs.writeFileSync(RES, JSON.stringify(r, null, 1));
+  fs.writeFileSync(RES(), JSON.stringify(r, null, 1));
 };
 let nCap = 0;
-const cap = (cp: string, slug: string) => {
+const cap = async (cp: string, slug: string) => {
   fs.mkdirSync('test-results/evidence', { recursive: true });
-  const f = `test-results/evidence/${cp}-android-p${String(++nCap).padStart(2, '0')}-${slug}.png`;
-  fs.writeFileSync(f, execSync('adb exec-out screencap -p', { maxBuffer: 20 * 1024 * 1024, timeout: 30000 }));
+  const f = `test-results/evidence/${cp}-${disp.plataforma()}-p${String(++nCap).padStart(2, '0')}-${slug}.png`;
+  fs.writeFileSync(f, (await disp.captura()));
 };
-const teclado = () => /mInputShown=true/.test(execSync('adb shell dumpsys input_method', { timeout: 15000 }).toString());
-const ocultarTeclado = async () => { if (teclado()) { execSync('adb shell input tap 564 1557', { timeout: 15000 }); await pausa(1200); } };
+const teclado = async () => (await disp.tecladoVisible());
+const ocultarTeclado = async () => { if (await teclado()) { await disp.tocarFijo(564, 1557); await pausa(1200); } };
 
 test.describe.configure({ timeout: 1800000 });
-test.describe('B2C-125 — OTP al cambiar la tienda de retiro (Android)', () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-125 — OTP al cambiar la tienda de retiro (${PLATAFORMA})`, () => {
   test('LOG · TC-B2C125-APP-018 y APP-020', async ({ screen, plataforma: p, testData }) => {
     const correo = token(testData, 'USER_AUTH_001')!.split('/')[0].trim();
     const t1 = token(testData, 'TIENDA_RETIRO_001')!; // Unimarc Las Condes
@@ -42,7 +44,7 @@ test.describe('B2C-125 — OTP al cambiar la tienda de retiro (Android)', () => 
     await sesion(screen, p, 'TC-B2C125-APP-018', correo, /Karl|Comprador/i);
     const nav = new NavBar(screen, p);
     const activo = async () => { await tol(() => screen.getByTestId('tab-Home').tap()); await pausa(3000); return ((await screen.getByTestId('delivery-open').getText().catch(() => '')) || '').replace(/\s+/g, ' ').trim(); };
-    const volverHome = async () => { for (let i = 0; i < 4 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { execSync('adb shell input keyevent 4', { timeout: 15000 }); await pausa(1500); } };
+    const volverHome = async () => { for (let i = 0; i < 4 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { await disp.atras(); await pausa(1500); } };
     const abrirRetiro = async () => {
       await volverHome();
       await tol(() => screen.getByTestId('tab-Home').tap()); await pausa(2500);
@@ -77,7 +79,7 @@ test.describe('B2C-125 — OTP al cambiar la tienda de retiro (Android)', () => 
     try {
       await aOtp(); await pausa(800);
       const tx = util(await textos(screen));
-      cap('TC-B2C125-APP-018', 'modal-autenticacion-requerida');
+      await cap('TC-B2C125-APP-018', 'modal-autenticacion-requerida');
       const toast = tx.some((x) => /c[oó]digo de verificaci[oó]n ha sido enviado/i.test(x));
       const enmascarado = tx.some((x) => /\*{2,}|•{2,}|@/.test(x));
       const campos = (await nodos(screen)).filter((n) => /EditText/.test(n.type)).length;
@@ -93,15 +95,15 @@ test.describe('B2C-125 — OTP al cambiar la tienda de retiro (Android)', () => 
       // El modal del 018 sigue abierto: se cierra con «<».
       await ocultarTeclado();
       const cerrar = screen.getByRole('button', { name: /^(Cerrar|Volver|Atrás)/i }).first();
-      if (await cerrar.isVisible().catch(() => false)) await tol(() => cerrar.tap()); else execSync('adb shell input tap 70 496', { timeout: 15000 });
+      if (await cerrar.isVisible().catch(() => false)) await tol(() => cerrar.tap()); else await disp.tocarFijo(70, 496);
       await pausa(3000);
-      cap('TC-B2C125-APP-020', 'tras-cerrar-el-otp');
+      await cap('TC-B2C125-APP-020', 'tras-cerrar-el-otp');
       const tx = util(await textos(screen));
       const sinModal = !tx.some((x) => /Autenticaci[oó]n requerida/.test(x));
       const enLocator = tx.some((x) => /Retiro en tienda|Confirmar tienda|Selecciona tu tienda/i.test(x));
       await volverHome();
       const despues = await activo();
-      cap('TC-B2C125-APP-020', 'retiro-activo');
+      await cap('TC-B2C125-APP-020', 'retiro-activo');
       const igual = despues === antes && !/Las Condes/i.test(despues);
       guardar('TC-B2C125-APP-020', sinModal && enLocator && igual ? 'Aprobado' : (sinModal && igual ? 'REVISAR' : 'Rechazado'),
         `Tras «<» del modal OTP: modal cerrado: ${sinModal}; Store Locator visible: ${enLocator}; retiro activo antes «${antes}» y después «${despues}». Textos: ${tx.slice(0, 14).join(' | ')}.`);

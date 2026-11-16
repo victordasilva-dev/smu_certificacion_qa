@@ -6,6 +6,7 @@ import { TabBar } from './pages/TabBar';
 import { NavBar } from './pages/NavBar';
 import { rutaEvidencia } from '../tests/support/rutasEvidencia';
 import { escalaAnimaciones, grabarColdStart, medirCarrusel, tiraDeCuadros } from './support/grabacionAndroid';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-67 — Splash de la app.
@@ -30,7 +31,7 @@ function guardar(cp: string, paso: number, etiqueta: string, plataforma: Paramet
   fs.writeFileSync(ruta, png);
 }
 
-for (const plataforma of ['Android'] as const) {
+for (const plataforma of AMBAS) {
   test.describe(`B2C-67 — Splash (${plataforma})`, () => {
     test(`TC-B2C67-APP-001 · En cold start la app muestra el Splash a pantalla completa sin UI navegacional (${plataforma})`, async ({
       screen,

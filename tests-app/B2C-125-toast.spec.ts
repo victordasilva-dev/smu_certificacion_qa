@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -9,6 +8,7 @@ import { DetalleDireccionScreen } from './pages/DetalleDireccionScreen';
 import { tolerante } from './support/tolerante';
 import { nodos } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
 
 /** B2C-125 — comprobación puntual del toast de envío y del temporizador inicial con otra dirección nueva ({DIRECCION_SIN_EXPRESS}); no valida el código. */
 const tol = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
@@ -33,10 +33,10 @@ test('B2C-125 · toast de envío y temporizador inicial (dirección nueva altern
   for (let i = 0; i < 14; i++) {
     const t = (await textos(screen)).filter((x) => !/^Notificaci|Timbre|Modo|^$/.test(x));
     log.push(`${((Date.now() - t0) / 1000).toFixed(1)}s: ${t.filter((x) => /c[oó]digo|Autenticaci|Reenviar|enviado/i.test(x)).join(' | ')}`);
-    if (i === 1 || i === 3) fs.writeFileSync(`test-results/evidence/TC-B2C125-APP-001-android-p0${i}-toast-y-temporizador.png`, execSync('adb exec-out screencap -p', { maxBuffer: 20 * 1024 * 1024, timeout: 30000 }));
+    if (i === 1 || i === 3) fs.writeFileSync(`test-results/evidence/TC-B2C125-APP-001-${disp.plataforma()}-p0${i}-toast-y-temporizador.png`, (await disp.captura()));
     await pausa(700);
   }
   fs.writeFileSync('.qa/run/toast125.txt', log.join('\n'));
-  execSync('adb shell input tap 639 496', { timeout: 15000 });
+  await disp.tocarFijo(639, 496);
   await pausa(3000);
 });

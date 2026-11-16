@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -8,6 +7,8 @@ import { FiltroOfertasPanel } from './pages/FiltroOfertasPanel';
 import { tolerante } from './support/tolerante';
 import { sesion } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-95 — Filtro «Ofertas» del panel de filtros, en la app. Solo Android (emulador local), v1.0.1.
@@ -26,8 +27,9 @@ const dormir = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const tol = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
 const SALUDO = /Karl/i;
 const MARCA = 'Fundo Rio Alegre';
+/** Desplazamiento con coordenadas medidas en Android; en iOS `deslizarFijo` las escala. */
 const swipe = (x1: number, y1: number, x2: number, y2: number, ms = 400) =>
-  execSync(`adb shell input swipe ${x1} ${y1} ${x2} ${y2} ${ms}`, { timeout: 20000 });
+  disp.deslizarFijo(x1, y1, x2, y2, ms);
 
 /** Nodos con texto del árbol, para navegar por el menú de Categorías y leer la PLP. */
 async function textos(screen: Screen): Promise<{ label: string; type: string; x: number; y: number; w: number; h: number; id: string }[]> {
@@ -49,7 +51,7 @@ async function plpVacuno(screen: Screen, p: Plataforma, td: any, cp: string): Pr
   await sesion(screen, p, cp, token(td, 'USER_AUTH_001')!.split(' / ')[0].trim(), SALUDO);
   await tol(() => screen.getByTestId('tab-Categorías').tap());
   await dormir(4000);
-  for (let i = 0; i < 6; i++) { swipe(540, 700, 540, 1800, 250); await dormir(500); }
+  for (let i = 0; i < 6; i++) { await swipe(540, 700, 540, 1800, 250); await dormir(500); }
   // La sección «Carnes» es una fila a todo el ancho; sus N2 van en un carrusel horizontal debajo.
   let vacuno;
   for (let i = 0; i < 12 && !vacuno; i++) {
@@ -57,12 +59,12 @@ async function plpVacuno(screen: Screen, p: Plataforma, td: any, cp: string): Pr
     vacuno = n.find((x) => x.type === 'ViewGroup' && x.label === 'Vacuno' && x.y > 300 && x.y < 1900);
     if (vacuno) break;
     const carnes = n.find((x) => x.type === 'ViewGroup' && x.label === 'Carnes' && x.w >= 1000);
-    if (carnes && carnes.y < 1500) swipe(950, carnes.y + 300, 350, carnes.y + 300, 400);
-    else swipe(540, 1500, 540, 1000, 500);
+    if (carnes && carnes.y < 1500) await swipe(950, carnes.y + 300, 350, carnes.y + 300, 400);
+    else await swipe(540, 1500, 540, 1000, 500);
     await dormir(1500);
   }
   expect(vacuno, 'el menú de Categorías muestra Carnes → Vacuno').toBeTruthy();
-  execSync(`adb shell input tap ${vacuno!.x + 100} ${vacuno!.y + 100}`, { timeout: 15000 });
+  await disp.tocar(vacuno!.x + 100, vacuno!.y + 100);
   const plp = new ListadoScreen(screen, p);
   await tol(() => screen.getByText(/^\d+ productos?$/).first().waitFor({ state: 'visible', timeout: 40000 }));
   await dormir(2500);
@@ -102,7 +104,7 @@ async function productosDelListado(screen: Screen, maxPantallas = 8): Promise<{ 
       vistos.push({ sku, texto });
     }
     sinNuevos = vistos.length === antes ? sinNuevos + 1 : 0;
-    swipe(540, 1800, 540, 900, 600);
+    await swipe(540, 1800, 540, 900, 600);
     await dormir(1500);
   }
   return vistos;
@@ -116,8 +118,8 @@ const enOferta = (texto: string) =>
   texto.split(' | ').filter((t) => /^\$[\d.]+$/.test(t)).length >= 2;
 
 test.describe.configure({ timeout: 900000 });
-test.describe('B2C-95 — Filtro Ofertas (Android)', () => {
-  test('TC-B2C95-APP-001 · Ofertas es la primera tarjeta con nombre, cantidad y toggle desactivado [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-95 — Filtro Ofertas (${PLATAFORMA})`, () => {
+  test(`TC-B2C95-APP-001 · Ofertas es la primera tarjeta con nombre, cantidad y toggle desactivado [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C95-APP-001';
     const { plp } = await plpVacuno(screen, p, testData, cp);
     const panel = await abrirPanel(screen, p, plp, cp);
@@ -134,7 +136,8 @@ test.describe('B2C-95 — Filtro Ofertas (Android)', () => {
     await panel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C95-APP-002 · Activar Ofertas muestra el toggle activo y actualiza el conteo del boton [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C95-APP-002 · Activar Ofertas muestra el toggle activo y actualiza el conteo del boton [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
+    test.skip(PLATAFORMA === 'iOS', 'La planilla no le declara «Plataforma: Ambas»: se certifica solo en Android');
     const cp = 'TC-B2C95-APP-002';
     const { plp } = await plpVacuno(screen, p, testData, cp);
     const panel = await abrirPanel(screen, p, plp, cp);
@@ -149,7 +152,8 @@ test.describe('B2C-95 — Filtro Ofertas (Android)', () => {
     await panel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C95-APP-003 · Mostrar productos con Ofertas activo cierra el panel y lista solo ofertas [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C95-APP-003 · Mostrar productos con Ofertas activo cierra el panel y lista solo ofertas [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
+    test.skip(PLATAFORMA === 'iOS', 'La planilla no le declara «Plataforma: Ambas»: se certifica solo en Android');
     const cp = 'TC-B2C95-APP-003';
     const { plp } = await plpVacuno(screen, p, testData, cp);
     const panel = await abrirPanel(screen, p, plp, cp);
@@ -168,7 +172,7 @@ test.describe('B2C-95 — Filtro Ofertas (Android)', () => {
     await plp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C95-APP-004 · Desactivar Ofertas recalcula el conteo sobre los filtros restantes [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C95-APP-004 · Desactivar Ofertas recalcula el conteo sobre los filtros restantes [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C95-APP-004';
     const { plp } = await plpVacuno(screen, p, testData, cp);
     const panel = await abrirPanel(screen, p, plp, cp);
@@ -197,7 +201,7 @@ test.describe('B2C-95 — Filtro Ofertas (Android)', () => {
     await plp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C95-APP-006 · Ofertas combinado con Marca muestra solo productos que cumplen ambos [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C95-APP-006 · Ofertas combinado con Marca muestra solo productos que cumplen ambos [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C95-APP-006';
     const { plp } = await plpVacuno(screen, p, testData, cp);
     const panel = await abrirPanel(screen, p, plp, cp);

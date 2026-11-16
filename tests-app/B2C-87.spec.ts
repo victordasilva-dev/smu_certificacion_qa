@@ -5,8 +5,8 @@ import { token } from '../tests/support/testData';
 import { TabBar } from './pages/TabBar';
 import { BuscarScreen } from './pages/BuscarScreen';
 import type { ListadoScreen, ProductoListado } from './pages/ListadoScreen';
-import { borrarDatosApp } from './support/grabacionAndroid';
 import { proporcionRoja } from './support/pixeles';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-87 — Ordenamiento de listados en la app (modal "Selecciona tus filtros" → "Ordena tus
@@ -204,7 +204,7 @@ for (const plataforma of ['Android'] as const) {
       const cp = 'TC-B2C87-APP-014';
       // Precondición: app con datos borrados (como recién instalada).
       await device.terminateApp(bundleId!);
-      borrarDatosApp(bundleId!, process.env.ANDROID_SERIAL);
+      await disp.borrarDatosApp(bundleId!);
       await device.launchApp(bundleId!);
       // Tras borrar los datos, el primer arranque deja a uiautomator sin poder volcar la UI unos
       // segundos ("no XML content"): se reintenta la espera del Home hasta 60 s antes de seguir.

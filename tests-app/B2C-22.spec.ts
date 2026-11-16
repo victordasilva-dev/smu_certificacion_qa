@@ -11,6 +11,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { rutaEvidencia } from '../tests/support/rutasEvidencia';
 import { proporcionClara, proporcionRoja } from './support/pixeles';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-22 — TapBar de la app.
@@ -32,7 +34,7 @@ import { proporcionClara, proporcionRoja } from './support/pixeles';
 const ROJO_ACTIVO = 0.03;
 const ROJO_INACTIVO = 0.005;
 
-for (const plataforma of ['Android'] as const) {
+for (const plataforma of AMBAS) {
   test.describe(`B2C-22 — TapBar (${plataforma})`, () => {
     test(`TC-B2C22-APP-001 · Composicion del TapBar para usuario no logueado (${plataforma})`, async ({
       screen,
@@ -390,7 +392,7 @@ async function inicialDelSaludo(cuenta: MiCuentaScreen): Promise<string> {
   return (await cuenta.saludo.getText()).replace(/^Hola,\s*/, '').trim().charAt(0).toUpperCase();
 }
 
-for (const plataforma of ['Android'] as const) {
+for (const plataforma of AMBAS) {
   test.describe(`B2C-22 — TapBar con cuenta y carro declarados (${plataforma})`, () => {
     test(`TC-B2C22-APP-002 · Composicion del TapBar para usuario logueado (${plataforma})`, async ({ screen, plataforma: p, testData }) => {
       const cp = 'TC-B2C22-APP-002';
@@ -525,7 +527,7 @@ for (const plataforma of ['Android'] as const) {
       await plp.abrirPrimerProducto();
       await revisar('PDP', 5);
       // La PDP no muestra la TapBar: se vuelve a la PLP para seguir por los tabs.
-      await screen.goBack();
+      await disp.volver();
       await expect(tabs.tab('Mis productos')).toBeVisible({ timeout: 15000 });
       await tabs.tapMisProductos();
       await expect(screen.getByText('Mis favoritos')).toBeVisible();

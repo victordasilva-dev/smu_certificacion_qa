@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -11,6 +10,8 @@ import { tolerante } from './support/tolerante';
 import { agregarDesdePdp } from './support/invitadoConCarro';
 import { esperarCodigo, ingresarCodigo, nodos, sesion } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-189 — Mis Envíos: cambio de dirección/tienda desde la tarjeta (app nativa, Android, v1.0.1).
@@ -20,29 +21,30 @@ const tol = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
 const pausa = (ms: number) => new Promise((s) => setTimeout(s, ms));
 const textos = async (screen: Screen) => (await nodos(screen)).map((n) => n.label).filter(Boolean);
 const util = (t: string[]) => t.filter((x) => !/^Notificaci|Timbre|Modo|^$/.test(x));
-const RES = '.qa/run/res189.json';
+/** Veredictos de la corrida, uno por plataforma: correr iOS no pisa los de Android. */
+const RES = () => `.qa/run/res189${disp.esIos() ? '-ios' : ''}.json`;
 const guardar = (cp: string, status: string, obs: string) => {
-  const r = fs.existsSync(RES) ? JSON.parse(fs.readFileSync(RES, 'utf-8')) : {};
+  const r = fs.existsSync(RES()) ? JSON.parse(fs.readFileSync(RES(), 'utf-8')) : {};
   r[cp] = { status, obs };
-  fs.writeFileSync(RES, JSON.stringify(r, null, 1));
+  fs.writeFileSync(RES(), JSON.stringify(r, null, 1));
 };
 let nCap = 0;
-const cap = (cp: string, slug: string) => {
+const cap = async (cp: string, slug: string) => {
   fs.mkdirSync('test-results/evidence', { recursive: true });
-  const f = `test-results/evidence/${cp}-android-p${String(++nCap).padStart(2, '0')}-${slug}.png`;
-  fs.writeFileSync(f, execSync('adb exec-out screencap -p', { maxBuffer: 20 * 1024 * 1024, timeout: 30000 }));
+  const f = `test-results/evidence/${cp}-${disp.plataforma()}-p${String(++nCap).padStart(2, '0')}-${slug}.png`;
+  fs.writeFileSync(f, (await disp.captura()));
 };
 const verif = async (cp: string, fn: () => Promise<[boolean | null, string]>) => {
   nCap = 0;
   try { const [ok, obs] = await fn(); guardar(cp, ok === null ? 'REVISAR' : ok ? 'Aprobado' : 'Rechazado', obs); }
   catch (e) { guardar(cp, 'ERROR', String(e).slice(0, 300)); }
 };
-const teclado = () => /mInputShown=true/.test(execSync('adb shell dumpsys input_method', { timeout: 15000 }).toString());
-const ocultarTeclado = async () => { if (teclado()) { execSync('adb shell input tap 564 1557', { timeout: 15000 }); await pausa(1200); } };
+const teclado = async () => (await disp.tecladoVisible());
+const ocultarTeclado = async () => { if (await teclado()) { await disp.tocarFijo(564, 1557); await pausa(1200); } };
 const sinTilde = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
 
 test.describe.configure({ timeout: 3300000 });
-test.describe('B2C-189 — Mis Envíos: cambio de dirección o tienda (Android)', () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-189 — Mis Envíos: cambio de dirección o tienda (${PLATAFORMA})`, () => {
   test('LOG · TC-B2C189-APP (001-018)', async ({ screen, plataforma: p, testData }) => {
     const correo = token(testData, 'USER_AUTH_001')!.split('/')[0].trim();
     const base = token(testData, 'DIRECCION_DESPACHO_001')!;
@@ -58,7 +60,7 @@ test.describe('B2C-189 — Mis Envíos: cambio de dirección o tienda (Android)'
     const nav = new NavBar(screen, p);
     const tabs = new TabBar(screen, p);
 
-    const volverHome = async () => { for (let i = 0; i < 5 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { execSync('adb shell input keyevent 4', { timeout: 15000 }); await pausa(1500); } };
+    const volverHome = async () => { for (let i = 0; i < 5 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { await disp.atras(); await pausa(1500); } };
     const home = async () => { await volverHome(); await tol(() => screen.getByTestId('tab-Home').tap()); await pausa(2500); };
     const activo = async () => { await home(); return ((await screen.getByTestId('delivery-open').getText().catch(() => '')) || '').replace(/\s+/g, ' ').trim(); };
 
@@ -91,7 +93,7 @@ test.describe('B2C-189 — Mis Envíos: cambio de dirección o tienda (Android)'
           if (!(await b.isVisible().catch(() => false))) { if ((await textos(screen)).some((x) => /carro est[aá] vac[ií]o/i.test(x)) || i > 6) break; await pausa(2500); continue; }
           await tol(() => b.tap()).catch(() => {}); await pausa(2500);
         }
-        await tol(() => screen.goBack()); await pausa(2000);
+        await tol(() => disp.volver()); await pausa(2000);
       }
     };
     const agregar = async (sku: string, unid = 1) => {
@@ -99,8 +101,8 @@ test.describe('B2C-189 — Mis Envíos: cambio de dirección o tienda (Android)'
       await home();
       if (unid > 1) {
         await tol(() => tabs.tapFloatingPill()); await pausa(6000);
-        for (let u = 1; u < unid; u++) { execSync('adb shell input tap 626 421', { timeout: 15000 }); await pausa(2000); }
-        await pausa(2000); await tol(() => screen.goBack()); await pausa(2000);
+        for (let u = 1; u < unid; u++) { await disp.tocarFijo(626, 421); await pausa(2000); }
+        await pausa(2000); await tol(() => disp.volver()); await pausa(2000);
       }
     };
     const aMisEnvios = async () => {
@@ -111,7 +113,7 @@ test.describe('B2C-189 — Mis Envíos: cambio de dirección o tienda (Android)'
       await tol(() => screen.getByText('Datos de entrega').first().waitFor({ state: 'visible', timeout: 30000 }));
     };
     const snap = async () => {
-      execSync('adb shell input swipe 360 500 360 1100 400', { timeout: 15000 }); await pausa(1200);
+      await disp.deslizarFijo(360, 500, 360, 1100, 400, { base: [720, 1600], timeout: 15000 }); await pausa(1200);
       const t = util(await textos(screen));
       const i0 = t.indexOf('Datos de entrega');
       const rest = t.slice(i0 + 1);
@@ -170,20 +172,20 @@ test.describe('B2C-189 — Mis Envíos: cambio de dirección o tienda (Android)'
     await prep('mis-envios-retiro', aMisEnvios);
     let s0: any = null;
     await verif('TC-B2C189-APP-003', async () => {
-      s0 = await snap(); cap('TC-B2C189-APP-003', 'mis-envios-retiro');
-      await abrirCambiar(); cap('TC-B2C189-APP-003', 'store-locator');
+      s0 = await snap(); await cap('TC-B2C189-APP-003', 'mis-envios-retiro');
+      await abrirCambiar(); await cap('TC-B2C189-APP-003', 'store-locator');
       const t = util(await textos(screen));
       const ok = t.some((x) => /Elige tu m[eé]todo de entrega/.test(x)) && t.some((x) => /Selecciona tu tienda/i.test(x));
       return [ok, `Tarjeta antes: «${s0.tarjeta}». Al tocar «Cambiar» se abrió: ${t.slice(0, 12).join(' | ')}.`];
     });
     await verif('TC-B2C189-APP-004', async () => {
-      await cerrarModal(); cap('TC-B2C189-APP-004', 'tras-la-x');
+      await cerrarModal(); await cap('TC-B2C189-APP-004', 'tras-la-x');
       const s1 = await snap();
       return [igual(s0, s1), `Antes: ${s0.tarjeta} | ${s0.dia} | ${s0.hor} | ${s0.sub}. Después de la X: ${s1.tarjeta} | ${s1.dia} | ${s1.hor} | ${s1.sub}.`];
     });
     await verif('TC-B2C189-APP-006', async () => {
       const a = await snap(); const log = await cambiarTienda('TC-B2C189-APP-006', t2);
-      await pausa(4000); cap('TC-B2C189-APP-006', 'mis-envios-nueva-tienda');
+      await pausa(4000); await cap('TC-B2C189-APP-006', 'mis-envios-nueva-tienda');
       const s1 = await snap();
       const ok = new RegExp(corta(t2), 'i').test(s1.tarjeta + ' ' + s1.todo.join(' ')) && s1.todo.includes('Datos de entrega');
       return [ok, `Flujo: ${log.join(' > ')}. Tarjeta antes «${a.tarjeta}» / ${a.hor}; después «${s1.tarjeta}» / ${s1.hor} / ${s1.sub}.`];
@@ -198,28 +200,28 @@ test.describe('B2C-189 — Mis Envíos: cambio de dirección o tienda (Android)'
     await prep('mis-envios-despacho', aMisEnvios);
     let d0: any = null;
     await verif('TC-B2C189-APP-001', async () => {
-      d0 = await snap(); cap('TC-B2C189-APP-001', 'mis-envios-despacho');
-      await abrirCambiar(); cap('TC-B2C189-APP-001', 'store-locator-despacho');
+      d0 = await snap(); await cap('TC-B2C189-APP-001', 'mis-envios-despacho');
+      await abrirCambiar(); await cap('TC-B2C189-APP-001', 'store-locator-despacho');
       const t = util(await textos(screen));
       const ok = t.some((x) => /Elige tu m[eé]todo de entrega/.test(x)) && t.some((x) => /Direcci[oó]n de despacho|Direcciones guardadas|Calle, direcci[oó]n o lugar/.test(x));
       return [ok, `Tarjeta: «${d0.tarjeta}». Textos al tocar «Cambiar»: ${t.slice(0, 12).join(' | ')}.`];
     });
     await verif('TC-B2C189-APP-002', async () => {
-      await cerrarModal(); cap('TC-B2C189-APP-002', 'tras-la-x');
+      await cerrarModal(); await cap('TC-B2C189-APP-002', 'tras-la-x');
       const s1 = await snap();
       return [igual(d0, s1), `Antes: ${d0.tarjeta} | ${d0.dia} | ${d0.hor} | ${d0.sub}. Después de la X: ${s1.tarjeta} | ${s1.dia} | ${s1.hor} | ${s1.sub}.`];
     });
     await verif('TC-B2C189-APP-016', async () => {
       const a = await snap();
       const m = await abrirCambiar(); await tol(() => m.pestanaDespacho.tap()); await pausa(1500);
-      await m.buscar(otra); await pausa(3000); cap('TC-B2C189-APP-016', 'busqueda-sin-confirmar');
-      await cerrarModal(); cap('TC-B2C189-APP-016', 'tras-la-x');
+      await m.buscar(otra); await pausa(3000); await cap('TC-B2C189-APP-016', 'busqueda-sin-confirmar');
+      await cerrarModal(); await cap('TC-B2C189-APP-016', 'tras-la-x');
       const s1 = await snap();
       return [igual(a, s1), `Antes: ${a.tarjeta} | ${a.dia} | ${a.hor} | ${a.sub}. Con «${otra}» escrita sin confirmar y tras la X: ${s1.tarjeta} | ${s1.dia} | ${s1.hor} | ${s1.sub}.`];
     });
     await verif('TC-B2C189-APP-005', async () => {
       const a = await snap(); const log = await cambiarDireccion('TC-B2C189-APP-005', otra);
-      await pausa(4000); cap('TC-B2C189-APP-005', 'mis-envios-nueva-direccion');
+      await pausa(4000); await cap('TC-B2C189-APP-005', 'mis-envios-nueva-direccion');
       const s1 = await snap();
       const ok = s1.todo.includes('Datos de entrega') && new RegExp(num(otra)).test(s1.tarjeta);
       return [ok, `Flujo: ${log.join(' > ')}. Tarjeta antes «${a.tarjeta}» / ${a.hor}; después «${s1.tarjeta}» / ${s1.hor} / ${s1.sub}.`];
@@ -235,7 +237,7 @@ test.describe('B2C-189 — Mis Envíos: cambio de dirección o tienda (Android)'
     let itemsAntes = 0;
     await verif('TC-B2C189-APP-015', async () => {
       const a = await snap(); const log = await cambiarDireccion('TC-B2C189-APP-015', misma);
-      await pausa(4000); cap('TC-B2C189-APP-015', 'mis-envios-misma-tienda');
+      await pausa(4000); await cap('TC-B2C189-APP-015', 'mis-envios-misma-tienda');
       const s1 = await snap();
       const sinModal = !s1.todo.some((x) => /Se agotaron|Algunos productos/i.test(x)) && log.every((x) => x === 'OTP');
       const ok = sinModal && s1.todo.includes('Datos de entrega') && new RegExp(num(misma)).test(s1.tarjeta);
@@ -250,14 +252,14 @@ test.describe('B2C-189 — Mis Envíos: cambio de dirección o tienda (Android)'
     await verif('TC-B2C189-APP-007', async () => {
       itemsAntes = (await screen.getByRole('button', { name: /^eliminar/i }).all().catch(() => [])).length;
       log7 = await cambiarDireccion('TC-B2C189-APP-007', otra, true);
-      await pausa(3000); cap('TC-B2C189-APP-007', 'flujo-no-disponibles');
+      await pausa(3000); await cap('TC-B2C189-APP-007', 'flujo-no-disponibles');
       const t = util(await textos(screen));
       const ok = t.some((x) => /Se agotaron/i.test(x));
       return [ok, `Flujo: ${log7.join(' > ')}. Textos: ${t.slice(0, 16).join(' | ')}.`];
     });
     await verif('TC-B2C189-APP-008', async () => {
       await tol(() => screen.getByRole('button', { name: /Entendido/i }).first().tap()); await pausa(6000);
-      cap('TC-B2C189-APP-008', 'tras-entendido');
+      await cap('TC-B2C189-APP-008', 'tras-entendido');
       const t = util(await textos(screen));
       const enCarro = t.some((x) => /Continuar con la entrega|Mi carro|Carro|Subtotal/i.test(x)) && !t.some((x) => /Datos de entrega/.test(x));
       return [enCarro, `Tras «Entendido»: ${t.slice(0, 18).join(' | ')}.`];
@@ -271,7 +273,7 @@ test.describe('B2C-189 — Mis Envíos: cambio de dirección o tienda (Android)'
     await prep('mis-envios-4', aMisEnvios);
     await verif('TC-B2C189-APP-018', async () => {
       const log = await cambiarTienda('TC-B2C189-APP-018', t2, true);
-      await pausa(3000); cap('TC-B2C189-APP-018', 'flujo-no-disponibles');
+      await pausa(3000); await cap('TC-B2C189-APP-018', 'flujo-no-disponibles');
       const t = util(await textos(screen));
       return [t.some((x) => /Se agotaron/i.test(x)), `Flujo: ${log.join(' > ')}. Textos: ${t.slice(0, 16).join(' | ')}.`];
     });

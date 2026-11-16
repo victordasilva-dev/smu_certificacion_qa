@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -10,6 +9,8 @@ import { TabBar } from './pages/TabBar';
 import { tolerante } from './support/tolerante';
 import { esperarCodigo, nodos, sesion } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-125 — Validación OTP al cambiar de dirección (app nativa, Android, build v1.0.1).
@@ -19,31 +20,32 @@ const tol = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
 const pausa = (ms: number) => new Promise((s) => setTimeout(s, ms));
 const textos = async (screen: Screen) => (await nodos(screen)).map((n) => n.label).filter(Boolean);
 const util = (t: string[]) => t.filter((x) => !/^Notificaci|Timbre|Modo|^$/.test(x));
-const RES = '.qa/run/res125c.json';
+/** Veredictos de la corrida, uno por plataforma: correr iOS no pisa los de Android. */
+const RES = () => `.qa/run/res125c${disp.esIos() ? '-ios' : ''}.json`;
 const guardar = (cp: string, status: string, obs: string) => {
-  const r = fs.existsSync(RES) ? JSON.parse(fs.readFileSync(RES, 'utf-8')) : {};
+  const r = fs.existsSync(RES()) ? JSON.parse(fs.readFileSync(RES(), 'utf-8')) : {};
   r[cp] = { status, obs };
-  fs.writeFileSync(RES, JSON.stringify(r, null, 1));
+  fs.writeFileSync(RES(), JSON.stringify(r, null, 1));
 };
 let nCap = 0;
-const cap = (cp: string, slug: string) => {
+const cap = async (cp: string, slug: string) => {
   fs.mkdirSync('test-results/evidence', { recursive: true });
-  const f = `test-results/evidence/${cp}-android-p${String(++nCap).padStart(2, '0')}-${slug}.png`;
-  fs.writeFileSync(f, execSync('adb exec-out screencap -p', { maxBuffer: 20 * 1024 * 1024, timeout: 30000 }));
+  const f = `test-results/evidence/${cp}-${disp.plataforma()}-p${String(++nCap).padStart(2, '0')}-${slug}.png`;
+  fs.writeFileSync(f, (await disp.captura()));
 };
 const verif = async (cp: string, fn: () => Promise<[boolean | null, string]>) => {
   nCap = 0;
   try { const [ok, obs] = await fn(); guardar(cp, ok === null ? 'REVISAR' : ok ? 'Aprobado' : 'Rechazado', obs); }
   catch (e) { guardar(cp, 'ERROR', String(e).slice(0, 300)); }
 };
-const teclado = () => /mInputShown=true/.test(execSync('adb shell dumpsys input_method', { timeout: 15000 }).toString());
-const ocultarTeclado = async () => { if (teclado()) { execSync('adb shell input tap 564 1557', { timeout: 15000 }); await pausa(1200); } };
-const digitos = (c: string) => { for (const d of c) { execSync(`adb shell input keyevent ${7 + Number(d)}`, { timeout: 15000 }); execSync('sleep 0.6'); } };
-const borrar = () => { for (let i = 0; i < 8; i++) { execSync('adb shell input keyevent KEYCODE_DEL', { timeout: 15000 }); execSync('sleep 0.3'); } };
+const teclado = async () => (await disp.tecladoVisible());
+const ocultarTeclado = async () => { if (await teclado()) { await disp.tocarFijo(564, 1557); await pausa(1200); } };
+const digitos = async (c: string) => { for (const d of c) { await disp.tecla(String(d) as disp.Tecla); await disp.pausaMs(600); } };
+const borrar = async () => { for (let i = 0; i < 8; i++) { await disp.tecla('borrar'); await disp.pausaMs(300); } };
 const temporizador = (t: string[]) => t.find((x) => /\d{2}:\d{2}/.test(x)) ?? '';
 
 test.describe.configure({ timeout: 3000000 });
-test.describe('B2C-125 — OTP al cambiar de dirección (Android)', () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-125 — OTP al cambiar de dirección (${PLATAFORMA})`, () => {
   test('LOG · TC-B2C125-APP cierre (016, 014, 015, 008)', async ({ screen, plataforma: p, testData }) => {
     const correo = token(testData, 'USER_AUTH_001')!.split('/')[0].trim();
     const dir = token(testData, 'DIRECCION_OTRA_TIENDA')!;
@@ -64,11 +66,11 @@ test.describe('B2C-125 — OTP al cambiar de dirección (Android)', () => {
         if (!(await b.isVisible().catch(() => false))) { if ((await textos(screen)).some((x) => /carro est[aá] vac[ií]o/i.test(x)) || i > 6) break; await pausa(2500); continue; }
         await tol(() => b.tap()).catch(() => {}); await pausa(2500);
       }
-      await tol(() => screen.goBack()); await pausa(2000);
+      await tol(() => disp.volver()); await pausa(2000);
     }
     const locActivo = async () => { await tol(() => screen.getByTestId('tab-Home').tap()); await pausa(3000); return (((await screen.getByTestId('delivery-open').getText().catch(() => '')) || '').replace(/\s+/g, ' ').trim()); };
     const abrirOtp = async (): Promise<Date> => {
-      for (let i = 0; i < 4 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { execSync('adb shell input keyevent 4', { timeout: 15000 }); await pausa(1500); }
+      for (let i = 0; i < 4 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { await disp.atras(); await pausa(1500); }
       await tol(() => screen.getByTestId('tab-Home').tap()); await pausa(2500);
       await tol(() => nav.tapMetodoDeEntrega());
       const modal = await tol(() => new MetodoEntregaModal(screen, p).waitUntilReady());
@@ -83,33 +85,33 @@ test.describe('B2C-125 — OTP al cambiar de dirección (Android)', () => {
       return desde;
     };
     const continuarHabilitado = async () => { await ocultarTeclado(); return screen.getByRole('button', { name: 'Validar' }).first().isEnabled().catch(() => null); };
-    const ingresar = async (codigo: string) => { if (!teclado()) { await screen.getByType('android.widget.EditText').first().tap().catch(() => {}); await pausa(1200); } borrar(); digitos(codigo); await pausa(1500); await ocultarTeclado(); await tol(() => screen.getByRole('button', { name: 'Validar' }).first().tap()); await pausa(4000); };
+    const ingresar = async (codigo: string) => { if (!await teclado()) { await disp.campoDeTexto(screen).first().tap().catch(() => {}); await pausa(1200); } await borrar(); await digitos(codigo); await pausa(1500); await ocultarTeclado(); await tol(() => screen.getByRole('button', { name: 'Validar' }).first().tap()); await pausa(4000); };
 
     const activaAntes = await locActivo();
     // ── 014 / 015 / 008 ──
     const desde1 = await abrirOtp();
     const c1 = await esperarCodigo('TC-B2C125-APP-014', correo, desde1);
     for (let i = 0; i < 50 && !(await textos(screen)).some((x) => /^Reenviar$/.test(x)); i++) await pausa(3000);
-    cap('TC-B2C125-APP-014', 'reenviar-disponible');
+    await cap('TC-B2C125-APP-014', 'reenviar-disponible');
     const desde2 = new Date(Date.now() - 5000);
     await tol(() => screen.getByText(/^Reenviar$/).first().tap()); await pausa(2500);
-    cap('TC-B2C125-APP-014', 'tras-reenviar');
+    await cap('TC-B2C125-APP-014', 'tras-reenviar');
     const tim2 = temporizador(util(await textos(screen)));
     const c2 = await esperarCodigo('TC-B2C125-APP-014', correo, desde2);
     await verif('TC-B2C125-APP-015', async () => {
-      await ingresar(c1); await pausa(2000); cap('TC-B2C125-APP-015', 'codigo-anterior');
+      await ingresar(c1); await pausa(2000); await cap('TC-B2C125-APP-015', 'codigo-anterior');
       const t = util(await textos(screen));
       return [t.some((x) => /Autenticaci[oó]n requerida/.test(x)) && t.some((x) => /inv[aá]lid|incorrect|no pudimos|no es v[aá]lido/i.test(x)), `Textos tras validar el código anterior: ${t.slice(0, 20).join(' | ')}.`];
     });
     await verif('TC-B2C125-APP-014', async () => {
-      await ingresar(c2); await pausa(3000); cap('TC-B2C125-APP-014', 'codigo-nuevo');
+      await ingresar(c2); await pausa(3000); await cap('TC-B2C125-APP-014', 'codigo-nuevo');
       const t = util(await textos(screen));
       const cerrado = !t.some((x) => /Autenticaci[oó]n requerida/.test(x));
       return [cerrado, `Tras reenviar el temporizador marcó «${tim2}» (reinicio); con el código nuevo el modal ${cerrado ? 'se cerró' : 'sigue abierto'}.`];
     });
     await verif('TC-B2C125-APP-008', async () => {
       await pausa(5000);
-      const hdr = await locActivo(); cap('TC-B2C125-APP-008', 'direccion-activa');
+      const hdr = await locActivo(); await cap('TC-B2C125-APP-008', 'direccion-activa');
       return [new RegExp(numero).test(hdr), `Dirección activa tras validar el OTP: «${hdr}».`];
     });
     try {
