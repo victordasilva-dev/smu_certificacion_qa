@@ -8,6 +8,7 @@ import { MiCuentaScreen } from './pages/MiCuentaScreen';
 import { rutaEvidencia } from '../tests/support/rutasEvidencia';
 import { proporcionRojiza } from './support/pixeles';
 import { AMBAS } from './support/plataformaApp';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-23 — NavBar de la app.
@@ -57,8 +58,9 @@ for (const plataforma of AMBAS) {
       await expect(nav.textoSinMetodo).toBeVisible();
       const icono = await nav.iconoDerechoEsMas();
 
-      // Esperado — icono, 'Elige una forma de entrega' y el icono más.
-      expect(icono.esMas, `icono más a la derecha (${icono.detalle})`).toBe(true);
+      // Esperado — icono, 'Elige una forma de entrega' y el icono chevron (la planilla lo cambió de '+' a chevron).
+      expect(icono.detalle, 'hay un icono a la derecha').not.toBe('sin icono oscuro en la zona');
+      expect(icono.esMas, `icono chevron, no '+', a la derecha (${icono.detalle})`).toBe(false);
     });
 
     test(`TC-B2C23-APP-005 · Tap en el NavBar abre el popup Metodo de entrega (${plataforma})`, async ({ screen, plataforma: p }) => {
@@ -118,14 +120,18 @@ for (const plataforma of AMBAS) {
       const home = await new TabBar(screen, p).tab('Home').boundingBox();
       const tapbar = { x: home.x, y: home.y, width: home.width * 5, height: home.height };
       let splash: Buffer | undefined;
+      // En el emulador Pixel 4 el splash dura ~1 s: `screen.screenshot()` llega tarde. Se toman varias
+      // capturas rápidas (screencap) tras cada relanzamiento y se queda la primera que sea el splash.
       for (let intento = 0; intento < 5 && !splash; intento++) {
         await device.terminateApp(bundleId!);
         await device.launchApp(bundleId!);
-        const foto = await screen.screenshot();
-        const logo = await proporcionRojiza(foto, { left: 440, top: 1070, width: 200, height: 200 });
-        const conTapBar = (await NavBar.franjaClara(foto, tapbar)) > 0.5;
-        await test.info().attach(`intento-${intento}-logo-${logo.toFixed(2)}`, { body: foto, contentType: 'image/png' });
-        if (logo > 0.3 && !conTapBar) splash = foto;
+        for (let cuadro = 0; cuadro < 4 && !splash; cuadro++) {
+          const foto = await disp.captura();
+          const logo = await proporcionRojiza(foto, { left: 440, top: 1070, width: 200, height: 200 });
+          const claraTapBar = await NavBar.franjaClara(foto, tapbar);
+          await test.info().attach(`intento-${intento}.${cuadro}-logo-${logo.toFixed(2)}-tapbar-${claraTapBar.toFixed(2)}`, { body: foto, contentType: 'image/png' });
+          if (logo > 0.3 && claraTapBar <= 0.5) splash = foto;
+        }
       }
       if (!splash) throw new Error('Ambiente: no se alcanzó a fotografiar el splash en 5 relanzamientos.');
       const ruta = rutaEvidencia(cp, 1, 'splash sin NavBar', p);
