@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -8,6 +7,7 @@ import { arrancarInvitado } from './support/entregaApp';
 import { sesion } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
 import { tolerante } from './support/tolerante';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-72 — Carrusel + imagen circular con título (app nativa, Android, build v1.0.1): los TC Pendiente.
@@ -63,10 +63,13 @@ const masCentrado = (it: Nodo[]) => [...it].sort((a, b) => Math.abs(a.x + a.w / 
 
 
 /** Desliza el carrusel a la altura del elemento con coordenadas explícitas (el swipe del locator falla cerca del borde). */
-function deslizar(ref: Nodo, dir: 'left' | 'right'): void {
+async function deslizar(ref: Nodo, dir: 'left' | 'right'): Promise<void> {
   const y = Math.round(ref.y + ref.h / 2);
-  const [x1, x2] = dir === 'left' ? [850, 250] : [250, 850];
-  execSync(`adb shell input swipe ${x1} ${y} ${x2} ${y} 350`, { timeout: 15000 });
+  // x medidas en Android (1080 de ancho); en iOS, la misma proporción del ancho en puntos.
+  const ancho = disp.esIos() ? (await disp.tamanoPantalla())[0] : 1080;
+  const [a, b] = [Math.round((850 * ancho) / 1080), Math.round((250 * ancho) / 1080)];
+  const [x1, x2] = dir === 'left' ? [a, b] : [b, a];
+  await disp.deslizar(x1, y, x2, y, 350);
 }
 
 /** Deja el componente en pantalla buscándolo hacia abajo y, si la página aún cargaba, también hacia arriba. */
@@ -93,7 +96,7 @@ async function todosLosElementos(screen: Screen): Promise<string[]> {
     const primero = it0[0]?.t ?? '';
     if (!ref0 || primero === previo) break;
     previo = primero;
-    deslizar(ref0, 'right');
+    await deslizar(ref0, 'right');
     await pausa(900);
   }
   const vistos: string[] = [];
@@ -104,7 +107,7 @@ async function todosLosElementos(screen: Screen): Promise<string[]> {
     if (!nuevos.length && vuelta > 0) break;
     const origen = masCentrado(it.filter(enPantalla));
     if (!origen) break;
-    deslizar(origen, 'left');
+    await deslizar(origen, 'left');
     await pausa(1200);
   }
   return vistos;
@@ -171,7 +174,7 @@ test.describe('B2C-72 — Carrusel de imágenes circulares, TC pendientes (Andro
       const antes = new Set((await items(screen)).map((x) => x.t));
       const ref = masCentrado(visibles);
       if (!ref) break;
-      deslizar(ref, 'left');
+      await deslizar(ref, 'left');
       await pausa(1200);
       const despues = (await items(screen)).map((x) => x.t);
       if (despues.every((t) => antes.has(t))) break;

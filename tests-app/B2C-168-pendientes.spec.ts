@@ -8,6 +8,7 @@ import { HomeScreen } from './pages/HomeScreen';
 import { arrancarInvitado } from './support/entregaApp';
 import { escribirTexto, esperarCodigo, ingresarCodigo } from './support/sesionOtp';
 import { tolerante } from './support/tolerante';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-168 — fusión de carros invitado → logueado (app nativa, Android, build v1.0.1), TC 002.
@@ -42,7 +43,7 @@ test.describe('B2C-168 — fusión de carros, TC pendientes (Android)', () => {
     await r(() => carro.capturarEvidencia(cp, 4, 'carro del invitado'));
     await r(() => boton.tap());
     // Paso 4: inicio de sesión por correo + OTP.
-    const campo = screen.getByType('android.widget.EditText').first();
+    const campo = disp.campoDeTexto(screen).first();
     await r(() => campo.waitFor({ state: 'visible', timeout: 30000 }));
     const desde = new Date(Date.now() - 30000);
     await escribirTexto(campo, correo);

@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
 import { BuscarScreen } from './pages/BuscarScreen';
@@ -7,6 +6,7 @@ import { MiCuentaScreen } from './pages/MiCuentaScreen';
 import { sesion, nodos } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
 import { tolerante } from './support/tolerante';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-100 — pantalla de búsqueda (app nativa, Android, build v1.0.1): los TC con sesión que quedaron
@@ -20,8 +20,9 @@ import { tolerante } from './support/tolerante';
 
 const r = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
 const pausa = (ms: number) => new Promise((s) => setTimeout(s, ms));
-const tocar = (x: number, y: number) => execSync(`adb shell input tap ${x} ${y}`, { timeout: 15000 });
-const atras = () => execSync('adb shell input keyevent 4', { timeout: 15000 });
+/** Coordenadas medidas a mano en Android: en iOS `tocarFijo` falla en vez de tocar cualquier cosa. */
+const tocar = (x: number, y: number) => disp.tocarFijo(x, y);
+const atras = async () => await disp.atras();
 const TAB_BUSCAR: [number, number] = [540, 2232];
 const TAB_PRODUCTOS: [number, number] = [720, 2232];
 const TAB_CUENTA: [number, number] = [900, 2232];
@@ -40,13 +41,13 @@ async function conSesion(screen: any, p: any, cp: string, td: any) {
 /** Cierra sesión (si hay) y vuelve a entrar: deja el historial de la sesión vacío. */
 async function sesionNueva(screen: any, p: any, cp: string, td: any) {
   await asegurarApp(screen);
-  tocar(...TAB_CUENTA);
+  await tocar(...TAB_CUENTA);
   await pausa(3500);
   if ((await r(() => nodos(screen))).some((x) => /^Hola, /.test(x.label))) {
     // El cierre de sesión funciona, pero el helper puede no ver el modal de confirmación y reintentar sobre una cuenta ya cerrada.
     await r(() => new MiCuentaScreen(screen, p).cerrarSesion()).catch(() => undefined);
     await pausa(3000);
-    tocar(...TAB_CUENTA);
+    await tocar(...TAB_CUENTA);
     await pausa(3500);
     if ((await r(() => nodos(screen))).some((x) => /^Hola, /.test(x.label))) throw new Error('la sesión no se cerró');
   }
@@ -57,19 +58,19 @@ async function sesionNueva(screen: any, p: any, cp: string, td: any) {
 /** Deja la app como invitado (cierra la sesión si hay una). */
 async function comoInvitado(screen: any, p: any) {
   await asegurarApp(screen);
-  tocar(...TAB_CUENTA);
+  await tocar(...TAB_CUENTA);
   await pausa(3500);
   if ((await r(() => nodos(screen))).some((x) => /^Hola, /.test(x.label))) {
     await r(() => new MiCuentaScreen(screen, p).cerrarSesion()).catch(() => undefined);
     await pausa(3000);
-    tocar(...TAB_CUENTA);
+    await tocar(...TAB_CUENTA);
     await pausa(3500);
     if ((await r(() => nodos(screen))).some((x) => /^Hola, /.test(x.label))) throw new Error('la sesión no se cerró');
   }
 }
 
 async function abrirBusqueda(screen: any, p: any): Promise<BuscarScreen> {
-  tocar(...TAB_BUSCAR);
+  await tocar(...TAB_BUSCAR);
   await pausa(3500);
   const b = new BuscarScreen(screen, p);
   await r(() => b.waitUntilReady());
@@ -99,14 +100,14 @@ async function buscarTermino(screen: any, p: any, termino: string) {
 /** Visita la PDP del SKU desde los favoritos de la cuenta (sin tocar el historial de búsquedas). */
 async function visitarDesdeFavoritos(screen: any, p: any, sku: string) {
   const nombre = sku.includes('675191') ? /Albondigas Super Pollo/i : new RegExp(sku);
-  tocar(...TAB_PRODUCTOS);
+  await tocar(...TAB_PRODUCTOS);
   await pausa(5000);
   const fila = screen.getByText(nombre).first();
   await r(() => fila.waitFor({ state: 'visible', timeout: 40000 }));
   await r(() => fila.tap());
   const pdp = await r(() => new PdpScreen(screen, p).waitUntilReady());
   await pausa(2000);
-  atras();
+  await atras();
   await pausa(2500);
   return pdp;
 }
@@ -117,9 +118,9 @@ async function visitarPorBusqueda(screen: any, p: any, sku: string) {
   await r(() => srp.tarjeta(sku).tap());
   await r(() => new PdpScreen(screen, p).waitUntilReady());
   await pausa(1800);
-  atras();
+  await atras();
   await pausa(1500);
-  atras();
+  await atras();
   await pausa(2500);
 }
 
@@ -127,7 +128,7 @@ async function visitarPorBusqueda(screen: any, p: any, sku: string) {
 async function armarHistorial(screen: any, p: any, o: { busquedas?: string[]; skuVisita?: string }) {
   for (const t of o.busquedas ?? []) {
     await buscarTermino(screen, p, t);
-    atras();
+    await atras();
     await pausa(2500);
   }
   if (o.skuVisita) await visitarDesdeFavoritos(screen, p, o.skuVisita);
@@ -144,7 +145,7 @@ test.describe('B2C-100 — pantalla de búsqueda con sesión (Android)', () => {
     const cp = 'TC-100-APP-009';
     await sesionNueva(screen, p, cp, testData);
     await buscarTermino(screen, p, 'leche');
-    atras();
+    await atras();
     await pausa(2500);
     const b = await abrirBusqueda(screen, p);
     await r(() => b.capturarEvidencia(cp, 2, 'pantalla de búsqueda tras buscar leche'));
@@ -220,7 +221,7 @@ test.describe('B2C-100 — pantalla de búsqueda con sesión (Android)', () => {
     await pausa(7000);
     await r(() => b.capturarEvidencia(cp, 4, 'con 3 caracteres (resultados dinámicos)'));
     const con3 = await secciones(screen, p);
-    execSync('adb shell input keyevent 67', { timeout: 15000 });
+    await disp.tecla('borrar');
     await pausa(5000);
     await r(() => b.capturarEvidencia(cp, 6, 'tras borrar 1 carácter (quedan 2)'));
     const con2 = await secciones(screen, p);
@@ -354,14 +355,14 @@ test.describe('B2C-100 — pantalla de búsqueda con sesión (Android)', () => {
       let actual = await leer();
       if (actual.length > 0 && !texto.startsWith(actual) && !actual.startsWith(texto.slice(0, 100))) {
         // Texto corrupto: se borra y se parte de nuevo.
-        for (let d = 0; d < actual.length + 5; d++) execSync('adb shell input keyevent 67', { timeout: 15000 });
+        for (let d = 0; d < actual.length + 5; d++) await disp.tecla('borrar');
         await pausa(1500);
         actual = await leer();
       }
       if (actual.length >= 100) break;
       const faltante = texto.slice(actual.length, actual.length + 6);
       if (!faltante) break;
-      execSync(`adb shell input text '${faltante.replace(/ /g, '%s')}'`, { timeout: 20000 });
+      await disp.escribir(faltante);
       await pausa(1200);
       const nuevo = await leer();
       sinAvance = nuevo === previo ? sinAvance + 1 : 0;

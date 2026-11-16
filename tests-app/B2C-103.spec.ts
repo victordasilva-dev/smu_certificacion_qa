@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -8,6 +7,8 @@ import { SellosAdvertenciaPanel } from './pages/SellosAdvertenciaPanel';
 import { tolerante } from './support/tolerante';
 import { sesion } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-103 — Filtro «Sellos de advertencia» del panel de filtros, en la app. Solo Android (emulador
@@ -31,8 +32,9 @@ const SODIO = 'No alto en sodio';
 const MARCA = 'Fundo Rio Alegre';
 /** Orden fijo del resultado esperado de TC-B2C103-APP-002 (CA2 de la HU). */
 const ORDEN_FIJO = ['Sin sellos', 'No alto en azúcares', 'No alto en calorías', 'No alto en grasas saturadas', 'No alto en sodio', 'No alto en alcohol'];
+/** Desplazamiento con coordenadas medidas en Android; en iOS `deslizarFijo` las escala. */
 const swipe = (x1: number, y1: number, x2: number, y2: number, ms = 400) =>
-  execSync(`adb shell input swipe ${x1} ${y1} ${x2} ${y2} ${ms}`, { timeout: 20000 });
+  disp.deslizarFijo(x1, y1, x2, y2, ms);
 
 /** Nodos con texto del árbol, para navegar por el menú de Categorías y leer la PLP. */
 async function textos(screen: Screen): Promise<{ label: string; type: string; x: number; y: number; w: number; h: number; id: string }[]> {
@@ -60,19 +62,19 @@ async function plpVacuno(screen: Screen, p: Plataforma, td: any, cp: string): Pr
   await sesion(screen, p, cp, token(td, 'USER_AUTH_001')!.split(' / ')[0].trim(), SALUDO);
   await tol(() => screen.getByTestId('tab-Categorías').tap());
   await dormir(4000);
-  for (let i = 0; i < 6; i++) { swipe(540, 700, 540, 1800, 250); await dormir(500); }
+  for (let i = 0; i < 6; i++) { await swipe(540, 700, 540, 1800, 250); await dormir(500); }
   let vacuno;
   for (let i = 0; i < 12 && !vacuno; i++) {
     const n = await textos(screen);
     vacuno = n.find((x) => x.type === 'ViewGroup' && x.label === 'Vacuno' && x.y > 300 && x.y < 1900);
     if (vacuno) break;
     const carnes = n.find((x) => x.type === 'ViewGroup' && x.label === 'Carnes' && x.w >= 1000);
-    if (carnes && carnes.y < 1500) swipe(950, carnes.y + 300, 350, carnes.y + 300, 400);
-    else swipe(540, 1500, 540, 1000, 500);
+    if (carnes && carnes.y < 1500) await swipe(950, carnes.y + 300, 350, carnes.y + 300, 400);
+    else await swipe(540, 1500, 540, 1000, 500);
     await dormir(1500);
   }
   expect(vacuno, 'el menú de Categorías muestra Carnes → Vacuno').toBeTruthy();
-  execSync(`adb shell input tap ${vacuno!.x + 100} ${vacuno!.y + 100}`, { timeout: 15000 });
+  await disp.tocar(vacuno!.x + 100, vacuno!.y + 100);
   const plp = new ListadoScreen(screen, p);
   await tol(() => screen.getByText(/^\d+ productos?$/).first().waitFor({ state: 'visible', timeout: 40000 }));
   await dormir(2500);
@@ -110,15 +112,15 @@ async function productosDelListado(screen: Screen, maxPantallas = 6): Promise<{ 
       vistos.push({ sku, texto });
     }
     sinNuevos = vistos.length === antes ? sinNuevos + 1 : 0;
-    swipe(540, 1700, 540, 900, 600);
+    await swipe(540, 1700, 540, 900, 600);
     await dormir(1500);
   }
   return vistos;
 }
 
 test.describe.configure({ timeout: 900000 });
-test.describe('B2C-103 — Filtro Sellos de advertencia (Android)', () => {
-  test('TC-B2C103-APP-001 · Sellos de advertencia se muestra como dropdown colapsado [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-103 — Filtro Sellos de advertencia (${PLATAFORMA})`, () => {
+  test(`TC-B2C103-APP-001 · Sellos de advertencia se muestra como dropdown colapsado [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C103-APP-001';
     const panel = await abrirPanel(screen, p, await plpVacuno(screen, p, testData, cp), cp);
     const boton = await panel.verSeccion();
@@ -130,7 +132,7 @@ test.describe('B2C-103 — Filtro Sellos de advertencia (Android)', () => {
     await panel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C103-APP-002 · Las opciones se muestran en orden fijo, como checkbox y desmarcadas [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C103-APP-002 · Las opciones se muestran en orden fijo, como checkbox y desmarcadas [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C103-APP-002';
     const panel = await abrirPanel(screen, p, await plpVacuno(screen, p, testData, cp), cp);
     await abrirSellos(panel, cp);
@@ -146,7 +148,7 @@ test.describe('B2C-103 — Filtro Sellos de advertencia (Android)', () => {
     await panel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C103-APP-003 · Marcar un sello lo marca, agrega badge y chip y actualiza el conteo [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C103-APP-003 · Marcar un sello lo marca, agrega badge y chip y actualiza el conteo [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C103-APP-003';
     const panel = await abrirPanel(screen, p, await plpVacuno(screen, p, testData, cp), cp);
     await abrirSellos(panel, cp);
@@ -167,7 +169,7 @@ test.describe('B2C-103 — Filtro Sellos de advertencia (Android)', () => {
     await panel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C103-APP-004 · Un sello sin productos en la PLP no se muestra en el dropdown [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C103-APP-004 · Un sello sin productos en la PLP no se muestra en el dropdown [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C103-APP-004';
     const panel = await abrirPanel(screen, p, await plpVacuno(screen, p, testData, cp), cp);
     await abrirSellos(panel, cp);
@@ -180,7 +182,7 @@ test.describe('B2C-103 — Filtro Sellos de advertencia (Android)', () => {
     await panel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C103-APP-005 · Mostrar productos con varios sellos cierra el panel y el encabezado coincide con el botón [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C103-APP-005 · Mostrar productos con varios sellos cierra el panel y el encabezado coincide con el botón [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C103-APP-005';
     const plp = await plpVacuno(screen, p, testData, cp);
     const panel = await abrirPanel(screen, p, plp, cp);
@@ -206,7 +208,7 @@ test.describe('B2C-103 — Filtro Sellos de advertencia (Android)', () => {
     await plp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C103-APP-006 · Desmarcar un sello baja el badge, quita su chip y recalcula el conteo [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C103-APP-006 · Desmarcar un sello baja el badge, quita su chip y recalcula el conteo [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C103-APP-006';
     const panel = await abrirPanel(screen, p, await plpVacuno(screen, p, testData, cp), cp);
     await abrirSellos(panel, cp);
@@ -235,7 +237,7 @@ test.describe('B2C-103 — Filtro Sellos de advertencia (Android)', () => {
     await panel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C103-APP-007 · Un sello combinado con una marca aplica lógica AND [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C103-APP-007 · Un sello combinado con una marca aplica lógica AND [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C103-APP-007';
     const marca = MARCA;
     const plp = await plpVacuno(screen, p, testData, cp);
@@ -267,7 +269,7 @@ test.describe('B2C-103 — Filtro Sellos de advertencia (Android)', () => {
     await plp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C103-APP-008 · Quitar un sello desde su chip lo desmarca y actualiza badge y conteo [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C103-APP-008 · Quitar un sello desde su chip lo desmarca y actualiza badge y conteo [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C103-APP-008';
     const panel = await abrirPanel(screen, p, await plpVacuno(screen, p, testData, cp), cp);
     await abrirSellos(panel, cp);

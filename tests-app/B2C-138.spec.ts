@@ -6,6 +6,8 @@ import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
 import { DetalleDireccionScreen } from './pages/DetalleDireccionScreen';
 import { tolerante } from './support/tolerante';
 import { arrancarInvitado, calle } from './support/entregaApp';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-138 — Store Locator sin dirección (app nativa): "Elige una forma de entrega" en el navbar y el
@@ -19,9 +21,8 @@ import { arrancarInvitado, calle } from './support/entregaApp';
  */
 
 const PLATAFORMA = 'Android' as const;
-const PAQUETE = 'cl.smu.unimarcapp.sfcc.qa';
 
-test.describe(`B2C-138 — Store Locator sin dirección (${PLATAFORMA})`, () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-138 — Store Locator sin dirección (${PLATAFORMA})`, () => {
   test.describe.configure({ timeout: 300000 });
 
   /** Pasos 1–4: invitado recién instalado → toca el chevron del Store Locator → modal abierto. */
@@ -96,9 +97,8 @@ test.describe(`B2C-138 — Store Locator sin dirección (${PLATAFORMA})`, () => 
     const cp = 'TC-B2C138-APP-007';
     const { modal } = await abrirModal(screen, device, bundleId!, p, cp);
     // Precondición: la app tiene permiso de ubicación. El emulador se ubica en Santiago (La Florida).
-    const { execSync } = await import('child_process');
-    for (const perm of ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']) execSync(`adb shell pm grant ${PAQUETE} android.permission.${perm}`);
-    execSync('adb emu geo fix -70.5980 -33.5230');
+    await disp.permisoUbicacion(true);
+    await disp.fijarUbicacion(-33.5230, -70.5980);
     await tolerante(() => modal.tapActivarUbicacion());
     const detalle = new DetalleDireccionScreen(screen, p);
     await tolerante(() => expect(detalle.titulo, 'se inicia el flujo de B2C-26 («Detalles de la dirección»)').toBeVisible({ timeout: 30000 }));

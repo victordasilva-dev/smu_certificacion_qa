@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -10,6 +9,8 @@ import { tolerante } from './support/tolerante';
 import { esperarCodigo, ingresarCodigo, escribirTexto, nodos, tiene, tocarEscalado } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
 import { fijarDireccionInvitado, agregarDesdePdp } from './support/invitadoConCarro';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-124 — Fusión de sesión: invitado que inicia sesión (app nativa, Android, build v1.0.1).
@@ -41,7 +42,7 @@ async function empezarLogin(screen: Screen, p: any, td: any): Promise<Date> {
   }
   await tol(() => screen.getByText('Iniciar sesión').first().tap());
   await dormir(3500);
-  const campo = screen.getByType('android.widget.EditText').first();
+  const campo = disp.campoDeTexto(screen).first();
   await tol(() => campo.waitFor({ state: 'visible', timeout: 25000 }));
   const desde = new Date(Date.now() - 30000);
   await escribirTexto(campo, correo(td));
@@ -123,7 +124,7 @@ async function restaurarDireccion(screen: Screen, p: any, td: any, cp: string): 
   // El agente de mobilecli no escribe en el teclado Samsung: se teclea por adb (los espacios van como %s).
   await tol(() => modal.buscador.tap());
   await dormir(1000);
-  execSync(`adb shell input text '${calle.replace(/ /g, '%s')}'`, { timeout: 20000 });
+  await disp.escribir(calle);
   const patron = new RegExp(`${dir.match(/\d+/)![0]}.*${dir.split(',').pop()!.trim()}.*, Chile$`, 'i');
   await tol(() => screen.getByText(patron).first().waitFor({ state: 'visible', timeout: 30000 }));
   await tol(() => screen.getByText(patron).first().tap());
@@ -135,11 +136,11 @@ async function restaurarDireccion(screen: Screen, p: any, td: any, cp: string): 
 }
 
 test.describe.configure({ timeout: 900000 });
-test.describe('B2C-124 — Fusión de sesión (Android)', () => {
-  test('TC-B2C124-APP-000 · Precondición: la cuenta queda con {DIRECCION_DESPACHO_001} como última dirección (Android)', async ({ screen, device, bundleId, plataforma: p, testData }) => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-124 — Fusión de sesión (${PLATAFORMA})`, () => {
+  test(`TC-B2C124-APP-000 · Precondición: la cuenta queda con {DIRECCION_DESPACHO_001} como última dirección (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C124-APP-000';
     await device.terminateApp(bundleId!);
-    execSync(`adb shell pm clear ${bundleId}`, { timeout: 30000 });
+    await disp.borrarDatosApp(bundleId);
     await device.launchApp(bundleId!);
     const desde = await paso('iniciar el login', () => empezarLogin(screen, p, testData));
     await tol(() => modalAutenticacion(screen).waitFor({ state: 'visible', timeout: 40000 }));
@@ -147,7 +148,7 @@ test.describe('B2C-124 — Fusión de sesión (Android)', () => {
     await paso('restaurar la dirección', () => restaurarDireccion(screen, p, testData, cp));
   });
 
-  test('TC-B2C124-APP-001 · La dirección del invitado se mantiene activa tras iniciar sesión y validar OTP [Guest] (Android)', async ({ screen, device, bundleId, plataforma: p, testData }) => {
+  test(`TC-B2C124-APP-001 · La dirección del invitado se mantiene activa tras iniciar sesión y validar OTP [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C124-APP-001';
     const otra = token(testData, 'DIRECCION_OTRA_TIENDA')!;
     await paso('fijar dirección del invitado', () => fijarDireccionInvitado(screen, device, bundleId!, p, testData, 'DIRECCION_OTRA_TIENDA'));
@@ -166,10 +167,10 @@ test.describe('B2C-124 — Fusión de sesión (Android)', () => {
     await modal.capturarEvidencia(cp, 5, 'el usuario puede cambiar la dirección desde el Store Locator');
     await expect(modal.buscador, 'el modal permite cambiar la dirección').toBeVisible();
     await modal.capturarEvidencia(cp);
-    await screen.goBack();
+    await disp.volver();
     await paso('restaurar la dirección', () => restaurarDireccion(screen, p, testData, cp));
   });
-  test('TC-B2C124-APP-003 · Al iniciar sesión con dirección heredada se solicita la validación OTP [Guest] (Android)', async ({ screen, device, bundleId, plataforma: p, testData }) => {
+  test(`TC-B2C124-APP-003 · Al iniciar sesión con dirección heredada se solicita la validación OTP [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C124-APP-003';
     await paso('fijar dirección del invitado', () => fijarDireccionInvitado(screen, device, bundleId!, p, testData, 'DIRECCION_OTRA_TIENDA'));
     const desde = await paso('iniciar el login', () => empezarLogin(screen, p, testData));
@@ -183,7 +184,7 @@ test.describe('B2C-124 — Fusión de sesión (Android)', () => {
     await paso('restaurar la dirección', () => restaurarDireccion(screen, p, testData, cp));
   });
 
-  test('TC-B2C124-APP-004 · Salir del OTP sin validar inicia sesión sin aplicar la dirección del invitado [Guest] (Android)', async ({ screen, device, bundleId, plataforma: p, testData }) => {
+  test(`TC-B2C124-APP-004 · Salir del OTP sin validar inicia sesión sin aplicar la dirección del invitado [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C124-APP-004';
     await paso('fijar dirección del invitado', () => fijarDireccionInvitado(screen, device, bundleId!, p, testData, 'DIRECCION_OTRA_TIENDA'));
     const desde = await paso('iniciar el login', () => empezarLogin(screen, p, testData));
@@ -193,7 +194,7 @@ test.describe('B2C-124 — Fusión de sesión (Android)', () => {
     if (r === 'agotarse') await continuarConElCambio(screen);
     await new TabBar(screen, p).capturarEvidencia(cp, 3, 'modal «Autenticación requerida» de la dirección');
     // Se sale del OTP de la dirección sin validar: X del modal.
-    tocarEscalado(958, 745);
+    await tocarEscalado(958, 745);
     let toast = false;
     for (let i = 0; i < 10 && !toast; i++) { toast = tiene(await nodos(screen), /Verificaci[oó]n pendiente/i); if (!toast) await dormir(800); }
     await new TabBar(screen, p).capturarEvidencia(cp, 5, 'pantalla tras salir del OTP');
@@ -214,7 +215,7 @@ test.describe('B2C-124 — Fusión de sesión (Android)', () => {
     await modal.capturarEvidencia(cp);
   });
 
-  test('TC-B2C124-APP-005 · Con carro y cambio de tienda el OTP exitoso muestra el modal «No se te escapen» [Guest] (Android)', async ({ screen, device, bundleId, plataforma: p, testData }) => {
+  test(`TC-B2C124-APP-005 · Con carro y cambio de tienda el OTP exitoso muestra el modal «No se te escapen» [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C124-APP-005';
     await paso('fijar dirección del invitado', () => fijarDireccionInvitado(screen, device, bundleId!, p, testData, 'DIRECCION_OTRA_TIENDA'));
     await agregarDesdePdp(screen, p, token(testData, 'SKU_VALID_001')!);

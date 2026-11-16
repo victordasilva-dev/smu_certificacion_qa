@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -8,6 +7,8 @@ import { MyUsualsCarruselScreen, type NodoApp } from './pages/MyUsualsCarruselSc
 import { tolerante } from './support/tolerante';
 import { sesion } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-55 — Carrusel My Usuals en el Home de la app. Solo Android (emulador local), build v1.0.1.
@@ -46,8 +47,8 @@ async function homeConCarrusel(screen: Screen, p: Plataforma, td: any, cp: strin
 }
 
 test.describe.configure({ timeout: 900000 });
-test.describe('B2C-55 — Carrusel My Usuals (Android)', () => {
-  test('TC-B2C55-APP-001 · Orden de relevancia de myUsualsProducts [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-55 — Carrusel My Usuals (${PLATAFORMA})`, () => {
+  test(`TC-B2C55-APP-001 · Orden de relevancia de myUsualsProducts [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C55-APP-001';
     const { carrusel } = await homeConCarrusel(screen, p, testData, cp);
     const skus = await carrusel.todosLosSkus();
@@ -74,7 +75,7 @@ test.describe('B2C-55 — Carrusel My Usuals (Android)', () => {
     await carrusel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C55-APP-003 · Titulo configurado centrado [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C55-APP-003 · Titulo configurado centrado [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C55-APP-003';
     const { carrusel } = await homeConCarrusel(screen, p, testData, cp);
     const t = await carrusel.titulo();
@@ -87,7 +88,7 @@ test.describe('B2C-55 — Carrusel My Usuals (Android)', () => {
     await carrusel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C55-APP-004 · Cada producto usa la shelf estandar [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C55-APP-004 · Cada producto usa la shelf estandar [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C55-APP-004';
     const { carrusel } = await homeConCarrusel(screen, p, testData, cp);
     const revisadas: string[] = [];
@@ -118,7 +119,7 @@ test.describe('B2C-55 — Carrusel My Usuals (Android)', () => {
     await carrusel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C55-APP-005 · Link "Ver todos" [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C55-APP-005 · Link "Ver todos" [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C55-APP-005';
     const { carrusel } = await homeConCarrusel(screen, p, testData, cp);
     await expect(carrusel.verTodos, 'el componente muestra el link «Ver todos»').toBeVisible();
@@ -126,7 +127,7 @@ test.describe('B2C-55 — Carrusel My Usuals (Android)', () => {
     await carrusel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C55-APP-006 · 2 productos visibles a la vez [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C55-APP-006 · 2 productos visibles a la vez [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C55-APP-006';
     const { carrusel } = await homeConCarrusel(screen, p, testData, cp);
     const iniciales = await carrusel.skusVisibles();
@@ -141,7 +142,7 @@ test.describe('B2C-55 — Carrusel My Usuals (Android)', () => {
     await carrusel.capturarEvidencia(cp);
   });
 
-  test('TC-B2C55-APP-007 · No se muestra con exactamente 5 frecuentes [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C55-APP-007 · No se muestra con exactamente 5 frecuentes [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C55-APP-007';
     await asegurarApp(screen);
     await sesion(screen, p, cp, correo(testData, 'COMPRADOR_5_FRECUENTES'), CINCO);
@@ -158,7 +159,7 @@ test.describe('B2C-55 — Carrusel My Usuals (Android)', () => {
       const m = n.find((x) => /^Contrata la membres[íi]a/.test(x.label) && x.type === 'ViewGroup');
       if (m && m.y > 700 && m.y < 1500) break;
       if (m && m.y >= 1500) await screen.swipe('up');
-      else execSync('adb shell input swipe 540 900 540 1500 400', { timeout: 20000 });
+      else await disp.deslizarFijo(540, 900, 540, 1500, 400);
       await dormir(1200);
       n = await carrusel.nodos();
     }

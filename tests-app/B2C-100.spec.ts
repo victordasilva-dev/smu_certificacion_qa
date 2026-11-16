@@ -5,9 +5,9 @@ import { baseUrl } from '../tests/support/testData';
 import { TabBar } from './pages/TabBar';
 import { MiCuentaScreen } from './pages/MiCuentaScreen';
 import { tolerante } from './support/tolerante';
-import { borrarDatosApp } from './support/adbAndroid';
 import { HomePage } from '../tests/pages/HomePage';
 import { BuscadorModal, SECCIONES } from '../tests/pages/BuscadorModal';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-100 — Buscador de la app: contenido por defecto y panel de sugerencias.
@@ -41,7 +41,7 @@ const tiene = (n: Nodo[], re: RegExp) => n.some((x) => re.test(x.label));
 /** App con datos borrados: sin historial de búsquedas ni carro. */
 async function limpiarApp(device: any, bundleId: string) {
   await device.terminateApp(bundleId).catch(() => {});
-  borrarDatosApp(bundleId, process.env.ANDROID_SERIAL);
+  await disp.borrarDatosApp(bundleId);
   await device.launchApp(bundleId);
 }
 

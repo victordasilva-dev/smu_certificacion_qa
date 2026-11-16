@@ -6,6 +6,7 @@ import { HomeScreen } from './pages/HomeScreen';
 import { PdpScreen } from './pages/PdpScreen';
 import { LoginScreen } from './pages/LoginScreen';
 import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-31 — PDP en la app, ejecutada en Android (build v1.0.7, emulador local, 2026-10-20).
@@ -181,7 +182,7 @@ for (const plataforma of ['Android'] as const) {
       test.info().annotations.push({ type: 'share', description: JSON.stringify(t.filter((x) => /intentresolver|chooser|http|unimarc/i.test(x.id + x.t)).slice(0, 6)) });
       expect(t.some((x) => /intentresolver|chooser|resolver/i.test(x.id)), 'se abre el share nativo').toBe(true);
       expect(t.some((x) => /https?:\/\/\S*unimarc|exp-delivery/i.test(x.t)), 'con el link de la PDP').toBe(true);
-      await r(() => screen.goBack());
+      await r(() => disp.volver());
     });
 
     test(`TC-B2C31-APP-018 · El corazón redirige al login al usuario invitado [Guest] (${plataforma})`, async ({ screen, plataforma: p, testData }) => {

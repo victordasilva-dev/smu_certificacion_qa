@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import sharp from 'sharp';
 import type { Screen } from 'mobilewright';
 import { test, expect } from './support/fixtures';
@@ -10,6 +9,8 @@ import { PdpScreen } from './pages/PdpScreen';
 import { tolerante } from './support/tolerante';
 import { sesion } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-75 — Carrusel de productos (T1/T2/T3) en el Home de la app. Solo Android (emulador), v1.0.1.
@@ -33,9 +34,10 @@ const tol = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
 const SALUDO = /Karl/i;
 const T1 = /^Frescura y calidad$/;
 const T2 = /^Los m[aá]s vendidos$/;
+/** Desplazamiento con coordenadas medidas en Android; en iOS `deslizarFijo` las escala. */
 const swipe = (x1: number, y1: number, x2: number, y2: number, ms = 400) =>
-  execSync(`adb shell input swipe ${x1} ${y1} ${x2} ${y2} ${ms}`, { timeout: 20000 });
-const tap = (x: number, y: number) => execSync(`adb shell input tap ${Math.round(x)} ${Math.round(y)}`, { timeout: 15000 });
+  disp.deslizarFijo(x1, y1, x2, y2, ms);
+const tap = async (x: number, y: number) => await disp.tocar(x, y);
 
 interface Nodo { label: string; type: string; x: number; y: number; w: number; h: number; id: string }
 async function nodos(screen: Screen): Promise<Nodo[]> {
@@ -57,7 +59,7 @@ async function homeEnCarrusel(screen: Screen, p: Plataforma, td: any, cp: string
   await sesion(screen, p, cp, token(td, 'USER_AUTH_001')!.split(' / ')[0].trim(), SALUDO);
   await tol(() => screen.getByTestId('tab-Home').tap());
   await dormir(4000);
-  for (let i = 0; i < 10; i++) { swipe(540, 700, 540, 1900, 200); await dormir(300); }
+  for (let i = 0; i < 10; i++) { await swipe(540, 700, 540, 1900, 200); await dormir(300); }
   await dormir(2000);
   const home = new HomeScreen(screen, p);
   await home.capturarEvidencia(cp, 2, 'Home de la App');
@@ -67,9 +69,9 @@ async function homeEnCarrusel(screen: Screen, p: Plataforma, td: any, cp: string
     if (n.length < 15) { await dormir(2000); n = await nodos(screen); }
     const t = n.find((x) => x.type === 'TextView' && titulo.test(x.label));
     if (t && t.y >= 330 && t.y <= 950) return home;
-    if (t && t.y < 330) swipe(540, 900, 540, 1250, 1500);
-    else if (t) swipe(540, 1600, 540, Math.max(200, 1600 - (t.y - 500)), 1500);
-    else swipe(540, 1700, 540, 900, 600);
+    if (t && t.y < 330) await swipe(540, 900, 540, 1250, 1500);
+    else if (t) await swipe(540, 1600, 540, Math.max(200, 1600 - (t.y - 500)), 1500);
+    else await swipe(540, 1700, 540, 900, 600);
     await dormir(1000);
   }
   throw new Error(`El Home no muestra el carrusel «${titulo.source}»`);
@@ -103,7 +105,7 @@ async function partesT2(screen: Screen) {
 }
 
 async function deslizarFila(y: number): Promise<void> {
-  swipe(950, y, 150, y, 400);
+  await swipe(950, y, 150, y, 400);
   await dormir(1500);
 }
 
@@ -131,8 +133,8 @@ async function unidadesEnCarro(screen: Screen, p: Plataforma): Promise<number> {
 }
 
 test.describe.configure({ timeout: 900000 });
-test.describe('B2C-75 — Carrusel de productos (Android)', () => {
-  test('TC-B2C75-APP-001 · T1 muestra titulo, texto y banner arriba y el carrusel debajo con 2 productos [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-75 — Carrusel de productos (${PLATAFORMA})`, () => {
+  test(`TC-B2C75-APP-001 · T1 muestra titulo, texto y banner arriba y el carrusel debajo con 2 productos [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C75-APP-001';
     const home = await homeEnCarrusel(screen, p, testData, cp, T1);
     const { titulo, texto, banner, productos } = await partesT1(screen);
@@ -148,7 +150,7 @@ test.describe('B2C-75 — Carrusel de productos (Android)', () => {
     await home.capturarEvidencia(cp);
   });
 
-  test('TC-B2C75-APP-002 · La etiqueta del T1 aparece como tag sobre el banner [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C75-APP-002 · La etiqueta del T1 aparece como tag sobre el banner [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C75-APP-002';
     const home = await homeEnCarrusel(screen, p, testData, cp, T1);
     const { banner, etiqueta } = await partesT1(screen);
@@ -158,13 +160,13 @@ test.describe('B2C-75 — Carrusel de productos (Android)', () => {
     await home.capturarEvidencia(cp);
   });
 
-  test('TC-B2C75-APP-003 · Tocar el banner del T1 navega al enlace configurado [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C75-APP-003 · Tocar el banner del T1 navega al enlace configurado [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C75-APP-003';
     const home = await homeEnCarrusel(screen, p, testData, cp, T1);
     const { banner } = await partesT1(screen);
     expect(banner, 'el T1 muestra el banner').toBeTruthy();
     await home.capturarEvidencia(cp, 3, 'banner del T1');
-    tap(banner!.x + banner!.w / 2, banner!.y + Math.min(banner!.h, 300) / 2);
+    await tap(banner!.x + banner!.w / 2, banner!.y + Math.min(banner!.h, 300) / 2);
     await dormir(6000);
     const destino = await tituloListado(screen);
     await home.capturarEvidencia(cp, 4, `destino del banner: ${destino?.titulo ?? 'sin listado'}`);
@@ -173,7 +175,8 @@ test.describe('B2C-75 — Carrusel de productos (Android)', () => {
     await home.capturarEvidencia(cp);
   });
 
-  test('TC-B2C75-APP-005 · T2 en modo Coleccion muestra "Ver todo" al final del carrusel [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C75-APP-005 · T2 en modo Coleccion muestra "Ver todo" al final del carrusel [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
+    test.skip(PLATAFORMA === 'iOS', 'La planilla no le declara «Plataforma: Ambas»: se certifica solo en Android');
     const cp = 'TC-B2C75-APP-005';
     const home = await homeEnCarrusel(screen, p, testData, cp, T2);
     const { productos } = await partesT2(screen);
@@ -194,7 +197,7 @@ test.describe('B2C-75 — Carrusel de productos (Android)', () => {
     await home.capturarEvidencia(cp);
   });
 
-  test('TC-B2C75-APP-007 · El carrusel se desplaza al deslizar con el dedo [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C75-APP-007 · El carrusel se desplaza al deslizar con el dedo [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C75-APP-007';
     const home = await homeEnCarrusel(screen, p, testData, cp, T2);
     const inicial = await partesT2(screen);
@@ -210,12 +213,13 @@ test.describe('B2C-75 — Carrusel de productos (Android)', () => {
     await home.capturarEvidencia(cp);
   });
 
-  test('TC-B2C75-APP-008 · El carrusel avanza automaticamente cada 3 segundos [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C75-APP-008 · El carrusel avanza automaticamente cada 3 segundos [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
+    test.skip(PLATAFORMA === 'iOS', 'La planilla no le declara «Plataforma: Ambas»: se certifica solo en Android');
     const cp = 'TC-B2C75-APP-008';
     const home = await homeEnCarrusel(screen, p, testData, cp, T2);
     const { productos } = await partesT2(screen);
     const zona = { left: 0, top: productos[0].y, width: 1080, height: 450 };
-    const recorte = async () => sharp(execSync('adb exec-out screencap -p', { timeout: 20000, maxBuffer: 50 * 1024 * 1024 })).extract(zona).raw().toBuffer();
+    const recorte = async () => sharp((await disp.captura())).extract(zona).raw().toBuffer();
     const base = await recorte();
     await home.capturarEvidencia(cp, 3, 'carrusel al empezar a observar');
     const cambios: number[] = [];
@@ -232,13 +236,13 @@ test.describe('B2C-75 — Carrusel de productos (Android)', () => {
     await home.capturarEvidencia(cp);
   });
 
-  test('TC-B2C75-APP-009 · "Mostrar todo" lleva al destino configurado [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C75-APP-009 · "Mostrar todo" lleva al destino configurado [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C75-APP-009';
     const home = await homeEnCarrusel(screen, p, testData, cp, T2);
     const { mostrar } = await partesT2(screen);
     expect(mostrar, 'el carrusel en modo Colección muestra «Mostrar todo»').toBeTruthy();
     await home.capturarEvidencia(cp, 3, 'Mostrar todo del carrusel');
-    tap(mostrar!.x + mostrar!.w / 2, mostrar!.y + mostrar!.h / 2);
+    await tap(mostrar!.x + mostrar!.w / 2, mostrar!.y + mostrar!.h / 2);
     await dormir(6000);
     const destino = await tituloListado(screen);
     await home.capturarEvidencia(cp, 4, `destino de Mostrar todo: ${destino?.titulo ?? 'sin listado'}`);
@@ -247,7 +251,7 @@ test.describe('B2C-75 — Carrusel de productos (Android)', () => {
     await home.capturarEvidencia(cp);
   });
 
-  test('TC-B2C75-APP-010 · Tocar el nombre de un producto abre su PDP [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C75-APP-010 · Tocar el nombre de un producto abre su PDP [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C75-APP-010';
     const home = await homeEnCarrusel(screen, p, testData, cp, T2);
     const { n, productos } = await partesT2(screen);
@@ -255,7 +259,7 @@ test.describe('B2C-75 — Carrusel de productos (Android)', () => {
     const nombre = n.filter((x) => x.type === 'TextView' && x.x >= t.x && x.x < t.x + t.w && x.y > t.y && / \| |\w{4,} \w{3,}/.test(x.label) && !/^\$/.test(x.label)).sort((a, b) => a.y - b.y)[0];
     expect(nombre, 'la tarjeta muestra el nombre del producto').toBeTruthy();
     await home.capturarEvidencia(cp, 3, `producto ${nombre!.label}`);
-    tap(nombre!.x + nombre!.w / 2, nombre!.y + nombre!.h / 2);
+    await tap(nombre!.x + nombre!.w / 2, nombre!.y + nombre!.h / 2);
     await dormir(6000);
     const pdp = new PdpScreen(screen, p);
     const abierta = await pdp.readyLocator.isVisible({ timeout: 20000 }).catch(() => false);
@@ -268,7 +272,7 @@ test.describe('B2C-75 — Carrusel de productos (Android)', () => {
     await pdp.capturarEvidencia(cp);
   });
 
-  test('TC-B2C75-APP-011 · Agregar un producto con stock desde el carrusel actualiza el indicador del carro [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C75-APP-011 · Agregar un producto con stock desde el carrusel actualiza el indicador del carro [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C75-APP-011';
     const home = await homeEnCarrusel(screen, p, testData, cp, T2);
     const { n, productos } = await partesT2(screen);
@@ -288,7 +292,7 @@ test.describe('B2C-75 — Carrusel de productos (Android)', () => {
     await home.capturarEvidencia(cp);
   });
 
-  test('TC-B2C75-APP-015 · El fondo ocupa todo el ancho y el contenido respeta el padding del header [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C75-APP-015 · El fondo ocupa todo el ancho y el contenido respeta el padding del header [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C75-APP-015';
     const home = await homeEnCarrusel(screen, p, testData, cp, T1);
     const { n, titulo, banner, productos } = await partesT1(screen);

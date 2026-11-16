@@ -9,8 +9,9 @@ import { HomeScreen } from './pages/HomeScreen';
 import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
 import { DetalleDireccionScreen } from './pages/DetalleDireccionScreen';
 import { AgotarseModal, PromptLogin } from './pages/AgotarseModal';
-import { borrarDatosApp } from './support/grabacionAndroid';
 import { tolerante } from './support/tolerante';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-122 — Modal "Algunos productos podrían agotarse" al cambiar a otra tienda abastecedora con
@@ -86,7 +87,7 @@ async function prepararInvitado(screen: Screen, device: any, bundleId: string, p
   const nav = new NavBar(screen, p);
   for (let intento = 1; ; intento++) {
     await device.terminateApp(bundleId);
-    borrarDatosApp(bundleId, process.env.ANDROID_SERIAL);
+    await disp.borrarDatosApp(bundleId);
     await device.launchApp(bundleId);
     await esperarTabBar(tabs);
     const detalle = await elegirDireccion(screen, p, dir, new RegExp(`^${calle(dir)}`, 'i'));
@@ -127,7 +128,7 @@ async function volverAlHome(screen: Screen, nav: NavBar): Promise<void> {
   await tolerante(() => expect(nav.metodoDeEntrega).toBeVisible({ timeout: 15000 }));
 }
 
-test.describe(`B2C-122 — Modal de productos que podrían agotarse (${PLATAFORMA})`, () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-122 — Modal de productos que podrían agotarse (${PLATAFORMA})`, () => {
   test.describe.configure({ timeout: 360000 });
 
   test(`TC-B2C122-APP-001 · Al cambiar a una dirección de otra tienda abastecedora con carro aparece el modal [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
@@ -144,6 +145,7 @@ test.describe(`B2C-122 — Modal de productos que podrían agotarse (${PLATAFORM
   });
 
   test(`TC-B2C122-APP-002 · Si la nueva dirección usa la misma tienda abastecedora el cambio se aplica sin modal [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
+    test.skip(PLATAFORMA === 'iOS', 'La planilla no le declara «Plataforma: Ambas»: se certifica solo en Android');
     const cp = 'TC-B2C122-APP-002';
     const { nav } = await prepararInvitado(screen, device, bundleId!, p, testData, cp);
     const misma = token(testData, 'DIRECCION_MISMA_TIENDA')!;

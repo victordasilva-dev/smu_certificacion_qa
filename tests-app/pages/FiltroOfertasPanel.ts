@@ -1,6 +1,6 @@
-import { execSync } from 'child_process';
 import type { Locator } from 'mobilewright';
 import { BaseScreen } from './BaseScreen';
+import * as disp from '../support/dispositivo';
 
 /**
  * Filtro «Ofertas» del panel «Selecciona tus filtros» de la app (HU B2C-95). Verificado en Android,
@@ -85,20 +85,20 @@ export class FiltroOfertasPanel extends BaseScreen {
   }
 
   /** Toca el centro de un nodo (el Switch y las CheckBox no siempre resuelven por rol con mobilecli). */
-  private tocar(n: NodoPanel): void {
-    execSync(`adb shell input tap ${Math.round(n.x + n.w / 2)} ${Math.round(n.y + n.h / 2)}`, { timeout: 15000 });
+  private async tocar(n: NodoPanel): Promise<void> {
+    await disp.tocar(n.x + n.w / 2, n.y + n.h / 2);
   }
 
   async tocarToggle(): Promise<void> {
     // Tras elegir una marca el panel queda desplazado y la tarjeta Ofertas fuera de pantalla: se sube.
     let t = (await this.tarjetaOfertas())?.toggle;
     for (let i = 0; i < 5 && !(t && t.y > 300 && t.y < 1950); i++) {
-      execSync('adb shell input swipe 540 900 540 1600 800', { timeout: 20000 });
+      await disp.deslizarFijo(540, 900, 540, 1600, 800);
       await dormir(1200);
       t = (await this.tarjetaOfertas())?.toggle;
     }
     if (!t) throw new Error('El panel no muestra el toggle de Ofertas');
-    this.tocar(t);
+    await this.tocar(t);
     await dormir(2500);
   }
 
@@ -119,7 +119,7 @@ export class FiltroOfertasPanel extends BaseScreen {
   async abrirMarcas(): Promise<void> {
     await this.screen.getByRole('button', { name: 'Marcas' }).tap();
     await dormir(2000);
-    execSync('adb shell input swipe 540 1700 540 1100 800', { timeout: 20000 });
+    await disp.deslizarFijo(540, 1700, 540, 1100, 800);
     await dormir(1500);
   }
 
@@ -131,12 +131,12 @@ export class FiltroOfertasPanel extends BaseScreen {
     // Con «Filtros aplicados» arriba la lista de marcas queda más abajo: se desplaza el panel hasta verla.
     let c = (await this.marcas()).find((x) => x.label === nombre && x.y > 300 && x.y < 1950);
     for (let i = 0; i < 5 && !c; i++) {
-      execSync('adb shell input swipe 540 1700 540 1250 800', { timeout: 20000 });
+      await disp.deslizarFijo(540, 1700, 540, 1250, 800);
       await dormir(1200);
       c = (await this.marcas()).find((x) => x.label === nombre && x.y > 300 && x.y < 1950);
     }
     if (!c) throw new Error(`El panel no muestra la marca «${nombre}»`);
-    this.tocar(c);
+    await this.tocar(c);
     await dormir(2500);
   }
 

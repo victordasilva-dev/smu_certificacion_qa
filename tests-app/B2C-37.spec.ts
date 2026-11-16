@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import { execSync } from 'child_process';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
 import { TabBar } from './pages/TabBar';
@@ -8,6 +7,8 @@ import { fijarDireccionInvitado, agregarDesdePdp, abrirCarro } from './support/i
 import { tolerante } from './support/tolerante';
 import sharp from 'sharp';
 import { diferenciaMedia } from './support/pixeles';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-37 — Página del carro en la app (Android, app v1.0.1, emulador local).
@@ -44,17 +45,29 @@ async function nodos(screen: any): Promise<Nodo[]> {
 const tiene = (n: Nodo[], re: RegExp) => n.some((x) => re.test(x.label));
 const sku = (td: any, k: string) => token(td, k)!;
 
-/** Factor de escala respecto del Pixel 6 (1080x2400) para el que están las coordenadas y zonas fijas. */
-const ESCALA = (() => {
-  try {
-    const wm = execSync('adb shell wm size', { timeout: 15000 }).toString();
+/**
+ * Factor de escala respecto del Pixel 6 (1080x2400) para el que están las coordenadas y zonas fijas.
+ * Se calcula en el primer uso (ya con el dispositivo del caso) y no al cargar el archivo.
+ *
+ * Este spec es **solo Android**: toca coordenadas medidas en el Pixel 6 y decide por píxeles de la
+ * captura (el menú ⋯ es una ventana nativa que el árbol no ve). En iOS, `tocarFijo` y
+ * `soloAndroid` cortan el caso con `SoloAndroidError` en vez de dar un veredicto falso.
+ */
+let escalaPixel6: number | undefined;
+const ESCALA = (): number => {
+  if (escalaPixel6 === undefined) {
+    const wm = disp.adbSoloAndroid('wm size');
     const m = /(\d+)x(\d+)/.exec(wm.split('Override size:').pop() ?? wm);
-    return m ? Number(m[1]) / 1080 : 1;
-  } catch { return 1; }
-})();
-const esc = (xy: string) => xy.trim().split(/\s+/).map((n) => Math.round(Number(n) * ESCALA)).join(' ');
+    escalaPixel6 = m ? Number(m[1]) / 1080 : 1;
+  }
+  return escalaPixel6;
+};
+const escXY = (xy: string): [number, number] => {
+  const [x, y] = xy.trim().split(/\s+/).map((n) => Math.round(Number(n) * ESCALA()));
+  return [x, y];
+};
 const escZona = (z: { left: number; top: number; width: number; height: number }) => ({
-  left: Math.round(z.left * ESCALA), top: Math.round(z.top * ESCALA), width: Math.round(z.width * ESCALA), height: Math.round(z.height * ESCALA),
+  left: Math.round(z.left * ESCALA()), top: Math.round(z.top * ESCALA()), width: Math.round(z.width * ESCALA()), height: Math.round(z.height * ESCALA()),
 });
 
 /**
@@ -62,33 +75,34 @@ const escZona = (z: { left: number; top: number; width: number; height: number }
  * el diseño no escala de forma uniforme (la densidad cambia), así que cada sitio puede traer su
  * coordenada medida en el equipo de 720x1600 (`tel`) y, si no la trae, se escala la del Pixel 6.
  */
-function tocar(_re: RegExp, pixel: string, tel?: string): void {
-  const xy = ESCALA !== 1 && tel ? tel : esc(pixel);
-  execSync(`adb shell input tap ${xy}`, { timeout: 15000 });
+async function tocar(_re: RegExp, pixel: string, tel?: string): Promise<void> {
+  const [x, y] = ESCALA() !== 1 && tel ? (tel.split(' ').map(Number) as [number, number]) : escXY(pixel);
+  await disp.tocarFijo(x, y);
 }
 /** Pulsación corta sobre «Más opciones» (⋯): el toque simple no siempre abre el menú. */
-function abrirMenuMas(): void {
-  execSync(`adb shell input swipe ${esc('980 380 980 380 120')}`, { timeout: 15000 });
+async function abrirMenuMas(): Promise<void> {
+  disp.soloAndroid('abrirMenuMas', 'es una pulsación en una coordenada medida en el Pixel 6');
+  const [x, y] = escXY('980 380');
+  await disp.deslizar(x, y, x, y, 120, 15000);
 }
 
 // --- Teclado numérico en pantalla (1080x2400) ----------------------------------------------------
 const TECLA: Record<string, [number, number]> = { '1': [138, 1728], '2': [406, 1728], '3': [673, 1728], '4': [138, 1882], '5': [406, 1882], '6': [673, 1882], '7': [138, 2036], '8': [406, 2036], '9': [673, 2036], '0': [406, 2190] };
 /** Resolución de la pantalla en uso (por defecto la del Pixel 6, para la que están las coordenadas fijas). */
-function pantallaGrande(): boolean {
-  const wm = execSync('adb shell wm size', { timeout: 15000 }).toString();
-  return /1080x2400/.test(wm.split('Override size:').pop() ?? wm);
+async function pantallaGrande(): Promise<boolean> {
+  return !disp.esIos() && (await disp.tamanoPantalla()).join('x') === '1080x2400';
 }
-function teclear(codigo: string) {
+async function teclear(codigo: string): Promise<void> {
   // Fuera del Pixel 6 el teclado numérico está en otro lugar: se envían las teclas por código (KEYCODE_0 = 7).
-  if (!pantallaGrande()) {
-    for (const d of codigo) { execSync(`adb shell input keyevent ${7 + Number(d)}`, { timeout: 15000 }); execSync('sleep 0.8'); }
+  if (!(await pantallaGrande())) {
+    for (const d of codigo) { await disp.tecla(String(d) as disp.Tecla); await disp.pausaMs(800); }
     return;
   }
-  for (const d of codigo) { execSync(`adb shell input tap ${TECLA[d][0]} ${TECLA[d][1]}`, { timeout: 15000 }); execSync('sleep 0.7'); }
+  for (const d of codigo) { await disp.tocarFijo(TECLA[d][0], TECLA[d][1]); await disp.pausaMs(700); }
 }
-function borrarCasillas() {
-  if (!pantallaGrande()) { for (let i = 0; i < 8; i++) { execSync('adb shell input keyevent KEYCODE_DEL', { timeout: 15000 }); execSync('sleep 0.3'); } return; }
-  for (let i = 0; i < 14; i++) { execSync(`adb shell input tap ${esc('940 2036')}`, { timeout: 15000 }); execSync('sleep 0.6'); }
+async function borrarCasillas(): Promise<void> {
+  if (!(await pantallaGrande())) { for (let i = 0; i < 8; i++) { await disp.tecla('borrar'); await disp.pausaMs(300); } return; }
+  for (let i = 0; i < 14; i++) { await disp.tocarFijo(...escXY('940 2036')); await disp.pausaMs(600); }
 }
 
 /** Código OTP: el spec lo pide por archivo y el agente lo deja en `.qa/otp/codigos`. */
@@ -109,12 +123,12 @@ async function esperarCodigo(cp: string, correo: string, desde: Date): Promise<s
 async function sesion(screen: any, p: any, cp: string, correo: string, saludo: RegExp) {
   // Si un test anterior dejó la app fuera de las pestañas, se vuelve con «atrás» (cerrar la app cerraría la sesión).
   for (let i = 0; i < 6 && !(await screen.getByTestId('tab-Mi cuenta').isVisible().catch(() => false)); i++) {
-    const foco = execSync('adb shell dumpsys window | grep mCurrentFocus || true', { timeout: 20000 }).toString();
-    if (!foco.includes('cl.smu.unimarcapp.sfcc.qa')) {
-      execSync('adb shell monkey -p cl.smu.unimarcapp.sfcc.qa -c android.intent.category.LAUNCHER 1', { timeout: 15000 });
+    const foco = (await disp.ventanaConFoco());
+    if (!foco.includes(disp.bundle())) {
+      await disp.abrirApp();
       await dormir(8000);
     } else {
-      execSync('adb shell input keyevent 4', { timeout: 15000 });
+      await disp.atras();
       await dormir(2000);
     }
     carroActual = '';
@@ -132,7 +146,7 @@ async function sesion(screen: any, p: any, cp: string, correo: string, saludo: R
   }
   await tol(() => screen.getByText('Iniciar sesión').first().tap());
   await dormir(3500);
-  const campo = screen.getByType('android.widget.EditText').first();
+  const campo = disp.campoDeTexto(screen).first();
   await tol(() => campo.waitFor({ state: 'visible', timeout: 25000 }));
   const desde = new Date(Date.now() - 30000);
   await tol(() => campo.fill(correo));
@@ -140,8 +154,8 @@ async function sesion(screen: any, p: any, cp: string, correo: string, saludo: R
   await tol(() => screen.getByText('Continuar').first().tap());
   await tol(() => screen.getByText(/Autenticación requerida/).waitFor({ state: 'visible', timeout: 40000 }));
   const codigo = await esperarCodigo(cp, correo, desde);
-  borrarCasillas();
-  teclear(codigo);
+  await borrarCasillas();
+  await teclear(codigo);
   await dormir(2000);
   await tol(() => screen.getByText('Validar').tap());
   await dormir(7000);
@@ -170,43 +184,46 @@ async function abrirMiCarro(screen: any, p: any) {
 }
 
 /** Captura por adb (la misma vía que los toques); la del framework tiene ruido y no sirve para comparar. */
-const capAdb = (zona: { left: number; top: number; width: number; height: number }) =>
-  sharp(execSync('adb exec-out screencap -p', { timeout: 20000, maxBuffer: 64 * 1024 * 1024 })).extract(escZona(zona)).png().toBuffer();
+const capAdb = async (zona: { left: number; top: number; width: number; height: number }) => {
+  disp.soloAndroid('capAdb', 'las zonas están medidas en el Pixel 6');
+  return sharp(await disp.captura()).extract(escZona(zona)).png().toBuffer();
+};
 
 /** Cuenta píxeles de una zona que cumplen `fn` (captura por adb a tamaño completo). */
 async function contar(zona: { left: number; top: number; width: number; height: number }, fn: (r: number, g: number, b: number) => boolean): Promise<number> {
-  const { data, info } = await sharp(execSync('adb exec-out screencap -p', { timeout: 20000, maxBuffer: 64 * 1024 * 1024 })).extract(escZona(zona)).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  disp.soloAndroid('contar píxeles', 'las zonas están medidas en el Pixel 6');
+  const { data, info } = await sharp(await disp.captura()).extract(escZona(zona)).removeAlpha().raw().toBuffer({ resolveWithObject: true });
   let n = 0;
   for (let i = 0; i < data.length; i += info.channels) if (fn(data[i], data[i + 1], data[i + 2])) n++;
   return n;
 }
 /** El menú ⋯ está abierto si aparece el texto oscuro de sus opciones (a la derecha del título, donde antes no hay nada). */
-const menuVisible = async () => (await contar({ left: 480, top: 290, width: 420, height: 60 }, (r, g, b) => r < 110 && g < 110 && b < 110)) > 300 * ESCALA * ESCALA;
+const menuVisible = async () => (await contar({ left: 480, top: 290, width: 420, height: 60 }, (r, g, b) => r < 110 && g < 110 && b < 110)) > 300 * ESCALA() * ESCALA();
 /** El modal «Vaciar el carro» está abierto si aparece el botón rosado «Sí, eliminar». */
-const modalVisible = async () => (await contar({ left: 60, top: 2020, width: 960, height: 100 }, (r, g, b) => r > 240 && g > 205 && g < 235 && b > 205 && b < 235)) > 15000 * ESCALA * ESCALA;
+const modalVisible = async () => (await contar({ left: 60, top: 2020, width: 960, height: 100 }, (r, g, b) => r > 240 && g > 205 && g < 235 && b > 205 && b < 235)) > 15000 * ESCALA() * ESCALA();
 
 /** Menú ⋯: es una ventana emergente nativa que el árbol de accesibilidad no ve mientras está abierta. */
 const ZONA_MENU = { left: 440, top: 260, width: 600, height: 280 };
 async function menuMasOpciones(screen: any): Promise<{ abierto: boolean; dif: number }> {
   for (let i = 0; i < 4; i++) {
     // el toque del framework sobre «Más opciones» no siempre abre el menú; se alterna toque y pulsación corta
-    if (i % 2 === 0) execSync(`adb shell input tap ${esc('980 380')}`, { timeout: 15000 }); else abrirMenuMas();
+    if (i % 2 === 0) await disp.tocarFijo(...escXY('980 380')); else await abrirMenuMas();
     await dormir(2200);
     if (await menuVisible()) return { abierto: true, dif: i };
   }
   return { abierto: false, dif: -1 };
 }
-const tocarItemMenu = (item: 'guardar' | 'vaciar') => { tocar(item === 'guardar' ? /Guardar como lista/i : /Vaciar carro/i, item === 'guardar' ? '672 324' : '600 450', item === 'guardar' ? '430 270' : '380 359'); execSync('sleep 2'); };
+const tocarItemMenu = async (item: 'guardar' | 'vaciar') => { await tocar(item === 'guardar' ? /Guardar como lista/i : /Vaciar carro/i, item === 'guardar' ? '672 324' : '600 450', item === 'guardar' ? '430 270' : '380 359'); await disp.pausaMs(2000); };
 async function vaciarDesdeMenu(screen: any) {
   for (let intento = 0; intento < 3; intento++) {
-    abrirMenuMas(); await dormir(2500);   // ⋯
-    tocarItemMenu('vaciar');                                                           // «Vaciar Carro»
+    await abrirMenuMas(); await dormir(2500);   // ⋯
+    await tocarItemMenu('vaciar');                                                           // «Vaciar Carro»
     await dormir(3500);
-    tocar(/S[ií], eliminar/i, '540 2066', '360 1243');                      // «Sí, eliminar»
+    await tocar(/S[ií], eliminar/i, '540 2066', '360 1243');                      // «Sí, eliminar»
     await dormir(3000);
     for (let i = 0; i < 6; i++) { if (tiene(await nodos(screen), /Tu carro est[áa] vac[íi]o/)) return; await dormir(2000); }
   }
-  execSync('adb exec-out screencap -p > .qa/run/dbg-fallo.png', { timeout: 20000 });
+  fs.writeFileSync(`.qa/run/dbg-fallo.png`, await disp.captura());
   throw new Error('el carro no quedó vacío tras «Sí, eliminar»');
 }
 
@@ -288,9 +305,9 @@ const CUENTA = (td: any) => sku(td, 'COMPRADOR_USER');
 const SALUDO = /Karl|Comprador/i;
 
 test.describe.configure({ timeout: 900000 });
-test.describe('B2C-37 — Página del carro (Android)', () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-37 — Página del carro (${PLATAFORMA})`, () => {
   // ================================================================ cuenta de comprador
-  test('TC-B2C37-APP-001 · El carrito muestra el layout con ítems disponibles y totales fijos [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-001 · El carrito muestra el layout con ítems disponibles y totales fijos [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-001';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const carro = await carroCon(screen, p, testData, [['SKU_VALID_001', 1]]);
@@ -305,7 +322,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     await carro.capturarEvidencia(cp);
   });
 
-  test('TC-B2C37-APP-003 · El menú ⋯ muestra "Guardar como lista" y "Vaciar carro" [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-003 · El menú ⋯ muestra "Guardar como lista" y "Vaciar carro" [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-003';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const carro = await carroCon(screen, p, testData, [['SKU_VALID_001', 1]]);
@@ -316,7 +333,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     await carro.capturarEvidencia(cp);
   });
 
-  test('TC-B2C37-APP-006 · "Guardar como lista" del menú ⋯ inicia el flujo de guardado de lista [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-006 · "Guardar como lista" del menú ⋯ inicia el flujo de guardado de lista [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-006';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const carro = await carroCon(screen, p, testData, [['SKU_VALID_001', 1]]);
@@ -324,20 +341,20 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     expect(m.abierto, 'el menú ⋯ se abre').toBe(true);
     const ZONA_HOJA = { left: 0, top: 560, width: 1080, height: 1500 };
     const recorteHoja = async () => sharp(await tol(() => screen.screenshot())).extract(escZona(ZONA_HOJA)).png().toBuffer();
-    abrirMenuMas(); await dormir(1500); execSync('adb shell input keyevent 4', { timeout: 15000 }); await dormir(1500);
+    await abrirMenuMas(); await dormir(1500); await disp.atras(); await dormir(1500);
     const antes = await recorteHoja();
-    abrirMenuMas(); await dormir(2500);
-    tocarItemMenu('guardar');
+    await abrirMenuMas(); await dormir(2500);
+    await tocarItemMenu('guardar');
     await dormir(3500);
     const dif = await diferenciaMedia(antes, await recorteHoja());
     await carro.capturarEvidencia(cp, 6, 'tras tocar «Guardar como lista» (hoja «Agregar como lista»)');
     test.info().annotations.push({ type: 'hoja', description: `se abre la hoja «Agregar como lista» (Crear nueva lista / listas / Confirmar): diferencia de la zona ${dif.toFixed(1)}` });
     expect(dif > 6, 'se abre el flujo de guardado de lista (hoja «Agregar como lista»)').toBe(true);
-    tocar(/^(Cerrar|Close)$/i, '61 584', '44 367'); await dormir(1500);
+    await tocar(/^(Cerrar|Close)$/i, '61 584', '44 367'); await dormir(1500);
     await carro.capturarEvidencia(cp);
   });
 
-  test('TC-B2C37-APP-014 · Cada ítem disponible muestra imagen, nombre, precios, cantidad, controles y eliminar [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-014 · Cada ítem disponible muestra imagen, nombre, precios, cantidad, controles y eliminar [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-014';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const carro = await carroCon(screen, p, testData, [['SKU_VALID_001', 1]]);
@@ -353,7 +370,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     await carro.capturarEvidencia(cp);
   });
 
-  test('TC-B2C37-APP-034 · El carrito bajo el mínimo muestra el faltante y deshabilita el CTA [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-034 · El carrito bajo el mínimo muestra el faltante y deshabilita el CTA [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-034';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const carro = await carroCon(screen, p, testData, [['SKU_VALID_001', 1]]);
@@ -370,7 +387,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     await carro.capturarEvidencia(cp);
   });
 
-  test('TC-B2C37-APP-036 · La X cierra el toast de monto mínimo [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-036 · La X cierra el toast de monto mínimo [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-036';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const carro = await carroCon(screen, p, testData, [['SKU_VALID_001', 1]]);
@@ -384,7 +401,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     await carro.capturarEvidencia(cp);
   });
 
-  test('TC-B2C37-APP-035 · El monto faltante del toast se actualiza al cambiar la cantidad [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-035 · El monto faltante del toast se actualiza al cambiar la cantidad [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-035';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     invalidarCarro();
@@ -400,7 +417,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     await carro.capturarEvidencia(cp);
   });
 
-  test('TC-B2C37-APP-038 · Al alcanzar el mínimo se oculta el toast y se habilita el CTA [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-038 · Al alcanzar el mínimo se oculta el toast y se habilita el CTA [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-038';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const unidades = Number(sku(testData, 'UNIDADES_SOBRE_MINIMO'));
@@ -413,7 +430,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     await carro.capturarEvidencia(cp);
   });
 
-  test('TC-B2C37-APP-005 · "Continuar con la entrega" avanza al paso Datos de entrega [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-005 · "Continuar con la entrega" avanza al paso Datos de entrega [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-005';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const unidades = Number(sku(testData, 'UNIDADES_SOBRE_MINIMO'));
@@ -421,7 +438,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     await tol(() => screen.getByTestId('cart-checkout').tap());
     await dormir(4000);
     await carro.capturarEvidencia(cp, 6, 'modal «¡Que no se te olviden!» tras «Continuar con la entrega»');
-    tocar(/^Continuar$/i, '540 2238');   // «Continuar» del modal de sugeridos (no figura en los pasos del caso)
+    await tocar(/^Continuar$/i, '540 2238');   // «Continuar» del modal de sugeridos (no figura en los pasos del caso)
     await dormir(6000);
     const n = await nodos(screen);
     test.info().annotations.push({ type: 'pantalla', description: n.map((x) => x.label).filter(Boolean).slice(0, 25).join(' | ') });
@@ -429,7 +446,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     await carro.capturarEvidencia(cp);
   });
 
-  test('TC-B2C37-APP-002 · La tarjeta de totales muestra "Subtotal con Unipay" con descuento [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-002 · La tarjeta de totales muestra "Subtotal con Unipay" con descuento [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-002';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const carro = await carroCon(screen, p, testData, [['SKU_UNIPAY_001', 1]]);
@@ -440,7 +457,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     await carro.capturarEvidencia(cp);
   });
 
-  test('TC-B2C37-APP-047 · La tarjeta de totales queda fija al hacer scroll [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-047 · La tarjeta de totales queda fija al hacer scroll [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-047';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const lista = sku(testData, 'SKUS_CARRUSEL').split(',').map((s) => s.trim());
@@ -456,7 +473,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
 
   // --- Alcohol --------------------------------------------------------------------------------------
   for (const [n, titulo] of [['024', 'El carrito muestra el toast de restricción de alcohol'], ['025', 'La "X" cierra el toast de restricción de alcohol'], ['026', 'El toast de restricción de alcohol desaparece a los 4 segundos']] as const) {
-    test(`TC-B2C37-APP-${n} · ${titulo} [Logueado] (Android)`, async ({ screen, plataforma: p, testData }) => {
+    test(`TC-B2C37-APP-${n} · ${titulo} [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
       const cp = `TC-B2C37-APP-${n}`;
       await sesion(screen, p, cp, CUENTA(testData), SALUDO);
       invalidarCarro();
@@ -488,7 +505,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
 
   // --- Vaciar carro (cantidad: SKU_VALID_001 y SKU_UNITARIO) -----------------------------------------
   for (const [n, titulo] of [['019', 'El modal «Vaciar carro» muestra su contenido'], ['022', '«No, gracias» cierra el modal sin cambios'], ['023', 'La X del modal lo cierra sin cambios']] as const) {
-    test(`TC-B2C37-APP-${n} · ${titulo} [Logueado] (Android)`, async ({ screen, plataforma: p, testData }) => {
+    test(`TC-B2C37-APP-${n} · ${titulo} [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
       const cp = `TC-B2C37-APP-${n}`;
       await sesion(screen, p, cp, CUENTA(testData), SALUDO);
       const carro = await carroCon(screen, p, testData, [['SKU_VALID_001', 1], ['SKU_UNITARIO', 1]]);
@@ -500,19 +517,19 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
       const antes = await recorteModal();
       let abierto = false;
       const traza: string[] = [];
-      const foto = (n: string) => execSync(`adb exec-out screencap -p > .qa/run/dbg19-${n}.png`, { timeout: 20000 });
+      const foto = async (n: string) => fs.writeFileSync(`.qa/run/dbg19-${n}.png`, await disp.captura());
       for (let intento = 0; intento < 3 && !abierto; intento++) {
         const enCarro = tiene(await nodos(screen), /^Mi carro$/);
         traza.push(`intento ${intento}: arbol dice Mi carro=${enCarro}`);
         if (!enCarro) await abrirMiCarro(screen, p);   // nunca tocar por coordenadas fuera del carro
-        foto(`${intento}-a-antes-menu`);
+        await foto(`${intento}-a-antes-menu`);
         const mm = await menuMasOpciones(screen);
         traza.push(`  menu abierto=${mm.abierto} dif=${mm.dif.toFixed(1)}`);
-        foto(`${intento}-b-tras-menu`);
+        await foto(`${intento}-b-tras-menu`);
         if (!mm.abierto) continue;
-        tocarItemMenu('vaciar');
+        await tocarItemMenu('vaciar');
         await dormir(3500);
-        foto(`${intento}-c-tras-vaciar`);
+        await foto(`${intento}-c-tras-vaciar`);
         abierto = await modalVisible();
         traza.push(`  modal visible=${abierto}`);
       }
@@ -520,8 +537,8 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
       await carro.capturarEvidencia(cp, 6, 'modal «Vaciar el carro»');
       expect(abierto, 'el modal «Vaciar el carro» se abre (ver captura: imagen, título, subtítulo, «Sí, eliminar», «No, gracias» y «X»)').toBe(true);
       if (n !== '019') {
-        if (n === '022') tocar(/No, gracias/i, '540 2198', '360 1339');   // «No, gracias»
-        else tocar(/^(Cerrar|Close)$/i, '61 940', '44 600');                 // «X»
+        if (n === '022') await tocar(/No, gracias/i, '540 2198', '360 1339');   // «No, gracias»
+        else await tocar(/^(Cerrar|Close)$/i, '61 940', '44 600');                 // «X»
         await dormir(3000);
         const cerrado = !(await modalVisible());
         const d = await nodos(screen);
@@ -529,13 +546,13 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
         expect(cerrado, 'el modal se cierra').toBe(true);
         expect(d.filter((x) => x.id.startsWith('cart-item-')).length, 'el carro conserva sus 2 ítems').toBe(2);
       } else {
-        execSync('adb shell input keyevent 4', { timeout: 15000 }); await dormir(1500);
+        await disp.atras(); await dormir(1500);
       }
       await carro.capturarEvidencia(cp);
     });
   }
 
-  test('TC-B2C37-APP-021 · "Sí, eliminar" vacía el carro y muestra el estado de carro vacío [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-021 · "Sí, eliminar" vacía el carro y muestra el estado de carro vacío [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-021';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const carro = await carroCon(screen, p, testData, [['SKU_VALID_001', 1], ['SKU_UNITARIO', 1]]);
@@ -549,7 +566,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     await carro.capturarEvidencia(cp);
   });
 
-  test('TC-B2C37-APP-015 · Los ítems disponibles se ordenan del agregado más reciente al más antiguo [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-015 · Los ítems disponibles se ordenan del agregado más reciente al más antiguo [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-015';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     // El carro quedó vacío tras APP-021; se agregan en el orden contrario al esperado en pantalla.
@@ -567,7 +584,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
 
   // --- Ítems no disponibles: se intenta dejar {SKU_NO_DISPONIBLE} en el carro --------------------------
   for (const [n, titulo] of [['007', 'El carrito muestra disponibles colapsados y no disponibles expandidos'], ['010', 'Una sección colapsada se expande al tocar «Mostrar más»'], ['011', 'Una sección expandida se colapsa al tocar «Mostrar menos»'], ['012', 'Las secciones cambian de estado de forma independiente'], ['013', 'El estado de los acordeones vuelve al inicial al recargar'], ['016', 'Cada ítem no disponible muestra overlay, badge, faltantes y «Reemplazar»'], ['017', 'Los ítems no disponibles no permiten cambiar la cantidad ni suman al subtotal'], ['018', '«Reemplazar» inicia el flujo de productos similares']] as const) {
-    test(`TC-B2C37-APP-${n} · ${titulo} [Logueado] (Android)`, async ({ screen, plataforma: p, testData }) => {
+    test(`TC-B2C37-APP-${n} · ${titulo} [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
       const cp = `TC-B2C37-APP-${n}`;
       await sesion(screen, p, cp, CUENTA(testData), SALUDO);
       const carro = await conNoDisponible(screen, p, testData, [['SKU_VALID_001', 1]]);
@@ -578,14 +595,14 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
     });
   }
 
-  test('TC-B2C37-APP-008 · El carrusel de disponibles muestra el tile "+N" [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-008 · El carrusel de disponibles muestra el tile "+N" [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-008';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     if (noDisponible) throw BD(noDisponible);
     throw BD('depende de dejar {SKU_NO_DISPONIBLE} en el carro junto a los {SKUS_CARRUSEL}, y esa precondición no se cumple en esta cuenta (ver APP-007)');
   });
 
-  test('TC-B2C37-APP-037 · El carrito sobre el mínimo con Retiro habilita "Continuar con la entrega" [Logueado] (Android)', async ({ screen, plataforma: p, testData }) => {
+  test(`TC-B2C37-APP-037 · El carrito sobre el mínimo con Retiro habilita "Continuar con la entrega" [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
     const cp = 'TC-B2C37-APP-037';
     await sesion(screen, p, cp, CUENTA(testData), SALUDO);
     const unidades = Number(sku(testData, 'UNIDADES_SOBRE_MINIMO'));
@@ -599,7 +616,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
 
   // --- Membresía ---------------------------------------------------------------------------------------
   for (const [n, titulo, boton] of [['039', 'El carrito muestra el banner de membresía para un cliente sin membresía', 'Lo quiero'], ['040', '«Lo quiero» abre el flujo de contratación de membresía', 'Lo quiero']] as const) {
-    test(`TC-B2C37-APP-${n} · ${titulo} [Logueado] (Android)`, async ({ screen, plataforma: p, testData }) => {
+    test(`TC-B2C37-APP-${n} · ${titulo} [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
       const cp = `TC-B2C37-APP-${n}`;
       await sesion(screen, p, cp, sku(testData, 'COMPRADOR_SIN_MEMBRESIA_USER'), SALUDO);
       const carro = await carroCon(screen, p, testData, [['SKU_VALID_001', 1], ['SKU_OFERTA_MEMBRESIA', 1]]);
@@ -620,7 +637,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
 
   // ================================================================ cuenta con membresía vencida
   for (const [n, titulo] of [['041', 'El carrito muestra el banner de renovación para membresía expirada'], ['042', '«Renovar» abre el flujo de renovación de membresía']] as const) {
-    test(`TC-B2C37-APP-${n} · ${titulo} [Logueado] (Android)`, async ({ screen, plataforma: p, testData }) => {
+    test(`TC-B2C37-APP-${n} · ${titulo} [Logueado] (${PLATAFORMA})`, async ({ screen, plataforma: p, testData }) => {
       const cp = `TC-B2C37-APP-${n}`;
       await sesion(screen, p, cp, sku(testData, 'COMPRADOR_MEMBRESIA_EXPIRADA_USER'), /Girolamo/i);
       invalidarCarro();
@@ -642,7 +659,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
 
   // ================================================================ invitado (app con datos borrados)
   for (const [n, titulo] of [['004', 'El menú ⋯ muestra solo «Vaciar carro» al invitado'], ['043', 'El carrito no muestra el banner de membresía al invitado']] as const) {
-    test(`TC-B2C37-APP-${n} · ${titulo} [Guest] (Android)`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
+    test(`TC-B2C37-APP-${n} · ${titulo} [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
       const cp = `TC-B2C37-APP-${n}`;
       await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
       await agregarDesdePdp(screen, p, sku(testData, 'SKU_VALID_001'));
@@ -662,7 +679,7 @@ test.describe('B2C-37 — Página del carro (Android)', () => {
   }
 
   for (const [n, titulo] of [['027', 'El carrito sin ítems muestra el estado vacío con «Ir a Comprar»'], ['028', '«Ir a Comprar» del carro vacío redirige al Home']] as const) {
-    test(`TC-B2C37-APP-${n} · ${titulo} [Guest] (Android)`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
+    test(`TC-B2C37-APP-${n} · ${titulo} [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
       const cp = `TC-B2C37-APP-${n}`;
       await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
       await agregarDesdePdp(screen, p, sku(testData, 'SKU_VALID_001'));

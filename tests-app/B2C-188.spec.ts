@@ -3,7 +3,7 @@ import { token } from '../tests/support/testData';
 import { TabBar } from './pages/TabBar';
 import { HomeScreen } from './pages/HomeScreen';
 import { BuscarScreen } from './pages/BuscarScreen';
-import { borrarDatosApp } from './support/grabacionAndroid';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-188 — Floating Cart de la app (componente "Ir al carro" sobre la TabBar).
@@ -24,7 +24,7 @@ for (const plataforma of ['Android'] as const) {
       test.setTimeout(240000);
       // Precondición: invitado con el carro vacío → app con datos borrados (recién instalada).
       await device.terminateApp(bundleId!);
-      borrarDatosApp(bundleId!, process.env.ANDROID_SERIAL);
+      await disp.borrarDatosApp(bundleId!);
       await device.launchApp(bundleId!);
       const tabs = new TabBar(screen, p);
       for (let intento = 0; ; intento++) {

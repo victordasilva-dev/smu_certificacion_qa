@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -7,6 +6,7 @@ import { CucardaShelf, type NodoShelf } from './pages/CucardaShelf';
 import { tolerante } from './support/tolerante';
 import { sesion } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-65 — Cucarda (label promocional) del shelf, en la app. Solo Android (emulador local), v1.0.1
@@ -25,8 +25,9 @@ import { asegurarApp } from './support/appLista';
 const dormir = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const tol = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
 const SALUDO = /Karl/i;
+/** Desplazamiento con coordenadas medidas en Android; en iOS `deslizarFijo` las escala. */
 const swipe = (x1: number, y1: number, x2: number, y2: number, ms = 500) =>
-  execSync(`adb shell input swipe ${x1} ${y1} ${x2} ${y2} ${ms}`, { timeout: 20000 });
+  disp.deslizarFijo(x1, y1, x2, y2, ms);
 const sku = (td: any, t: string) => token(td, t)!;
 const precondicion = (motivo: string) => new Error(`PRECONDICION_NO_DISPONIBLE: ${motivo}`);
 
@@ -43,19 +44,19 @@ async function plpVacuno(screen: Screen, p: Plataforma, td: any, cp: string): Pr
   const s = await abrirApp(screen, p, td, cp);
   await tol(() => screen.getByTestId('tab-Categorías').tap());
   await dormir(4000);
-  for (let i = 0; i < 6; i++) { swipe(540, 700, 540, 1800, 250); await dormir(500); }
+  for (let i = 0; i < 6; i++) { await swipe(540, 700, 540, 1800, 250); await dormir(500); }
   let vacuno: NodoShelf | undefined;
   for (let i = 0; i < 12 && !vacuno; i++) {
     const n = await s.nodos();
     vacuno = n.find((x) => x.type === 'ViewGroup' && x.label === 'Vacuno' && x.y > 300 && x.y < 1900);
     if (vacuno) break;
     const carnes = n.find((x) => x.type === 'ViewGroup' && x.label === 'Carnes' && x.w >= 1000);
-    if (carnes && carnes.y < 1500) swipe(950, carnes.y + 300, 350, carnes.y + 300, 400);
-    else swipe(540, 1500, 540, 1000, 500);
+    if (carnes && carnes.y < 1500) await swipe(950, carnes.y + 300, 350, carnes.y + 300, 400);
+    else await swipe(540, 1500, 540, 1000, 500);
     await dormir(1500);
   }
   expect(vacuno, 'el menú de Categorías muestra Carnes → Vacuno').toBeTruthy();
-  execSync(`adb shell input tap ${vacuno!.x + 100} ${vacuno!.y + 100}`, { timeout: 15000 });
+  await disp.tocar(vacuno!.x + 100, vacuno!.y + 100);
   await tol(() => screen.getByText(/^\d+ productos?$/).first().waitFor({ state: 'visible', timeout: 40000 }));
   await dormir(3000);
   await s.capturarEvidencia(cp, 3, 'PLP Vacuno');
@@ -68,16 +69,16 @@ async function buscar(screen: Screen, s: CucardaShelf, termino: string, enter: b
   await dormir(4000);
   const campo = (await s.nodos()).find((x) => /EditText/.test(x.type));
   if (!campo) throw new Error('La pestaña Buscar no muestra el campo de búsqueda');
-  execSync(`adb shell input tap ${campo.x + 60} ${Math.round(campo.y + campo.h / 2)}`, { timeout: 15000 });
+  await disp.tocar(campo.x + 60, campo.y + campo.h / 2);
   await dormir(1500);
-  execSync(`adb shell input text "${termino.replace(/ /g, '%s')}"`, { timeout: 15000 });
+  await disp.escribir(termino);
   await dormir(5000);
   if (enter) {
     // Enter abre la SRP y cierra el teclado: un «atrás» aquí volvería a la pantalla anterior.
-    execSync('adb shell input keyevent KEYCODE_ENTER', { timeout: 15000 });
+    await disp.tecla('enter');
     await dormir(7000);
   } else {
-    execSync('adb shell input keyevent KEYCODE_BACK', { timeout: 15000 }); // cierra el teclado
+    await disp.atras(); // cierra el teclado
     await dormir(1500);
   }
 }
@@ -146,13 +147,13 @@ test.describe('B2C-65 — Cucarda del shelf (Android)', () => {
         if (hallado || revisadas.has(Math.round(y / 50))) continue;
         revisadas.add(Math.round(y / 50));
         for (let h = 0; h < 8 && !hallado; h++) {
-          swipe(950, y + 200, 250, y + 200, 500);
+          await swipe(950, y + 200, 250, y + 200, 500);
           await dormir(1500);
           n = await s.nodos();
           hallado = n.find((x) => x.id === `product-${SKU}` && x.y > 250 && x.y < 1500 && x.x >= 0 && x.x < 700);
         }
       }
-      if (!hallado) { swipe(540, 1700, 540, 1000, 700); await dormir(1800); }
+      if (!hallado) { await swipe(540, 1700, 540, 1000, 700); await dormir(1800); }
     }
     if (!hallado) throw precondicion(`{SKU_CUCARDA} (${SKU}) no aparece en ningún carrusel del Home`);
     const f = (await s.franja(SKU))!;
@@ -243,7 +244,7 @@ test.describe('B2C-65 — Cucarda del shelf (Android)', () => {
       for (let i = 0; i < 4; i++) {
         const eliminar = (await s.nodos()).find((x) => x.type === 'Button' && /^Eliminar /.test(x.label) && /Tapapecho vacuno Nacional/.test(x.label));
         if (!eliminar) break;
-        execSync(`adb shell input tap ${Math.round(eliminar.x + eliminar.w / 2)} ${Math.round(eliminar.y + eliminar.h / 2)}`, { timeout: 15000 });
+        await disp.tocar(eliminar.x + eliminar.w / 2, eliminar.y + eliminar.h / 2);
         await dormir(4000);
       }
       const quedo = (await s.nodos()).some((x) => x.id === `cart-quantity-${SKU}`);
@@ -260,7 +261,7 @@ test.describe('B2C-65 — Cucarda del shelf (Android)', () => {
     await s.buscar(SKU, 1);
     const shelf = await s.delShelf(SKU);
     // «Ver similares» queda al pie del shelf: se acerca para leerlo.
-    swipe(540, 1500, 540, 1000, 700); await dormir(1500);
+    await swipe(540, 1500, 540, 1000, 700); await dormir(1500);
     const pie = await s.delShelf(SKU);
     await s.capturarEvidencia(cp, 4, 'shelf sin stock con la cucarda', { elemento: s.shelf(SKU) });
     const textos = [...shelf, ...pie].map((x) => x.label);

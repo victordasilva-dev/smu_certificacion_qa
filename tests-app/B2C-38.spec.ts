@@ -13,6 +13,8 @@ import { sesion } from './support/sesionOtp';
 import { NavBar } from './pages/NavBar';
 import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
 import { asegurarApp } from './support/appLista';
+import { AMBAS } from './support/plataformaApp';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-38 — Control de cantidad y eliminación de ítems del carro (app nativa, Android, build v1.0.7).
@@ -137,7 +139,7 @@ async function reabrirYVaciar(screen: Screen, device: any, bundleId: string, p: 
   await tol(() => tabs.floatingPill.waitFor({ state: 'visible', timeout: 20000 })).catch(() => {});
   if (!(await tol(() => tabs.floatingPill.isVisible({ timeout: 2000 })))) return;
   await abrirCarro(screen, p);
-  if (!(await esperarCarroCargado(screen))) { await tol(() => screen.goBack()); return; }
+  if (!(await esperarCarroCargado(screen))) { await tol(() => disp.volver()); return; }
   // Con 1 unidad el control es "Eliminar <nombre>"; con más, "Quitar una unidad de <nombre>".
   // Tras cada toque la lista vuelve a mostrar el esqueleto: el carro solo se da por vacío cuando aparece
   // "¡Tu carro está vacío!", nunca porque no se vea ningún botón.
@@ -151,7 +153,7 @@ async function reabrirYVaciar(screen: Screen, device: any, bundleId: string, p: 
     }
     await pausa(2000);
   }
-  await tol(() => screen.goBack());
+  await tol(() => disp.volver());
   await pausa(1500);
 }
 
@@ -169,7 +171,7 @@ async function armarCarro(screen: Screen, p: Plataforma, items: [string, number]
   return carro;
 }
 
-test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-38 — Cantidad e ítems del carro (${PLATAFORMA})`, () => {
   test.describe.configure({ timeout: 600000 });
 
   test(`TC-B2C38-APP-000 · Precondición: invitado con {DIRECCION_DESPACHO_001} (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {

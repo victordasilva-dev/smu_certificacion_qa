@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import type { Screen } from 'mobilewright';
 import { test, expect } from './support/fixtures';
 import { token } from '../tests/support/testData';
@@ -10,6 +9,8 @@ import { invitadoConDireccion, elegirDireccion, agregarAlCarro } from './support
 import { agregarDesdePdp } from './support/invitadoConCarro';
 import { nodos, tiene, tocarEscalado, sesion, esperarCodigo, ingresarCodigo } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-126 — Cambio de dirección o tienda con carro (app nativa, Android, build v1.0.1).
@@ -28,7 +29,7 @@ const paso = async <T>(n: string, f: () => Promise<T>): Promise<T> => { try { re
 const BD = (m: string) => new Error(`PRECONDICION_NO_DISPONIBLE: ${m}`);
 
 test.describe.configure({ timeout: 900000 });
-test.describe(`B2C-126 — Cambio con carro (${PLATAFORMA})`, () => {
+for (const PLATAFORMA of AMBAS) test.describe(`B2C-126 — Cambio con carro (${PLATAFORMA})`, () => {
   test(`TC-B2C126-APP-003 · Si todos los productos siguen disponibles no se muestra el toast [Guest] (${PLATAFORMA})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
     const cp = 'TC-B2C126-APP-003';
     const tabs = await invitadoConDireccion(screen, device, bundleId!, p, token(testData, 'DIRECCION_DESPACHO_001')!);
@@ -42,7 +43,7 @@ test.describe(`B2C-126 — Cambio con carro (${PLATAFORMA})`, () => {
     if (tiene(await nodos(screen), /Algunos productos podr[ií]an agotarse/)) await tol(() => screen.getByRole('button', { name: 'Sí, continuar' }).tap());
     await pausa(6000);
     // Un invitado debe iniciar sesión tras «Sí, continuar»: se cierra el prompt si aparece.
-    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { tocarEscalado(1000, 201); await pausa(3000); }
+    if (tiene(await nodos(screen), /inicia sesi[oó]n o reg[ií]strate/i)) { await tocarEscalado(1000, 201); await pausa(3000); }
     await new NavBar(screen, p).capturarEvidencia(cp, 10, 'Home tras el cambio');
     const t = await textos(screen);
     const loc = (await screen.getByTestId('delivery-open').getText().catch(() => '')) || '';
@@ -56,7 +57,7 @@ test.describe(`B2C-126 — Cambio con carro (${PLATAFORMA})`, () => {
   /** Sesión de la cuenta, carro con `items` y despacho a {DIRECCION_DESPACHO_001} (guardada). */
   async function prepararCuenta(screen: Screen, p: any, cp: string, testData: any, items: { sku: string; unidades: number }[]): Promise<string> {
     const correo = token(testData, 'USER_AUTH_001')!.split('/')[0].trim();
-    await paso('iniciar sesión', async () => { execSync('adb shell am force-stop cl.smu.unimarcapp.sfcc.qa', { timeout: 20000 }); await pausa(2000); await asegurarApp(screen); await sesion(screen, p, cp, correo, /Karl|Comprador/i); await tol(() => screen.getByTestId('tab-Home').tap()); await pausa(3000); });
+    await paso('iniciar sesión', async () => { await disp.cerrarApp(); await pausa(2000); await asegurarApp(screen); await sesion(screen, p, cp, correo, /Karl|Comprador/i); await tol(() => screen.getByTestId('tab-Home').tap()); await pausa(3000); });
     // Vaciar el carro de la cuenta.
     const tabs = new TabBar(screen, p);
     if (await tabs.floatingPill.isVisible().catch(() => false)) {
@@ -68,7 +69,7 @@ test.describe(`B2C-126 — Cambio con carro (${PLATAFORMA})`, () => {
         await tol(() => b.tap()).catch(() => {});
         await pausa(2500);
       }
-      await tol(() => screen.goBack());
+      await tol(() => disp.volver());
       await pausa(2000);
     }
     // Despacho a {DIRECCION_DESPACHO_001} desde las direcciones guardadas.
@@ -98,8 +99,8 @@ test.describe(`B2C-126 — Cambio con carro (${PLATAFORMA})`, () => {
     // Productos al carro.
     for (const { sku, unidades } of items) {
       await paso(`agregar ${sku}`, () => agregarDesdePdp(screen, p, sku).catch((e) => { if (!/no matching element/.test(String(e))) throw e; }));
-      for (let u = 1; u < unidades; u++) { tocarEscalado(945, 1548); await pausa(3000); }
-      for (let i = 0; i < 5 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { await tol(() => screen.goBack()); await pausa(1500); }
+      for (let u = 1; u < unidades; u++) { await tocarEscalado(945, 1548); await pausa(3000); }
+      for (let i = 0; i < 5 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { await tol(() => disp.volver()); await pausa(1500); }
     }
     await tol(() => screen.getByTestId('tab-Home').tap());
     await pausa(3000);

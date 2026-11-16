@@ -7,7 +7,7 @@ import { SinCoberturaModal } from './pages/SinCoberturaModal';
 import { sesion, esperarCodigo, ingresarCodigo } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
 import { tolerante } from './support/tolerante';
-import { execSync } from 'child_process';
+import * as disp from './support/dispositivo';
 
 /**
  * B2C-123 — dirección guardada sin cobertura (app nativa, Android, build v1.0.1), TC 002: con la
@@ -29,9 +29,9 @@ test.describe('B2C-123 — dirección guardada sin cobertura, con sesión (Andro
     await asegurarApp(screen);
     await sesion(screen, p, cp, correo, /Karl/);
     // La Home con sesión no se puede volcar: se entra y se abre el Store Locator por coordenadas.
-    execSync('adb shell input tap 176 2230', { timeout: 15000 });
+    await disp.tocarFijo(176, 2230);
     await pausa(6000);
-    execSync('adb shell input tap 1012 192', { timeout: 15000 });
+    await disp.tocarFijo(1012, 192);
     await pausa(3000);
     const modal = await r(() => new MetodoEntregaModal(screen, p).waitUntilReady());
     await pausa(2000);

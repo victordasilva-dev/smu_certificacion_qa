@@ -1,7 +1,7 @@
-import { execSync } from 'child_process';
 import sharp from 'sharp';
 import { BaseScreen } from './BaseScreen';
 import type { Locator } from 'mobilewright';
+import * as disp from '../support/dispositivo';
 
 /**
  * Carrusel My Usuals del Home de la app (HU B2C-55). Verificado en Android, build v1.0.1 (2026-11-11).
@@ -18,8 +18,9 @@ export interface NodoApp { id: string; label: string; type: string; x: number; y
 const TITULO = /^Tus productos m[aá]s comprados$/i;
 const VER_TODOS = 'Ver todos mis productos frecuentes';
 
-function deslizar(x1: number, y1: number, x2: number, y2: number, ms = 400): void {
-  execSync(`adb shell input swipe ${x1} ${y1} ${x2} ${y2} ${ms}`, { timeout: 20000 });
+/** Desliza con coordenadas medidas en Android (1080 de ancho); en iOS, `deslizarFijo` las escala. */
+function deslizar(x1: number, y1: number, x2: number, y2: number, ms = 400): Promise<void> {
+  return disp.deslizarFijo(x1, y1, x2, y2, ms);
 }
 const dormir = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -52,7 +53,7 @@ export class MyUsualsCarruselScreen extends BaseScreen {
   async alInicioDelHome(): Promise<void> {
     for (let i = 0; i < 16; i++) {
       if ((await this.nodos()).some((n) => n.label === 'Los más vendidos' && n.y > 250)) return;
-      deslizar(540, 700, 540, 1900, 200);
+      await deslizar(540, 700, 540, 1900, 200);
       await dormir(600);
     }
   }
@@ -80,10 +81,10 @@ export class MyUsualsCarruselScreen extends BaseScreen {
       const t = n.find((x) => TITULO.test(x.label));
       if (t && t.y >= 330 && t.y <= 900) return true;
       // Ajustes finos con gesto lento: uno rápido arrastra con inercia y se pasa del título.
-      if (t && t.y < 330) deslizar(540, 900, 540, 1250, 1500);
-      else if (t) deslizar(540, 1600, 540, Math.max(200, 1600 - (t.y - 500)), 1500);
+      if (t && t.y < 330) await deslizar(540, 900, 540, 1250, 1500);
+      else if (t) await deslizar(540, 1600, 540, Math.max(200, 1600 - (t.y - 500)), 1500);
       else if (n.some((x) => /^T[ÉE]RMINOS Y CONDICIONES/.test(x.label) && x.y < 1400)) return false;
-      else deslizar(540, 1800, 540, 800, 300);
+      else await deslizar(540, 1800, 540, 800, 300);
       await dormir(900);
     }
     return false;
@@ -108,7 +109,7 @@ export class MyUsualsCarruselScreen extends BaseScreen {
   async avanzar(): Promise<void> {
     const t = (await this.tarjetas())[0];
     const y = t ? t.y + 500 : 1000;
-    deslizar(950, y, 150, y, 400);
+    await deslizar(950, y, 150, y, 400);
     await dormir(1500);
   }
 

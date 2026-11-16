@@ -6,7 +6,7 @@ import { NavBar } from '../pages/NavBar';
 import { HomeScreen } from '../pages/HomeScreen';
 import { MetodoEntregaModal } from '../pages/MetodoEntregaModal';
 import { DetalleDireccionScreen } from '../pages/DetalleDireccionScreen';
-import { borrarDatosApp } from './grabacionAndroid';
+import { borrarDatosApp } from './dispositivo';
 import { tolerante } from './tolerante';
 
 /**
@@ -37,7 +37,7 @@ export function calle(direccion: string): string {
 /** Arranca la app como invitado recién instalado y espera la TabBar (el splash tira "no XML content"). */
 export async function arrancarInvitado(screen: Screen, device: any, bundleId: string, p: Plataforma): Promise<TabBar> {
   await device.terminateApp(bundleId);
-  borrarDatosApp(bundleId, process.env.ANDROID_SERIAL);
+  await borrarDatosApp(bundleId);
   await device.launchApp(bundleId);
   const tabs = new TabBar(screen, p);
   for (let intento = 0; ; intento++) {

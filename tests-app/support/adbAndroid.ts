@@ -3,37 +3,21 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import sharp from 'sharp';
+import { soloAndroid } from './dispositivo';
 
 /**
- * Preparación del dispositivo Android que los TC de la app piden en sus precondiciones y que la UI
- * no ofrece: "App recién instalada o con datos borrados", "la App no tiene permiso de ubicación".
- * Solo Android: usa adb, igual que `grabacionAndroid.ts`.
+ * Lecturas y grabaciones del dispositivo que solo existen en Android (adb). Borrar los datos de la
+ * app, los permisos de ubicación y fijar la ubicación están en `dispositivo.ts`, que tiene su
+ * equivalente en iOS; lo que queda aquí corta el caso en iOS con `SoloAndroidError`.
  */
 
 function adb(args: string[], serial?: string): Buffer {
   return execFileSync('adb', [...(serial ? ['-s', serial] : []), ...args], { maxBuffer: 64e6 });
 }
 
-/**
- * Borra los datos de la app (`pm clear`): sin sesión, sin método de entrega y sin permisos
- * otorgados, como recién instalada. Deja la app detenida; hay que lanzarla después.
- */
-export function borrarDatosApp(paquete: string, serial?: string): void {
-  adb(['shell', 'pm', 'clear', paquete], serial);
-}
-
-/** Activa o desactiva la ubicación del sistema ("emulador Android sin ubicación", B2C-26 APP-014). */
-export function ubicacionDelSistema(activa: boolean, serial?: string): void {
-  adb(['shell', 'cmd', 'location', 'set-location-enabled', String(activa)], serial);
-}
-
-/** Otorga a la app el permiso de ubicación sin pasar por el diálogo del sistema. */
-export function otorgarUbicacion(paquete: string, serial?: string): void {
-  for (const p of ['ACCESS_FINE_LOCATION', 'ACCESS_COARSE_LOCATION']) adb(['shell', 'pm', 'grant', paquete, `android.permission.${p}`], serial);
-}
-
 /** Coordenadas que el emulador entrega hoy como ubicación del dispositivo (último fix de GPS). */
 export function ubicacionDelDispositivo(serial?: string): { lat: number; lon: number } | null {
+  soloAndroid('ubicacionDelDispositivo', 'lee `dumpsys location`');
   const salida = adb(['shell', 'dumpsys', 'location'], serial).toString();
   const m = /last location=Location\[(?:gps|fused) (-?\d+\.\d+),(-?\d+\.\d+)/.exec(salida);
   return m ? { lat: Number(m[1]), lon: Number(m[2]) } : null;
@@ -59,6 +43,7 @@ export async function grabarFranja(
   accion: () => Promise<void>,
   opts: { top: number; alto: number; segundos: number; serial?: string },
 ): Promise<CuadroFranja[]> {
+  soloAndroid('grabarFranja', 'graba cuadros con `screencap` dentro del dispositivo Android');
   const { top, alto, segundos, serial } = opts;
   const cab = adb(['exec-out', 'screencap'], serial).subarray(0, 16);
   const W = cab.readUInt32LE(0);

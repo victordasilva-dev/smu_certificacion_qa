@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import sharp from 'sharp';
+import { soloAndroid } from './dispositivo';
 
 /**
  * Grabación por cuadros de un cold start en Android, para medir tiempos del Splash (HU B2C-67).
@@ -10,7 +11,8 @@ import sharp from 'sharp';
  * `screen.screenshot()` tarda 1-3 s y el Splash dura ~4 s: no alcanza para medir. Aquí un bucle
  * dentro del dispositivo toma `screencap` cada ~0,2 s con su marca de tiempo, y de cada cuadro
  * guarda solo dos franjas (la del NavBar y una central con el logo y la foto) para no llenar el
- * almacenamiento del emulador (un cuadro entero pesa ~10 MB). Solo Android: usa adb.
+ * almacenamiento del emulador (un cuadro entero pesa ~10 MB). Solo Android: usa adb, y en iOS
+ * corta el caso con `SoloAndroidError` (el equivalente sería `xcrun simctl io recordVideo`).
  */
 export interface Cuadro {
   /** Milisegundos desde que se lanzó la app. */
@@ -33,10 +35,12 @@ function adb(serial: string | undefined, args: string[], opts: { maxBuffer?: num
 
 /** Escala de animaciones del sistema (1 = normal, 0 = desactivadas). */
 export function escalaAnimaciones(serial?: string): number {
+  soloAndroid('escalaAnimaciones', 'lee `settings global` de Android');
   return Number(adb(serial, ['shell', 'settings', 'get', 'global', 'animator_duration_scale']).toString().trim());
 }
 
 export async function grabarColdStart(paquete: string, segundos: number, serial?: string): Promise<Cuadro[]> {
+  soloAndroid('grabarColdStart', 'graba cuadros con `screencap` dentro del dispositivo Android');
   const cab = adb(serial, ['exec-out', 'screencap']).subarray(0, 16);
   const W = cab.readUInt32LE(0);
   const H = cab.readUInt32LE(4);
@@ -173,7 +177,3 @@ export async function tiraDeCuadros(cuadros: Cuadro[], columnas = 4): Promise<Bu
     .toBuffer();
 }
 
-/** Borra los datos de la app (estado de recién instalada) con `pm clear`. Solo Android. */
-export function borrarDatosApp(paquete: string, serial?: string): void {
-  adb(serial, ['shell', 'pm', 'clear', paquete]);
-}

@@ -3,6 +3,7 @@ import { TabBar } from './pages/TabBar';
 import { CategoriasModal } from './pages/CategoriasModal';
 import { ListadoScreen } from './pages/ListadoScreen';
 import { tolerante } from './support/tolerante';
+import { AMBAS } from './support/plataformaApp';
 
 /**
  * B2C-21 — Modal de categorías de la app.
@@ -18,7 +19,7 @@ import { tolerante } from './support/tolerante';
  * Las N1/N2 que se verifican son las que la app muestra hoy ("Carnes" → "Cerdo", "Frutas y
  * Verduras" → "Frutas"): el TC pide "las categorías N1 activas", y esas las define el catálogo.
  */
-for (const plataforma of ['Android'] as const) {
+for (const plataforma of AMBAS) {
   test.describe(`B2C-21 — Modal de categorias (${plataforma})`, () => {
     test(`TC-B2C21-APP-001 · Apertura del modal de categorias desde el tab Categorias de la TabBar (${plataforma})`, async ({
       screen,

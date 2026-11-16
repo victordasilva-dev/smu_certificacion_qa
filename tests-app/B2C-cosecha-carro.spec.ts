@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import { execSync } from 'child_process';
 import { test } from './support/fixtures';
 import { token } from '../tests/support/testData';
 import { TabBar } from './pages/TabBar';
@@ -9,6 +8,7 @@ import { tolerante } from './support/tolerante';
 import { fijarDireccionInvitado } from './support/invitadoConCarro';
 import { nodos } from './support/sesionOtp';
 import { asegurarApp } from './support/appLista';
+import * as disp from './support/dispositivo';
 
 /**
  * Cosecha del carro y de la PDP con carro (app nativa, Android, v1.0.1): B2C-31 (024, 025, 028, 029),
@@ -19,7 +19,7 @@ const r = <T>(fn: () => Promise<T>) => tolerante(fn, 30);
 const pausa = (ms: number) => new Promise((s) => setTimeout(s, ms));
 const OUT = '.qa/run/cosecha.json';
 const guardar = (k: string, v: unknown) => { const x = fs.existsSync(OUT) ? JSON.parse(fs.readFileSync(OUT, 'utf-8')) : {}; x[k] = v; fs.writeFileSync(OUT, JSON.stringify(x, null, 1)); };
-const cap = (cp: string, slug: string) => { fs.mkdirSync('test-results/evidence', { recursive: true }); fs.writeFileSync(`test-results/evidence/${cp}-android-${slug}.png`, execSync('adb exec-out screencap -p', { maxBuffer: 20 * 1024 * 1024, timeout: 30000 })); };
+const cap = async (cp: string, slug: string) => { fs.mkdirSync('test-results/evidence', { recursive: true }); fs.writeFileSync(`test-results/evidence/${cp}-${disp.plataforma()}-${slug}.png`, (await disp.captura())); };
 const FASE = () => process.env.FASE_COSECHA ?? 'todo';
 
 test.describe.configure({ timeout: 3000000 });
@@ -36,7 +36,7 @@ test.describe('Cosecha de carro y PDP (Android)', () => {
       await r(() => b.resultadoPara(s).waitFor({ state: 'visible', timeout: 30000 }));
       await pausa(1500); return srp;
     };
-    const volverTabs = async () => { for (let i = 0; i < 5 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { execSync('adb shell input keyevent 4', { timeout: 15000 }); await pausa(1500); } };
+    const volverTabs = async () => { for (let i = 0; i < 5 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { await disp.atras(); await pausa(1500); } };
     const agregarSku = async (s: string, veces = 1) => {
       await volverTabs(); const srp = await buscarSrp(s); await r(() => srp.tarjeta(s).tap()); await r(() => pdp.waitUntilReady()); await pausa(1500);
       await r(() => pdp.agregar.tap()); await pausa(2500);
@@ -67,9 +67,9 @@ test.describe('Cosecha de carro y PDP (Android)', () => {
       const todos = await nodos(screen); const c = todos.find((n) => n.id === `cart-item-${s}`); if (!c) throw new Error(`no está el ítem ${s} en el carro`);
       const bs = todos.filter((n) => n.type === 'Button' && n.y >= c.y && n.y <= c.y + c.h && n.x >= c.x).sort((a, b) => a.x - b.x);
       const b = lado === 'mas' ? bs[bs.length - 1] : bs[0]; if (!b) throw new Error('sin botones en el ítem');
-      execSync(`adb shell input tap ${Math.round(b.x + b.w / 2)} ${Math.round(b.y + b.h / 2)}`, { timeout: 15000 }); await pausa(2200);
+      await disp.tocar(b.x + b.w / 2, b.y + b.h / 2); await pausa(2200);
     };
-    const paso = async (cp: string, clave: string, skus: string[]) => { const d = await leerCarro(skus); guardar(`${cp}|${clave}`, d); cap(cp, clave.replace(/\W+/g, '-')); return d; };
+    const paso = async (cp: string, clave: string, skus: string[]) => { const d = await leerCarro(skus); guardar(`${cp}|${clave}`, d); await cap(cp, clave.replace(/\W+/g, '-')); return d; };
 
     await asegurarApp(screen);
     await fijarDireccionInvitado(screen, device, bundleId!, p, testData);
@@ -81,10 +81,10 @@ test.describe('Cosecha de carro y PDP (Android)', () => {
       const antes = (await ns()).map((n) => lim(n.label)).filter((x) => /Agregar|unidad|\$/.test(x)).slice(0, 14);
       await r(() => pdp.agregar.tap()); await pausa(3000);
       const t1 = (await ns()).map((n) => `${lim(n.label)}[${n.type}${n.id ? ':' + n.id : ''}]`).filter((x) => /unidad|Agregar|Quitar|\d un|\$|Eliminar/i.test(x)).slice(0, 20);
-      guardar('TC-B2C31-APP-024|tras-agregar', { antes, despues: t1, pill: await tabs.textoDelPill().catch(() => '') }); cap('TC-B2C31-APP-024', 'pdp-tras-agregar');
+      guardar('TC-B2C31-APP-024|tras-agregar', { antes, despues: t1, pill: await tabs.textoDelPill().catch(() => '') }); await cap('TC-B2C31-APP-024', 'pdp-tras-agregar');
       await r(() => screen.getByRole('button', { name: /agregar una unidad/i }).first().tap()); await pausa(2500);
       const t2 = (await ns()).map((n) => `${lim(n.label)}[${n.type}]`).filter((x) => /unidad|Agregar|Quitar|\d un|\$/i.test(x)).slice(0, 20);
-      guardar('TC-B2C31-APP-025|tras-sumar', { despues: t2, pill: await tabs.textoDelPill().catch(() => '') }); cap('TC-B2C31-APP-025', 'pdp-tras-sumar');
+      guardar('TC-B2C31-APP-025|tras-sumar', { despues: t2, pill: await tabs.textoDelPill().catch(() => '') }); await cap('TC-B2C31-APP-025', 'pdp-tras-sumar');
       await vaciar();
       // 028: stock limitado
       const sl = sku('SKU_STOCK_LIMITADO'); await volverTabs(); const srp2 = await buscarSrp(sl); await r(() => srp2.tarjeta(sl).tap()); await r(() => pdp.waitUntilReady()); await pausa(1500);
@@ -96,7 +96,7 @@ test.describe('Cosecha de carro y PDP (Android)', () => {
         reg.push(`unidad ${i + 1}: cantidad «${cant}», «+» habilitado=${hab}`);
         if (hab === false || hab === null) break; await r(() => mas.tap()); await pausa(2000);
       }
-      guardar('TC-B2C31-APP-028|hasta-el-stock', reg); cap('TC-B2C31-APP-028', 'pdp-stock-limite');
+      guardar('TC-B2C31-APP-028|hasta-el-stock', reg); await cap('TC-B2C31-APP-028', 'pdp-stock-limite');
       await vaciar();
       // 029: cartlimit
       const cl = sku('SKU_CAR_LIMIT'); await volverTabs(); const srp3 = await buscarSrp(cl); await r(() => srp3.tarjeta(cl).tap()); await r(() => pdp.waitUntilReady()); await pausa(1500);
@@ -109,7 +109,7 @@ test.describe('Cosecha de carro y PDP (Android)', () => {
         reg2.push(`unidad ${i + 1}: cantidad «${cant}», «+» habilitado=${hab}${msg ? `, mensaje «${msg}»` : ''}`);
         if (hab === false || hab === null || msg) break; await r(() => mas.tap()); await pausa(1800);
       }
-      guardar('TC-B2C31-APP-029|hasta-el-cartlimit', reg2); cap('TC-B2C31-APP-029', 'pdp-cartlimit');
+      guardar('TC-B2C31-APP-029|hasta-el-cartlimit', reg2); await cap('TC-B2C31-APP-029', 'pdp-cartlimit');
       await vaciar();
     }
 

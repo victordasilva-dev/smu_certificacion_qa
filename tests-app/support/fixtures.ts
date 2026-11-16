@@ -4,6 +4,7 @@ import { test as base, expect } from '@mobilewright/test';
 import { LoadedTestData, loadTestData, token } from '../../tests/support/testData';
 import { EVIDENCE_DIR, Plataforma, esEvidenciaDe, rutaEvidencia } from '../../tests/support/rutasEvidencia';
 import { TOKENS_APP } from './plataformaApp';
+import { fijarDispositivo } from './dispositivo';
 
 /**
  * `test` de los TC de app nativa: el de `@mobilewright/test` —con `screen`, `device` y
@@ -14,7 +15,7 @@ import { TOKENS_APP } from './plataformaApp';
  * aquí, no de `@mobilewright/test`.
  */
 export const test = base.extend<
-  { testData: LoadedTestData; plataforma: Plataforma; appDeclarada: void; evidenciaDelCaso: void },
+  { testData: LoadedTestData; plataforma: Plataforma; appDeclarada: void; dispositivoDelCaso: void; evidenciaDelCaso: void },
   {}
 >({
   // Video del dispositivo en todos los casos, como la web en la corrida de certificación. Es
@@ -48,6 +49,23 @@ export const test = base.extend<
             `repite el read; o, para una corrida puntual, pásalo por entorno: ${t}=... npx mobilewright test`,
         );
       }
+      await use();
+    },
+    { auto: true },
+  ],
+
+  /**
+   * Fija el contexto de `support/dispositivo.ts` —plataforma, screen, device, bundle y build del
+   * caso— para que las acciones de dispositivo (toques por coordenada, teclado, permisos, borrar
+   * datos) vayan por adb en Android y por mobilewright/simctl en iOS sin que el spec lo decida.
+   */
+  dispositivoDelCaso: [
+    async ({ plataforma, screen, device, bundleId, testData }, use) => {
+      const build = token(testData, TOKENS_APP[plataforma].build);
+      fijarDispositivo({
+        plataforma, screen, device, bundleId: bundleId!,
+        build: build ? path.resolve(process.cwd(), build) : undefined,
+      });
       await use();
     },
     { auto: true },
