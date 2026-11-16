@@ -21,8 +21,14 @@ export class LoginScreen extends BaseScreen {
     return this.screen.getByRole('button', { name: 'Cerrar' });
   }
 
+  /** Desde el build instalado el 2026-11-16 el login pide correo (`login-email`) en vez de RUT. */
+  get correo(): Locator {
+    return this.screen.getByTestId('login-email');
+  }
+
+  /** El título es común a las dos variantes del login (RUT o correo). */
   get readyLocator(): Locator {
-    return this.rut;
+    return this.screen.getByText(/inicia sesi[oó]n o reg[ií]strate/i);
   }
 
   async tapCerrar(): Promise<void> {
