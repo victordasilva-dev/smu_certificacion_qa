@@ -316,7 +316,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
       const cp = (n: string) => `TC-B2C125-${L}-${n}`;
       const T = (n: string, titulo: string) => `${cp(n)} · ${titulo} [Logueado] (${sufijo})`;
 
-      test(T('001', 'Confirmar una dirección nueva envía el OTP y muestra el toast de envío'), async ({ page, testData }) => {
+      test(T('001', 'Confirmar una dirección nueva envía el OTP y muestra el toast de envío'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, true, async () => {
           const { home, otp, desde } = await llegarAlOtp(page, testData, cp('001'));
           await expect(otp.root, 'modal «Autenticación requerida»').toBeVisible();
@@ -330,7 +330,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('002', 'El modal Autenticación requerida muestra todos sus elementos'), async ({ page, testData }) => {
+      test(T('002', 'El modal Autenticación requerida muestra todos sus elementos'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, false, async () => {
           const { home, otp } = await llegarAlOtp(page, testData, cp('002'));
           await expect(otp.cerrar, 'botón X').toBeVisible();
@@ -347,7 +347,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('003', 'El correo del modal OTP se muestra enmascarado según la regla'), async ({ page, testData }) => {
+      test(T('003', 'El correo del modal OTP se muestra enmascarado según la regla'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, false, async () => {
           const { home, otp } = await llegarAlOtp(page, testData, cp('003'));
           const correo = correoDe(testData);
@@ -362,7 +362,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('004', 'Al ingresar un dígito el foco avanza al siguiente campo'), async ({ page, testData }) => {
+      test(T('004', 'Al ingresar un dígito el foco avanza al siguiente campo'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, false, async () => {
           const { home, otp } = await llegarAlOtp(page, testData, cp('004'));
           await otp.campo(0).click();
@@ -375,7 +375,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('006', 'Con menos de 6 dígitos no se permite continuar'), async ({ page, testData }) => {
+      test(T('006', 'Con menos de 6 dígitos no se permite continuar'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, false, async () => {
           const { home, otp } = await llegarAlOtp(page, testData, cp('006'));
           await otp.escribir('12345');
@@ -390,7 +390,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('016', 'Cerrar el modal OTP cancela el cambio y mantiene la dirección anterior'), async ({ page, testData }) => {
+      test(T('016', 'Cerrar el modal OTP cancela el cambio y mantiene la dirección anterior'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, false, async () => {
           const { home, modal, otp, calle, numero } = await llegarAlOtp(page, testData, cp('016'));
           await otp.cerrar.click();
@@ -414,7 +414,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('008', 'Un OTP correcto aplica la dirección, cierra el modal y la guarda en la libreta'), async ({ page, testData }) => {
+      test(T('008', 'Un OTP correcto aplica la dirección, cierra el modal y la guarda en la libreta'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, true, async () => {
           const { home, otp, desde, numero } = await llegarAlOtp(page, testData, cp('008'));
           try {
@@ -445,7 +445,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('007', 'Al validar el código la pantalla muestra el estado skeleton'), async ({ page, testData }) => {
+      test(T('007', 'Al validar el código la pantalla muestra el estado skeleton'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, true, async () => {
           const { home, otp, desde } = await llegarAlOtp(page, testData, cp('007'));
           try {
@@ -487,7 +487,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('014', 'Reenviar envía un código nuevo, reinicia el temporizador y el nuevo código funciona'), async ({ page, testData }) => {
+      test(T('014', 'Reenviar envía un código nuevo, reinicia el temporizador y el nuevo código funciona'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, true, async () => {
           const { home, otp } = await llegarAlOtp(page, testData, cp('014'));
           try {
@@ -522,7 +522,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('017', 'Con OTP correcto un error al guardar muestra el toast y no cambia la dirección'), async ({ page, testData }) => {
+      test(T('017', 'Con OTP correcto un error al guardar muestra el toast y no cambia la dirección'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, true, async () => {
           const { home, otp, desde, calle, numero } = await llegarAlOtp(page, testData, cp('017'));
           try {
@@ -554,7 +554,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('019', 'Con OTP correcto y una dirección sin horarios se deriva al modal Sin horarios disponibles'), async ({ page, browser, testData }) => {
+      test(T('019', 'Con OTP correcto y una dirección sin horarios se deriva al modal Sin horarios disponibles'), { tag: '@otp' }, async ({ page, browser, testData }) => {
         // La precondición es de la data: {DIRECCION_SIN_SLA} con cobertura y sin SLAs. Se comprueba como invitado, sin gastar OTP.
         const sondeo = await guestSinHorarios(browser, page, testData);
         nota('Sondeo de {DIRECCION_SIN_SLA} (invitado)', sondeo);
@@ -591,7 +591,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('009', 'El temporizador de reenvío inicia en 60 segundos y bloquea el reenvío'), async ({ page, testData }) => {
+      test(T('009', 'El temporizador de reenvío inicia en 60 segundos y bloquea el reenvío'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, true, async () => {
           const { home, otp } = await llegarAlOtp(page, testData, cp('009'));
           const inicial = await otp.segundos();
@@ -607,7 +607,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('010', 'Al terminar el temporizador se muestra Reenviar'), async ({ page, testData }) => {
+      test(T('010', 'Al terminar el temporizador se muestra Reenviar'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, true, async () => {
           const { home, otp } = await llegarAlOtp(page, testData, cp('010'));
           const t0 = Date.now();
@@ -629,7 +629,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('015', 'Tras reenviar el código anterior ya no es válido'), async ({ page, testData }) => {
+      test(T('015', 'Tras reenviar el código anterior ya no es válido'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, true, async () => {
           const { home, otp, desde } = await llegarAlOtp(page, testData, cp('015'));
           const primero = await esperarOtp(correoDe(testData), desde, { digitos: 6 });
@@ -651,7 +651,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('018', 'Confirmar un cambio de tienda de retiro envía el OTP y muestra el modal con el toast de envío'), async ({ page, testData }) => {
+      test(T('018', 'Confirmar un cambio de tienda de retiro envía el OTP y muestra el modal con el toast de envío'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, true, async () => {
           const { home, retiro, otp, desde } = await llegarAlOtpRetiro(page, testData, cp('018'));
           await expect(otp.root, 'modal «Autenticación requerida»').toBeVisible();
@@ -670,7 +670,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
         });
       });
 
-      test(T('020', 'Cerrar el modal OTP tras cambiar la tienda de retiro mantiene la tienda anterior'), async ({ page, testData }) => {
+      test(T('020', 'Cerrar el modal OTP tras cambiar la tienda de retiro mantiene la tienda anterior'), { tag: '@otp' }, async ({ page, testData }) => {
         await conCuenta(testData, true, async () => {
           const { home, retiro, otp } = await llegarAlOtpRetiro(page, testData, cp('020'));
           const t1 = token(testData, 'TIENDA_RETIRO_001')!;
@@ -701,7 +701,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
   test.describe('Preparación y restauración de la cuenta', () => {
     test.use({ ...DESKTOP, storageState: SESION });
 
-    test('PREPARAR cuenta de B2C-125 (Desktop)', async ({ page, testData }) => {
+    test('PREPARAR cuenta de B2C-125 (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       const home = await abrirHome(page, testData);
       const { numero } = direccionOtra(testData);
       const aria = (await home.header.miniCarrito.first().getAttribute('aria-label')) ?? '';
@@ -726,7 +726,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
       nota('Preparación', `copias de {DIRECCION_OTRA_TIENDA} eliminadas: ${borradas}`);
     });
 
-    test('RESTAURAR cuenta de B2C-125 (Desktop)', async ({ page, testData }) => {
+    test('RESTAURAR cuenta de B2C-125 (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       await conCandado(correoDe(testData), async () => {
         await restaurarCuenta(page, testData);
       });
@@ -737,7 +737,7 @@ test.describe('B2C-125 — Autenticación requerida (OTP al cambiar dirección o
     for (const [vp, sufijo, L] of [[DESKTOP, 'Desktop', 'D'], [MOBILE, 'Mobile', 'M']] as const) {
       test.describe(sufijo, () => {
         test.use({ ...vp, storageState: SESION });
-        test(`TC-B2C125-${L}-012 · Un código expirado muestra Código inválido y el toast con Solicitar [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C125-${L}-012 · Un código expirado muestra Código inválido y el toast con Solicitar [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           test.setTimeout(1_500_000);
           const cp = `TC-B2C125-${L}-012`;
           await enfriar();

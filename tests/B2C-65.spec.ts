@@ -558,13 +558,13 @@ test.describe('B2C-65 — Cucarda en la shelf de producto', () => {
       await casoSobrePlaceholder(page, testData, cp);
     });
 
-    test('TC-65-D-013 · Cucarda visible en PLP para usuario logueado (Desktop)', async ({ page, testData }) => {
+    test('TC-65-D-013 · Cucarda visible en PLP para usuario logueado (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-65-D-013';
       await iniciarSesionComprador(page, testData);
       await casoCucardaEnPLP(page, testData, cp, 'Cyber');
     });
 
-    test('TC-65-D-014 · Cucarda consistente en todos los estados de la shelf para usuario logueado (Desktop)', async ({ page, testData }) => {
+    test('TC-65-D-014 · Cucarda consistente en todos los estados de la shelf para usuario logueado (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       await casoEstadosLogueado(page, testData, 'TC-65-D-014');
     });
   });
@@ -650,13 +650,13 @@ test.describe('B2C-65 — Cucarda en la shelf de producto', () => {
       await casoSobrePlaceholder(page, testData, cp);
     });
 
-    test('TC-65-M-013 · Cucarda visible en PLP para usuario logueado (Mobile)', async ({ page, testData }) => {
+    test('TC-65-M-013 · Cucarda visible en PLP para usuario logueado (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-65-M-013';
       await iniciarSesionComprador(page, testData);
       await casoCucardaEnPLP(page, testData, cp, 'Cyber');
     });
 
-    test('TC-65-M-014 · Cucarda consistente en todos los estados de la shelf para usuario logueado (Mobile)', async ({ page, testData }) => {
+    test('TC-65-M-014 · Cucarda consistente en todos los estados de la shelf para usuario logueado (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       await casoEstadosLogueado(page, testData, 'TC-65-M-014');
     });
   });

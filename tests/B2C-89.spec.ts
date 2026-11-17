@@ -367,22 +367,22 @@ test.describe('B2C-89 — Add to cart desde la shelf', () => {
     test.use(DESKTOP_1280);
 
     test(
-      "TC-89-D-001 · Agregar producto al carro desde la shelf con usuario logueado y dirección configurada (Desktop)",
+      "TC-89-D-001 · Agregar producto al carro desde la shelf con usuario logueado y dirección configurada (Desktop)", { tag: '@otp' },
       casoAgregarLogueado('TC-89-D-001'),
     );
 
     test(
-      "TC-89-D-003 · Estado 'En carro' con qty=1: muestra basurero (eliminar) y botón '+' (Desktop)",
+      "TC-89-D-003 · Estado 'En carro' con qty=1: muestra basurero (eliminar) y botón '+' (Desktop)", { tag: '@otp' },
       casoQtyUno('TC-89-D-003'),
     );
 
     test(
-      "TC-89-D-004 · Estado 'En carro' con qty>1: muestra botón '−' y '+' con actualización en tiempo real (Desktop)",
+      "TC-89-D-004 · Estado 'En carro' con qty>1: muestra botón '−' y '+' con actualización en tiempo real (Desktop)", { tag: '@otp' },
       casoQtyMayorAUno('TC-89-D-004'),
     );
 
     test(
-      "TC-89-D-005 · Botón '+' se deshabilita al alcanzar el máximo de stock disponible en el carrito (Desktop)",
+      "TC-89-D-005 · Botón '+' se deshabilita al alcanzar el máximo de stock disponible en el carrito (Desktop)", { tag: '@otp' },
       casoMaximoStock('TC-89-D-005'),
     );
 
@@ -392,7 +392,7 @@ test.describe('B2C-89 — Add to cart desde la shelf', () => {
     );
 
     test(
-      "TC-89-D-006 · Cartlimit: botón '+' deshabilitado al alcanzar el límite de compra con mensaje informativo (Desktop)",
+      "TC-89-D-006 · Cartlimit: botón '+' deshabilitado al alcanzar el límite de compra con mensaje informativo (Desktop)", { tag: '@otp' },
       casoCartlimit('TC-89-D-006'),
     );
   });
@@ -401,17 +401,17 @@ test.describe('B2C-89 — Add to cart desde la shelf', () => {
     test.use(MOBILE);
 
     test(
-      "TC-89-M-001 · Agregar producto al carro desde la shelf con usuario logueado y dirección configurada (Mobile)",
+      "TC-89-M-001 · Agregar producto al carro desde la shelf con usuario logueado y dirección configurada (Mobile)", { tag: '@otp' },
       casoAgregarLogueado('TC-89-M-001'),
     );
 
     test(
-      "TC-89-M-003 · Estado 'En carro' con qty=1: muestra basurero y botón '+' en Mobile (Mobile)",
+      "TC-89-M-003 · Estado 'En carro' con qty=1: muestra basurero y botón '+' en Mobile (Mobile)", { tag: '@otp' },
       casoQtyUno('TC-89-M-003'),
     );
 
     test(
-      "TC-89-M-004 · Estado 'En carro' con qty>1: muestra '−' y '+' con actualización en tiempo real (Mobile)",
+      "TC-89-M-004 · Estado 'En carro' con qty>1: muestra '−' y '+' con actualización en tiempo real (Mobile)", { tag: '@otp' },
       casoQtyMayorAUno('TC-89-M-004'),
     );
 
@@ -421,7 +421,7 @@ test.describe('B2C-89 — Add to cart desde la shelf', () => {
     );
 
     test(
-      "TC-89-M-006 · Cartlimit: botón '+' deshabilitado al alcanzar el límite de compra con mensaje (Mobile)",
+      "TC-89-M-006 · Cartlimit: botón '+' deshabilitado al alcanzar el límite de compra con mensaje (Mobile)", { tag: '@otp' },
       casoCartlimit('TC-89-M-006'),
     );
   });

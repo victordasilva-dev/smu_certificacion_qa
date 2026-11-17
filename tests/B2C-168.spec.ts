@@ -134,7 +134,7 @@ test.describe('B2C-168 — Fusión de carros al iniciar sesión', () => {
     test.describe(ff, () => {
       test.use(vp);
 
-      test(`TC-B2C168-${L}-004 · Un carro invitado vacío no altera el carro guardado del logueado [Guest] (${sufijo})`, async ({ page, browser, testData }) => {
+      test(`TC-B2C168-${L}-004 · Un carro invitado vacío no altera el carro guardado del logueado [Guest] (${sufijo})`, { tag: '@otp' }, async ({ page, browser, testData }) => {
         const cp = `TC-B2C168-${L}-004`;
         const nombres = await prepararCarroGuardado(browser, testData, [['SKU_NOMBRE_CORTO', 2], ['SKU_CROSS_SELLING', 1]]);
 
@@ -158,7 +158,7 @@ test.describe('B2C-168 — Fusión de carros al iniciar sesión', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C168-${L}-005 · Con ambos carros vacíos se muestra el estado de carro vacío [Guest] (${sufijo})`, async ({ page, browser, testData }) => {
+      test(`TC-B2C168-${L}-005 · Con ambos carros vacíos se muestra el estado de carro vacío [Guest] (${sufijo})`, { tag: '@otp' }, async ({ page, browser, testData }) => {
         const cp = `TC-B2C168-${L}-005`;
         await prepararCarroGuardado(browser, testData, []);
 
@@ -177,7 +177,7 @@ test.describe('B2C-168 — Fusión de carros al iniciar sesión', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C168-${L}-007 · Tras la fusión se reconsulta la ventana horaria de la tienda del invitado [Guest] (${sufijo})`, async ({ page, browser, testData }) => {
+      test(`TC-B2C168-${L}-007 · Tras la fusión se reconsulta la ventana horaria de la tienda del invitado [Guest] (${sufijo})`, { tag: '@otp' }, async ({ page, browser, testData }) => {
         const cp = `TC-B2C168-${L}-007`;
         const direccion = token(testData, 'DIRECCION_DESPACHO_001')!;
         const calle = direccion.split(',')[0].trim();
@@ -205,7 +205,7 @@ test.describe('B2C-168 — Fusión de carros al iniciar sesión', () => {
         await home.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C168-${L}-008 · Un producto duplicado queda con la cantidad del carro invitado [Guest] (${sufijo})`, async ({ page, browser, testData }) => {
+      test(`TC-B2C168-${L}-008 · Un producto duplicado queda con la cantidad del carro invitado [Guest] (${sufijo})`, { tag: '@otp' }, async ({ page, browser, testData }) => {
         const cp = `TC-B2C168-${L}-008`;
         const nombres = await prepararCarroGuardado(browser, testData, [['SKU_VALID_001', 5]]);
 

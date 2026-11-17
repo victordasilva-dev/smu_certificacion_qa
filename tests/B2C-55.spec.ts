@@ -257,28 +257,28 @@ test.describe('B2C-55 — Carrusel My Usuals', () => {
   test.describe('Desktop 1440x900', () => {
     test.use(DESKTOP);
 
-    test('TC-B2C55-D-001 · Orden de relevancia de myUsualsProducts (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C55-D-001 · Orden de relevancia de myUsualsProducts (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       await ordenSegunAtributo(page, testData, 'TC-B2C55-D-001', false);
     });
-    test('TC-B2C55-D-003 · Titulo configurado centrado (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C55-D-003 · Titulo configurado centrado (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       await tituloCentrado(page, testData, 'TC-B2C55-D-003', false);
     });
-    test('TC-B2C55-D-004 · Cada producto usa la shelf estandar (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C55-D-004 · Cada producto usa la shelf estandar (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       await shelfEstandar(page, testData, 'TC-B2C55-D-004', false);
     });
-    test('TC-B2C55-D-005 · Link "Ver todos" (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C55-D-005 · Link "Ver todos" (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       await linkVerTodos(page, testData, 'TC-B2C55-D-005', false);
     });
-    test('TC-B2C55-D-006 · 5 productos visibles a la vez (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C55-D-006 · 5 productos visibles a la vez (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       await productosVisibles(page, testData, 'TC-B2C55-D-006', false, 5);
     });
-    test('TC-B2C55-D-007 · No se muestra con exactamente 5 frecuentes (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C55-D-007 · No se muestra con exactamente 5 frecuentes (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       await noSeMuestraCon5(page, testData, 'TC-B2C55-D-007', false);
     });
-    test('TC-B2C55-D-011 · Icono de carga mientras obtiene los datos (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C55-D-011 · Icono de carga mientras obtiene los datos (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       await iconoDeCarga(page, testData, 'TC-B2C55-D-011', false);
     });
-    test('TC-B2C55-D-012 · Falla silenciosa al obtener myUsuals (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C55-D-012 · Falla silenciosa al obtener myUsuals (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       await falloSilencioso(page, testData, 'TC-B2C55-D-012', false);
     });
   });
@@ -286,22 +286,22 @@ test.describe('B2C-55 — Carrusel My Usuals', () => {
   test.describe('Mobile 390x844', () => {
     test.use(MOBILE);
 
-    test('TC-B2C55-M-001 · Orden de relevancia de myUsualsProducts (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C55-M-001 · Orden de relevancia de myUsualsProducts (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       await ordenSegunAtributo(page, testData, 'TC-B2C55-M-001', true);
     });
-    test('TC-B2C55-M-003 · Titulo configurado centrado (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C55-M-003 · Titulo configurado centrado (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       await tituloCentrado(page, testData, 'TC-B2C55-M-003', true);
     });
-    test('TC-B2C55-M-004 · Cada producto usa la shelf estandar (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C55-M-004 · Cada producto usa la shelf estandar (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       await shelfEstandar(page, testData, 'TC-B2C55-M-004', true);
     });
-    test('TC-B2C55-M-005 · Link "Ver todos" (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C55-M-005 · Link "Ver todos" (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       await linkVerTodos(page, testData, 'TC-B2C55-M-005', true);
     });
-    test('TC-B2C55-M-006 · 2 productos visibles a la vez (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C55-M-006 · 2 productos visibles a la vez (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       await productosVisibles(page, testData, 'TC-B2C55-M-006', true, 2);
     });
-    test('TC-B2C55-M-007 · No se muestra con exactamente 5 frecuentes (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C55-M-007 · No se muestra con exactamente 5 frecuentes (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       await noSeMuestraCon5(page, testData, 'TC-B2C55-M-007', true);
     });
     // En WebKit las lecturas del cliente y del catálogo pasan por el service worker, que `page.route`
@@ -309,10 +309,10 @@ test.describe('B2C-55 — Carrusel My Usuals', () => {
     test.describe('Red simulada', () => {
       test.use({ serviceWorkers: 'block' });
 
-      test('TC-B2C55-M-010 · Icono de carga mientras obtiene los datos (Mobile)', async ({ page, testData }) => {
+      test('TC-B2C55-M-010 · Icono de carga mientras obtiene los datos (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
         await iconoDeCarga(page, testData, 'TC-B2C55-M-010', true);
       });
-      test('TC-B2C55-M-011 · Falla silenciosa al obtener myUsuals (Mobile)', async ({ page, testData }) => {
+      test('TC-B2C55-M-011 · Falla silenciosa al obtener myUsuals (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
         await falloSilencioso(page, testData, 'TC-B2C55-M-011', true);
       });
     });

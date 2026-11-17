@@ -98,7 +98,7 @@ test.describe('B2C-126 — Logueado: cambio a retiro en tienda', () => {
       test.use(vp);
       const id = (n: string) => `TC-B2C126-${tipo}-${n}`;
 
-      test(`${id('009')} · Logueado cambia a retiro desde el Home con productos no disponibles (${ff})`, async ({ page, testData }) => {
+      test(`${id('009')} · Logueado cambia a retiro desde el Home con productos no disponibles (${ff})`, { tag: '@otp' }, async ({ page, testData }) => {
         const n = await sesionConCarro(page, testData);
         const home = new HomePage(page);
         await home.goto();
@@ -122,7 +122,7 @@ test.describe('B2C-126 — Logueado: cambio a retiro en tienda', () => {
         ['012', 'Entendido en Se agotaron lleva al carro actualizado', 'entendido'],
         ['013', 'la X de Se agotaron lleva al carro actualizado', 'x'],
       ] as const) {
-        test(`${id(num)} · Logueado desde ${nombre} (${ff})`, async ({ page, testData }) => {
+        test(`${id(num)} · Logueado desde ${nombre} (${ff})`, { tag: '@otp' }, async ({ page, testData }) => {
           const n = await sesionConCarro(page, testData);
           await aRetiroDesdeMisEnvios(page, testData);
           const m = seAgotaron(page);

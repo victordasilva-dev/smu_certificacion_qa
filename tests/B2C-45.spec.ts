@@ -89,7 +89,7 @@ test.describe('B2C-45 — Instrucciones al picker', () => {
       test.describe.configure({ timeout: 300000 });
       const id = (n: string) => `TC-B2C45-${L}-${n}`;
 
-      test(`${id('001')} · «Agregar instrucciones» abre el modal de nuevo comentario con sus elementos [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('001')} · «Agregar instrucciones» abre el modal de nuevo comentario con sus elementos [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('001');
         const carro = await carroSinInstruccion(page, testData);
         const modal = await new InstruccionesModal(page).abrir();
@@ -104,7 +104,7 @@ test.describe('B2C-45 — Instrucciones al picker', () => {
         await modal.cerrar.click();
       });
 
-      test(`${id('002')} · Al escribir, el contador se actualiza y se habilita «Agregar» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('002')} · Al escribir, el contador se actualiza y se habilita «Agregar» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('002');
         const texto = declarado(testData, 'TEXTO_INSTRUCCION_001');
         const carro = await carroSinInstruccion(page, testData);
@@ -116,7 +116,7 @@ test.describe('B2C-45 — Instrucciones al picker', () => {
         await modal.cerrar.click();
       });
 
-      test(`${id('003')} · El campo de instrucciones no admite más de 150 caracteres [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('003')} · El campo de instrucciones no admite más de 150 caracteres [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('003');
         const texto = declarado(testData, 'TEXTO_151_CARACTERES');
         const carro = await carroSinInstruccion(page, testData);
@@ -131,7 +131,7 @@ test.describe('B2C-45 — Instrucciones al picker', () => {
         await modal.cerrar.click();
       });
 
-      test(`${id('005')} · Una nota de más de 30 caracteres se trunca con «…» en el shelf [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('005')} · Una nota de más de 30 caracteres se trunca con «…» en el shelf [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('005');
         const texto = declarado(testData, 'TEXTO_INSTRUCCION_LARGO');
         const carro = await carroSinInstruccion(page, testData);
@@ -144,7 +144,7 @@ test.describe('B2C-45 — Instrucciones al picker', () => {
         await expect(modal.nota, '«Nota:» + 30 caracteres + «…»').toHaveText(notaTruncada(texto));
       });
 
-      test(`${id('007')} · «Editar instrucciones» abre el modal con el comentario precargado [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('007')} · «Editar instrucciones» abre el modal con el comentario precargado [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('007');
         const texto = declarado(testData, 'TEXTO_INSTRUCCION_001');
         const carro = await carroConInstruccion(page, testData);
@@ -157,7 +157,7 @@ test.describe('B2C-45 — Instrucciones al picker', () => {
         await modal.cerrar.click();
       });
 
-      test(`${id('008')} · Confirmar la edición reemplaza el comentario y muestra el toast [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('008')} · Confirmar la edición reemplaza el comentario y muestra el toast [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('008');
         const nuevo = declarado(testData, 'TEXTO_INSTRUCCION_002');
         const carro = await carroConInstruccion(page, testData);
@@ -171,7 +171,7 @@ test.describe('B2C-45 — Instrucciones al picker', () => {
         await expect(modal.nota, 'el shelf muestra la nueva nota (truncada a 30)').toHaveText(notaTruncada(nuevo));
       });
 
-      test(`${id('009')} · «Eliminar comentario» muestra el modal de confirmación [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('009')} · «Eliminar comentario» muestra el modal de confirmación [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('009');
         const carro = await carroConInstruccion(page, testData);
         const modal = await new InstruccionesModal(page).editar();
@@ -186,7 +186,7 @@ test.describe('B2C-45 — Instrucciones al picker', () => {
         await modal.noGracias.click();
       });
 
-      test(`${id('010')} · «Sí, eliminar» quita la instrucción y el shelf vuelve a «Agregar instrucciones» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('010')} · «Sí, eliminar» quita la instrucción y el shelf vuelve a «Agregar instrucciones» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('010');
         const carro = await carroConInstruccion(page, testData);
         const modal = await new InstruccionesModal(page).editar();
@@ -198,7 +198,7 @@ test.describe('B2C-45 — Instrucciones al picker', () => {
         await expect(modal.abrirNuevo, 'vuelve «Agregar instrucciones»').toBeVisible();
       });
 
-      test(`${id('011')} · «No, gracias» vuelve al modal de edición sin eliminar el comentario [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('011')} · «No, gracias» vuelve al modal de edición sin eliminar el comentario [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('011');
         const texto = declarado(testData, 'TEXTO_INSTRUCCION_001');
         const carro = await carroConInstruccion(page, testData);
@@ -212,7 +212,7 @@ test.describe('B2C-45 — Instrucciones al picker', () => {
         await modal.cerrar.click();
       });
 
-      test(`${id('004')} · Confirmar la instrucción la guarda y el shelf muestra la nota [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('004')} · Confirmar la instrucción la guarda y el shelf muestra la nota [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('004');
         const texto = declarado(testData, 'TEXTO_INSTRUCCION_001');
         const carro = await carroSinInstruccion(page, testData);

@@ -135,7 +135,7 @@ test.describe('B2C-127 — Sin horarios disponibles por dirección', () => {
         await modal.capturarModal(cp('006', form), undefined, 'selector de método de entrega');
       });
 
-      test(`${cp('007', form)} · Mis envíos muestra pantalla Sin horarios disponibles tras validar OTP [Logueado] (${form === 'D' ? 'Desktop' : 'Mobile'})`, async ({ page, testData }) => {
+      test(`${cp('007', form)} · Mis envíos muestra pantalla Sin horarios disponibles tras validar OTP [Logueado] (${form === 'D' ? 'Desktop' : 'Mobile'})`, { tag: '@otp' }, async ({ page, testData }) => {
         const home = await new PaginaHabilitada(page).goto();
         await login(page, testData);
         const pdp = await new PDPPage(page).abrir(token(testData, 'SKU_VALID_001')!);
