@@ -30,16 +30,34 @@ import base from './playwright.config';
  *    y omita los demás **reportando verde**, que es la peor forma de fallar: nadie revisa una
  *    suite que pasó. En CI eso pasa a ser un error de configuración, no un silencio.
  *
+ * 4. **Sin los casos `@otp`.** El login con código por correo lo resuelve el agente leyendo Gmail
+ *    (tests/support/otp.ts); en un pipeline nadie responde el pedido y el caso esperaría hasta
+ *    `OTP_NO_RECIBIDO`. Esos `test()` llevan `{ tag: '@otp' }` y aquí se excluyen. Para correrlos
+ *    igual —el ambiente da una cuenta sin OTP o un código fijo en `OTP_CODE`— exporta `QA_CI_OTP=true`.
+ *    Si un caso que pide OTP se quedó sin etiqueta, `esperarOtp` lo salta (skip) en vez de esperar.
+ *
  * Lo que NO cambia: `retries: 1` y los projects. Los reintentos se conservan porque un pipeline
  * corre contra un ambiente compartido, donde un fallo de red puntual no debería ensuciar el
  * reporte; y combinan bien con `trace: 'on-first-retry'`, que captura el trace exactamente
  * cuando algo empezó a fallar.
  */
+// Marca la corrida como de pipeline para el código de soporte (los workers vuelven a cargar este
+// archivo, así que la variable llega a ellos): `esperarOtp` salta el caso en vez de esperar.
+process.env.QA_EN_CI = '1';
+
+// Cada project ya filtra por form-factor con `grep`; la exclusión va por project para no pisarlo.
+const sinOtp = process.env.QA_CI_OTP === 'true' ? undefined : /@otp/;
+
 export default defineConfig({
   ...base,
 
+  projects: (base.projects ?? []).map((p) => ({ ...p, grepInvert: sinOtp ?? p.grepInvert })),
+
   // Un `.only` olvidado deja de ser un falso verde y pasa a ser un error de configuración.
   forbidOnly: true,
+
+  // En CI sí se conserva un reintento (ver arriba); en local el principal corre con 0.
+  retries: Number(process.env.QA_RETRIES ?? 1),
 
   reporter: [
     // Una línea por caso en el log del pipeline: es lo que se lee cuando algo falla y todavía

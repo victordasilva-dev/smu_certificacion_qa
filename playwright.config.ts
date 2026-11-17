@@ -34,7 +34,12 @@ export default defineConfig({
   // existe. La lentitud es del ambiente y no de ningún caso, así que el valor vive aquí y no
   // repetido en cada suite. Un caso que necesite más sigue pudiendo subirlo con test.setTimeout().
   timeout: 180000,
-  retries: 1,
+  // Sin reintentos a ciegas: reintentar repite también los fallos de spec y de data, que vuelven a
+  // fallar igual y duplican la corrida (en una suite de app de 14 casos se llevaron 22 de 42 min sin
+  // cambiar un veredicto). Los fallos de AMBIENTE se reintentan aparte, solos:
+  //   node scripts/reintentar-ambiente.mjs --correr
+  // QA_RETRIES=1 en .env vuelve al comportamiento anterior.
+  retries: Number(process.env.QA_RETRIES ?? 0),
   reporter: [
     ['json', { outputFile: 'test-results/results.json' }],
     ['html', { outputFolder: 'playwright-report', open: 'never' }],

@@ -4,9 +4,12 @@ import type { Plataforma } from '../tests/support/rutasEvidencia';
 import { token } from '../tests/support/testData';
 import { TabBar } from './pages/TabBar';
 import { BuscarScreen } from './pages/BuscarScreen';
-import type { ListadoScreen, ProductoListado } from './pages/ListadoScreen';
+import { ListadoScreen, type ProductoListado } from './pages/ListadoScreen';
 import { proporcionRoja } from './support/pixeles';
 import * as disp from './support/dispositivo';
+import { sesion } from './support/sesionOtp';
+import { tolerante } from './support/tolerante';
+import { MiCuentaScreen } from './pages/MiCuentaScreen';
 
 /**
  * B2C-87 — Ordenamiento de listados en la app (modal "Selecciona tus filtros" → "Ordena tus
@@ -277,6 +280,178 @@ for (const plataforma of ['Android'] as const) {
       const lista = await srp.leerProductos(12);
       await srp.capturarEvidencia(cp, 8, 'SRP ordenada por Precio más bajo');
       expect(ascendente(precios(lista)), `resultados de menor a mayor precio de venta (${listar(lista)})`).toBe(true);
+    });
+  });
+}
+
+/**
+ * Corrida 2026-11-16 (solo Android, Pixel 4 API 33, app ya instalada): los pendientes de Android que
+ * la planilla revisada ya puede correr. APP-001 y 012 son de invitado (datos de la app borrados);
+ * APP-019 inicia sesión por OTP con {COMPRADOR_SIN_HISTORIAL_USER}.
+ */
+const pausa87 = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Invitado = sin sesión. Se cierra la sesión desde Mi cuenta si hay una abierta, en vez de borrar los
+ * datos de la app: el arranque en frío tras `pm clear` dejaba a uiautomator sin XML y al agente de
+ * mobilecli caído (WebSocket closed) en el Pixel 4 API 33 (2026-11-16).
+ */
+async function comoInvitado(screen: Screen, _device: any, _bundleId: string, p: Plataforma): Promise<void> {
+  const tabs = new TabBar(screen, p);
+  await tolerante(() => tabs.waitUntilReady(), 20);
+  await tolerante(() => screen.getByTestId('tab-Mi cuenta').tap(), 10);
+  await pausa87(3000);
+  const cuenta = new MiCuentaScreen(screen, p);
+  if (await cuenta.saludo.isVisible({ timeout: 3000 }).catch(() => false)) await tolerante(() => cuenta.cerrarSesion(), 3);
+  await tolerante(() => screen.getByTestId('tab-Home').tap(), 10);
+  await pausa87(2500);
+}
+
+/** PLP N3 equivalente a una URL /category/<n1>_<n2>_<n3>: N2 desde Categorías y luego el chip N3. */
+async function abrirPlpN3(screen: Screen, p: Plataforma, urlN3: string): Promise<ListadoScreen> {
+  const segs = new URL(urlN3).pathname.split('/').pop()!.split('_');
+  const n2 = await abrirPlpN2(screen, p, urlN3.replace(/_[^_/]+$/, ''));
+  const nombre = new RegExp(`^${segs[segs.length - 1].replace(/-/g, ' ')}$`, 'i');
+  await n2.chip(nombre).tap();
+  await expect(n2.iconoFiltros).toBeVisible();
+  await pausa87(3000);
+  return n2;
+}
+
+/**
+ * PLP equivalente a /category/<n1>_<n2>_<n3> cuando la N2 está fuera de la vista en la fila de su N1
+ * (Despensa › Cóctel y snacks): se desliza la fila con las coordenadas de sus tiles (del árbol).
+ */
+async function abrirPlpN3EnFila(screen: Screen, p: Plataforma, url: string): Promise<ListadoScreen> {
+  const [, n2, n3] = new URL(url).pathname.split('/').pop()!.split('_');
+  const reN2 = new RegExp(`^${n2.replace(/-/g, '[\\s\\n]+').replace(/coctel/i, 'c[oó]ctel')}$`, 'i');
+  const reN3 = new RegExp(`^${n3.replace(/-/g, ' ')}$`, 'i');
+  const tabs = await new TabBar(screen, p).waitUntilReady();
+  const modal = await tabs.tapCategorias();
+  await modal.waitUntilReady();
+  // Se baja hasta que el encabezado de la N1 quede en la mitad superior, y se desliza la fila de N2 que
+  // tiene debajo (sus tiles cargan la imagen tarde como invitado: se usa el encabezado, no el tile).
+  const n1 = screen.getByText(/^Despensa$/).first();
+  for (let i = 0; i < 10; i++) {
+    const b = await n1.boundingBox({ timeout: 800 }).catch(() => null);
+    if (b && b.y < 1000) break;
+    await disp.deslizar(540, 1500, 540, 1000, 600);
+    await pausa87(1200);
+  }
+  for (let i = 0; i < 8 && !(await screen.getByText(reN2).first().isVisible({ timeout: 800 }).catch(() => false)); i++) {
+    const b = await n1.boundingBox();
+    await disp.deslizar(950, b.y + b.height + 200, 150, b.y + b.height + 200, 500);
+    await pausa87(1300);
+  }
+  await screen.getByText(reN2).first().tap();
+  const plp = new ListadoScreen(screen, p);
+  await expect(plp.iconoFiltros).toBeVisible({ timeout: 20000 });
+  await plp.chip(reN3).tap();
+  await pausa87(4000);
+  return plp;
+}
+
+const contar = async (l: ListadoScreen) => Number(((await l.cantidad.getText()) || '').match(/\d+/)?.[0] ?? NaN);
+
+for (const plataforma of ['Android'] as const) {
+  test.describe(`B2C-87 — Ordenamiento, pendientes 2026-11-16 (${plataforma})`, () => {
+    test(`TC-B2C87-APP-001 · El modal de filtros despliega Ordena tus productos en PLP N2, N3, SRP y Coleccion [Guest] (${plataforma})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
+      const cp = 'TC-B2C87-APP-001';
+      await comoInvitado(screen, device, bundleId!, p);
+
+      const n2 = await abrirPlpN2(screen, p, dato(testData, 'CATEGORY_N2_URL'));
+      let modal = await n2.abrirFiltros();
+      await modal.waitUntilReady();
+      const opN2 = (await modal.opciones()).map((o) => o.nombre);
+      await modal.capturarEvidencia(cp, 4, 'PLP N2 Cerdo - Ordena tus productos');
+      await modal.cerrarConX();
+
+      await disp.volver(); await pausa87(2000);
+      const n3 = await abrirPlpN3(screen, p, dato(testData, 'CATEGORY_N3_URL'));
+      modal = await n3.abrirFiltros();
+      await modal.waitUntilReady();
+      const opN3 = (await modal.opciones()).map((o) => o.nombre);
+      await modal.capturarEvidencia(cp, 8, 'PLP N3 Chuleta - Ordena tus productos');
+      await modal.cerrarConX();
+
+      for (let i = 0; i < 4; i++) { await disp.volver(); await pausa87(1500); }
+      const { srp } = await abrirSrp(screen, p, dato(testData, 'SEARCH_TERM_001'));
+      modal = await srp.abrirFiltros();
+      await modal.waitUntilReady();
+      const opSrp = (await modal.opciones()).map((o) => o.nombre);
+      await modal.capturarEvidencia(cp, 12, 'SRP - Ordena tus productos');
+
+      for (const [donde, op] of [['PLP N2', opN2], ['PLP N3', opN3], ['SRP', opSrp]] as const) {
+        expect.soft(op.length, `${donde}: "Ordena tus productos" con opciones (${op.join(' / ')})`).toBeGreaterThan(0);
+      }
+      expect(test.info().errors, 'N2, N3 y SRP muestran "Ordena tus productos"').toHaveLength(0);
+      throw new Error(`PRECONDICION_NO_DISPONIBLE: {COLECCION_URL} (${dato(testData, 'COLECCION_URL')}) responde "No encontramos esta página" en DEV y la app no tiene una colección equivalente a la que navegar`);
+    });
+
+    test(`TC-B2C87-APP-012 · Cambiar el orden mantiene el filtro de marca activo y la cantidad de productos [Guest] (${plataforma})`, async ({ screen, device, bundleId, plataforma: p, testData }) => {
+      const cp = 'TC-B2C87-APP-012';
+      const marca = dato(testData, 'BRAND_001');
+      await comoInvitado(screen, device, bundleId!, p);
+      const plp = await abrirPlpN3EnFila(screen, p, dato(testData, 'PLP_URL_NxM'));
+      await plp.capturarEvidencia(cp, 2, 'PLP Papas fritas');
+
+      let modal = await plp.abrirFiltros();
+      await modal.waitUntilReady();
+      await modal.seccion('Marcas').tap();
+      await modal.marca(marca).tap();
+      await modal.capturarEvidencia(cp, 5, `marca ${marca} seleccionada`);
+      await modal.confirmar();
+      await expect(modal.titulo).not.toBeVisible();
+      await pausa87(3000);
+      const nFiltro = await contar(plp);
+      const conMarca = await plp.leerProductos(nFiltro);
+      await plp.capturarEvidencia(cp, 7, `listado filtrado por ${marca}`);
+
+      modal = await plp.abrirFiltros();
+      await modal.waitUntilReady();
+      await modal.elegir('Precio más alto');
+      await modal.capturarEvidencia(cp, 11, 'Precio más alto marcado con la marca activa');
+      await modal.confirmar();
+      await expect(modal.titulo).not.toBeVisible();
+      await pausa87(3000);
+      const nOrden = await contar(plp);
+      const ordenada = await plp.leerProductos(nOrden);
+      await plp.capturarEvidencia(cp, 13, 'listado ordenado por Precio más alto');
+
+      expect(conMarca.every((x) => new RegExp(`^${marca}\\b`, 'i').test(x.nombre)), `solo ${marca} tras filtrar (${listar(conMarca)})`).toBe(true);
+      expect(nOrden, `misma cantidad tras ordenar (antes ${nFiltro})`).toBe(nFiltro);
+      expect(ordenada.every((x) => new RegExp(`^${marca}\\b`, 'i').test(x.nombre)), `el filtro ${marca} sigue activo (${listar(ordenada)})`).toBe(true);
+      expect(descendente(precios(ordenada)), `de mayor a menor precio (${listar(ordenada)})`).toBe(true);
+    });
+
+    test(`TC-B2C87-APP-019 · Pensados para ti sin historial ordena como Recomendado sin mostrar error [Logueado] (${plataforma})`, async ({ screen, plataforma: p, testData }) => {
+      const cp = 'TC-B2C87-APP-019';
+      await sesion(screen, p, cp, dato(testData, 'COMPRADOR_SIN_HISTORIAL_USER'), /(?!)/); // fuerza el login con esta cuenta
+      for (let i = 0; i < 4 && !(await screen.getByTestId('tab-Home').isVisible().catch(() => false)); i++) { await disp.volver(); await pausa87(1500); }
+      await screen.getByTestId('tab-Home').tap(); await pausa87(2500);
+
+      const plp = await abrirPlpN2(screen, p, dato(testData, 'CATEGORY_N2_URL'));
+      const recomendado = await plp.leerProductos(10);
+      await plp.capturarEvidencia(cp, 3, 'PLP N2 con Recomendado');
+
+      const modal = await plp.abrirFiltros();
+      await modal.waitUntilReady();
+      await modal.elegir('Pensados para ti');
+      await modal.confirmar();
+      await expect(modal.titulo).not.toBeVisible();
+      await pausa87(3000);
+      const pensados = await plp.leerProductos(10);
+      await plp.capturarEvidencia(cp, 10, 'PLP N2 con Pensados para ti');
+      const error = await screen.getByText(/Tuvimos un problema|Error PLP|Reintentar/i).first().isVisible({ timeout: 1500 }).catch(() => false);
+
+      const reabierto = await plp.abrirFiltros();
+      await reabierto.waitUntilReady();
+      const marcadas = await reabierto.marcadas();
+      await reabierto.capturarEvidencia(cp, 11, 'Pensados para ti sigue marcado');
+
+      expect(error, 'no se muestra ningún mensaje de error').toBe(false);
+      expect(marcadas, '"Pensados para ti" sigue marcado').toEqual(['Pensados para ti']);
+      expect(pensados.map((x) => x.sku), `mismos 10 primeros que con Recomendado (Recomendado: ${listar(recomendado)})`).toEqual(recomendado.map((x) => x.sku));
     });
   });
 }

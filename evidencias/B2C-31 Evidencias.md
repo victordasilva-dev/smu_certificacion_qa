@@ -1,30 +1,32 @@
-# B2C-31 APP
+# B2C-31 - Página de detalle de producto (PDP) - Evidencias QA
 
 | Campo | Valor |
 |---|---|
 | Suite | B2C-31 |
-| Última actualización | 2026-11-13 |
+| Última actualización | 2026-11-16 |
 | Ejecutado por | Victor Chirinos |
 | Ambiente | https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/ |
 | Navegador Desktop | chromium |
 | Navegador Mobile | webkit |
 | Dispositivo Android | Pixel 6 · Android 14 (emulador) |
-| Origen de los TC | Casos de Prueba/Ejecutados/SP1/B2C-31 Test Cases.xlsx |
+| Origen de los TC | Casos de Prueba/Para Ejecutar/SP1/B2C-31 Test Cases.xlsx |
 | Origen de la data | Datos Pruebas/Datos pruebas Ecommerce.xlsx |
 
 ## Resumen de resultados
 
 | Estado | Casos |
 |---|---|
-| Aprobado | 32 |
+| Aprobado | 33 |
 | Bloqueado Data | 25 |
 | Bloqueado | 2 |
-| **Total** | **59** |
+| Rechazado | 2 |
+| **Total** | **62** |
 
 ## Historial de corridas
 
 | Fecha | Casos | TC ejecutados |
 |---|---|---|
+| 2026-11-16 | 4 | TC-B2C31-M-012, TC-B2C31-M-013, TC-B2C31-M-040, TC-B2C31-M-049 |
 | 2026-11-13 | 5 | TC-B2C31-D-002, TC-B2C31-M-033, TC-B2C31-M-041, TC-B2C31-M-042, TC-B2C31-M-043 |
 | 2026-10-27 | 5 | TC-B2C31-APP-005, TC-B2C31-APP-017, TC-B2C31-APP-020, TC-B2C31-APP-048, TC-B2C31-APP-049 |
 | 2026-10-26 | 45 | TC-B2C31-APP-001, TC-B2C31-APP-002, TC-B2C31-APP-003, TC-B2C31-APP-004, TC-B2C31-APP-006, TC-B2C31-APP-007, TC-B2C31-APP-008, TC-B2C31-APP-009, TC-B2C31-APP-010, TC-B2C31-APP-011, TC-B2C31-APP-012, TC-B2C31-APP-013, TC-B2C31-APP-014, TC-B2C31-APP-015, TC-B2C31-APP-016, TC-B2C31-APP-018, TC-B2C31-APP-019, TC-B2C31-APP-021, TC-B2C31-APP-022, TC-B2C31-APP-023, TC-B2C31-APP-024, TC-B2C31-APP-025, TC-B2C31-APP-026, TC-B2C31-APP-027, TC-B2C31-APP-028, TC-B2C31-APP-029, TC-B2C31-APP-030, TC-B2C31-APP-031, TC-B2C31-APP-032, TC-B2C31-APP-033, TC-B2C31-APP-034, TC-B2C31-APP-035, TC-B2C31-APP-036, TC-B2C31-APP-037, TC-B2C31-APP-038, TC-B2C31-APP-039, TC-B2C31-APP-040, TC-B2C31-APP-041, TC-B2C31-APP-042, TC-B2C31-APP-043, TC-B2C31-APP-044, TC-B2C31-APP-045, TC-B2C31-APP-046, TC-B2C31-APP-047, TC-B2C31-APP-050 |
@@ -224,12 +226,12 @@ Al hacer scroll 4 veces por el contenido, la barra de pills permanece en la mism
 
 | Campo | Valor |
 |---|---|
-| Estado | Bloqueado Data |
-| Ejecutado | 2026-10-19 |
+| Estado | Aprobado |
+| Ejecutado | 2026-11-16 |
 | Form factor | mobile |
 | Viewport | 390x844 |
 | Navegador | webkit |
-| Spec | tests/B2C-31.spec.ts |
+| Spec | tests/B2C-31.spec.ts:1200 |
 
 **Precondiciones**
 
@@ -240,7 +242,8 @@ Al hacer scroll 4 veces por el contenido, la barra de pills permanece en la mism
 
 **Data utilizada**
 
-{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SKU_INFO_COMPLETA}: 000000000000675191-UN
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {SKU_INFO_COMPLETA} = TBD
 
 **Pasos ejecutados**
 
@@ -255,15 +258,17 @@ Se muestra el contenido configurado (texto, imágenes y/o video) adaptado al anc
 
 **Resultado obtenido**
 
-No se ejecutó el paso 3: el producto declarado no tiene la pill ni la sección "Acerca de" (solo Descripción, Ingredientes, Estilos de alimentación y Datos de nutrición).
+En la PDP de 000000000000675191-UN (Albóndigas Super Pollo), el tab Información muestra las pills Descripción, Ingredientes y Acerca de; al tocar "Acerca de" se muestra su contenido ("Acerca de las albóndigas ...") dentro del ancho de la pantalla, sin desbordes.
 
 **Observación**
 
-Causa: {SKU_INFO_COMPLETA} (000000000000675191-UN) no tiene contenido en el atributo acercaDe en el ambiente dev, contrario a la precondición. Acción: cargar contenido acercaDe en ese SKU o declarar en la planilla un SKU que lo tenga.
+{SKU_INFO_COMPLETA} ya tiene contenido en acercaDe en DEV (antes bloqueado por data).
 
 **Evidencia**
 
 ![Paso 3 — pills del producto](<B2C-31 Evidencias/TC-B2C31-M-040-p03-pills-del-producto.png>)
+
+![Paso 4 — seccion acerca de](<B2C-31 Evidencias/TC-B2C31-M-040-p04-seccion-acerca-de.png>)
 
 ![Estado final](<B2C-31 Evidencias/TC-B2C31-M-040.png>)
 
@@ -2599,6 +2604,153 @@ Data {PDP_API_ENDPOINT} pendiente: se usó el servicio que documenta el bug B2C-
 
 ---
 
+### TC-B2C31-M-012 - Verificar que un producto patrocinado muestra el label "Patrocinado" [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Bloqueado Data |
+| Ejecutado | 2026-11-16 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PDP
+- {SKU_PATROCINADO} tiene isSponsored = true
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {SKU_PATROCINADO} = 000000000000642688-UN
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a la PDP de {SKU_PATROCINADO} ({BASE_URL}product/{SKU_PATROCINADO}).
+2. El sistema carga la PDP de {SKU_PATROCINADO}.
+
+**Resultado esperado**
+
+La PDP muestra el label "Patrocinado".
+
+**Resultado obtenido**
+
+La PDP de 000000000000642688-UN (Galleta Oreo clásica vainilla 108 g) muestra solo el breadcrumb, el nombre y un bloque editorial de Page Designer: sin imagen, precio, "Agregar" ni label "Patrocinado".
+
+**Observación**
+
+Causa: re-verificado el 2026-11-16, {SKU_PATROCINADO} (000000000000642688-UN) sigue sin ficha en DEV, igual que el 2026-10-12. Acción: declarar un SKU patrocinado (isSponsored = true) con ficha completa en DEV.
+
+**Evidencia**
+
+![Paso 1 — pdp patrocinado](<B2C-31 Evidencias/TC-B2C31-M-012-mobile-p01-pdp-patrocinado.png>)
+
+---
+
+### TC-B2C31-M-013 - Verificar que un producto de marketplace muestra "Vendido por" y el vendedor [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Rechazado |
+| Ejecutado | 2026-11-16 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Spec | tests/B2C-31.spec.ts:1035 |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PDP
+- {SKU_MARKETPLACE} tiene isMarketplace con valor
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {SKU_MARKETPLACE} = TBD
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a la PDP de {SKU_MARKETPLACE} ({BASE_URL}product/{SKU_MARKETPLACE}).
+2. El sistema carga la PDP de {SKU_MARKETPLACE}.
+
+**Resultado esperado**
+
+La PDP muestra "Vendido por" seguido del nombre del tercero.
+
+**Resultado obtenido**
+
+La PDP de 000000000000217756-UN (Papel higiénico Confort mega doble hoja 4 un) muestra "Vendido por true". El producto trae c_isMarketPlace = true y ningún atributo con el nombre del vendedor.
+
+**Observación**
+
+Esperado: "Vendido por" seguido del nombre del tercero. Obtenido: "Vendido por true" (se muestra el valor booleano de c_isMarketPlace). tests/B2C-31.spec.ts:1035. Bug: B2C-1501.
+
+**Evidencia**
+
+![PDP: "Vendido por true" (error)](<B2C-31 Evidencias/TC-B2C31-M-013-p02-ficha-vendido-por-true.png>)
+
+---
+
+### TC-B2C31-M-049 - Verificar que un producto con "Completa la promo" no muestra el botón "Combina la promo" [Mobile] [Guest]
+
+| Campo | Valor |
+|---|---|
+| Estado | Rechazado |
+| Ejecutado | 2026-11-16 |
+| Form factor | mobile |
+| Viewport | 390x844 |
+| Navegador | webkit |
+| Spec | tests/B2C-31.spec.ts:1052 |
+
+**Precondiciones**
+
+- User type: Guest
+- Viewport: Mobile 390x844
+- Ubicacion: PDP
+- Método de entrega activo (Despacho a domicilio o Retiro en tienda con cobertura)
+- {SKU_PROM_NxM} tiene una promo NxM del mismo SKU (Completa la promo)
+
+**Data utilizada**
+
+- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/
+- {DIRECCION_DESPACHO} = Dirección de despacho
+- {SKU_PROM_NxM} = 000000000641229002-UN
+
+**Pasos ejecutados**
+
+1. El usuario ingresa a la PDP de {SKU_PROM_NxM} ({BASE_URL}product/{SKU_PROM_NxM}).
+2. El sistema carga la PDP de {SKU_PROM_NxM}.
+3. El usuario toca "Agregar" y luego "+" en el stepper.
+4. El sistema actualiza la cantidad en el stepper de la PDP.
+
+**Resultado esperado**
+
+No se muestra "Combina la promo" y las unidades se agregan desde el stepper de la PDP.
+
+**Resultado obtenido**
+
+Con la dirección de despacho Camino La Fuente 1589 Las Condes activa, la PDP de 000000000641229002-UN (Lay's Stax crema cebolla 134 g) muestra la promo "3 por 2 a $49.000" / "Lleva 3 por $2.592" y el botón "Combina la promo", aunque el producto trae c_isCombinable = false. "Agregar" y "+" dejan el stepper de la PDP en 2 unidades.
+
+**Observación**
+
+Esperado: con una promo NxM del mismo SKU (c_isCombinable = false) no se muestra "Combina la promo". Obtenido: se muestra "Combina la promo"; el stepper de la PDP sí suma las unidades. tests/B2C-31.spec.ts:1052. Bug: B2C-1502.
+
+**Evidencia**
+
+![Paso 1 — direccion de despacho activa](<B2C-31 Evidencias/TC-B2C31-M-049-p01-direccion-de-despacho-activa.png>)
+
+![PDP con promo NxM no combinable y botón "Combina la promo" (error)](<B2C-31 Evidencias/TC-B2C31-M-049-p02-pdp-con-la-promo-nxm.png>)
+
+![Paso 4 — stepper de la pdp con 2 unidades](<B2C-31 Evidencias/TC-B2C31-M-049-p04-stepper-de-la-pdp-con-2-unidades.png>)
+
+![Estado final](<B2C-31 Evidencias/TC-B2C31-M-049.png>)
+
+---
+
 <!-- qa-evidence-state
 {
  "header": {
@@ -2613,9 +2765,9 @@ Data {PDP_API_ENDPOINT} pendiente: se usó el servicio que documenta el bug B2C-
   "environment": "https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/",
   "executed_by": "Victor Chirinos",
   "suite": "B2C-31",
-  "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-31 Test Cases.xlsx",
-  "title": "B2C-31 APP",
-  "updated_at": "2026-11-13"
+  "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-31 Test Cases.xlsx",
+  "title": "B2C-31 - Página de detalle de producto (PDP) - Evidencias QA",
+  "updated_at": "2026-11-16"
  },
  "history": {
   "2026-10-19": [
@@ -2685,6 +2837,12 @@ Data {PDP_API_ENDPOINT} pendiente: se usó el servicio que documenta el bug B2C-
    "TC-B2C31-M-041",
    "TC-B2C31-M-042",
    "TC-B2C31-M-043"
+  ],
+  "2026-11-16": [
+   "TC-B2C31-M-012",
+   "TC-B2C31-M-013",
+   "TC-B2C31-M-040",
+   "TC-B2C31-M-049"
   ]
  },
  "results": [
@@ -2799,13 +2957,13 @@ Data {PDP_API_ENDPOINT} pendiente: se usó el servicio que documenta el bug B2C-
   },
   {
    "browser": "webkit",
-   "executed_at": "2026-10-19",
+   "executed_at": "2026-11-16",
    "expected": "Se muestra el contenido configurado (texto, imágenes y/o video) adaptado al ancho de la pantalla, sin desbordes.",
    "form_factor": "mobile",
    "id": "TC-B2C31-M-040",
    "name": "Verificar que la sección \"Acerca de\" muestra el contenido inspiracional configurado [Mobile] [Guest]",
-   "observation": "Causa: {SKU_INFO_COMPLETA} (000000000000675191-UN) no tiene contenido en el atributo acercaDe en el ambiente dev, contrario a la precondición. Acción: cargar contenido acercaDe en ese SKU o declarar en la planilla un SKU que lo tenga.",
-   "observed": "No se ejecutó el paso 3: el producto declarado no tiene la pill ni la sección \"Acerca de\" (solo Descripción, Ingredientes, Estilos de alimentación y Datos de nutrición).",
+   "observation": "{SKU_INFO_COMPLETA} ya tiene contenido en acercaDe en DEV (antes bloqueado por data).",
+   "observed": "En la PDP de 000000000000675191-UN (Albóndigas Super Pollo), el tab Información muestra las pills Descripción, Ingredientes y Acerca de; al tocar \"Acerca de\" se muestra su contenido (\"Acerca de las albóndigas ...\") dentro del ancho de la pantalla, sin desbordes.",
    "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- {SKU_INFO_COMPLETA} tiene contenido en el atributo acercaDe",
    "screenshots": [
     {
@@ -2813,14 +2971,18 @@ Data {PDP_API_ENDPOINT} pendiente: se usó el servicio que documenta el bug B2C-
      "file": "TC-B2C31-M-040-p03-pills-del-producto.png"
     },
     {
+     "caption": "Paso 4 — seccion acerca de",
+     "file": "TC-B2C31-M-040-p04-seccion-acerca-de.png"
+    },
+    {
      "caption": "Estado final",
      "file": "TC-B2C31-M-040.png"
     }
    ],
-   "spec": "tests/B2C-31.spec.ts",
-   "status": "Bloqueado Data",
+   "spec": "tests/B2C-31.spec.ts:1200",
+   "status": "Aprobado",
    "steps": "1. El usuario ingresa a la PDP de {SKU_INFO_COMPLETA} ({BASE_URL}product/{SKU_INFO_COMPLETA}).\n2. El sistema carga la PDP de {SKU_INFO_COMPLETA}.\n3. El usuario toca el tab \"Información\" y luego la pill \"Acerca de\".\n4. El sistema muestra el contenido inspiracional del producto.",
-   "test_data": "{BASE_URL}: https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/; {SKU_INFO_COMPLETA}: 000000000000675191-UN",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {SKU_INFO_COMPLETA} = TBD",
    "viewport": "390x844"
   },
   {
@@ -4003,6 +4165,83 @@ Data {PDP_API_ENDPOINT} pendiente: se usó el servicio que documenta el bug B2C-
    "status": "Aprobado",
    "steps": "1. El usuario ingresa a la PDP de {SKU_VALID_001} ({BASE_URL}product/{SKU_VALID_001}).\n2. El sistema muestra la pantalla de error de la PDP.\n3. El usuario toca \"Ir a inicio\".\n4. El sistema redirige al Home ({BASE_URL}).",
    "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {PDP_API_ENDPOINT} = TBD\n- {SKU_VALID_001} = 000000000000675191-UN",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-16",
+   "expected": "La PDP muestra el label \"Patrocinado\".",
+   "form_factor": "mobile",
+   "id": "TC-B2C31-M-012",
+   "name": "Verificar que un producto patrocinado muestra el label \"Patrocinado\" [Mobile] [Guest]",
+   "observation": "Causa: re-verificado el 2026-11-16, {SKU_PATROCINADO} (000000000000642688-UN) sigue sin ficha en DEV, igual que el 2026-10-12. Acción: declarar un SKU patrocinado (isSponsored = true) con ficha completa en DEV.",
+   "observed": "La PDP de 000000000000642688-UN (Galleta Oreo clásica vainilla 108 g) muestra solo el breadcrumb, el nombre y un bloque editorial de Page Designer: sin imagen, precio, \"Agregar\" ni label \"Patrocinado\".",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- {SKU_PATROCINADO} tiene isSponsored = true",
+   "screenshots": [
+    {
+     "caption": "Paso 1 — pdp patrocinado",
+     "file": "TC-B2C31-M-012-mobile-p01-pdp-patrocinado.png"
+    }
+   ],
+   "status": "Bloqueado Data",
+   "steps": "1. El usuario ingresa a la PDP de {SKU_PATROCINADO} ({BASE_URL}product/{SKU_PATROCINADO}).\n2. El sistema carga la PDP de {SKU_PATROCINADO}.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {SKU_PATROCINADO} = 000000000000642688-UN",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-16",
+   "expected": "La PDP muestra \"Vendido por\" seguido del nombre del tercero.",
+   "form_factor": "mobile",
+   "id": "TC-B2C31-M-013",
+   "name": "Verificar que un producto de marketplace muestra \"Vendido por\" y el vendedor [Mobile] [Guest]",
+   "observation": "Esperado: \"Vendido por\" seguido del nombre del tercero. Obtenido: \"Vendido por true\" (se muestra el valor booleano de c_isMarketPlace). tests/B2C-31.spec.ts:1035. Bug: B2C-1501.",
+   "observed": "La PDP de 000000000000217756-UN (Papel higiénico Confort mega doble hoja 4 un) muestra \"Vendido por true\". El producto trae c_isMarketPlace = true y ningún atributo con el nombre del vendedor.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- {SKU_MARKETPLACE} tiene isMarketplace con valor",
+   "screenshots": [
+    {
+     "caption": "PDP: \"Vendido por true\" (error)",
+     "file": "TC-B2C31-M-013-p02-ficha-vendido-por-true.png"
+    }
+   ],
+   "spec": "tests/B2C-31.spec.ts:1035",
+   "status": "Rechazado",
+   "steps": "1. El usuario ingresa a la PDP de {SKU_MARKETPLACE} ({BASE_URL}product/{SKU_MARKETPLACE}).\n2. El sistema carga la PDP de {SKU_MARKETPLACE}.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {SKU_MARKETPLACE} = TBD",
+   "viewport": "390x844"
+  },
+  {
+   "browser": "webkit",
+   "executed_at": "2026-11-16",
+   "expected": "No se muestra \"Combina la promo\" y las unidades se agregan desde el stepper de la PDP.",
+   "form_factor": "mobile",
+   "id": "TC-B2C31-M-049",
+   "name": "Verificar que un producto con \"Completa la promo\" no muestra el botón \"Combina la promo\" [Mobile] [Guest]",
+   "observation": "Esperado: con una promo NxM del mismo SKU (c_isCombinable = false) no se muestra \"Combina la promo\". Obtenido: se muestra \"Combina la promo\"; el stepper de la PDP sí suma las unidades. tests/B2C-31.spec.ts:1052. Bug: B2C-1502.",
+   "observed": "Con la dirección de despacho Camino La Fuente 1589 Las Condes activa, la PDP de 000000000641229002-UN (Lay's Stax crema cebolla 134 g) muestra la promo \"3 por 2 a $49.000\" / \"Lleva 3 por $2.592\" y el botón \"Combina la promo\", aunque el producto trae c_isCombinable = false. \"Agregar\" y \"+\" dejan el stepper de la PDP en 2 unidades.",
+   "preconditions": "- User type: Guest\n- Viewport: Mobile 390x844\n- Ubicacion: PDP\n- Método de entrega activo (Despacho a domicilio o Retiro en tienda con cobertura)\n- {SKU_PROM_NxM} tiene una promo NxM del mismo SKU (Completa la promo)",
+   "screenshots": [
+    {
+     "caption": "Paso 1 — direccion de despacho activa",
+     "file": "TC-B2C31-M-049-p01-direccion-de-despacho-activa.png"
+    },
+    {
+     "caption": "PDP con promo NxM no combinable y botón \"Combina la promo\" (error)",
+     "file": "TC-B2C31-M-049-p02-pdp-con-la-promo-nxm.png"
+    },
+    {
+     "caption": "Paso 4 — stepper de la pdp con 2 unidades",
+     "file": "TC-B2C31-M-049-p04-stepper-de-la-pdp-con-2-unidades.png"
+    },
+    {
+     "caption": "Estado final",
+     "file": "TC-B2C31-M-049.png"
+    }
+   ],
+   "spec": "tests/B2C-31.spec.ts:1052",
+   "status": "Rechazado",
+   "steps": "1. El usuario ingresa a la PDP de {SKU_PROM_NxM} ({BASE_URL}product/{SKU_PROM_NxM}).\n2. El sistema carga la PDP de {SKU_PROM_NxM}.\n3. El usuario toca \"Agregar\" y luego \"+\" en el stepper.\n4. El sistema actualiza la cantidad en el stepper de la PDP.",
+   "test_data": "- {BASE_URL} = https://smu-dev-development.sfdc-8tgtt5-ecom1.exp-delivery.com/\n- {DIRECCION_DESPACHO} = Dirección de despacho\n- {SKU_PROM_NxM} = 000000000641229002-UN",
    "viewport": "390x844"
   }
  ]

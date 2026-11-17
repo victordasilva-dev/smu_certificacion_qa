@@ -6,6 +6,8 @@
     "test": "playwright test",
     "test:desktop": "playwright test --project=desktop",
     "test:mobile": "playwright test --project=mobile",
+    "preflight": "playwright test -c playwright.preflight.config.ts",
+    "test:reintentar-ambiente": "node scripts/reintentar-ambiente.mjs --correr",
     "test:android": "mobilewright test",
     "test:ios": "mobilewright test -c mobilewright.ios.config.ts",
     "app:doctor": "mobilewright doctor",
