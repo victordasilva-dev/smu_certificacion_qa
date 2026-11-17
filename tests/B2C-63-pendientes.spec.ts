@@ -176,7 +176,7 @@ test.describe('B2C-63 — Completa la promo (pendientes)', () => {
           return { l, s, sku };
         };
 
-        test(`${n('001', '011')} · Toast «Agrega 1 y ahorra más» al agregar la 1ª unidad desde la PLP (${rol}) (${ff})`, async ({ page, testData }) => {
+        test(`${n('001', '011')} · Toast «Agrega 1 y ahorra más» al agregar la 1ª unidad desde la PLP (${rol}) (${ff})`, { tag: logueado ? ['@otp'] : [] }, async ({ page, testData }) => {
           const cp = n('001', '011');
           const { l, s } = await prep(page, testData);
           await l.capturarEvidencia(cp, 1, 'shelf antes de agregar');
@@ -189,7 +189,7 @@ test.describe('B2C-63 — Completa la promo (pendientes)', () => {
           if (logueado) await s.sacarDelCarro();
         });
 
-        test(`${n('002', '012')} · «¡Completaste la promo!» al alcanzar el umbral desde la PLP (${rol}) (${ff})`, async ({ page, testData }) => {
+        test(`${n('002', '012')} · «¡Completaste la promo!» al alcanzar el umbral desde la PLP (${rol}) (${ff})`, { tag: logueado ? ['@otp'] : [] }, async ({ page, testData }) => {
           const cp = n('002', '012');
           const { l, s } = await prep(page, testData);
           await llevarA(s, 1);
@@ -203,7 +203,7 @@ test.describe('B2C-63 — Completa la promo (pendientes)', () => {
           if (logueado) await s.sacarDelCarro();
         });
 
-        test(`${n('004', '013')} · Mensaje progresivo al agregar desde la PDP (${rol}) (${ff})`, async ({ page, testData }) => {
+        test(`${n('004', '013')} · Mensaje progresivo al agregar desde la PDP (${rol}) (${ff})`, { tag: logueado ? ['@otp'] : [] }, async ({ page, testData }) => {
           const cp = n('004', '013');
           const { sku } = await prep(page, testData);
           const pdp = new PDPPage(page);
@@ -220,7 +220,7 @@ test.describe('B2C-63 — Completa la promo (pendientes)', () => {
           if (logueado) { const { s } = await plpDelSku(page, sku); await s.sacarDelCarro(); }
         });
 
-        test(`${n('005', '014')} · Mensaje progresivo al agregar desde el modal «Combina la promo» (${rol}) (${ff})`, async ({ page, testData }) => {
+        test(`${n('005', '014')} · Mensaje progresivo al agregar desde el modal «Combina la promo» (${rol}) (${ff})`, { tag: logueado ? ['@otp'] : [] }, async ({ page, testData }) => {
           const cp = n('005', '014');
           const { l, s } = await prep(page, testData);
           await s.combinaLaPromo.click();
@@ -237,7 +237,7 @@ test.describe('B2C-63 — Completa la promo (pendientes)', () => {
           if (logueado) { await modal.cerrarConX().catch(() => {}); await s.sacarDelCarro(); }
         });
 
-        test(`${n('006', '015')} · Mensaje progresivo al agregar desde un carrusel del Home (${rol}) (${ff})`, async ({ page, testData }) => {
+        test(`${n('006', '015')} · Mensaje progresivo al agregar desde un carrusel del Home (${rol}) (${ff})`, { tag: logueado ? ['@otp'] : [] }, async ({ page, testData }) => {
           const cp = n('006', '015');
           const sku = sku2x1(testData);
           if (logueado) await loguear(page, testData, movil); else await conDireccion(page, token(testData, 'DIRECCION_DESPACHO_003')!);
@@ -253,7 +253,7 @@ test.describe('B2C-63 — Completa la promo (pendientes)', () => {
           if (logueado) await sh.sacarDelCarro();
         });
 
-        test(`${n('007', '016')} · Al quitar una unidad la promo vuelve a «en progreso» (${rol}) (${ff})`, async ({ page, testData }) => {
+        test(`${n('007', '016')} · Al quitar una unidad la promo vuelve a «en progreso» (${rol}) (${ff})`, { tag: logueado ? ['@otp'] : [] }, async ({ page, testData }) => {
           const cp = n('007', '016');
           const { l, s } = await prep(page, testData);
           await llevarA(s, 2);
@@ -267,7 +267,7 @@ test.describe('B2C-63 — Completa la promo (pendientes)', () => {
           if (logueado) await s.sacarDelCarro();
         });
 
-        test(`${n('008', '017')} · La 3ª unidad inicia un nuevo ciclo 2x1 (${rol}) (${ff})`, async ({ page, testData }) => {
+        test(`${n('008', '017')} · La 3ª unidad inicia un nuevo ciclo 2x1 (${rol}) (${ff})`, { tag: logueado ? ['@otp'] : [] }, async ({ page, testData }) => {
           const cp = n('008', '017');
           const { l, s } = await prep(page, testData);
           await llevarA(s, 2);
@@ -281,7 +281,7 @@ test.describe('B2C-63 — Completa la promo (pendientes)', () => {
           if (logueado) await s.sacarDelCarro();
         });
 
-        test(`${n('010', '019')} · Eliminar el producto resetea el progreso y oculta el mensaje (${rol}) (${ff})`, async ({ page, testData }) => {
+        test(`${n('010', '019')} · Eliminar el producto resetea el progreso y oculta el mensaje (${rol}) (${ff})`, { tag: logueado ? ['@otp'] : [] }, async ({ page, testData }) => {
           const cp = n('010', '019');
           const { l, s } = await prep(page, testData);
           await llevarA(s, 1);

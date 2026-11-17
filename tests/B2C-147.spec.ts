@@ -238,7 +238,7 @@ test.describe('B2C-147 — Mis Envíos: ver y seleccionar la ventana de despacho
     test.describe(ff, () => {
       test.use(vp);
 
-      test(`TC-B2C147-${L}-001 · Al continuar desde el carro Mis Envíos muestra el skeleton y luego Datos de entrega [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C147-${L}-001 · Al continuar desde el carro Mis Envíos muestra el skeleton y luego Datos de entrega [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C147-${L}-001`;
         const carro = await carroLogueado(page, testData, cp, 'despacho');
         await vigilarEntrega(page);
@@ -274,7 +274,7 @@ test.describe('B2C-147 — Mis Envíos: ver y seleccionar la ventana de despacho
         await carro.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C147-${L}-003 · Con despacho a domicilio la página Datos de entrega muestra todos sus elementos [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C147-${L}-003 · Con despacho a domicilio la página Datos de entrega muestra todos sus elementos [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C147-${L}-003`;
         const entrega = await hastaMisEnvios(page, testData, cp, 'despacho');
         const calle = token(testData, 'DIRECCION_DESPACHO_001')!.split(',')[0].trim();
@@ -311,7 +311,7 @@ test.describe('B2C-147 — Mis Envíos: ver y seleccionar la ventana de despacho
       });
 
       if (L === 'D') {
-        test(`TC-B2C147-D-006 · El resumen de totales incluye despacho, subtotal y subtotal con Unipay [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C147-D-006 · El resumen de totales incluye despacho, subtotal y subtotal con Unipay [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = 'TC-B2C147-D-006';
           await iniciarSesion(page, testData);
           await asegurarMetodo(page, testData, 'despacho');
@@ -343,7 +343,7 @@ test.describe('B2C-147 — Mis Envíos: ver y seleccionar la ventana de despacho
         });
       }
 
-      test(`TC-B2C147-${L}-005 · El selector de fechas muestra los días de Janis con el primero disponible marcado [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C147-${L}-005 · El selector de fechas muestra los días de Janis con el primero disponible marcado [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C147-${L}-005`;
         const entrega = await hastaMisEnvios(page, testData, cp, 'despacho');
         const dias = await entrega.dias('despacho').evaluateAll((bs) =>
@@ -364,7 +364,7 @@ test.describe('B2C-147 — Mis Envíos: ver y seleccionar la ventana de despacho
         await entrega.capturarEvidencia(cp);
       });
 
-      test(`${cpNoOlvides} · Continuar en el modal No te olvides lleva a Mis Envíos con skeleton y luego Datos de entrega [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${cpNoOlvides} · Continuar en el modal No te olvides lleva a Mis Envíos con skeleton y luego Datos de entrega [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = cpNoOlvides;
         const carro = await carroLogueado(page, testData, cp, 'despacho');
         await vigilarEntrega(page);
@@ -409,7 +409,7 @@ test.describe('B2C-147 — Mis Envíos: ver y seleccionar la ventana de despacho
       }
 
       // Retiro al final: cambiar de método con sesión pide un OTP.
-      test(`TC-B2C147-${L}-010 · Con retiro en tienda la página muestra la tienda y horarios sin precio [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C147-${L}-010 · Con retiro en tienda la página muestra la tienda y horarios sin precio [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C147-${L}-010`;
         const entrega = await hastaMisEnvios(page, testData, cp, 'retiro');
         const tienda = token(testData, 'TIENDA_RETIRO_001')!;

@@ -1,8 +1,8 @@
 {
-  "plugin_version": "1.19.0",
+  "plugin_version": "1.20.0",
   "files": {
     ".env.example": "8db980dd3408dfa306d5c28fbc4245a0f3d04c58916f7a8904b22e2a73af6b23",
-    ".gitignore": "c50a39255f7882f2f6709c5246050be4e23af506810da9af218132fc10ac48ba",
+    ".gitignore": "b6a0111aaf8038ff66305bff181d3a8edd454891cbfda4613b372e4374f87048",
     "package.json": "98bd088e4de453c46063ca993fa6d3d36c8f518352b246179129cffeba03f3ca",
     "playwright.config.ci.ts": "35c4869c6cafe994396df87e96d0e27705ba79021c0f7499b80348411289593f",
     "playwright.config.ts": "2435aea7a1d5deaa24384e7d39f5e2ba22a6ce0e2f4626d546459c63bcf24281",
@@ -25,7 +25,7 @@
     "tests-app/support/fixtures.ts": "1a92ec5737478a18eb5dd9a4a174ba9a86d6edbec9bcf24a0537f10c579b9547",
     "tests-app/support/limpiarEvidenciaApp.ts": "5ced450684605ee34c7d5df80e7e141646dc002088f90fe46d040a6d1110146b",
     "tests-app/support/plataformaApp.ts": "00fd0a8541ec48e2cec805cdb0fb1b758f012770724e26683a54916814f1b0d0",
-    "tests/support/otp.ts": "454b9fd2c55a2c98a3a15587a1159571da5aa3a05471903a483f4b13ff40d1ef",
+    "tests/support/otp.ts": "29d5c3c9aa1250149f502814dd64b5e6ad19924705ecd4259de283c462412007",
     "playwright.preflight.config.ts": "8beb1b98576cce1824b67b4730a481dc972c131655aa6e745eba3876e140efbb",
     "scripts/reintentar-ambiente.mjs": "943c36338b9729187436dd0b935339733bf069d2966b7e72d72773a6f92d0edb",
     "tests/support/estadoCompartido.ts": "697590627cb22e10afddf54c8caaa611704ed817b2292be41bbd7cb6dff242bd",

@@ -180,7 +180,7 @@ test.describe('B2C-41 — Modal "¡Que no se te olviden!": productos sugeridos',
       test.use(vp);
       const accion = L === 'D' ? 'clic' : 'toque';
 
-      test(`TC-B2C41-${L}-001 · Continuar con la entrega abre el modal de sugeridos cuando hay sugerencias [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C41-${L}-001 · Continuar con la entrega abre el modal de sugeridos cuando hay sugerencias [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C41-${L}-001`;
         const { carro, modal } = await hastaElModal(page, testData, cp, 'COMPRADOR_USUALS_FAVORITOS_USER');
         await expect(modal.titulo, 'título "¡Que no se te olviden!"').toBeVisible();
@@ -189,7 +189,7 @@ test.describe('B2C-41 — Modal "¡Que no se te olviden!": productos sugeridos',
         await carro.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C41-${L}-003 · Con My Usuals y favoritos se ven ambas pestañas en orden [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C41-${L}-003 · Con My Usuals y favoritos se ven ambas pestañas en orden [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C41-${L}-003`;
         const { carro, modal } = await hastaElModal(page, testData, cp, 'COMPRADOR_USUALS_FAVORITOS_USER');
         await carro.capturarEvidencia(cp, 4, 'modal abierto', { elemento: modal.root });
@@ -202,7 +202,7 @@ test.describe('B2C-41 — Modal "¡Que no se te olviden!": productos sugeridos',
         await carro.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C41-${L}-004 · Sin favoritos solo se ve la pestaña Lo que más compro [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C41-${L}-004 · Sin favoritos solo se ve la pestaña Lo que más compro [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C41-${L}-004`;
         const { carro, modal } = await hastaElModal(page, testData, cp, 'COMPRADOR_SOLO_USUALS_USER');
         await carro.capturarEvidencia(cp, 4, 'modal abierto', { elemento: modal.root });
@@ -215,7 +215,7 @@ test.describe('B2C-41 — Modal "¡Que no se te olviden!": productos sugeridos',
         await carro.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C41-${L}-005 · Sin My Usuals solo se ve la pestaña Mis favoritos [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C41-${L}-005 · Sin My Usuals solo se ve la pestaña Mis favoritos [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C41-${L}-005`;
         const { carro, modal } = await hastaElModal(page, testData, cp, 'COMPRADOR_SOLO_FAVORITOS_USER');
         await carro.capturarEvidencia(cp, 4, 'modal abierto', { elemento: modal.root });
@@ -227,7 +227,7 @@ test.describe('B2C-41 — Modal "¡Que no se te olviden!": productos sugeridos',
         await carro.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C41-${L}-006 · Lo que más compro muestra los My Usuals en grilla 2x2 con Continuar fijo [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C41-${L}-006 · Lo que más compro muestra los My Usuals en grilla 2x2 con Continuar fijo [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C41-${L}-006`;
         const { carro, modal } = await hastaElModal(page, testData, cp, 'COMPRADOR_USUALS_FAVORITOS_USER');
         await carro.capturarEvidencia(cp, 4, 'modal abierto', { elemento: modal.root });
@@ -248,7 +248,7 @@ test.describe('B2C-41 — Modal "¡Que no se te olviden!": productos sugeridos',
         await carro.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C41-${L}-008 · La pestaña Mis favoritos muestra los favoritos en grilla 2x2 sin tope [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C41-${L}-008 · La pestaña Mis favoritos muestra los favoritos en grilla 2x2 sin tope [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C41-${L}-008`;
         await iniciarSesion(page, testData, 'COMPRADOR_USUALS_FAVORITOS_USER');
         // Los favoritos de la cuenta, para comparar con la pestaña: cada fila tiene "Quitar <nombre> de favoritos".
@@ -272,7 +272,7 @@ test.describe('B2C-41 — Modal "¡Que no se te olviden!": productos sugeridos',
         await carro.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C41-${L}-009 · Agregar un sugerido lo suma al carro y el modal sigue abierto [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C41-${L}-009 · Agregar un sugerido lo suma al carro y el modal sigue abierto [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C41-${L}-009`;
         const { carro, modal } = await hastaElModal(page, testData, cp, 'COMPRADOR_USUALS_FAVORITOS_USER');
         await carro.capturarEvidencia(cp, 4, 'modal abierto', { elemento: modal.root });
@@ -305,7 +305,7 @@ test.describe('B2C-41 — Modal "¡Que no se te olviden!": productos sugeridos',
         await quitarDelCarro(page, nombre);
       });
 
-      test(`TC-B2C41-${L}-010 · Continuar cierra el modal de sugeridos y sigue a Mis Envíos [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C41-${L}-010 · Continuar cierra el modal de sugeridos y sigue a Mis Envíos [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C41-${L}-010`;
         const { carro, modal } = await hastaElModal(page, testData, cp, 'COMPRADOR_USUALS_FAVORITOS_USER');
         await carro.capturarEvidencia(cp, 4, 'modal abierto', { elemento: modal.root });
@@ -317,7 +317,7 @@ test.describe('B2C-41 — Modal "¡Que no se te olviden!": productos sugeridos',
       });
 
       if (L === 'M') {
-        test(`TC-B2C41-M-012 · Al hacer scroll en el modal el botón Continuar permanece fijo [Logueado] (Mobile)`, async ({ page, testData }) => {
+        test(`TC-B2C41-M-012 · Al hacer scroll en el modal el botón Continuar permanece fijo [Logueado] (Mobile)`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = 'TC-B2C41-M-012';
           const { carro, modal } = await hastaElModal(page, testData, cp, 'COMPRADOR_USUALS_FAVORITOS_USER');
           await carro.capturarEvidencia(cp, 4, 'modal abierto, inicio de la lista');

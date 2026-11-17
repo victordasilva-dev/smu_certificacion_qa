@@ -342,7 +342,7 @@ test.describe('B2C-123 — Sin cobertura', () => {
         await expect(sinCobertura.getByText(/^revisa que est/i), 'mensaje del modal').toHaveText(MENSAJE);
       });
 
-      test(`TC-B2C123-${L}-002 · Una dirección guardada sin cobertura muestra el modal tras validar OTP [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C123-${L}-002 · Una dirección guardada sin cobertura muestra el modal tras validar OTP [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         test.setTimeout(300000);
         const cp = `TC-B2C123-${L}-002`;
         const direccion = token(testData, 'DIRECCION_SIN_COBERTURA')!;
@@ -367,7 +367,7 @@ test.describe('B2C-123 — Sin cobertura', () => {
         await modal.capturarModal(cp, undefined, undefined, modal.modalSinCobertura);
       });
 
-      test(`TC-B2C123-${L}-010 · Al iniciar sesión, una dirección que recuperó cobertura pierde la etiqueta «Despacho sin cobertura» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C123-${L}-010 · Al iniciar sesión, una dirección que recuperó cobertura pierde la etiqueta «Despacho sin cobertura» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         test.setTimeout(300000);
         const cp = `TC-B2C123-${L}-010`;
         // Paso 1 — entrar con la cuenta declarada; paso 2 — el sitio re-verifica la cobertura.
@@ -385,7 +385,7 @@ test.describe('B2C-123 — Sin cobertura', () => {
         await pdp.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C123-${L}-011 · Al iniciar sesión, una dirección que sigue sin cobertura mantiene la etiqueta «Despacho sin cobertura» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C123-${L}-011 · Al iniciar sesión, una dirección que sigue sin cobertura mantiene la etiqueta «Despacho sin cobertura» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         test.setTimeout(300000);
         const cp = `TC-B2C123-${L}-011`;
         await iniciarSesionSinCobertura(page, testData);
@@ -396,7 +396,7 @@ test.describe('B2C-123 — Sin cobertura', () => {
         await home.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C123-${L}-009 · Continuar con la dirección sin cobertura desde Mis envíos lleva al Home [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C123-${L}-009 · Continuar con la dirección sin cobertura desde Mis envíos lleva al Home [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         test.setTimeout(300000);
         const cp = `TC-B2C123-${L}-009`;
         const direccion = token(testData, 'DIRECCION_SIN_COBERTURA')!;

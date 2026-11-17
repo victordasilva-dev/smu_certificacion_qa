@@ -74,7 +74,7 @@ test.describe('B2C-69 — Header: SSO, membresía, minicarrito y Mi Cuenta', () 
       await home.capturarEvidencia(cp);
     });
 
-    test('TC-B2C69-D-003 · Area SSO Desktop muestra el icono con iniciales y el saludo con el nombre del usuario logueado (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C69-D-003 · Area SSO Desktop muestra el icono con iniciales y el saludo con el nombre del usuario logueado (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C69-D-003';
       const { home, perfil, menu } = await homeLogueado(page, testData, 'COMPRADOR');
       const partes = await menu.partesDelDisparador();
@@ -83,7 +83,7 @@ test.describe('B2C-69 — Header: SSO, membresía, minicarrito y Mi Cuenta', () 
       await home.capturarEvidencia(cp, undefined, undefined, { elemento: menu.disparador });
     });
 
-    test('TC-B2C69-D-004 · Nombre largo en el saludo Desktop se trunca a 15 caracteres mas puntos suspensivos (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C69-D-004 · Nombre largo en el saludo Desktop se trunca a 15 caracteres mas puntos suspensivos (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C69-D-004';
       const { home, perfil, menu } = await homeLogueado(page, testData, 'COMPRADOR_NOMBRE_LARGO');
       const nombre = primerNombre(perfil.firstName);
@@ -96,7 +96,7 @@ test.describe('B2C-69 — Header: SSO, membresía, minicarrito y Mi Cuenta', () 
       await home.capturarEvidencia(cp, undefined, undefined, { elemento: menu.disparador });
     });
 
-    test("TC-B2C69-D-005 · Cliente logueado sin membresia paga muestra el boton 'Suscribete a Unimarc' en Desktop (Desktop)", async ({ page, testData }) => {
+    test("TC-B2C69-D-005 · Cliente logueado sin membresia paga muestra el boton 'Suscribete a Unimarc' en Desktop (Desktop)", { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C69-D-005';
       const { home } = await homeLogueado(page, testData, 'COMPRADOR_SIN_MEMBRESIA');
       await home.capturarEvidencia(cp, 3, 'header del cliente sin membresía', { elemento: home.header.barraDelSitio });
@@ -104,7 +104,7 @@ test.describe('B2C-69 — Header: SSO, membresía, minicarrito y Mi Cuenta', () 
       await home.capturarEvidencia(cp);
     });
 
-    test("TC-B2C69-D-006 · Cliente logueado con membresia paga muestra 'Ver mi suscripcion' en Desktop (Desktop)", async ({ page, testData }) => {
+    test("TC-B2C69-D-006 · Cliente logueado con membresia paga muestra 'Ver mi suscripcion' en Desktop (Desktop)", { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C69-D-006';
       const { home } = await homeLogueado(page, testData, 'COMPRADOR_MEMBRESIA');
       await expect(home.header.botonVerSuscripcion).toBeVisible({ timeout: 20000 });
@@ -131,7 +131,7 @@ test.describe('B2C-69 — Header: SSO, membresía, minicarrito y Mi Cuenta', () 
       await home.capturarEvidencia(cp);
     });
 
-    test('TC-B2C69-D-011 · Clic en el nombre del cliente Desktop abre el modal del menu de Mi Cuenta (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C69-D-011 · Clic en el nombre del cliente Desktop abre el modal del menu de Mi Cuenta (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C69-D-011';
       const { home, menu } = await homeLogueado(page, testData, 'COMPRADOR');
       await menu.abrir();
@@ -149,7 +149,7 @@ test.describe('B2C-69 — Header: SSO, membresía, minicarrito y Mi Cuenta', () 
       ['TC-B2C69-D-014', /^mi membres[íi]a$/i, 'MI_MEMBRESIA_URL', "Clic en 'Mi membresia' del modal Desktop redirige a la pagina de Mi membresia"],
       ['TC-B2C69-D-015', /^mis favoritos$/i, 'MIS_FAVORITOS_URL', "Clic en 'Mis Favoritos' del modal Desktop redirige a la pagina de Mis Favoritos"],
     ] as const) {
-      test(`${cp} · ${nombre} (Desktop)`, async ({ page, testData }) => {
+      test(`${cp} · ${nombre} (Desktop)`, { tag: '@otp' }, async ({ page, testData }) => {
         const { home, menu } = await homeLogueado(page, testData, 'COMPRADOR');
         await menu.abrir();
         await expect(menu.modal).toBeVisible({ timeout: 20000 });
@@ -162,7 +162,7 @@ test.describe('B2C-69 — Header: SSO, membresía, minicarrito y Mi Cuenta', () 
       });
     }
 
-    test('TC-B2C69-D-018 · Cerrar sesion desde el modal Mi Cuenta Desktop cierra la sesion y actualiza el header (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C69-D-018 · Cerrar sesion desde el modal Mi Cuenta Desktop cierra la sesion y actualiza el header (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C69-D-018';
       const { home, menu } = await homeLogueado(page, testData, 'COMPRADOR');
       await menu.abrir();
@@ -198,7 +198,7 @@ test.describe('B2C-69 — Header: SSO, membresía, minicarrito y Mi Cuenta', () 
       await home.capturarEvidencia(cp);
     });
 
-    test('TC-B2C69-M-003 · Area SSO Mobile muestra solo el icono, sin el saludo, para usuario logueado (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C69-M-003 · Area SSO Mobile muestra solo el icono, sin el saludo, para usuario logueado (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C69-M-003';
       const { home, perfil, menu } = await homeLogueado(page, testData, 'COMPRADOR');
       const partes = await menu.partesDelDisparador();
@@ -207,7 +207,7 @@ test.describe('B2C-69 — Header: SSO, membresía, minicarrito y Mi Cuenta', () 
       await home.capturarEvidencia(cp, undefined, undefined, { elemento: home.header.barraDelSitio });
     });
 
-    test("TC-B2C69-M-004 · Cliente logueado sin membresia paga muestra el boton 'Suscribete a Unimarc' en Mobile (Mobile)", async ({ page, testData }) => {
+    test("TC-B2C69-M-004 · Cliente logueado sin membresia paga muestra el boton 'Suscribete a Unimarc' en Mobile (Mobile)", { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C69-M-004';
       const { home } = await homeLogueado(page, testData, 'COMPRADOR_SIN_MEMBRESIA');
       await home.capturarEvidencia(cp, 3, 'header del cliente sin membresía', { elemento: home.header.barraDelSitio });
@@ -215,7 +215,7 @@ test.describe('B2C-69 — Header: SSO, membresía, minicarrito y Mi Cuenta', () 
       await home.capturarEvidencia(cp);
     });
 
-    test("TC-B2C69-M-005 · Cliente logueado con membresia paga muestra 'Ver mi suscripcion' en Mobile (Mobile)", async ({ page, testData }) => {
+    test("TC-B2C69-M-005 · Cliente logueado con membresia paga muestra 'Ver mi suscripcion' en Mobile (Mobile)", { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C69-M-005';
       const { home } = await homeLogueado(page, testData, 'COMPRADOR_MEMBRESIA');
       await expect(home.header.botonVerSuscripcion).toBeVisible({ timeout: 20000 });
@@ -241,7 +241,7 @@ test.describe('B2C-69 — Header: SSO, membresía, minicarrito y Mi Cuenta', () 
       await home.capturarEvidencia(cp);
     });
 
-    test('TC-B2C69-M-010 · Clic en el icono del cliente Mobile redirige directamente a Mi cuenta (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C69-M-010 · Clic en el icono del cliente Mobile redirige directamente a Mi cuenta (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C69-M-010';
       const { home, menu } = await homeLogueado(page, testData, 'COMPRADOR');
       await home.capturarEvidencia(cp, 2, 'header con el icono del cliente', { elemento: home.header.barraDelSitio });

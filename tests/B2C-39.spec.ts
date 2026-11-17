@@ -154,7 +154,7 @@ test.describe('B2C-39 — Carro con ítems no disponibles', () => {
       test.describe.configure({ timeout: 900000 });
       const id = (n: string) => `TC-B2C39-${L}-${n}`;
 
-      test(`${id('001')} · Verificar que Reemplazar de un ítem no disponible abre el modal de productos similares [${sufijo}] [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('001')} · Verificar que Reemplazar de un ítem no disponible abre el modal de productos similares [${sufijo}] [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('001');
         const carro = await armarCarro(page, testData, 'v1+nd1', true, [['SKU_VALID_001', 1], ['SKU_NO_DISPONIBLE', 1]]);
         await carro.capturarEvidencia(cp, 2, 'carro con el ítem no disponible');
@@ -167,7 +167,7 @@ test.describe('B2C-39 — Carro con ítems no disponibles', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('002')} · Verificar que el ítem no disponible muestra el CTA Reemplazar y el link de texto Eliminar [${sufijo}] [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('002')} · Verificar que el ítem no disponible muestra el CTA Reemplazar y el link de texto Eliminar [${sufijo}] [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('002');
         const carro = await armarCarro(page, testData, 'v1+nd1', true, [['SKU_VALID_001', 1], ['SKU_NO_DISPONIBLE', 1]]);
         await expect(reemplazar(page), 'CTA «Reemplazar»').toBeVisible({ timeout: 20000 });
@@ -177,7 +177,7 @@ test.describe('B2C-39 — Carro con ítems no disponibles', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('003')} · Verificar que reemplazar por un similar lo agrega a disponibles y quita el no disponible [${sufijo}] [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('003')} · Verificar que reemplazar por un similar lo agrega a disponibles y quita el no disponible [${sufijo}] [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('003');
         const carro = await armarCarro(page, testData, 'v1+nd1', true, [['SKU_VALID_001', 1], ['SKU_NO_DISPONIBLE', 1]]);
         escribirEstado('roto');
@@ -192,7 +192,7 @@ test.describe('B2C-39 — Carro con ítems no disponibles', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('004')} · Verificar que un reemplazo parcial deja en no disponibles la cantidad restante [${sufijo}] [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('004')} · Verificar que un reemplazo parcial deja en no disponibles la cantidad restante [${sufijo}] [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('004');
         const carro = await armarCarro(page, testData, 'v1+nd3', true, [['SKU_VALID_001', 1], ['SKU_NO_DISPONIBLE', 3]]);
         escribirEstado('roto');
@@ -210,7 +210,7 @@ test.describe('B2C-39 — Carro con ítems no disponibles', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('005')} · Verificar que un carro solo con no disponibles muestra la sección expandida y el CTA deshabilitado [${sufijo}] [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('005')} · Verificar que un carro solo con no disponibles muestra la sección expandida y el CTA deshabilitado [${sufijo}] [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('005');
         const carro = await armarCarro(page, testData, 'nd1', true, [['SKU_NO_DISPONIBLE', 1]]);
         await carro.capturarEvidencia(cp, 2, 'carro solo con no disponibles');
@@ -221,7 +221,7 @@ test.describe('B2C-39 — Carro con ítems no disponibles', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('007')} · Verificar que eliminar el último no disponible hace desaparecer la sección [${sufijo}] [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('007')} · Verificar que eliminar el último no disponible hace desaparecer la sección [${sufijo}] [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('007');
         const carro = await armarCarro(page, testData, 'v1+nd1', true, [['SKU_VALID_001', 1], ['SKU_NO_DISPONIBLE', 1]]);
         escribirEstado('roto');
@@ -234,7 +234,7 @@ test.describe('B2C-39 — Carro con ítems no disponibles', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('008')} · Verificar que un error al eliminar un no disponible muestra el toast CRT-021 [${sufijo}] [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('008')} · Verificar que un error al eliminar un no disponible muestra el toast CRT-021 [${sufijo}] [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('008');
         const carro = await armarCarro(page, testData, 'v1+nd1', true, [['SKU_VALID_001', 1], ['SKU_NO_DISPONIBLE', 1]]);
         await bloquear(page, 'DELETE');
@@ -250,7 +250,7 @@ test.describe('B2C-39 — Carro con ítems no disponibles', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('009')} · Verificar que un error al agregar el sustituto muestra el toast CRT-025 [${sufijo}] [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('009')} · Verificar que un error al agregar el sustituto muestra el toast CRT-025 [${sufijo}] [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('009');
         const carro = await armarCarro(page, testData, 'v1+nd1', true, [['SKU_VALID_001', 1], ['SKU_NO_DISPONIBLE', 1]]);
         await reemplazar(page).click();

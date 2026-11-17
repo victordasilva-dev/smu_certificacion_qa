@@ -164,7 +164,7 @@ test.describe('B2C-51 — Bloque de precios', () => {
       await pdp.capturarEvidencia(cp);
     });
 
-    test('TC-B2C51-M-009 · Verificar que oferta + membresia muestra oferta, lista tachado y badge Membresia (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C51-M-009 · Verificar que oferta + membresia muestra oferta, lista tachado y badge Membresia (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C51-M-009';
       test.setTimeout(180000);
 
@@ -183,7 +183,7 @@ test.describe('B2C-51 — Bloque de precios', () => {
       await pdp.capturarEvidencia(cp);
     });
 
-    test('TC-B2C51-M-010 · Verificar que NxM + membresia muestra el precio compuesto y el badge Membresia (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C51-M-010 · Verificar que NxM + membresia muestra el precio compuesto y el badge Membresia (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C51-M-010';
       test.setTimeout(180000);
 

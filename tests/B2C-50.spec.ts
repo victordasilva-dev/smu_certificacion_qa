@@ -86,7 +86,7 @@ test.describe('B2C-50 — Te faltan N para la promo en el carro', () => {
     test.describe(ff, () => {
       test.use(vp);
 
-      test(`${cp} · Logueado ve el mensaje Te faltan N de la promo Combina en el carro [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${cp} · Logueado ve el mensaje Te faltan N de la promo Combina en el carro [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const sku = token(testData, 'SKU_COMBINA_PROMO')!;
         await iniciarSesion(page, testData);
         const nombre = await carroConUnaUnidad(page, sku);

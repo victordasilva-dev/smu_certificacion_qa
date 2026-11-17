@@ -949,7 +949,7 @@ test.describe('B2C-99 — Confirmar dirección con PIN en mapa', () => {
       test.use(vp);
       for (const c of CASOS) {
         const cp = `TC-B2C99-${letra}-${c.n}`;
-        test(`${cp} · Verificar que ${c.nombre} [${sufijo}] [${c.logueado ? 'Logueado' : 'Guest'}] (${sufijo})`, async ({ page, testData }) => {
+        test(`${cp} · Verificar que ${c.nombre} [${sufijo}] [${c.logueado ? 'Logueado' : 'Guest'}] (${sufijo})`, { tag: c.logueado ? ['@otp'] : [] }, async ({ page, testData }) => {
           await c.cuerpo({ page, testData, cp });
           await new ConfirmacionPinModal(page).capturar(cp, undefined, undefined, page).catch(() => {});
         });

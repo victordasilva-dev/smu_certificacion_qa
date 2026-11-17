@@ -68,7 +68,7 @@ test.describe('B2C-46 — Modal Están de vuelta', () => {
       test.describe('Sesión iniciada', () => {
         test.use({ storageState: fs.existsSync(SESION) ? SESION : { cookies: [], origins: [] } });
 
-        test(`TC-B2C46-${L}-006 · Un logueado sin productos no disponibles no ve el modal (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C46-${L}-006 · Un logueado sin productos no disponibles no ve el modal (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = `TC-B2C46-${L}-006`;
           test.setTimeout(240000);
           await asegurarSesion(page, testData);

@@ -12,7 +12,7 @@ import { CarroPage } from './pages/CarroPage';
 import { CarroOpciones } from './pages/CarroOpciones';
 
 test.use(DESKTOP);
-test('probe42 (Desktop)', async ({ page, testData }) => {
+test('probe42 (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
   test.setTimeout(400000);
   const correo = token(testData, 'COMPRADOR_SIN_MEMBRESIA_USER')!;
   const sesion = path.resolve('.qa/auth/b42-user.json');

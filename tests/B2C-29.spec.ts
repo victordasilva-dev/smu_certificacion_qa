@@ -535,7 +535,7 @@ for (const [tipo, vp, ff] of [['D', DESKTOP, 'Desktop'], ['M', MOBILE, 'Mobile']
       await expect(page.getByText(/algo sali[oó] mal|error inesperado|no encontrad/i)).toHaveCount(0);
     });
 
-    test(`TC-B2C29-${id.seg} · Un componente segmentado para logueados solo se muestra con sesión iniciada (${ff})`, async ({ page, testData }) => {
+    test(`TC-B2C29-${id.seg} · Un componente segmentado para logueados solo se muestra con sesión iniciada (${ff})`, { tag: '@otp' }, async ({ page, testData }) => {
       const cp = `TC-B2C29-${id.seg}`;
       const nombre = token(testData, 'COMPONENTE_SEGMENTO_LOGUEADO')!;
       const correo = token(testData, 'USER_AUTH_001')!.split(' / ')[0];
@@ -561,7 +561,7 @@ test.describe('B2C-29 — Componentes segmentados (Mobile, 2026-11-09)', () => {
   test.use(MOBILE);
   test.describe.configure({ timeout: 420000 });
 
-  test('TC-B2C29-M-008 · Un usuario del segmento configurado ve el componente segmentado [Logueado] (Mobile)', async ({ page, testData }) => {
+  test('TC-B2C29-M-008 · Un usuario del segmento configurado ve el componente segmentado [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
     const cp = 'TC-B2C29-M-008';
     const nombre = token(testData, 'COMPONENTE_SEGMENTADO')!;
     await entrarConCodigo(page, token(testData, 'COMPRADOR_SEGMENTO_USER')!);
@@ -571,7 +571,7 @@ test.describe('B2C-29 — Componentes segmentados (Mobile, 2026-11-09)', () => {
     expect(comp, `la Home muestra ${nombre}`).not.toBeNull();
   });
 
-  test('TC-B2C29-M-009 · Un usuario fuera del segmento no ve el componente y no queda espacio reservado [Logueado] (Mobile)', async ({ page, testData }) => {
+  test('TC-B2C29-M-009 · Un usuario fuera del segmento no ve el componente y no queda espacio reservado [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
     const cp = 'TC-B2C29-M-009';
     const nombre = token(testData, 'COMPONENTE_SEGMENTADO')!;
     await entrarConCodigo(page, token(testData, 'COMPRADOR_FUERA_SEGMENTO_USER')!);

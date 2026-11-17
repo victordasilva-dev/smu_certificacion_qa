@@ -256,7 +256,7 @@ test.describe('B2C-124 — Dirección del invitado al iniciar sesión', () => {
     test.describe(ff, () => {
       test.use(vp);
 
-      test(`TC-B2C124-${L}-004 · Salir del OTP sin validar inicia sesión sin aplicar la dirección del invitado [Guest] (${sufijo})`, async ({ page, browser, testData }) => {
+      test(`TC-B2C124-${L}-004 · Salir del OTP sin validar inicia sesión sin aplicar la dirección del invitado [Guest] (${sufijo})`, { tag: '@otp' }, async ({ page, browser, testData }) => {
         const cp = `TC-B2C124-${L}-004`;
         const { numero } = direccionOtra(testData);
         const calleCuenta = token(testData, 'DIRECCION_DESPACHO_001')!.split(',')[0].trim();
@@ -303,7 +303,7 @@ test.describe('B2C-124 — Dirección del invitado al iniciar sesión', () => {
         }
       });
 
-      test(`TC-B2C124-${L}-003 · Al iniciar sesión con dirección heredada se solicita la validación OTP [Guest] (${sufijo})`, async ({ page, browser, testData }) => {
+      test(`TC-B2C124-${L}-003 · Al iniciar sesión con dirección heredada se solicita la validación OTP [Guest] (${sufijo})`, { tag: '@otp' }, async ({ page, browser, testData }) => {
         const cp = `TC-B2C124-${L}-003`;
         await dejarCarroVacio(browser, testData);
         const previo = await estadoCuenta(browser, testData);
@@ -331,7 +331,7 @@ test.describe('B2C-124 — Dirección del invitado al iniciar sesión', () => {
         }
       });
 
-      test(`TC-B2C124-${L}-001 · La dirección del invitado se mantiene activa tras iniciar sesión y validar OTP [Guest] (${sufijo})`, async ({ page, browser, testData }) => {
+      test(`TC-B2C124-${L}-001 · La dirección del invitado se mantiene activa tras iniciar sesión y validar OTP [Guest] (${sufijo})`, { tag: '@otp' }, async ({ page, browser, testData }) => {
         const cp = `TC-B2C124-${L}-001`;
         const calleCuenta = token(testData, 'DIRECCION_DESPACHO_001')!.split(',')[0].trim();
         await dejarCarroVacio(browser, testData);
@@ -366,7 +366,7 @@ test.describe('B2C-124 — Dirección del invitado al iniciar sesión', () => {
         }
       });
 
-      test(`TC-B2C124-${L}-005 · Con carro y cambio de tienda el OTP exitoso muestra el modal «Algunos productos podrían agotarse» [Guest] (${sufijo})`, async ({ page, browser, testData }) => {
+      test(`TC-B2C124-${L}-005 · Con carro y cambio de tienda el OTP exitoso muestra el modal «Algunos productos podrían agotarse» [Guest] (${sufijo})`, { tag: '@otp' }, async ({ page, browser, testData }) => {
         const cp = `TC-B2C124-${L}-005`;
         await dejarCarroVacio(browser, testData);
         const previo = await estadoCuenta(browser, testData);

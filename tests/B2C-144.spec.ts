@@ -416,7 +416,7 @@ for (const [ff, vp, L, sufijo] of [
     const umbral = (td: TD) => Number(token(td, 'UMBRAL_DESPACHO_GRATIS_CLUB')!);
     const aPesos = (s: string) => Number((s.match(/[\d.]+/) ?? ['0'])[0].replace(/\./g, ''));
 
-    test(T('011', 'Un cliente Club bajo el umbral ve el costo de despacho en el header [Logueado]'), async ({ page, testData }) => {
+    test(T('011', 'Un cliente Club bajo el umbral ve el costo de despacho en el header [Logueado]'), { tag: '@otp' }, async ({ page, testData }) => {
       test.setTimeout(420000);
       const cp = ID('011');
       await sesion(page, testData, mobile);
@@ -444,7 +444,7 @@ for (const [ff, vp, L, sufijo] of [
       }
     });
 
-    test(T('012', 'Un cliente Club sobre el umbral ve Despacho gratis en el header [Logueado]'), async ({ page, testData }) => {
+    test(T('012', 'Un cliente Club sobre el umbral ve Despacho gratis en el header [Logueado]'), { tag: '@otp' }, async ({ page, testData }) => {
       test.setTimeout(480000);
       const cp = ID('012');
       await sesion(page, testData, mobile);
@@ -467,7 +467,7 @@ for (const [ff, vp, L, sufijo] of [
       }
     });
 
-    test(T('013', 'Al cruzar el umbral en ambos sentidos el chip cambia sin recargar [Logueado]'), async ({ page, testData }) => {
+    test(T('013', 'Al cruzar el umbral en ambos sentidos el chip cambia sin recargar [Logueado]'), { tag: '@otp' }, async ({ page, testData }) => {
       test.setTimeout(540000);
       const cp = ID('013');
       await sesion(page, testData, mobile);
@@ -505,7 +505,7 @@ for (const [ff, vp, L, sufijo] of [
 
     // ----------------------------- Logueado: sesión y direcciones persistidas -------------------
 
-    test(T('018', 'Al iniciar sesión el header muestra la ventana vigente de la dirección guardada [Logueado]'), async ({ page, testData }) => {
+    test(T('018', 'Al iniciar sesión el header muestra la ventana vigente de la dirección guardada [Logueado]'), { tag: '@otp' }, async ({ page, testData }) => {
       test.setTimeout(420000);
       const cp = ID('018');
       const d = token(testData, 'DIRECCION_DESPACHO_001')!;
@@ -540,7 +540,7 @@ for (const [ff, vp, L, sufijo] of [
       bloqueoData(`{DIRECCION_SIN_SLA} (${d}) sí tiene horarios en el ambiente: la consulta a Janis responde ${info?.outcome}/${info?.deliveryStatus} con ventana ${info?.window?.start} y el header muestra «${t}». La precondición «sin SLAs» no se cumple.`);
     });
 
-    test(T('020', 'Si al iniciar sesión se perdió la cobertura el header pasa a sin cobertura [Logueado]'), async ({ page, testData }) => {
+    test(T('020', 'Si al iniciar sesión se perdió la cobertura el header pasa a sin cobertura [Logueado]'), { tag: '@otp' }, async ({ page, testData }) => {
       test.setTimeout(420000);
       const cp = ID('020');
       const d = token(testData, 'DIRECCION_SIN_COBERTURA')!;
@@ -561,7 +561,7 @@ for (const [ff, vp, L, sufijo] of [
       await expect(h.zona).toContainText(/despacho sin cobertura/i);
     });
 
-    test(T('040', 'Un logueado que setea una dirección sin cobertura no la setea y se deriva al flujo sin cobertura [Logueado]'), async ({ page, testData }) => {
+    test(T('040', 'Un logueado que setea una dirección sin cobertura no la setea y se deriva al flujo sin cobertura [Logueado]'), { tag: '@otp' }, async ({ page, testData }) => {
       test.setTimeout(480000);
       const cp = ID('040');
       const d = token(testData, 'DIRECCION_SIN_COBERTURA')!;
@@ -606,7 +606,7 @@ for (const [ff, vp, L, sufijo] of [
       bloqueoData(`{DIRECCION_SIN_SLA} (${d}) sí tiene cobertura y horarios en el ambiente (Janis: ${info?.outcome}/${info?.deliveryStatus}, ventana ${info?.window?.start}; header «${t}»); no se deriva a «Por ahora no hay horarios disponibles». La precondición «sin SLAs» no se cumple.`);
     });
 
-    test(T('042', 'Una dirección sin numeración se setea y el header la muestra con S/N, ventana y chip [Logueado]'), async ({ page, testData }) => {
+    test(T('042', 'Una dirección sin numeración se setea y el header la muestra con S/N, ventana y chip [Logueado]'), { tag: '@otp' }, async ({ page, testData }) => {
       test.setTimeout(480000);
       const cp = ID('042');
       const partes = token(testData, 'DIRECCION_SIN_NUMERO')!.split(',').map((s) => s.trim());
@@ -648,7 +648,7 @@ for (const [ff, vp, L, sufijo] of [
       expect(await h2.textoChip()).toMatch(/\$\s?[\d.]+|gratis/i);
     });
 
-    test(T('044', 'Una dirección sin departamento se muestra en el header sin complemento ni coma vacía [Logueado]'), async ({ page, testData }) => {
+    test(T('044', 'Una dirección sin departamento se muestra en el header sin complemento ni coma vacía [Logueado]'), { tag: '@otp' }, async ({ page, testData }) => {
       test.setTimeout(480000);
       const cp = ID('044');
       const d = token(testData, 'DIRECCION_DESPACHO_001')!;
@@ -684,7 +684,7 @@ for (const [ff, vp, L, sufijo] of [
 
     // ----------------------------- Invitado: sesión y TTL -------------------------------------
 
-    test(T('025', 'Al iniciar sesión en una cuenta sin direcciones se ve Elige una forma de entrega [Guest]'), async ({ page, testData }) => {
+    test(T('025', 'Al iniciar sesión en una cuenta sin direcciones se ve Elige una forma de entrega [Guest]'), { tag: '@otp' }, async ({ page, testData }) => {
       test.setTimeout(420000);
       const cp = ID('025');
       const correo = correoDe(testData, 'SIN_DIRECCION_USER');
@@ -787,7 +787,7 @@ for (const [ff, vp, L, sufijo] of [
     });
 
     if (mobile) {
-      test(T('024', 'Un invitado sin dirección que inicia sesión carga la última dirección del perfil [Guest]'), async ({ page, testData }) => {
+      test(T('024', 'Un invitado sin dirección que inicia sesión carga la última dirección del perfil [Guest]'), { tag: '@otp' }, async ({ page, testData }) => {
         test.setTimeout(420000);
         const cp = ID('024');
         const d = token(testData, 'DIRECCION_DESPACHO_001')!;
@@ -842,7 +842,7 @@ for (const [ff, vp, L, sufijo] of [
 
     // ----------------------------- Persistencia entre sesiones (cierra sesión: va al final) ----
 
-    test(T('003', 'La dirección de un logueado persiste entre sesiones [Logueado]'), async ({ page, testData }) => {
+    test(T('003', 'La dirección de un logueado persiste entre sesiones [Logueado]'), { tag: '@otp' }, async ({ page, testData }) => {
       test.setTimeout(480000);
       const cp = ID('003');
       const d = token(testData, 'DIRECCION_DESPACHO_001')!;

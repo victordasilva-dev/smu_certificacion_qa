@@ -129,7 +129,7 @@ test.describe('B2C-138 — Store Locator sin método de entrega', () => {
         await pdp.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C138-${L}-002 · Header muestra «Elige una forma de entrega» + ícono ∨ sin método seleccionado [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C138-${L}-002 · Header muestra «Elige una forma de entrega» + ícono ∨ sin método seleccionado [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C138-${L}-002`;
         const home = await iniciarSesion(page, testData);
         await sinMetodoEn(home, 'Home', cp, 2);
@@ -142,7 +142,7 @@ test.describe('B2C-138 — Store Locator sin método de entrega', () => {
         await pdp.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C138-${L}-005 · Estructura del modal para logueado: tabs, imagen y «sin direcciones guardadas» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C138-${L}-005 · Estructura del modal para logueado: tabs, imagen y «sin direcciones guardadas» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C138-${L}-005`;
         const home = await iniciarSesion(page, testData);
         await home.capturarEvidencia(cp, 1, 'sesión iniciada sin método de entrega', { elemento: home.header.barraDelSitio });
@@ -167,7 +167,7 @@ test.describe('B2C-138 — Store Locator sin método de entrega', () => {
       });
 
       if (L === 'M') {
-        test(`TC-B2C138-M-003 · Tap en el Store Locator abre el modal «Elige tu método de entrega» con botón X (Mobile)`, async ({ page, testData }) => {
+        test(`TC-B2C138-M-003 · Tap en el Store Locator abre el modal «Elige tu método de entrega» con botón X (Mobile)`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = 'TC-B2C138-M-003';
           // Pasos 1-3 como invitado.
           const { home, modal } = await abrirModal(page);

@@ -381,7 +381,7 @@ function definir(L: 'D' | 'M', sufijo: 'Desktop' | 'Mobile') {
   });
 
   // D/M-018 — Logueado: confirma tienda de retiro y valida OTP antes de setearla.
-  test(TA('018', 'Un logueado que confirma una tienda debe validar OTP antes de setearla'), async ({ page, testData }) => {
+  test(TA('018', 'Un logueado que confirma una tienda debe validar OTP antes de setearla'), { tag: '@otp' }, async ({ page, testData }) => {
     const nombre = token(testData, 'TIENDA_RETIRO_001')!;
     const correo = correoUsuario(testData);
     await iniciarSesion(page, correo);
@@ -396,7 +396,7 @@ function definir(L: 'D' | 'M', sufijo: 'Desktop' | 'Mobile') {
   });
 
   // D/M-019 — Logueado: OTP exitoso deriva al flujo Sin cobertura (B2C-123).
-  test(TA('019', 'Un logueado que valida OTP con tienda sin cobertura va al flujo Sin cobertura'), async ({ page, testData }) => {
+  test(TA('019', 'Un logueado que valida OTP con tienda sin cobertura va al flujo Sin cobertura'), { tag: '@otp' }, async ({ page, testData }) => {
     const nombre = token(testData, 'TIENDA_RETIRO_SIN_COBERTURA')!;
     const correo = correoUsuario(testData);
     await iniciarSesion(page, correo);
@@ -410,7 +410,7 @@ function definir(L: 'D' | 'M', sufijo: 'Desktop' | 'Mobile') {
   });
 
   // D/M-020 — Logueado: OTP exitoso con carro que contiene SKU_VALID_001 deriva a B2C-122.
-  test(TA('020', 'Un logueado con carro que valida OTP ve el modal No se te escapen'), async ({ page, testData }) => {
+  test(TA('020', 'Un logueado con carro que valida OTP ve el modal No se te escapen'), { tag: '@otp' }, async ({ page, testData }) => {
     const nombre = token(testData, 'TIENDA_RETIRO_001')!;
     const correo = correoUsuario(testData);
     await iniciarSesion(page, correo);
@@ -430,7 +430,7 @@ function definir(L: 'D' | 'M', sufijo: 'Desktop' | 'Mobile') {
   });
 
   // D/M-022 — Logueado: el header muestra tienda, ventana de retiro y Gratis en verde.
-  test(TA('022', 'Tras confirmar la tienda el header del logueado muestra tienda, ventana y Gratis'), async ({ page, testData }) => {
+  test(TA('022', 'Tras confirmar la tienda el header del logueado muestra tienda, ventana y Gratis'), { tag: '@otp' }, async ({ page, testData }) => {
     const nombre = token(testData, 'TIENDA_RETIRO_001')!;
     const correo = correoUsuario(testData);
     await iniciarSesion(page, correo);
