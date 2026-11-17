@@ -326,7 +326,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       ).toBe(true);
     });
 
-    test('TC-B2C26-D-005 · Error al cargar direcciones guardadas muestra pantalla de error sin cambiar la activa [Logueado] (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C26-D-005 · Error al cargar direcciones guardadas muestra pantalla de error sin cambiar la activa [Logueado] (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C26-D-005';
       const home = await iniciarSesion(page, testData);
       const antes = await home.header.esperarDireccionEnStoreLocator();
@@ -458,7 +458,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       await capturarEvidencia(page, cp);
     });
 
-    test('TC-B2C26-D-014 · Dirección de invitado: formato en el header, no persiste y dispara la asociación al loguearse [Guest] (Desktop)', async ({ page, browser, testData }) => {
+    test('TC-B2C26-D-014 · Dirección de invitado: formato en el header, no persiste y dispara la asociación al loguearse [Guest] (Desktop)', { tag: '@otp' }, async ({ page, browser, testData }) => {
       const cp = 'TC-B2C26-D-014';
       const dir = token(testData, 'DIRECCION_DESPACHO_001')!;
       const p = partes(dir);
@@ -504,7 +504,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       await sinNumeroInvitado(page, testData, 'TC-B2C26-D-017');
     });
 
-    test('TC-B2C26-D-018 · Dirección sin numeración se guarda en el perfil con «S/N» [Logueado] (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C26-D-018 · Dirección sin numeración se guarda en el perfil con «S/N» [Logueado] (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       await sinNumeroLogueado(page, testData, 'TC-B2C26-D-018');
     });
 
@@ -601,7 +601,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       expect.soft(activa, 'región').toMatch(/metropolitana/i);
     });
 
-    test('TC-B2C26-M-008 · El modal del logueado muestra skeleton y luego la activa y las guardadas [Logueado] (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C26-M-008 · El modal del logueado muestra skeleton y luego la activa y las guardadas [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C26-M-008';
       const home = await iniciarSesion(page, testData);
       await home.header.esperarDireccionEnStoreLocator().catch(() => '');
@@ -622,7 +622,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       expect.soft((await modal.cargaObservada()).skeleton, 'skeleton de carga').toBe(true);
     });
 
-    test('TC-B2C26-M-009 · Error al cargar los métodos de entrega muestra la pantalla de error con código [Logueado] (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C26-M-009 · Error al cargar los métodos de entrega muestra la pantalla de error con código [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C26-M-009';
       const home = await iniciarSesion(page, testData);
       const antes = await home.header.esperarDireccionEnStoreLocator();
@@ -642,7 +642,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       await capturarEvidencia(home.header.barraDelSitio, cp);
     });
 
-    test('TC-B2C26-M-010 · «Reintentar» vuelve a cargar los métodos de entrega [Logueado] (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C26-M-010 · «Reintentar» vuelve a cargar los métodos de entrega [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C26-M-010';
       const home = await iniciarSesion(page, testData);
       await home.header.esperarDireccionEnStoreLocator().catch(() => '');
@@ -658,7 +658,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       await modal.capturarModal(cp);
     });
 
-    test('TC-B2C26-M-011 · «Volver al inicio» cierra la pantalla de error y regresa al Home [Logueado] (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C26-M-011 · «Volver al inicio» cierra la pantalla de error y regresa al Home [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C26-M-011';
       const home = await iniciarSesion(page, testData);
       await home.irAUnaCategoria();
@@ -764,7 +764,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       await capturarEvidencia(page, cp);
     });
 
-    test('TC-B2C26-M-021 · Elegir una dirección guardada la setea sin PIN ni OTP y mantiene la página [Logueado] (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C26-M-021 · Elegir una dirección guardada la setea sin PIN ni OTP y mantiene la página [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C26-M-021';
       const home = await iniciarSesion(page, testData);
       await asegurarCasa(page, testData);
@@ -792,7 +792,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       await asegurarCasa(page, testData);
     });
 
-    test('TC-B2C26-M-022 · Error de API al cambiar de dirección muestra toast y mantiene la anterior [Logueado] (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C26-M-022 · Error de API al cambiar de dirección muestra toast y mantiene la anterior [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C26-M-022';
       await iniciarSesion(page, testData);
       await asegurarCasa(page, testData);
@@ -893,7 +893,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       await capturarEvidencia(page, cp);
     });
 
-    test('TC-B2C26-M-030 · El header del logueado sin dirección en sesión muestra la de su última compra [Logueado] (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C26-M-030 · El header del logueado sin dirección en sesión muestra la de su última compra [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C26-M-030';
       // Ventana nueva sin la sesión guardada: login por correo + OTP.
       const ordenes: string[] = [];
@@ -938,7 +938,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       await otra.context().close();
     });
 
-    test('TC-B2C26-M-035 · La dirección activa se mantiene en el header al navegar por el sitio [Logueado] (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C26-M-035 · La dirección activa se mantiene en el header al navegar por el sitio [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C26-M-035';
       await iniciarSesion(page, testData);
       const home = await new PaginaHabilitada(page).goto();
@@ -948,7 +948,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       await capturarEvidencia(page, cp);
     });
 
-    test('TC-B2C26-M-036 · Al reiniciar sesión se recupera la dirección de la última compra o la última seteada [Logueado] (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C26-M-036 · Al reiniciar sesión se recupera la dirección de la última compra o la última seteada [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C26-M-036';
       const home = await iniciarSesion(page, testData);
       const antes = await home.header.esperarDireccionEnStoreLocator();
@@ -970,7 +970,7 @@ test.describe('B2C-26 — Setear método de entrega con Despacho a domicilio', (
       await sinNumeroInvitado(page, testData, 'TC-B2C26-M-038');
     });
 
-    test('TC-B2C26-M-039 · Dirección sin numeración se guarda en el perfil con «S/N» [Logueado] (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C26-M-039 · Dirección sin numeración se guarda en el perfil con «S/N» [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       await sinNumeroLogueado(page, testData, 'TC-B2C26-M-039');
     });
 

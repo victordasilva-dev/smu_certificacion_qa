@@ -46,7 +46,7 @@ tests-app/          TC de app nativa (mobilewright)
 └── <SUITE>.spec.ts un test() por CP-ID y plataforma, con sufijo (iOS) / (Android)
 mobilewright.config.ts      Android (emulador o equipo local por ADB)
 mobilewright.ios.config.ts  iOS (simulador de una Mac con Xcode; se corre en la Mac)
-evidencias/         reporte de evidencia por HU — se commitea
+evidencias/         reporte de evidencia por HU — local, NO se commitea
 ├── <HU> Evidencias.md   uno por HU; cada corrida lo actualiza (no se edita a mano)
 └── <HU> Evidencias/     las capturas que el .md referencia
 .qa/

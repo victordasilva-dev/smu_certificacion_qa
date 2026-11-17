@@ -8,6 +8,8 @@ import { LoginModal } from './pages/LoginModal';
 import { MisFavoritosPage } from './pages/MisFavoritosPage';
 import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
 import { PaginaHabilitada } from './pages/PaginaHabilitada';
+import { aplicarEstado, estadoCompartido, invalidarEstado } from './support/estadoCompartido';
+import { baseUrl } from './support/testData';
 
 /**
  * B2C-31 — Página de detalle de producto (PDP).
@@ -70,10 +72,25 @@ async function pdpConSesion(
 async function pdpConDireccion(page: Page, testData: Parameters<typeof token>[0], sku: string, cp: string): Promise<PDPPage> {
   const direccion = tokenExigido(testData, 'DIRECCION_DESPACHO');
   const [, calle, numero] = direccion.match(/^(.*?)\s+(\d+)\s/) ?? [];
+  const fijar = async (p: Page) => {
+    const h = await new PaginaHabilitada(p).goto();
+    await h.header.storeLocator.click();
+    const modal = await new MetodoEntregaModal(p).esperarAbierto();
+    await modal.fijarDireccionComoInvitado(direccion, new RegExp(`${calle}\\s+${numero}`, 'i'));
+  };
+  // La dirección se fija UNA vez por corrida (estadoCompartido) y se reaplica a cada caso; si el
+  // header no la muestra (estado vencido o descartado por el sitio), se fija de nuevo aquí mismo.
+  const clave = `invitado-dir-${direccion}`;
+  const ruta = await estadoCompartido(page.context().browser()!, clave, fijar, {
+    contexto: { baseURL: baseUrl(testData), viewport: page.viewportSize() ?? undefined },
+  });
+  await aplicarEstado(page.context(), ruta);
   const home = await new PaginaHabilitada(page).goto();
-  await home.header.storeLocator.click();
-  const modal = await new MetodoEntregaModal(page).esperarAbierto();
-  await modal.fijarDireccionComoInvitado(direccion, new RegExp(`${calle}\\s+${numero}`, 'i'));
+  const conDireccion = await home.header.esperarDireccionEnStoreLocator(20000).then(() => true, () => false);
+  if (!conDireccion) {
+    invalidarEstado(clave);
+    await fijar(page);
+  }
   await home.capturarEvidencia(cp, 1, 'dirección de despacho activa', { elemento: home.header.barraDelSitio });
   const pdp = await new PDPPage(page).abrir(sku);
   await pdp.header.esperarDireccionEnStoreLocator(45000);
@@ -1018,6 +1035,45 @@ test.describe('B2C-31 — Pagina de detalle de producto', () => {
       expect(ficha.filter((t) => /promoci[oó]n|lleva \d|\d+ por \d/i.test(t)), 'precondición: el producto no tiene promo').toEqual([]);
       expect(ficha.filter((t) => /combina la promo/i.test(t)), 'no se muestra "Combina la promo"').toEqual([]);
       await pdp.capturarEvidencia(cp, 2, 'ficha sin Combina la promo', { elemento: pdp.core });
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-013 · Verificar que un producto de marketplace muestra "Vendido por" y el vendedor (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-013';
+      test.setTimeout(120000);
+      const sku = tokenExigido(testData, 'SKU_MARKETPLACE');
+
+      // Pasos 1 y 2 — PDP de {SKU_MARKETPLACE}.
+      const pdp = await new PDPPage(page).abrir(sku);
+      const vendido = /Vendido por[^\S\n]*([^\n]*)/i.exec(await pdp.core.innerText());
+      await pdp.capturarEvidencia(cp, 2, `ficha: ${vendido?.[0] ?? 'sin "Vendido por"'}`, { elemento: pdp.core });
+      expect(vendido, 'la PDP muestra "Vendido por"').toBeTruthy();
+      const vendedor = vendido![1].trim();
+      expect(vendedor, '"Vendido por" va seguido del nombre del tercero').not.toMatch(/^(|true|false|null|undefined)$/i);
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-049 · Verificar que un producto con "Completa la promo" no muestra el botón "Combina la promo" (Mobile)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C31-M-049';
+      test.setTimeout(180000);
+      const sku = tokenExigido(testData, 'SKU_PROM_NxM');
+
+      // Precondición — dirección de despacho activa; pasos 1 y 2 — PDP de {SKU_PROM_NxM}.
+      const pdp = await pdpConDireccion(page, testData, sku, cp);
+      const ficha = await pdp.textosDeLaFicha();
+      expect(ficha.filter((t) => /\d+\s*por\s*\d+|lleva \d/i.test(t)), 'precondición: el producto tiene una promo NxM').not.toEqual([]);
+      await pdp.capturarEvidencia(cp, 2, 'PDP con la promo NxM', { elemento: pdp.core });
+      expect.soft(ficha.filter((t) => /combina la promo/i.test(t)), 'no se muestra "Combina la promo"').toEqual([]);
+
+      // Pasos 3 y 4 — "Agregar" y "+": el stepper de la PDP suma las unidades.
+      await pdp.agregarVisible.click();
+      await expect(pdp.cantidadEnCarro).toHaveText(/^1\s*un\.?$/i, { timeout: 20000 });
+      await pdp.aumentarCantidad.click();
+      await expect(pdp.cantidadEnCarro, 'el stepper de la PDP suma la unidad').toHaveText(/^2\s*un\.?$/i, { timeout: 20000 });
+      await pdp.capturarEvidencia(cp, 4, 'stepper de la PDP con 2 unidades', { elemento: pdp.core });
       await pdp.capturarEvidencia(cp);
     });
 

@@ -284,7 +284,7 @@ test.describe('B2C-122 — Cambio de dirección con carro', () => {
         await home.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C122-${L}-011 · El modal también aparece al cambiar la tienda de retiro con carro [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C122-${L}-011 · El modal también aparece al cambiar la tienda de retiro con carro [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C122-${L}-011`;
         await iniciarSesion(page, testData);
         await asegurarCarroConSku(page, testData);

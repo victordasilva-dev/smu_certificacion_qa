@@ -1,76 +1,107 @@
 {
-  "flow": "app-floating-cart",
-  "last_updated": "2026-10-07T23:59:00Z",
-  "version": 1,
-  "description": "Floating Cart de la app Unimarc (componente 'Ir al carro' anclado sobre la TabBar). Objeto de la HU B2C-188.",
-  "source": {
-    "suite": "B2C-188 APP",
-    "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-188 APP Test Cases.xlsx",
-    "test_cases": [
-      "TC-B2C-188-APP-001"
-    ],
-    "last_sync": "2026-10-07T23:59:00Z"
-  },
-  "navigation": {
-    "entry": "cualquier pantalla con TabBar (Home, PLP, SRP, Mi cuenta); en la PDP la TabBar no se muestra (volver con BACK)"
-  },
-  "selectors": {
-    "preferred": [
-      {
-        "description": "Floating Cart",
-        "selector": "getByTestId('cart-open')",
-        "type": "testID",
-        "nota": "label: '<N> unidades, Te faltan $X para despacho GRATIS, Ir al carro'"
-      },
-      {
-        "description": "Agregar desde shelf",
-        "selector": "getByTestId('product-add-<sku>')",
-        "type": "testID"
-      },
-      {
-        "description": "Sumar unidad",
-        "selector": "getByTestId('product-increment-<sku>')",
-        "type": "testID"
-      },
-      {
-        "description": "Item del carro / cantidad",
-        "selector": "cart-item-<sku> / cart-quantity-<sku>",
-        "type": "testID"
-      },
-      {
-        "description": "Login",
-        "selector": "account-login → login-rut → login-submit → login-password → login-submit",
-        "type": "testID"
-      },
-      {
-        "description": "Cerrar sesión",
-        "selector": "texto 'Cerrar sesión' en Mi cuenta → account-sign-out-confirm",
-        "type": "testID"
-      }
-    ],
-    "fallback": [],
-    "deprecated": []
-  },
-  "network": {
-    "endpoints": [],
-    "intercepts_useful": []
-  },
-  "observations": [
-    "Android v1.0.7 (emulador Medium_Phone_API_36.1, 2026-10-07): el Floating Cart existe; con 1 unidad muestra '1 unidades, Te faltan $55.010 para despacho GRATIS, Ir al carro' (umbral 60.000 para cuenta normal).",
-    "{SKU_UNITARIO} 000000000400254005-UN sale 'Pronto disponible' + 'Ver similares' con {COMPRADOR_USER} (dirección Calle Uno 23, La Florida); con {COMPRADOR_MEMBRESIA_USER} (sin forma de entrega) sí se agrega. La disponibilidad depende de la tienda de la dirección.",
-    "{COMPRADOR_MEMBRESIA_USER} en la app es 'Socio Oro' con oferta 'Contrata tu membresía': NO tiene membresía activa; su Floating Cart muestra barra de progreso.",
-    "Invitado: 'Agregar' abre 'Elige tu método de entrega' (Despacho/Retiro) y pide dirección; sin dirección declarada no se arma carro.",
-    "Login: el campo login-rut puede traer un RUT recordado; mobilecli io text no escribe ahí: vaciar (MOVE_END + DEL) y escribir con adb input text. En el spec usar fill().",
-    "El emulador arrancado con '&' desde una shell en background quedó offline: lanzarlo con PowerShell Start-Process -no-snapshot-load. mobilecli lo identifica como 'Medium_Phone_API_36.1' (no 'emulator-5554'). Reinstalar el apk falló por INSUFFICIENT_STORAGE; quedó la instalación del 2026-10-06 (versionName 1.0).",
-    "Corrida 2026-10-07 (solo Android): APP-001 Aprobado; 23 Bloqueado Data (SKU sin stock para la cuenta, filas sin cuenta/dirección, cuentas Colaborador/Diamante en TBD, cuenta de membresía sin membresía). iOS Pendiente.",
-    "2026-10-14 (B2C-168): en v1.0.7 un invitado SIN dirección ya puede agregar desde la vitrina del Home ('En carro', Floating Cart '1 unidades'); antes 'Agregar' abría 'Elige tu método de entrega'.",
-    "2026-10-14: en 'Mi carro' de invitado el botón del pie (cart-checkout) queda en '…' (label 'busy', enabled=false) indefinidamente, con o sin dirección y sobre el mínimo; no ofrece 'Inicia sesión o regístrate' (bug B2C-1209). El 2026-10-09 mostraba 'Continuar con la entrega'."
+ "flow": "app-floating-cart",
+ "last_updated": "2026-11-16T19:00:00Z",
+ "version": 2,
+ "description": "Floating Cart de la app Unimarc (componente 'Ir al carro' anclado sobre la TabBar). Objeto de la HU B2C-188.",
+ "source": {
+  "suite": "B2C-188 APP",
+  "tc_file": "Casos de Prueba/Para Ejecutar/SP1/B2C-188 APP Test Cases.xlsx",
+  "test_cases": [
+   "TC-B2C-188-APP-001",
+   "TC-B2C-188-APP-002",
+   "TC-B2C-188-APP-003",
+   "TC-B2C-188-APP-004",
+   "TC-B2C-188-APP-005",
+   "TC-B2C-188-APP-006",
+   "TC-B2C-188-APP-007",
+   "TC-B2C-188-APP-008",
+   "TC-B2C-188-APP-009",
+   "TC-B2C-188-APP-010",
+   "TC-B2C-188-APP-011",
+   "TC-B2C-188-APP-012",
+   "TC-B2C-188-APP-013",
+   "TC-B2C-188-APP-014",
+   "TC-B2C-188-APP-015",
+   "TC-B2C-188-APP-016",
+   "TC-B2C-188-APP-017",
+   "TC-B2C-188-APP-018",
+   "TC-B2C-188-APP-019",
+   "TC-B2C-188-APP-020",
+   "TC-B2C-188-APP-021",
+   "TC-B2C-188-APP-022",
+   "TC-B2C-188-APP-023",
+   "TC-B2C-188-APP-024"
   ],
-  "page_objects": {
-    "exists": true,
-    "path": "tests-app/pages/TabBar.ts",
-    "class": "TabBar.floatingPill",
-    "nota": "ListadoScreen.abrirPrimerProducto() agregado; spec tests-app/B2C-188.spec.ts"
-  },
-  "history": []
+  "last_sync": "2026-10-07T23:59:00Z"
+ },
+ "navigation": {
+  "entry": "cualquier pantalla con TabBar (Home, PLP, SRP, Mi cuenta); en la PDP la TabBar no se muestra (volver con BACK)"
+ },
+ "selectors": {
+  "preferred": [
+   {
+    "description": "Floating Cart",
+    "selector": "getByTestId('cart-open')",
+    "type": "testID",
+    "nota": "label: '<N> unidades, Te faltan $X para despacho GRATIS, Ir al carro'"
+   },
+   {
+    "description": "Agregar desde shelf",
+    "selector": "getByTestId('product-add-<sku>')",
+    "type": "testID"
+   },
+   {
+    "description": "Sumar unidad",
+    "selector": "getByTestId('product-increment-<sku>')",
+    "type": "testID"
+   },
+   {
+    "description": "Item del carro / cantidad",
+    "selector": "cart-item-<sku> / cart-quantity-<sku>",
+    "type": "testID"
+   },
+   {
+    "description": "Login",
+    "selector": "account-login → login-rut → login-submit → login-password → login-submit",
+    "type": "testID"
+   },
+   {
+    "description": "Cerrar sesión",
+    "selector": "texto 'Cerrar sesión' en Mi cuenta → account-sign-out-confirm",
+    "type": "testID"
+   }
+  ],
+  "fallback": [],
+  "deprecated": []
+ },
+ "network": {
+  "endpoints": [],
+  "intercepts_useful": []
+ },
+ "observations": [
+  "Android v1.0.7 (emulador Medium_Phone_API_36.1, 2026-10-07): el Floating Cart existe; con 1 unidad muestra '1 unidades, Te faltan $55.010 para despacho GRATIS, Ir al carro' (umbral 60.000 para cuenta normal).",
+  "{SKU_UNITARIO} 000000000400254005-UN sale 'Pronto disponible' + 'Ver similares' con {COMPRADOR_USER} (dirección Calle Uno 23, La Florida); con {COMPRADOR_MEMBRESIA_USER} (sin forma de entrega) sí se agrega. La disponibilidad depende de la tienda de la dirección.",
+  "{COMPRADOR_MEMBRESIA_USER} en la app es 'Socio Oro' con oferta 'Contrata tu membresía': NO tiene membresía activa; su Floating Cart muestra barra de progreso.",
+  "Invitado: 'Agregar' abre 'Elige tu método de entrega' (Despacho/Retiro) y pide dirección; sin dirección declarada no se arma carro.",
+  "Login: el campo login-rut puede traer un RUT recordado; mobilecli io text no escribe ahí: vaciar (MOVE_END + DEL) y escribir con adb input text. En el spec usar fill().",
+  "El emulador arrancado con '&' desde una shell en background quedó offline: lanzarlo con PowerShell Start-Process -no-snapshot-load. mobilecli lo identifica como 'Medium_Phone_API_36.1' (no 'emulator-5554'). Reinstalar el apk falló por INSUFFICIENT_STORAGE; quedó la instalación del 2026-10-06 (versionName 1.0).",
+  "Corrida 2026-10-07 (solo Android): APP-001 Aprobado; 23 Bloqueado Data (SKU sin stock para la cuenta, filas sin cuenta/dirección, cuentas Colaborador/Diamante en TBD, cuenta de membresía sin membresía). iOS Pendiente.",
+  "2026-10-14 (B2C-168): en v1.0.7 un invitado SIN dirección ya puede agregar desde la vitrina del Home ('En carro', Floating Cart '1 unidades'); antes 'Agregar' abría 'Elige tu método de entrega'.",
+  "2026-10-14: en 'Mi carro' de invitado el botón del pie (cart-checkout) queda en '…' (label 'busy', enabled=false) indefinidamente, con o sin dirección y sobre el mínimo; no ofrece 'Inicia sesión o regístrate' (bug B2C-1209). El 2026-10-09 mostraba 'Continuar con la entrega'.",
+  "CORRIDA 2026-11-16 (Android, Pixel 4 API 33, v1.0 instalada hoy): 002/015/018/019/023 Aprobado; 003 Rechazado (B2C-1497, PDP sin TabBar); 010/011/012/016 Rechazado (B2C-1498, no hay barra de progreso); 020 Bloqueado; resto Bloqueado Data. iOS Pendiente.",
+  "LABEL del Floating Cart (cart-open): '<N> unidades, Te faltan $X para despacho GRATIS, Ir al carro' o '<N> unidades, ¡Ya tienes despacho GRATIS!, Ir al carro'. NO hay barra de progreso: medido en pixeles, el componente es identico con 7%, 53% y 93% (solo cambia el texto).",
+  "Toast al alcanzar el umbral: texto '¡Despacho GRATIS!' con icono (alcancia), visible ~3 s, aparece en el arbol de accesibilidad.",
+  "En la PDP el Floating Cart se ve pero la TabBar no (y=2030 en Pixel 4). En el carro y en el checkout ('Datos de entrega') no se muestra.",
+  "Tarjeta SRP con el SKU en carro: 'Quitar del carro' con 1 un.; 'Quitar una unidad' con >1; 'product-increment-<sku>' para sumar.",
+  "Invitado SIN direccion (v1.0, 2026-11-16): 'Agregar' en PDP y en la vitrina del Home abre 'Elige tu metodo de entrega' -> no arma carro (el 2026-10-14 en v1.0.7 si dejaba).",
+  "CUENTAS (2026-11-16): {COMPRADOR_USER}=vhchirinos+comprador (Calle Uno 23, La Florida; umbral 60.000); {COMPRADOR_COLABORADOR_USER}=vhchirinos+empleado NO existe en DEV (abre 'Crear cuenta'); {COMPRADOR_DIAMANTE_USER}=vhchirinos+diamante figura 'Socio Oro' y aplica 60.000; {COMPRADOR_MEMBRESIA_USER}=vhchirinos+noaddress sin direccion, no arma carro.",
+  "OTP: sesion() de support/sesionOtp.ts con saludo /Hola, / reutiliza CUALQUIER sesion abierta: para cambiar de cuenta pasar un saludo que no calce (/(?!)/). El spec espera el codigo 5 min: responder el pedido apenas aparece."
+ ],
+ "page_objects": {
+  "exists": true,
+  "path": "tests-app/pages/TabBar.ts",
+  "class": "TabBar.floatingPill",
+  "nota": "ListadoScreen.abrirPrimerProducto() agregado; spec tests-app/B2C-188.spec.ts"
+ },
+ "history": []
 }

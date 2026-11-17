@@ -178,7 +178,7 @@ test.describe('B2C-37 — Página del carro', () => {
       /** El CP-ID de este form-factor: la numeración Mobile no siempre coincide con la Desktop. */
       const id = (d: string, m = d) => `TC-B2C37-${L}-${movil ? m : d}`;
 
-      test(`${id('001')} · El carrito muestra el layout con ítems disponibles sin Unipay [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('001')} · El carrito muestra el layout con ítems disponibles sin Unipay [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('001');
         await iniciarSesion(page, testData);
         const carro = await dejarCarro(page, testData, [['SKU_VALID_001', 1]]);
@@ -201,7 +201,7 @@ test.describe('B2C-37 — Página del carro', () => {
       });
 
       if (movil) {
-        test(`TC-B2C37-M-003 · El menú ⋯ muestra «Guardar como lista» y «Vaciar carro» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C37-M-003 · El menú ⋯ muestra «Guardar como lista» y «Vaciar carro» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = 'TC-B2C37-M-003';
           await iniciarSesion(page, testData);
           const carro = await dejarCarro(page, testData, [['SKU_VALID_001', 1]]);
@@ -217,7 +217,7 @@ test.describe('B2C-37 — Página del carro', () => {
         });
       }
 
-      test(`${id('004', '006')} · «Guardar como lista» inicia el flujo de guardado de lista [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('004', '006')} · «Guardar como lista» inicia el flujo de guardado de lista [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('004', '006');
         await iniciarSesion(page, testData);
         const carro = await dejarCarro(page, testData, [['SKU_VALID_001', 1]]);
@@ -232,7 +232,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await carro.capturarEvidencia(cp, undefined, undefined, { elemento: op.dialogoGuardarLista });
       });
 
-      test(`${id('005')} · «Continuar con la entrega» avanza al paso Datos de entrega [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('005')} · «Continuar con la entrega» avanza al paso Datos de entrega [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('005');
         await iniciarSesion(page, testData);
         const carro = await dejarCarro(page, testData, [['SKU_VALID_001', Number(declarado(testData, 'UNIDADES_SOBRE_MINIMO'))]]);
@@ -244,7 +244,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('013', '014')} · Cada ítem disponible muestra imagen, nombre, precios, cantidad y controles [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('013', '014')} · Cada ítem disponible muestra imagen, nombre, precios, cantidad y controles [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('013', '014');
         await iniciarSesion(page, testData);
         const nombre = await nombreDe(page, testData, 'SKU_VALID_001');
@@ -261,7 +261,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('014', '015')} · Los ítems disponibles se ordenan del agregado más reciente al más antiguo [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('014', '015')} · Los ítems disponibles se ordenan del agregado más reciente al más antiguo [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('014', '015');
         await iniciarSesion(page, testData);
         const esperado = [
@@ -276,7 +276,7 @@ test.describe('B2C-37 — Página del carro', () => {
         expect(orden, 'del más reciente al más antiguo').toEqual(esperado);
       });
 
-      test(`${id('019')} · «Vaciar carro» abre el modal de confirmación con su contenido [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('019')} · «Vaciar carro» abre el modal de confirmación con su contenido [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('019');
         await iniciarSesion(page, testData);
         const carro = await dejarCarro(page, testData, [['SKU_VALID_001', 1], ['SKU_UNITARIO', 1]]);
@@ -298,7 +298,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await op.botonNoGracias.click();
       });
 
-      test(`${id('020')} · El modal muestra el estado de carga al confirmar el vaciado [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('020')} · El modal muestra el estado de carga al confirmar el vaciado [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('020');
         await iniciarSesion(page, testData);
         const carro = await dejarCarro(page, testData, [['SKU_VALID_001', 1], ['SKU_UNITARIO', 1]]);
@@ -324,7 +324,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await op.tituloVacio.waitFor({ state: 'visible', timeout: 60000 }).catch(() => {});
       });
 
-      test(`${id('021')} · «Sí, eliminar» vacía el carro y muestra el estado de carro vacío [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('021')} · «Sí, eliminar» vacía el carro y muestra el estado de carro vacío [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('021');
         await iniciarSesion(page, testData);
         const carro = await dejarCarro(page, testData, [['SKU_VALID_001', 1], ['SKU_UNITARIO', 1]]);
@@ -338,7 +338,7 @@ test.describe('B2C-37 — Página del carro', () => {
       });
 
       for (const [d, cierre] of [['022', 'No, gracias'], ['023', 'X']] as const) {
-        test(`${id(d)} · ${cierre === 'X' ? 'La «X»' : '«No, gracias»'} cierra el modal sin cambios en el carro [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`${id(d)} · ${cierre === 'X' ? 'La «X»' : '«No, gracias»'} cierra el modal sin cambios en el carro [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = id(d);
           await iniciarSesion(page, testData);
           const carro = await dejarCarro(page, testData, [['SKU_VALID_001', 1], ['SKU_UNITARIO', 1]]);
@@ -372,7 +372,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await new PaginaHabilitada(page).capturarEvidencia(cp);
       });
 
-      test(`${id('034')} · Bajo el mínimo se muestra el faltante y el CTA queda deshabilitado [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('034')} · Bajo el mínimo se muestra el faltante y el CTA queda deshabilitado [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('034');
         const minimo = Number(declarado(testData, 'MONTO_MINIMO_COMPRA'));
         await iniciarSesion(page, testData);
@@ -386,7 +386,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await expect(op.cta, 'label «Mínimo de compra $Y»').toHaveText(new RegExp(`m[íi]nimo de compra \\$${minimo.toLocaleString('es-CL').replace('.', '\\.')}`, 'i'));
       });
 
-      test(`${id('035')} · El faltante del toast se actualiza al cambiar la cantidad [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('035')} · El faltante del toast se actualiza al cambiar la cantidad [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('035');
         const minimo = Number(declarado(testData, 'MONTO_MINIMO_COMPRA'));
         await iniciarSesion(page, testData);
@@ -404,7 +404,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await expect.poll(() => op.faltante(), { message: `faltante = ${minimo} − ${subtotal}`, timeout: 15000 }).toBe(minimo - subtotal);
       });
 
-      test(`${id('036')} · La X cierra el toast de monto mínimo [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('036')} · La X cierra el toast de monto mínimo [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('036');
         await iniciarSesion(page, testData);
         const carro = await dejarCarro(page, testData, [['SKU_VALID_001', 1]]);
@@ -416,7 +416,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('038')} · Al alcanzar el mínimo se oculta el toast y se habilita el CTA [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('038')} · Al alcanzar el mínimo se oculta el toast y se habilita el CTA [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('038');
         const meta = Number(declarado(testData, 'UNIDADES_SOBRE_MINIMO'));
         await iniciarSesion(page, testData);
@@ -435,7 +435,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await expect(op.toastMinimo, 'el toast desaparece').toBeHidden({ timeout: 15000 });
       });
 
-      test(`${id('040')} · «Lo quiero» abre el flujo de contratación de membresía [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('040')} · «Lo quiero» abre el flujo de contratación de membresía [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('040');
         await iniciarSesion(page, testData, 'COMPRADOR_SIN_MEMBRESIA_USER');
         const carro = await dejarCarro(page, testData, [['SKU_VALID_001', 1]]);
@@ -450,7 +450,7 @@ test.describe('B2C-37 — Página del carro', () => {
       });
 
       for (const [d, cta] of [['041', null], ['042', 'Renovar']] as const) {
-        test(`${id(d)} · ${cta ? '«Renovar» abre el flujo de renovación de membresía' : 'El carrito muestra el banner de renovación para membresía expirada'} [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`${id(d)} · ${cta ? '«Renovar» abre el flujo de renovación de membresía' : 'El carrito muestra el banner de renovación para membresía expirada'} [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = id(d);
           await iniciarSesion(page, testData, 'COMPRADOR_MEMBRESIA_EXPIRADA_USER');
           const items: [string, number][] = [['SKU_VALID_001', 1]];
@@ -477,7 +477,7 @@ test.describe('B2C-37 — Página del carro', () => {
       }
 
       for (const d of ['044', '045'] as const) {
-        test(`${id(d)} · ${d === '044' ? 'Se muestra el skeleton de carga mientras se procesa' : 'El skeleton se reemplaza por el contenido sin parpadeo'} [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`${id(d)} · ${d === '044' ? 'Se muestra el skeleton de carga mientras se procesa' : 'El skeleton se reemplaza por el contenido sin parpadeo'} [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = id(d);
           await iniciarSesion(page, testData);
           const nombre = await nombreDe(page, testData, 'SKU_VALID_001');
@@ -502,7 +502,7 @@ test.describe('B2C-37 — Página del carro', () => {
         });
       }
 
-      test(`${id('037')} · Con Retiro y sobre el mínimo se habilita «Continuar con la entrega» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('037')} · Con Retiro y sobre el mínimo se habilita «Continuar con la entrega» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('037');
         await iniciarSesion(page, testData);
         try {
@@ -550,7 +550,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await expect(op.bannerMembresia, 'sin banner de membresía').toBeHidden();
       });
 
-      test(`${id('003', '002')} · La tarjeta de totales muestra «Subtotal con Unipay» con descuento Unipay [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('003', '002')} · La tarjeta de totales muestra «Subtotal con Unipay» con descuento Unipay [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('003', '002');
         await iniciarSesion(page, testData);
         const carro = await dejarCarro(page, testData, [['SKU_UNIPAY_001', 1]]);
@@ -564,7 +564,7 @@ test.describe('B2C-37 — Página del carro', () => {
         expect(unipay, '«Subtotal con Unipay» menor al «Subtotal»').toBeLessThan(subtotal);
       });
 
-      test(`${id('024')} · El carrito muestra el toast de restricción de alcohol [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('024')} · El carrito muestra el toast de restricción de alcohol [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('024');
         await iniciarSesion(page, testData);
         const nombre = await nombreDe(page, testData, 'SKU_ALCOHOL');
@@ -578,7 +578,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await expect(page.getByRole('button', { name: `Sumar ${nombre}` }), '{SKU_ALCOHOL} sigue en el carrito').toBeVisible();
       });
 
-      test(`${id('025')} · La «X» cierra el toast de restricción de alcohol [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('025')} · La «X» cierra el toast de restricción de alcohol [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('025');
         await iniciarSesion(page, testData);
         const nombre = await nombreDe(page, testData, 'SKU_ALCOHOL');
@@ -593,7 +593,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await expect(page.getByRole('button', { name: `Sumar ${nombre}` }), '{SKU_ALCOHOL} sigue en el carrito').toBeVisible();
       });
 
-      test(`${id('026')} · El toast de restricción de alcohol desaparece a los 4 segundos [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('026')} · El toast de restricción de alcohol desaparece a los 4 segundos [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('026');
         await iniciarSesion(page, testData);
         await dejarCarro(page, testData, [['SKU_ALCOHOL', 1]]);
@@ -612,7 +612,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('029')} · El carrito muestra el estado de error CRT-020 sin ítems parciales [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('029')} · El carrito muestra el estado de error CRT-020 sin ítems parciales [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('029');
         await iniciarSesion(page, testData);
         await dejarCarro(page, testData, [['SKU_VALID_001', 1]]);
@@ -630,7 +630,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await expect(op.lineaSubtotal, 'sin totales del carro').toBeHidden();
       });
 
-      test(`${id('030')} · «Volver al inicio» del error de carga navega al Home [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('030')} · «Volver al inicio» del error de carga navega al Home [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('030');
         await iniciarSesion(page, testData);
         await dejarCarro(page, testData, [['SKU_VALID_001', 1]]);
@@ -645,7 +645,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await new PaginaHabilitada(page).capturarEvidencia(cp);
       });
 
-      test(`${id('031')} · «Reintentar» vuelve a cargar el contenido del carrito [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('031')} · «Reintentar» vuelve a cargar el contenido del carrito [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('031');
         await iniciarSesion(page, testData);
         const nombre = await nombreDe(page, testData, 'SKU_VALID_001');
@@ -661,7 +661,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('046')} · El skeleton se reemplaza por el estado de error si la carga falla [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('046')} · El skeleton se reemplaza por el estado de error si la carga falla [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('046');
         await iniciarSesion(page, testData);
         await dejarCarro(page, testData, [['SKU_VALID_001', 1]]);
@@ -682,7 +682,7 @@ test.describe('B2C-37 — Página del carro', () => {
         await carro.capturarEvidencia(cp);
       });
 
-      test(`${id('039')} · El carrito muestra el banner de membresía para cliente sin membresía previa [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`${id('039')} · El carrito muestra el banner de membresía para cliente sin membresía previa [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = id('039');
         await iniciarSesion(page, testData, 'COMPRADOR_SIN_MEMBRESIA_USER');
         const carro = await dejarCarro(page, testData, [['SKU_VALID_001', 1], ['SKU_OFERTA_MEMBRESIA', 1]]);
@@ -699,7 +699,7 @@ test.describe('B2C-37 — Página del carro', () => {
       });
 
       if (movil) {
-        test(`TC-B2C37-M-047 · La tarjeta de totales queda fija al hacer scroll en la lista de productos [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C37-M-047 · La tarjeta de totales queda fija al hacer scroll en la lista de productos [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = 'TC-B2C37-M-047';
           await iniciarSesion(page, testData);
           const skus = declarado(testData, 'SKUS_CARRUSEL').split(',').map((s) => s.trim()).filter(Boolean);
@@ -734,7 +734,7 @@ test.describe('B2C-37 — Página del carro', () => {
       for (const cpNd of movil
         ? ['007', '008', '010', '011', '012', '013', '016', '017', '018']
         : ['006', '007', '009', '010', '011', '012', '015', '016', '017', '018']) {
-        test(`TC-B2C37-${L}-${cpNd} · Precondición: {SKU_NO_DISPONIBLE} en el carro [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C37-${L}-${cpNd} · Precondición: {SKU_NO_DISPONIBLE} en el carro [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = `TC-B2C37-${L}-${cpNd}`;
           await iniciarSesion(page, testData);
           const pdp = await new PDPPage(page).abrir(declarado(testData, 'SKU_NO_DISPONIBLE'));
@@ -750,7 +750,7 @@ test.describe('B2C-37 — Página del carro', () => {
       }
 
       for (const n of ['032', '033']) {
-        test(`${id(n)} · ${n === '032' ? 'El error al vaciar muestra el toast CRT-076 y conserva los ítems' : 'El toast de error CRT-076 permanece hasta cerrarlo con la X'} [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`${id(n)} · ${n === '032' ? 'El error al vaciar muestra el toast CRT-076 y conserva los ítems' : 'El toast de error CRT-076 permanece hasta cerrarlo con la X'} [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = id(n);
           await iniciarSesion(page, testData);
           const carro = await dejarCarro(page, testData, [['SKU_VALID_001', 1], ['SKU_UNITARIO', 1]]);

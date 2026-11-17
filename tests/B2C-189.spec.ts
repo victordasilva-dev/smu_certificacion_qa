@@ -227,7 +227,7 @@ test.describe('B2C-189 — Mis Envíos: cambiar dirección o tienda desde la tar
       ] as const) {
         const tab = (m: MetodoEntregaModal) => (metodo === 'despacho' ? m.tabDespachoDomicilio : m.tabRetiroEnTienda);
 
-        test(`TC-B2C189-${L}-${nAbrir} · El ícono de la tarjeta de ${cosa} abre el Store Locator de ${metodo} [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C189-${L}-${nAbrir} · El ícono de la tarjeta de ${cosa} abre el Store Locator de ${metodo} [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = `TC-B2C189-${L}-${nAbrir}`;
           const entrega = await hastaMisEnvios(page, testData, cp, metodo);
           const antes = await estado(entrega);
@@ -241,7 +241,7 @@ test.describe('B2C-189 — Mis Envíos: cambiar dirección o tienda desde la tar
           await modal.capturarModal(cp, undefined, undefined, page);
         });
 
-        test(`TC-B2C189-${L}-${nCancelar} · Al cancelar el Store Locator Mis Envíos mantiene la ${cosa} y la ventana [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C189-${L}-${nCancelar} · Al cancelar el Store Locator Mis Envíos mantiene la ${cosa} y la ventana [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = `TC-B2C189-${L}-${nCancelar}`;
           const entrega = await hastaMisEnvios(page, testData, cp, metodo);
           const antes = await estado(entrega);
@@ -257,7 +257,7 @@ test.describe('B2C-189 — Mis Envíos: cambiar dirección o tienda desde la tar
           await entrega.capturarEvidencia(cp);
         });
 
-        test(`TC-B2C189-${L}-${nCambiar} · Una nueva ${cosa} con todo disponible actualiza la tarjeta y las ventanas [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C189-${L}-${nCambiar} · Una nueva ${cosa} con todo disponible actualiza la tarjeta y las ventanas [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = `TC-B2C189-${L}-${nCambiar}`;
           const entrega = await hastaMisEnvios(page, testData, cp, metodo);
 
@@ -306,7 +306,7 @@ test.describe('B2C-189 — Mis Envíos: cambiar dirección o tienda desde la tar
   test.describe('Desktop 1440x900 · interacción parcial con el Store Locator', () => {
     test.use(DESKTOP);
 
-    test('TC-B2C189-D-016 · Mis Envíos mantiene su estado mientras el Store Locator completa parcialmente el flujo sin confirmar [Logueado] (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C189-D-016 · Mis Envíos mantiene su estado mientras el Store Locator completa parcialmente el flujo sin confirmar [Logueado] (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C189-D-016';
       const entrega = await hastaMisEnvios(page, testData, cp, 'despacho');
       const antes = await estado(entrega);
@@ -335,7 +335,7 @@ test.describe('B2C-189 — Mis Envíos: cambiar dirección o tienda desde la tar
       test.use(vp);
 
       for (const n of ['007', '008'] as const) {
-        test(`TC-B2C189-${L}-${n} · Cambio a otra dirección activa el flujo de productos no disponibles [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C189-${L}-${n} · Cambio a otra dirección activa el flujo de productos no disponibles [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = `TC-B2C189-${L}-${n}`;
           const skuPdp = await new PDPPage(page).abrir(token(testData, 'SKU_STOCK_SOLO_TIENDA_A')!);
           const nombreSku = (await skuPdp.nombreDelProducto.innerText()).trim().toLowerCase();
@@ -360,7 +360,7 @@ test.describe('B2C-189 — Mis Envíos: cambiar dirección o tienda desde la tar
       }
 
       for (const n of ['012', '013', '014'] as const) {
-        test(`TC-B2C189-${L}-${n} · Flujo Sin horarios disponibles y sus acciones [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C189-${L}-${n} · Flujo Sin horarios disponibles y sus acciones [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = `TC-B2C189-${L}-${n}`;
           const entrega = await hastaMisEnvios(page, testData, cp, 'despacho');
           await entrega.capturarEvidencia(cp, 4, 'Mis Envíos antes del cambio');
@@ -384,7 +384,7 @@ test.describe('B2C-189 — Mis Envíos: cambiar dirección o tienda desde la tar
         });
       }
 
-      test(`TC-B2C189-${L}-015 · Dirección de la misma tienda actualiza Mis Envíos sin validar productos [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C189-${L}-015 · Dirección de la misma tienda actualiza Mis Envíos sin validar productos [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C189-${L}-015`;
         const entrega = await hastaMisEnvios(page, testData, cp, 'despacho', true);
         const antes = await estado(entrega);
@@ -406,7 +406,7 @@ test.describe('B2C-189 — Mis Envíos: cambiar dirección o tienda desde la tar
     test.describe(`${ff} · retiro con productos no disponibles`, () => {
       test.use(vp);
 
-      test(`TC-B2C189-${L}-018 · Cambio a otra tienda de retiro activa el flujo de productos no disponibles [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C189-${L}-018 · Cambio a otra tienda de retiro activa el flujo de productos no disponibles [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         const cp = `TC-B2C189-${L}-018`;
         const entrega = await hastaMisEnvios(page, testData, cp, 'retiro', true);
         await entrega.capturarEvidencia(cp, 4, 'Mis Envíos antes del cambio de tienda');
@@ -423,7 +423,7 @@ test.describe('B2C-189 — Mis Envíos: cambiar dirección o tienda desde la tar
   test.describe('Mobile 390x844 · interacción parcial con el Store Locator', () => {
     test.use(MOBILE);
 
-    test('TC-B2C189-M-016 · Mis Envíos mantiene su estado mientras el Store Locator completa parcialmente el flujo sin confirmar [Logueado] (Mobile)', async ({ page, testData }) => {
+    test('TC-B2C189-M-016 · Mis Envíos mantiene su estado mientras el Store Locator completa parcialmente el flujo sin confirmar [Logueado] (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C189-M-016';
       const entrega = await hastaMisEnvios(page, testData, cp, 'despacho');
       const antes = await estado(entrega);

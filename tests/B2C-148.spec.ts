@@ -178,7 +178,7 @@ test.describe('B2C-148 — Datos de entrega: cambio de fecha y horario', () => {
       // Despacho primero y retiro después: cambiar de método con sesión pide un OTP.
       for (const [metodo, nFecha, nHorario] of [['despacho', '001', '002'], ['retiro', '004', '005']] as const) {
         const n = nFecha;
-        test(`TC-B2C148-${L}-${n} · En ${metodo} cambiar solo la fecha refresca los horarios sin confirmar la ventana [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C148-${L}-${n} · En ${metodo} cambiar solo la fecha refresca los horarios sin confirmar la ventana [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = `TC-B2C148-${L}-${n}`;
           const { entrega } = await hastaDatosDeEntrega(page, testData, cp, metodo);
           const fechaAntes = ((await entrega.fechaResumen(metodo).textContent()) ?? '').trim();
@@ -200,7 +200,7 @@ test.describe('B2C-148 — Datos de entrega: cambio de fecha y horario', () => {
           await entrega.capturarEvidencia(cp);
         });
 
-        test(`TC-B2C148-${L}-${nHorario} · En ${metodo} elegir otro horario lo guarda y muestra el toast de confirmación [Logueado] (${sufijo})`, async ({ page, testData }) => {
+        test(`TC-B2C148-${L}-${nHorario} · En ${metodo} elegir otro horario lo guarda y muestra el toast de confirmación [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
           const cp = `TC-B2C148-${L}-${nHorario}`;
           const { entrega, subtotalCarro } = await hastaDatosDeEntrega(page, testData, cp, metodo);
 

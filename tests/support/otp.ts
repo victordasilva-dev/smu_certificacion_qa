@@ -54,6 +54,14 @@ export async function esperarOtp(correo: string, desde: Date, opciones: Opciones
 
   const timeout = opciones.timeout ?? ESPERA_MS;
   const info = test.info();
+  if (process.env.QA_EN_CI === '1' && process.env.QA_CI_OTP !== 'true') {
+    // Red de seguridad del pipeline: un caso que llega aquí sin `@otp` (lo pide solo a veces, o
+    // nadie lo etiquetó) no se queda 3 min esperando un código que nadie va a responder.
+    test.skip(true, 'Pide un OTP por correo y en CI nadie lo responde (etiquétalo con @otp).');
+  }
+  if (!info.tags.includes('@otp')) {
+    console.warn(`[otp] ${info.title} pide OTP y no lleva { tag: '@otp' }.`);
+  }
   info.setTimeout(info.timeout + timeout);
 
   const cpId = info.title.split(' ')[0];

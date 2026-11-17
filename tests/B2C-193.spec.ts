@@ -118,7 +118,7 @@ test.describe.configure({ timeout: 420000 });
 test.describe('B2C-193 — Error al cargar el Checkout', () => {
   for (const [tipo, vp, ff] of [['D', DESKTOP, 'Desktop'], ['M', MOBILE, 'Mobile']] as const) {
     const movil = tipo === 'M';
-    test.describe(ff, () => {
+    test.describe(ff, { tag: '@otp' }, () => {
       test.use(vp);
       const id = (n: string) => `TC-B2C193-${tipo}-${n}`;
       const preparar = async (page: Page, td: TD, cuenta: string) => {

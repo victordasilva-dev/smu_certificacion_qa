@@ -166,7 +166,7 @@ test.describe('B2C-53 — Minicarro', () => {
   }
 
   // --- Casos que dependían de tokens que la data ya declara (D-024, 028, 030) ---------------------
-  test('TC-B2C53-D-024 · Un producto con promo «Combina/Completa» muestra el mensaje en el minicarro [Logueado] (Desktop)', async ({ page, testData }) => {
+  test('TC-B2C53-D-024 · Un producto con promo «Combina/Completa» muestra el mensaje en el minicarro [Logueado] (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
     const cp = 'TC-B2C53-D-024';
     await iniciarSesion(page, testData);
     await (await new CarroPage(page).goto()).vaciar();
@@ -196,7 +196,7 @@ test.describe('B2C-53 — Minicarro', () => {
     await expect(mc.cantidadDe(nombre), 'la cantidad permanece en el límite').toHaveText(`${limite} un.`);
   });
 
-  test('TC-B2C53-D-030 · El total del minicarro no incluye el precio de los productos no disponibles [Logueado] (Desktop)', async ({ page, testData }) => {
+  test('TC-B2C53-D-030 · El total del minicarro no incluye el precio de los productos no disponibles [Logueado] (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
     const cp = 'TC-B2C53-D-030';
     const precio = Number(declarado(testData, 'PRECIO_SKU_VALID_001'));
     await iniciarSesion(page, testData);

@@ -327,7 +327,7 @@ test.describe('B2C-70 — Store Locator del header', () => {
     });
   });
 
-  test.describe('Mobile 390x844 · cuenta con sesión', () => {
+  test.describe('Mobile 390x844 · cuenta con sesión', { tag: '@otp' }, () => {
     test.use(MOBILE);
     test.describe.configure({ timeout: 480000 });
 
@@ -418,7 +418,7 @@ test.describe('B2C-70 — Store Locator del header', () => {
     });
   });
 
-  test.describe('Desktop 1440x900 y Mobile 390x844 · cuenta con sesión', () => {
+  test.describe('Desktop 1440x900 y Mobile 390x844 · cuenta con sesión', { tag: '@otp' }, () => {
     test.use(DESKTOP);
     test.describe.configure({ timeout: 480000 });
 

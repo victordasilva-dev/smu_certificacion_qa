@@ -151,7 +151,7 @@ test.describe('B2C-190 — ¿Recibe alguien más?', () => {
     test.describe(ff, () => {
       test.use(vp);
 
-      test(`TC-B2C190-${L}-001 · Con despacho sin tercero se muestra la opción «¿Recibe alguien más?» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C190-${L}-001 · Con despacho sin tercero se muestra la opción «¿Recibe alguien más?» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         test.setTimeout(300000);
         const cp = `TC-B2C190-${L}-001`;
         const entrega = await irADatosDeEntrega(page, testData, cp);
@@ -164,7 +164,7 @@ test.describe('B2C-190 — ¿Recibe alguien más?', () => {
         await entrega.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C190-${L}-003 · El modal «¿Recibe alguien más?» muestra todos sus elementos [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C190-${L}-003 · El modal «¿Recibe alguien más?» muestra todos sus elementos [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         test.setTimeout(300000);
         const cp = `TC-B2C190-${L}-003`;
         const entrega = await irADatosDeEntrega(page, testData, cp);
@@ -186,35 +186,35 @@ test.describe('B2C-190 — ¿Recibe alguien más?', () => {
         await entrega.capturarEvidencia(cp);
       });
 
-      test(`TC-B2C190-${L}-012 · Un RUT con dígito verificador inválido muestra «Ingrese un valor válido» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C190-${L}-012 · Un RUT con dígito verificador inválido muestra «Ingrese un valor válido» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         await casoValidacion(page, testData, `TC-B2C190-${L}-012`, 'rut', declarado(testData, 'RUT_DV_INVALIDO'));
       });
 
-      test(`TC-B2C190-${L}-013 · Un RUT sin puntos ni guion muestra «Ingrese un valor válido» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C190-${L}-013 · Un RUT sin puntos ni guion muestra «Ingrese un valor válido» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         await casoValidacion(page, testData, `TC-B2C190-${L}-013`, 'rut', declarado(testData, 'RUT_SIN_FORMATO'));
       });
 
-      test(`TC-B2C190-${L}-014 · Un campo obligatorio vacío muestra «Ingrese un valor válido» al salir [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C190-${L}-014 · Un campo obligatorio vacío muestra «Ingrese un valor válido» al salir [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         await casoValidacion(page, testData, `TC-B2C190-${L}-014`, 'nombre', null);
       });
 
-      test(`TC-B2C190-${L}-015 · Un nombre con números o símbolos muestra «Ingrese un valor válido» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C190-${L}-015 · Un nombre con números o símbolos muestra «Ingrese un valor válido» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         await casoValidacion(page, testData, `TC-B2C190-${L}-015`, 'nombre', declarado(testData, 'NOMBRE_CON_NUMEROS'));
       });
 
-      test(`TC-B2C190-${L}-016 · Un nombre de más de 30 caracteres muestra «Ingrese un valor válido» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C190-${L}-016 · Un nombre de más de 30 caracteres muestra «Ingrese un valor válido» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         await casoValidacion(page, testData, `TC-B2C190-${L}-016`, 'nombre', declarado(testData, 'NOMBRE_31_CARACTERES'));
       });
 
-      test(`TC-B2C190-${L}-017 · Un teléfono sin 9 dígitos muestra «Ingrese un valor válido» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C190-${L}-017 · Un teléfono sin 9 dígitos muestra «Ingrese un valor válido» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         await casoValidacion(page, testData, `TC-B2C190-${L}-017`, 'telefono', declarado(testData, 'TELEFONO_CORTO'));
       });
 
-      test(`TC-B2C190-${L}-021 · Dejar Teléfono vacío muestra «Ingrese un valor válido» al salir [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C190-${L}-021 · Dejar Teléfono vacío muestra «Ingrese un valor válido» al salir [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         await casoValidacion(page, testData, `TC-B2C190-${L}-021`, 'telefono', null);
       });
 
-      test(`TC-B2C190-${L}-002 · Con retiro en tienda sin tercero se muestra la opción «¿Recibe alguien más?» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C190-${L}-002 · Con retiro en tienda sin tercero se muestra la opción «¿Recibe alguien más?» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         test.setTimeout(480000);
         const cp = `TC-B2C190-${L}-002`;
         await iniciarSesion(page, testData);

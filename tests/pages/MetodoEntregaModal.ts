@@ -1,4 +1,4 @@
-import { Locator, Page, Request, Response } from '@playwright/test';
+import { Locator, Page, Request, Response, expect } from '@playwright/test';
 import { capturarEvidencia } from '../support/evidencia';
 
 /**
@@ -358,9 +358,20 @@ export class MetodoEntregaModal {
    * Deja una dirección de despacho aplicada como invitado, de punta a punta: sugerencia de Google,
    * B2C-99 ("Continuar con detalles" y "Agregar dirección") y espera a que el header la muestre.
    */
+  /**
+   * Desde el 2026-11-16 el sitio puede saltarse el paso del pin ("Continuar con detalles de la
+   * dirección") y abrir directo "Detalles de la dirección" con "Agregar dirección": el botón es opcional.
+   */
+  private async continuarADetalles(): Promise<void> {
+    const continuar = this.confirmacionPin.getByRole('button', { name: /continuar con detalles de la direcci[óo]n/i });
+    const agregar = this.confirmacionPin.getByRole('button', { name: /^agregar direcci[óo]n$/i });
+    await expect(continuar.or(agregar).first()).toBeVisible({ timeout: 30000 });
+    if (await continuar.isVisible()) await continuar.click();
+  }
+
   async fijarDireccionComoInvitado(busqueda: string, texto: RegExp): Promise<void> {
     await this.elegirSugerencia(busqueda, texto);
-    await this.confirmacionPin.getByRole('button', { name: /continuar con detalles de la direcci[óo]n/i }).click();
+    await this.continuarADetalles();
     await this.confirmacionPin.getByRole('button', { name: /^agregar direcci[óo]n$/i }).click();
     await this.page
       .locator('header[role="banner"] button')
@@ -377,7 +388,7 @@ export class MetodoEntregaModal {
    */
   async agregarDireccion(busqueda: string, texto: RegExp): Promise<void> {
     await this.elegirSugerencia(busqueda, texto);
-    await this.confirmacionPin.getByRole('button', { name: /continuar con detalles de la direcci[óo]n/i }).click();
+    await this.continuarADetalles();
     await this.confirmacionPin.getByRole('button', { name: /^agregar direcci[óo]n$/i }).click();
   }
 

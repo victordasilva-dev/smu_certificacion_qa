@@ -117,7 +117,7 @@ test.describe('B2C-73 — Menú de categorías Desktop', () => {
       await cap(page, cp, 3, 'título, X y categorías N1');
     });
 
-    test('TC-B2C73-D-002 · Apertura del modal de categorías desde el botón Categorías del header como usuario logueado (Desktop)', async ({ page, testData }) => {
+    test('TC-B2C73-D-002 · Apertura del modal de categorías desde el botón Categorías del header como usuario logueado (Desktop)', { tag: '@otp' }, async ({ page, testData }) => {
       const cp = 'TC-B2C73-D-002';
       test.setTimeout(420000);
       const correo = token(testData, 'COMPRADOR_USER')!;

@@ -297,7 +297,7 @@ test.describe('B2C-63 — Completa la promo', () => {
 
   test.describe('Mobile (logueado)', () => {
     test.use(MOBILE);
-    test('TC-63-M-018 · Disminuir unidades recalcula el progreso promocional (Logueado) (Mobile)', async ({ page, testData }) => {
+    test('TC-63-M-018 · Disminuir unidades recalcula el progreso promocional (Logueado) (Mobile)', { tag: '@otp' }, async ({ page, testData }) => {
       test.setTimeout(300000);
       const cp = 'TC-63-M-018';
       const sku = skuNxM(testData);

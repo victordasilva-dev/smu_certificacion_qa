@@ -64,7 +64,7 @@ test.describe('B2C-38 — Cantidad y eliminación en el carro', () => {
     test.describe(ff, () => {
       test.use(vp);
 
-      test(`TC-B2C38-${L}-${cpN} · Al quedar bajo el mínimo de compra se deshabilita «Continuar con la entrega» [Logueado] (${sufijo})`, async ({ page, testData }) => {
+      test(`TC-B2C38-${L}-${cpN} · Al quedar bajo el mínimo de compra se deshabilita «Continuar con la entrega» [Logueado] (${sufijo})`, { tag: '@otp' }, async ({ page, testData }) => {
         test.setTimeout(300000);
         const cp = `TC-B2C38-${L}-${cpN}`;
         const minimo = Number(declarado(testData, 'MONTO_MINIMO_COMPRA'));

@@ -307,7 +307,7 @@ test.describe('B2C-61 — Store Locator: disponibilidad y promociones por tienda
     for (const [tipo, vp, ff] of [['D', DESKTOP, 'Desktop'], ['M', MOBILE, 'Mobile']] as const) {
       test.describe(`${ff} (logueado)`, () => {
         test.use(vp);
-        test(`TC-B2C61-${tipo}-019 · Usuario sin dirección con productos en el carro no puede avanzar al pago (${ff})`, async ({ page, testData }) => {
+        test(`TC-B2C61-${tipo}-019 · Usuario sin dirección con productos en el carro no puede avanzar al pago (${ff})`, { tag: '@otp' }, async ({ page, testData }) => {
           test.setTimeout(300000);
           const cp = `TC-B2C61-${tipo}-019`;
           const correo = tk(testData, 'SIN_DIRECCION_USER').split(' / ')[0];

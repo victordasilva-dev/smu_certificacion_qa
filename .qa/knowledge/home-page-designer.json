@@ -1,7 +1,7 @@
 {
  "flow": "home-page-designer",
- "last_updated": "2026-11-12T15:00:00Z",
- "version": 6,
+ "last_updated": "2026-11-16T22:05:00Z",
+ "version": 7,
  "source": {
   "suite": "B2C-29",
   "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-29 WEB Test Cases.xlsx",
@@ -101,6 +101,13 @@
   "nota": "Modela el Home como pagina de componentes: los cuenta por encabezado visible y expone el carrusel My Usuals y su CTA."
  },
  "observations": [
+  "CORRIDA 2026-11-16 B2C-29 BM: BM-001/002 Aprobado; BM-003 Rechazado (B2C-1500: la app no refleja cambios de PD sin reiniciarse); BM-004 Bloqueado Data ({FECHA_FIN_VIGENCIA} 2026-12-12 inalcanzable). Componente de prueba 'Carrusel de productos' (id 2b923b813f5063efa6413f6d2d) agregado al final de Main Content y eliminado al terminar.",
+  "AGREGAR COMPONENTE SIN DRAG: en Page Structure, boton '+' 'Add component to Main Content' abre el dialogo Insert (no aparece en el snapshot: clicar por coordenadas con mousemove/mousedown/mouseup): pestaña Components, buscar, elegir, Apply. Reordenar: playwright-cli drag entre treeitems del arbol (mismo frame) funciona y se guarda solo. Borrar: hover sobre el item muestra 'Remove <tipo>' + dialogo OK.",
+  "'Carrusel de productos' (ux_assets) tiene todos los atributos de un componente del Home: variante, titulo/subtitulo, modo collection + categoria, maximo, URL y texto de 'Mostrar todo' (CTA), desplazamiento automatico + velocidad, indicadores, banner T1 (imagen desktop/mobile por media picker, enlace por link builder 'Create' > External, etiqueta, titulo, URL de video). Los checkbox se marcan clicando su label. La libreria de medios es-CL esta vacia.",
+  "Apply puede seguir habilitado tras guardar; la confirmacion es el toast 'The component was successfully saved for the Spanish (Chile) locale'.",
+  "GIT BASH CONVIERTE RUTAS: '/images/...' o '/category/...' pasados a playwright-cli fill se guardan como 'C:/Users/.../Git/images/...'. Exportar MSYS_NO_PATHCONV=1 antes.",
+  "CACHE: tras 'Entire Page Cache for Site' la URL '/' sigue servida por la CDN varios minutos; verificar con '/?qa=<random>'. El contador 'Last Invalidated' puede no refrescar hasta recargar la pagina (horario UTC). Invalidar requiere el OK explicito del usuario en cada sesion (el clasificador lo bloquea sin el).",
+  "APP Y PAGE DESIGNER: la app (Android v1.0.1) lee el Home al abrirse y no lo vuelve a pedir al cambiar de pestaña y volver: cambios de PD solo aparecen tras reiniciarla (B2C-1500).",
   "CORRIDA 2026-11-12 B2C-55 BM: BM-001/002/004 Aprobado; BM-003 Bloqueado Data (vhchirinos+frecuentes_outsegment tiene exactamente 5 frecuentes y My Usuals exige mas de 5). Se agrego un My Usuals de prueba en Main Content (id 21d8b1b1bf801386158cb58546) y se elimino al final. {MY_USUALS_TITULO_30} mide 33 caracteres, no 30.",
   "CORRIDA 2026-11-10 (13 pendientes de SP1): D-013/M-015 Aprobado; los otros 11 en Bloqueado Data.",
   "NOMBRES DE PAGE DESIGNER EN DEV al 2026-11-10: solo 4 componentes tienen nombre: 'Unimarc Home' (home-page), 'Home_Banner' (tb-banner-hp, slides tb-banner-b1..b3-hp + uno sin id semantico), 'Modulo Bomba' (hp-bomba-hw), 'Carrusel_Banner' (tb-banner-t4-hp). Se leen de #mobify-data (SSR, invitado) o de shopper-experience /pages/home-page (con el token de la sesion; HomePage.componentesParaLaSesion).",
@@ -139,9 +146,9 @@
   }
  ],
  "last_run": {
-  "suite": "B2C-29",
-  "fecha": "2026-10-09",
-  "resultado": "8 pendientes: 1 Aprobado (D-010), 7 Bloqueado Data"
+  "suite": "B2C-29 BM",
+  "fecha": "2026-11-16",
+  "resultado": "2 Aprobado, 1 Rechazado (B2C-1500), 1 Bloqueado Data"
  },
  "business_manager": {
   "login": "{BM_URL}/default/ViewApplication-DisplayWelcomePage -> account.demandware.com: usuario, 'Log in', contraseña, 'Log in' -> verify.salesforce.com pide aprobar Salesforce Authenticator (paso del usuario). La sesion de BM expira en ~30 min de inactividad y vuelve a pedir Authenticator; una URL de BM sin el contexto app=__bm_* tambien manda al login.",
