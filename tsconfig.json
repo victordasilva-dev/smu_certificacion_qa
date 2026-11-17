@@ -24,8 +24,10 @@
   "include": [
     "tests/**/*.ts",
     "tests-app/**/*.ts",
+    "tests-preflight/**/*.ts",
     "playwright.config.ts",
     "playwright.config.ci.ts",
+    "playwright.preflight.config.ts",
     "mobilewright.config.ts",
     "mobilewright.ios.config.ts"
   ],

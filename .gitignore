@@ -30,4 +30,10 @@ tools/
 .qa/*.png
 .qa/*.txt
 
-scripts/
+# scripts locales, salvo el que usa el pipeline (`scripts/*`, no `scripts/`: si no, la excepción no aplica)
+scripts/*
+!scripts/reintentar-ambiente.mjs
+
+# El preflight de data es del flujo del agente; el repo es la suite que corre el CI del cliente.
+tests-preflight/
+playwright.preflight.config.ts

@@ -39,7 +39,8 @@ export class OrdenFiltrosModal extends BaseScreen {
   }
 
   get cerrarX(): Locator {
-    return this.screen.getByRole('button', { name: 'Cerrar y limpiar filtros' });
+    // v1.0.7: "Cerrar y limpiar filtros"; v1.0.1 (2026-11-16): "Cerrar el panel de filtros".
+    return this.screen.getByRole('button', { name: /^Cerrar (y limpiar filtros|el panel de filtros)$/ });
   }
 
   get fondo(): Locator {
@@ -48,6 +49,16 @@ export class OrdenFiltrosModal extends BaseScreen {
 
   opcion(nombre: string): Locator {
     return this.screen.getByRole('radio', { name: nombre });
+  }
+
+  /** Sección desplegable de "Aplica tus filtros" (Marcas, Precio, Sellos de advertencia…). */
+  seccion(nombre: string): Locator {
+    return this.screen.getByRole('button', { name: nombre });
+  }
+
+  /** Casilla de una marca dentro de la sección "Marcas" ya desplegada. */
+  marca(nombre: string): Locator {
+    return this.screen.getByRole('checkbox', { name: nombre });
   }
 
   /** Lee los RadioButton visibles del carrusel de orden, en orden de izquierda a derecha. */

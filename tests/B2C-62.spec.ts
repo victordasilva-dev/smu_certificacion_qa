@@ -6,6 +6,9 @@ import { ShelfProducto } from './pages/ShelfProducto';
 import { BloqueDePreciosShelf, PrecioRenderizado } from './pages/BloqueDePreciosShelf';
 import { PDPPage } from './pages/PDPPage';
 import { LoginModal } from './pages/LoginModal';
+import { loginConOtp } from './support/loginOtp';
+import { conEstado } from './support/estadoCompartido';
+import { exigirVisible } from './support/precondicion';
 
 /**
  * B2C-62 — Bloque de precios del shelf: precio, PPUM y mecánicas promocionales.
@@ -123,15 +126,23 @@ async function shelfDelSku(
   if (!ruta) {
     const pdp = await new PDPPage(page).abrir(sku);
     ruta = (await pdp.categoriaPorDefecto()) ?? '';
-    if (!ruta) throw new Error(`El producto ${sku} no expone su categoría en el breadcrumb de la PDP`);
+    // Sin breadcrumb en la PDP (p. ej. 674831 al 2026-11-16) el shelf se busca en la SRP del SKU:
+    // los pasos admiten "PLP/SRP".
+    if (!ruta) {
+      const nombre = ((await pdp.nombreDelProducto.first().textContent({ timeout: 5000 }).catch(() => '')) ?? '').trim();
+      ruta = `/search?q=${encodeURIComponent(nombre || sku.replace(/^0+|-UN$/g, ''))}`;
+    }
   }
   const plp = new PLPCategoriaPage(page, ruta.replace(/^\//, ''));
-  await plp.goto();
-  await expect(ShelfProducto.todos(page).first()).toBeVisible({ timeout: 60000 });
+  if (ruta.startsWith('/search')) await page.goto(ruta, { waitUntil: 'domcontentloaded' });
+  else await plp.goto();
+  // Precondición, y que falle rápido: si la página no lista productos o el SKU no está ahí, el caso
+  // termina en segundos como PRECONDICION_NO_DISPONIBLE (→ Bloqueado Data) en vez de agotar 180 s.
+  await exigirVisible(ShelfProducto.todos(page), `${ruta} no lista productos`, 45000);
   await page.waitForLoadState('networkidle', { timeout: 60000 }).catch(() => {});
   const shelf = ShelfProducto.porEnlaceOImagen(page, sku);
+  await exigirVisible(shelf.root, `el shelf de ${sku} no está en ${ruta}`, 15000);
   await shelf.root.scrollIntoViewIfNeeded();
-  await expect(shelf.root, `el shelf de ${sku} está en ${ruta}`).toBeVisible({ timeout: 30000 });
   await page.waitForTimeout(1500);
   return { plp, bloque: new BloqueDePreciosShelf(page, shelf.root), ruta };
 }
@@ -259,17 +270,18 @@ function casosConSkuDeclarado(ff: 'D' | 'M', etiqueta: 'Desktop' | 'Mobile'): vo
     test.info().annotations.push({ type: 'bloque', description: `${ruta} | ${await bloque.resumen()} | label ${(await bloque.labelMedioDePago.allInnerTexts()).join(',')}` });
     await plp.capturarEvidencia(cp, 2, 'shelf con promo de medio de pago', { elemento: bloque.shelf });
 
-    // Paso 3 — el precio MdP es un importe fijo en CLP, no un pill de %.
-    const mdp = precios.find((p) => !p.tachado && !p.deSocio);
-    expect(mdp, 'el shelf muestra un precio fijo').toBeTruthy();
-    expect(mdp!.texto, 'precio MdP como importe fijo en CLP').toMatch(/^\$\d{1,3}(\.\d{3})*/);
+    // Pasos 3 y 5 — el precio MdP es un importe fijo en CLP junto a su label ("Banco Estado $4.990"),
+    // no un pill de %. El label y el importe van en el mismo elemento.
+    const etiquetaMdp = bloque.shelf.getByText(/^(unipay|banco\s*estado)\s*\$\d{1,3}(\.\d{3})*/i).locator('visible=true').first();
+    await expect(etiquetaMdp, 'label del medio de pago (Unipay / Banco Estado) con su precio fijo en CLP').toBeVisible();
+    const textoMdp = (await etiquetaMdp.innerText()).replace(/\s+/g, ' ').trim();
+    const importeMdp = Number(/\$([\d.]+)/.exec(textoMdp)![1].replace(/\./g, ''));
     await expect(bloque.badgeDeDescuento, 'sin pill de %').toHaveCount(0);
-    // Paso 5 — el label del MdP (Unipay / Banco Estado) visible junto al precio.
-    await expect(bloque.labelMedioDePago.first(), 'label del medio de pago (Unipay / Banco Estado)').toBeVisible();
-    // Paso 4 — el precio mostrado es el efectivo post-descuento (menor que el de referencia).
-    const referencia = precios.find((p) => p !== mdp && !p.deSocio);
-    expect(referencia, 'hay un precio de referencia contra el cual el MdP es el efectivo post-descuento').toBeTruthy();
-    expect(mdp!.importe, 'el precio MdP es menor que el regular').toBeLessThan(referencia!.importe);
+    // Paso 4 — el precio mostrado es el efectivo post-descuento (menor que el regular).
+    const regular = precios.find((p) => !p.deSocio && p.importe !== importeMdp);
+    expect(regular, 'hay un precio regular de referencia').toBeTruthy();
+    test.info().annotations.push({ type: 'mdp', description: `${textoMdp} vs regular ${regular!.texto}` });
+    expect(importeMdp, `el precio MdP (${textoMdp}) es menor que el regular (${regular!.texto})`).toBeLessThan(regular!.importe);
     await plp.capturarEvidencia(cp);
   });
 
@@ -299,6 +311,73 @@ function casosConSkuDeclarado(ff: 'D' | 'M', etiqueta: 'Desktop' | 'Mobile'): vo
     await expect(bloque.rombo.first(), 'con su label identificador de membresía').toBeVisible();
     expect(precios.length, 'no se superan 3 precios').toBeLessThanOrEqual(3);
     await plp.capturarEvidencia(cp);
+  });
+
+  test(`TC-B2C62-${ff}-021 · Dos precios simultaneos: oferta + lista tachado (${etiqueta})`, async ({ page, testData }) => {
+    const cp = `TC-B2C62-${ff}-021`;
+    test.setTimeout(180000);
+    const sku = tokenExigido(testData, 'SKU_PRECIO_OFERTA');
+    // Pasos 1 y 2 — la PLP declarada y el shelf del SKU con oferta de catálogo, como invitado.
+    const { plp, bloque, ruta } = await shelfDelSku(page, sku, tokenExigido(testData, 'PLP_URL_PRECIO_OFERTA'));
+    const precios = await bloque.leerPrecios();
+    test.info().annotations.push({ type: 'bloque', description: `${ruta} | ${await bloque.resumen()}` });
+    await plp.capturarEvidencia(cp, 2, 'shelf con oferta de catalogo', { elemento: bloque.shelf });
+    // Paso 3 — oferta destacada con etiqueta de % y lista tachado.
+    const destacado = await bloque.precioDestacado();
+    expect(destacado && !destacado.tachado && !destacado.deSocio, 'precio oferta en acento como principal').toBe(true);
+    await expect(bloque.badgeDeDescuento.first(), 'etiqueta de % de descuento').toBeVisible();
+    expect(precios.some((p) => p.tachado || p.tipo === 'antes'), 'precio lista tachado').toBe(true);
+    // Paso 4 — sin tercer precio (ni membresía ni MdP).
+    expect(precios.length, 'exactamente 2 precios').toBe(2);
+    await plp.capturarEvidencia(cp);
+  });
+
+  /** El shelf de {SKU_PRECIO_MIEMBRO} en su categoría (la sesión ya viene del estado compartido). */
+  async function shelfMiembro(page: Page, testData: Parameters<typeof token>[0]) {
+    return shelfDelSku(page, tokenExigido(testData, 'SKU_PRECIO_MIEMBRO'));
+  }
+
+  // Los casos con la cuenta con membresía comparten UNA sesión por corrida (un solo OTP para
+  // D-017, D-023, M-017 y M-023), preparada por el primero que la pide.
+  test.describe('con la cuenta con membresía', { tag: '@otp' }, () => {
+    test.use({
+      storageState: conEstado('miembro', async (page, data) => {
+        await page.goto('/');
+        await loginConOtp(page, tokenExigido(data, 'COMPRADOR_MEMBRESIA_USER'));
+      }),
+    });
+
+  test(`TC-B2C62-${ff}-017 · Prioridad membresia sobre MdP y mejor descuento entre 2 MdP (${etiqueta})`, async ({ page, testData }) => {
+    const cp = `TC-B2C62-${ff}-017`;
+    test.setTimeout(420000);
+    // Pasos 1 y 2 — usuario con membresía y el shelf del producto con membresía y MdP.
+    const { plp, bloque, ruta } = await shelfMiembro(page, testData);
+    const precios = await bloque.leerPrecios();
+    const mdp = await bloque.labelMedioDePago.allInnerTexts();
+    test.info().annotations.push({ type: 'bloque', description: `${ruta} | ${await bloque.resumen()} | MdP ${mdp.join(',')}` });
+    await plp.capturarEvidencia(cp, 2, 'shelf con membresia y MdP', { elemento: bloque.shelf });
+    // Paso 3 — la membresía con mayor prioridad que el MdP (RF-08): se muestra el precio de membresía.
+    expect(precios.some((p) => p.deSocio), 'se muestra el precio de membresía').toBe(true);
+    await expect(bloque.rombo.first(), 'con su badge de membresía').toBeVisible();
+    // Paso 4 — con un solo MdP (Unipay) no aplica la comparación entre dos MdP.
+    await plp.capturarEvidencia(cp);
+  });
+
+  test(`TC-B2C62-${ff}-023 · PriceDisplayPriority MEMBERSHIP_FIRST: membresia como 3er precio (${etiqueta})`, async ({ page, testData }) => {
+    const cp = `TC-B2C62-${ff}-023`;
+    test.setTimeout(420000);
+    // Pasos 2 y 3 — usuario con membresía y el shelf con membresía y Unipay a la vez.
+    const { plp, bloque, ruta } = await shelfMiembro(page, testData);
+    const precios = await bloque.leerPrecios();
+    test.info().annotations.push({ type: 'bloque', description: `${ruta} | ${await bloque.resumen()}` });
+    await plp.capturarEvidencia(cp, 2, 'shelf con membresia y Unipay', { elemento: bloque.shelf });
+    // Paso 4 — el precio de membresía (badge) se muestra; paso 5 — Unipay no ocupa ese lugar.
+    expect(precios.some((p) => p.deSocio), 'el tercer precio es el de membresía').toBe(true);
+    await expect(bloque.rombo.first(), 'badge de membresía').toBeVisible();
+    const precioUnipay = bloque.shelf.getByText(/^unipay\s*\$\d/i).locator('visible=true');
+    await expect(precioUnipay, 'Unipay no aparece como precio en lugar de la membresía').toHaveCount(0);
+    await plp.capturarEvidencia(cp);
+  });
   });
 }
 

@@ -43,7 +43,9 @@ export function configApp(plataforma: Plataforma): MobilewrightConfig {
     globalSetup: './tests-app/support/limpiarEvidenciaApp.ts',
     // Mismo presupuesto que la web.
     timeout: 180000,
-    retries: 1,
+    // Sin reintentos a ciegas (ver playwright.config.ts): los de ambiente se reintentan con
+    // `node scripts/reintentar-ambiente.mjs --app android --correr`.
+    retries: Number(process.env.QA_RETRIES ?? 0),
     // El árbol de accesibilidad adjunto al reporte cuando un caso falla: es lo que permite
     // distinguir "el elemento no existe" de "el locator está mal" sin volver a correr nada.
     viewTree: 'on-failure',

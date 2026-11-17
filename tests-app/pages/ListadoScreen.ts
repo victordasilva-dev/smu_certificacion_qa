@@ -91,6 +91,16 @@ export class ListadoScreen extends BaseScreen {
     return this.screen.getByText('Patrocinado', { exact: true });
   }
 
+  /** Contador del listado: "12 productos" junto al título. */
+  get cantidad(): Locator {
+    return this.screen.getByText(/^\d+ productos?$/).first();
+  }
+
+  /** Chip de subcategoría (N3 en una PLP N2): por su texto exacto. */
+  chip(nombre: RegExp): Locator {
+    return this.screen.getByText(nombre).first();
+  }
+
   /** Botón de filtros y ordenamiento (PLP y SRP). */
   get iconoFiltros(): Locator {
     return this.screen.getByRole('button', { name: 'Abrir filtros y ordenamiento' });
@@ -126,7 +136,8 @@ export class ListadoScreen extends BaseScreen {
       for (const t of tarjetas) {
         if (vistos.has(t.sku)) continue;
         const partes = t.label.split(', ');
-        const precio = Number((/\$([\d.]+)/.exec(t.label)?.[1] ?? '0').replace(/\./g, ''));
+        // Con promo ("3x2 a $49.000, …, $24.500 c/u") el precio de venta es el "c/u"; sin promo, el primer monto.
+        const precio = Number(((/\$([\d.]+) c\/u/.exec(t.label) ?? /\$([\d.]+)/.exec(t.label))?.[1] ?? '0').replace(/\./g, ''));
         const nombre = partes.find((p) => p.includes('|')) ?? '';
         vistos.set(t.sku, { sku: t.sku, nombre, precio, conDescuento: /Antes:/.test(t.label) });
       }
