@@ -1,12 +1,12 @@
 {
-  "plugin_version": "1.20.0",
+  "plugin_version": "1.21.0",
   "files": {
     ".env.example": "8db980dd3408dfa306d5c28fbc4245a0f3d04c58916f7a8904b22e2a73af6b23",
-    ".gitignore": "b6a0111aaf8038ff66305bff181d3a8edd454891cbfda4613b372e4374f87048",
+    ".gitignore": "7a421e7fc545dd8dc49f791664e3c295841f1e84dd7bec9cb660c9c61e434a05",
     "package.json": "98bd088e4de453c46063ca993fa6d3d36c8f518352b246179129cffeba03f3ca",
     "playwright.config.ci.ts": "35c4869c6cafe994396df87e96d0e27705ba79021c0f7499b80348411289593f",
     "playwright.config.ts": "2435aea7a1d5deaa24384e7d39f5e2ba22a6ce0e2f4626d546459c63bcf24281",
-    "README.md": "4842d5bda56432e050b8cd89e7675fe7875b0f6e57485a21d8e2f0951f9e9be9",
+    "README.md": "6668a9dab9853a39f1309fe23064871099f0b43e86f41e1c09ec3b9da24ccb55",
     "tests/pages/BasePage.ts": "333835992a738865d022f6700cd52be61a7d32bedaab74715c28ad208982d11b",
     "tests/support/evidencia.ts": "84e70c636952b57417386d87e410ddf5f496b7e0406f695e75e22ee73406ccfc",
     "tests/support/fixtures.ts": "968fc0ace505fb7a9d871160b783e07d6346f0b8c1c4f87d2a3ba04030c7e898",
