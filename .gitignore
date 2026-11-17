@@ -18,9 +18,6 @@ __pycache__/
 
 # Artefactos pesados de Playwright (no se suben a GitHub: pasan el límite de 100 MB)
 # Trazas y videos de las corridas: se quedan locales; en el repo van el .md y los PNG
-evidencias/**/*.zip
-evidencias/**/*.zip.*
-evidencias/**/*.webm
 
 # Locales, sensibles o temporales (no se suben a GitHub)
 tools/
@@ -37,3 +34,7 @@ scripts/*
 # El preflight de data es del flujo del agente; el repo es la suite que corre el CI del cliente.
 tests-preflight/
 playwright.preflight.config.ts
+
+# La evidencia (el .md por HU y sus capturas) queda solo en la máquina del QA; el equipo la ve en
+# el Word del workspace de OneDrive. No viaja con la suite del cliente.
+evidencias/
