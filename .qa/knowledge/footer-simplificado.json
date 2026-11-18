@@ -1,26 +1,62 @@
 {
   "flow": "footer-simplificado",
   "description": "Footer Simplificado del storefront Unimarc (HU B2C-20): en las paginas del flujo de compra y en SSO, el footer muestra unicamente el Content Asset footer-support-block con sus 3 accesos de atencion al cliente. No lleva secciones dropdown, ni Politicas de Cookies, ni redes sociales.",
-  "last_explored": "2026-09-09",
+  "last_explored": "2026-11-17",
   "entry_url": "/cart",
   "auth_required": false,
   "form_factors": {
-    "desktop": { "browser": "chromium", "viewport": { "width": 1440, "height": 900 } },
-    "mobile": { "browser": "chromium", "viewport": { "width": 390, "height": 844 } }
+    "desktop": {
+      "browser": "chromium",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      }
+    },
+    "mobile": {
+      "browser": "chromium",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    }
   },
   "paginas_con_footer_simplificado": [
-    { "ruta": "/cart", "descripcion": "Carro de compra" },
-    { "ruta": "/login", "descripcion": "Pantalla de SSO (Sign In, con Google y Apple)" },
-    { "ruta": "/account", "descripcion": "Mi cuenta" },
-    { "ruta": "/checkout", "descripcion": "Redirige a /login cuando el usuario es Guest" }
+    {
+      "ruta": "/cart",
+      "descripcion": "Carro de compra"
+    },
+    {
+      "ruta": "/login",
+      "descripcion": "Pantalla de SSO (Sign In, con Google y Apple)"
+    },
+    {
+      "ruta": "/account",
+      "descripcion": "Mi cuenta"
+    },
+    {
+      "ruta": "/checkout",
+      "descripcion": "Redirige a /login cuando el usuario es Guest"
+    }
   ],
   "selectors": {
     "footer": "getByRole('contentinfo')",
     "header": "getByRole('banner')",
     "items": [
-      { "texto": "Centro de ayuda", "href": "/centro-de-ayuda", "descripcion": "Aqui encontraras preguntas frecuentes y mucho mas" },
-      { "texto": "Seguimiento de compra", "href": "/seguimiento-de-compra", "descripcion": "Revisa el estado y detalle de tu compra" },
-      { "texto": "Whatsapp clientes", "href": "https://wa.me/56XXXXXXXXX", "descripcion": "Escribenos de 9:00 a 20:00 horas" }
+      {
+        "texto": "Centro de ayuda",
+        "href": "/centro-de-ayuda",
+        "descripcion": "Aqui encontraras preguntas frecuentes y mucho mas"
+      },
+      {
+        "texto": "Seguimiento de compra",
+        "href": "/seguimiento-de-compra",
+        "descripcion": "Revisa el estado y detalle de tu compra"
+      },
+      {
+        "texto": "Whatsapp clientes",
+        "href": "https://wa.me/56XXXXXXXXX",
+        "descripcion": "Escribenos de 9:00 a 20:00 horas"
+      }
     ],
     "banner_cookies": "[data-testid='cookie-consent-banner']",
     "banner_cookies_aceptar": "button[aria-label='Aceptar todas las cookies']"
@@ -33,7 +69,9 @@
     "AMBIENTE DEV: /centro-de-ayuda y /seguimiento-de-compra devuelven HTTP 404 (paginas de contenido no desplegadas en DEV). Es la misma desviacion observada en B2C-19; ver [footer-full].",
     "DATO SIN CONFIGURAR: el item de WhatsApp apunta a https://wa.me/56XXXXXXXXX, un numero placeholder que sigue sin configurarse en el content asset footer-support-block.",
     "El banner de consentimiento de cookies aparece tambien en estas paginas y conviene aceptarlo antes de medir o hacer clic; en viewport chico se ancla al pie y tapa el footer.",
-    "footer-support-block es el MISMO content asset que usa el Footer Full de B2C-19, renderizado con otro layout (alli vertical en columna izquierda, aqui horizontal en Desktop). Por eso el HTML del asset no debe traer clases de layout."
+    "footer-support-block es el MISMO content asset que usa el Footer Full de B2C-19, renderizado con otro layout (alli vertical en columna izquierda, aqui horizontal en Desktop). Por eso el HTML del asset no debe traer clases de layout.",
+    "FALLBACK (TC-B2C20-BM-002, 2026-11-17): sin el asset footer-support-block, /cart en Desktop 1440x900 y Mobile 390x844 no renderiza ningun footer/contentinfo ni enlaces de soporte, y no deja contenido en su lugar. Consola: solo un 404 de shopper-context, ajeno al footer. Al restaurar, el footer vuelve con sus 3 enlaces.",
+    "AGREGAR AL CARRO COMO INVITADO: el primer 'Agregar' abre el drawer de metodo de entrega. Con 'Retiro en tienda' > buscar 'Las Condes' > elegir 'Las Condes' > 'Confirmar tienda', se abre el modal de login: cerrarlo con 'Cerrar' y volver a pulsar 'Agregar'."
   ],
   "network": [],
   "waits": [
@@ -48,5 +86,10 @@
     "CookieConsentBanner": "tests/pages/CookieConsentBanner.ts"
   },
   "deprecated_selectors": [],
-  "history": []
+  "history": [],
+  "business_manager": {
+    "content_asset": "Merchant Tools > Content > Content Assets (ViewLibraryContentList_52-Start), buscar 'footer-support-block' con Find. Asset Online + Categorized, carpeta por defecto 'footer'. Body HTML ~899 caracteres.",
+    "respaldo_y_restauracion": "Para 'eliminar' sin perder nada: marcar el checkbox de la fila > Copy > ID 'footer-support-block-qa-bkp' > OK (copia los 29 atributos y la carpeta). Eliminar el original: checkbox > Delete > OK en la barra roja de confirmacion. Restaurar: Copy del respaldo con ID 'footer-support-block' y luego Delete del respaldo. Verificado 2026-11-17: 29 atributos y carpeta identicos.",
+    "cache": "Tras eliminar y tras restaurar, invalidar Entire Page Cache for Site (ver home-page-designer.business_manager.cache). El primer clic en Invalidate a veces no registra: recargar y comprobar 'Last Invalidated' (UTC); si no cambio, repetir."
+  }
 }

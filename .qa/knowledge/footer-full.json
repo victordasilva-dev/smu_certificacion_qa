@@ -74,7 +74,10 @@
     "2026-10-06: contenido real de las 4 secciones. Contactanos coincide exacto con {CONTENIDO_SECCION_001} (4 bloques, 6 enlaces: tel, /contacto/compras-online, mailto, tel, /contacto/compras-tienda, mailto). Servicio al cliente 13 enlaces (/legales/*, /ayuda/*, /programas/unipay, /programas/unired); Nuestros programas 4 (/programas/*); Nuestra empresa 14 (/empresa/*).",
     "{CONTENIDO_SECCION_002} del Excel de data es una variante NEGATIVA de Contactanos (telefono '600 600 0025XYZ'), no el contenido de otra seccion.",
     "Clic real en 'Crea una solicitud' navega a /contacto/compras-online -> pagina 'This page isn't working / Not found' en DEV. Un a.click() por JS desde eval NO navega: usar clic real.",
-    "POM: FooterFull.enlaceDeSeccion(ruta), FooterFull.expandirSeccionConEnlace(ruta); HomePage.gotoOrigenDe(url) para TC que declaran solo un enlace y no {BASE_URL}."
+    "POM: FooterFull.enlaceDeSeccion(ruta), FooterFull.expandirSeccionConEnlace(ruta); HomePage.gotoOrigenDe(url) para TC que declaran solo un enlace y no {BASE_URL}.",
+    "2026-11-17: en Mi cuenta (/account) logueado, el footer NO es el Full: Desktop muestra solo el bloque estatico (3 enlaces, 0 botones de seccion, sin cookies ni redes, 123px); Mobile 390x844 tiene el <footer> con 0 px de alto (no se ve). Rechazo D-012/M-012.",
+    "2026-11-17: el Home de DEV ya no trae la seccion Contactanos en el Footer Full: 3 secciones (Servicio al cliente expandida por defecto, Nuestros programas, Nuestra empresa). D-001/D-002 aprobados antes pueden fallar al re-correrse.",
+    "Mi cuenta nunca llega a 'networkidle' (peticiones abiertas): esperar 'Mis datos personales'. Hay un 'Hola,' oculto en el header: filtrar por visible. Login OTP deja la sesion en /account."
   ],
   "network": [],
   "waits": [

@@ -10,6 +10,8 @@ import { MetodoEntregaModal } from './pages/MetodoEntregaModal';
 import { PaginaHabilitada } from './pages/PaginaHabilitada';
 import { aplicarEstado, estadoCompartido, invalidarEstado } from './support/estadoCompartido';
 import { baseUrl } from './support/testData';
+import { exigir } from './support/precondicion';
+import { loginConOtp } from './support/loginOtp';
 
 /**
  * B2C-31 — Página de detalle de producto (PDP).
@@ -438,6 +440,328 @@ test.describe('B2C-31 — Pagina de detalle de producto', () => {
       await page.waitForTimeout(1500);
       await conCucarda.capturarEvidencia(cp, 1, 'SRP filtrado por la marca');
       await conCucarda.capturarEvidencia(cp);
+    });
+
+    // ------------------------------------------------------------ corrida 2026-11-17 (data liberada)
+
+    test('TC-B2C31-D-003 · La galeria permite navegar entre imagenes con zoom o modal segun plataforma, y usa la imagen por defecto ante fallos (Desktop)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C31-D-003';
+      test.setTimeout(180000);
+      const pdp = new PDPPage(page);
+
+      // Paso 1 — varias imágenes: miniaturas a la izquierda; clic en una la deja como principal; zoom +/-.
+      await pdp.abrir(tokenExigido(testData, 'SKU_MULTI_IMAGEN'));
+      const miniaturas = pdp.miniaturas.locator('visible=true');
+      exigir((await miniaturas.count()) >= 2, '{SKU_MULTI_IMAGEN} no muestra 2 o más imágenes en la galería');
+      await pdp.capturarEvidencia(cp, 1, 'galeria con miniaturas a la izquierda');
+      const antes = PDPPage.fotoDe(await pdp.imagenPrincipal.getAttribute('src'));
+      await miniaturas.nth(1).click();
+      await expect
+        .poll(async () => PDPPage.fotoDe(await pdp.imagenPrincipal.getAttribute('src')), { message: 'la miniatura 2 pasa a ser la imagen principal' })
+        .not.toBe(antes);
+      await pdp.zoomAcercar.click();
+      await expect.poll(() => pdp.escalaImagenPrincipal(), { message: 'el zoom + agranda la imagen' }).toBeGreaterThan(1);
+      await pdp.capturarEvidencia(cp, 1, 'miniatura 2 como principal con zoom +');
+      await pdp.zoomAlejar.click();
+      await expect.poll(() => pdp.escalaImagenPrincipal(), { message: 'el zoom - la devuelve' }).toBe(1);
+
+      // Paso 2 — una sola imagen: sin controles para cambiar de imagen.
+      await pdp.abrir(tokenExigido(testData, 'SKU_UNA_IMAGEN'));
+      const unaSola = await pdp.miniaturas.locator('visible=true').count();
+      expect.soft(unaSola, 'con una sola imagen no hay más de una miniatura para navegar').toBeLessThanOrEqual(1);
+      test.info().annotations.push({ type: 'una-imagen', description: `${unaSola} miniatura(s) visibles` });
+      await pdp.capturarEvidencia(cp, 2, 'producto con una sola imagen');
+
+      // Paso 3 — sin imagen válida: se muestra la imagen por defecto de Unimarc.
+      await pdp.abrir(tokenExigido(testData, 'SKU_SIN_IMAGEN'));
+      await expect(pdp.agregar, 'el resto de la PDP carga normalmente').toBeVisible();
+      await pdp.capturarEvidencia(cp, 3, 'producto sin imagen valida');
+      const conImagen = await pdp.imagenPrincipal.locator('visible=true').count();
+      const vacia = (await pdp.galeriaVacia.count()) > 0 ? (await pdp.galeriaVacia.innerText()).trim() : '';
+      expect(
+        { imagenPorDefecto: conImagen > 0, estadoMostrado: vacia || '(imagen)' },
+        'sin imagen válida se muestra la imagen por defecto de Unimarc',
+      ).toEqual({ imagenPorDefecto: true, estadoMostrado: '(imagen)' });
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-D-006 · Compartir despliega modal en Desktop y share nativo en Mobile/App; el corazon agrega a favoritos o redirige al login (Desktop)', { tag: '@otp' }, async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C31-D-006';
+      test.setTimeout(300000);
+
+      // El producto es el primero de la {PLP_URL} declarada (la fila no declara un SKU).
+      const plp = new PLPPage(page, new URL(plpUrl(testData)).pathname.slice(1));
+      await page.addInitScript(() => {
+        const registro: unknown[] = [];
+        (window as unknown as { __compartidos: unknown[] }).__compartidos = registro;
+        Object.defineProperty(navigator, 'share', { configurable: true, value: async (d: unknown) => { registro.push(d); } });
+        Object.defineProperty(navigator, 'canShare', { configurable: true, value: () => true });
+      });
+      await plp.goto();
+      // En la PLP de Desktop el nombre ya no es un botón: se toma el primer enlace de producto.
+      const enlace = page.locator('main a[href$=".html"]').first();
+      await enlace.waitFor({ state: 'visible', timeout: 30000 });
+      await page.goto(new URL((await enlace.getAttribute('href'))!, page.url()).toString(), { waitUntil: 'domcontentloaded' });
+      const pdp = new PDPPage(page);
+      await pdp.waitUntilReady();
+      const urlPdp = page.url();
+      const sku = (urlPdp.match(/\/(\d+-[A-Z]+)\.html/) ?? [])[1] ?? '';
+      exigir(!!sku, 'no se pudo leer el SKU del primer producto de {PLP_URL}');
+      test.info().annotations.push({ type: 'producto', description: `${sku} (primero de {PLP_URL})` });
+
+      // Paso 1 — Compartir en Desktop: el CA7 pide el modal "Compartir productos". Se registra
+      // también si la página delegó en la Web Share API del sistema, como hace en un Chrome de escritorio.
+      await pdp.compartirVisible.click();
+      await page.waitForTimeout(2000);
+      const nativo = await page.evaluate(() => ((window as unknown as { __compartidos?: unknown[] }).__compartidos ?? []).length);
+      const conModal = await pdp.modalCompartir.isVisible();
+      await pdp.capturarEvidencia(cp, 1, conModal ? 'modal Compartir productos' : 'sin modal tras hacer clic en Compartir');
+      test.info().annotations.push({ type: 'compartir', description: `modal: ${conModal} · navigator.share llamado: ${nativo} vez/veces` });
+      expect.soft(conModal, `en Desktop se despliega el modal "Compartir productos" (la página llamó al share nativo ${nativo} vez/veces)`).toBe(true);
+      if (conModal) await page.keyboard.press('Escape');
+
+      // Paso 2a — corazón sin sesión: redirige al flujo de login.
+      await pdp.favoritosVisible.click();
+      const login = new LoginModal(page);
+      await expect.soft(login.campoCorreo, 'sin sesión el corazón lleva al login').toBeVisible({ timeout: 20000 });
+      await expect.soft(pdp.favoritoMarcado, 'sin sesión no se marca el favorito').toHaveCount(0);
+      await pdp.capturarEvidencia(cp, 2, 'corazon sin sesion abre el login');
+
+      // Paso 2b — corazón con la sesión de {COMPRADOR_USER}: se pinta rojo y queda en favoritos.
+      const ruta = await estadoCompartido(
+        page.context().browser()!,
+        'comprador',
+        async (p) => {
+          await p.goto('/');
+          await loginConOtp(p, tokenExigido(testData, 'COMPRADOR_USER'));
+        },
+        { contexto: { baseURL: baseUrl(testData), viewport: page.viewportSize() ?? undefined } },
+      );
+      // La sesión vive en un contexto nuevo que nace con el estado guardado: aplicarlo sobre el
+      // contexto del invitado no la toma (el sitio seguía pidiendo login).
+      const ctx = await page.context().browser()!.newContext({
+        storageState: ruta,
+        baseURL: baseUrl(testData),
+        viewport: page.viewportSize() ?? undefined,
+      });
+      const p2 = await ctx.newPage();
+      const conSesion = new PDPPage(p2);
+      try {
+        await p2.goto(urlPdp, { waitUntil: 'domcontentloaded' });
+        await conSesion.waitUntilReady();
+        const saludo = p2.getByText(/hola,/i).filter({ visible: true }).first();
+        exigir(await saludo.waitFor({ state: 'visible', timeout: 25000 }).then(() => true, () => false), 'la sesión de {COMPRADOR_USER} no quedó iniciada');
+        exigir((await conSesion.favoritoMarcado.count()) === 0, `el producto ${sku} ya está en favoritos de {COMPRADOR_USER}`);
+        await conSesion.favoritosVisible.click();
+        await expect.soft(conSesion.favoritoMarcado, 'con sesión el corazón queda marcado').toBeVisible({ timeout: 15000 });
+        const color = await conSesion.colorDelCorazon();
+        const [r, g, b] = (color.match(/\d+/g) ?? []).map(Number);
+        expect.soft(r > 170 && g < 90 && b < 90, `el corazón se pinta rojo (vio ${color})`).toBe(true);
+        await conSesion.capturarEvidencia(cp, 2, 'corazon rojo con sesion iniciada');
+        const favoritos = new MisFavoritosPage(p2);
+        await favoritos.goto();
+        await expect.soft(favoritos.producto(sku), 'el producto queda en Mis favoritos').toBeVisible({ timeout: 30000 });
+        await favoritos.capturarEvidencia(cp, 2, 'producto en Mis favoritos');
+      } finally {
+        await p2.goto(urlPdp, { waitUntil: 'domcontentloaded' }).catch(() => {});
+        await conSesion.waitUntilReady().catch(() => {});
+        if (await conSesion.favoritoMarcado.count()) await conSesion.favoritoMarcado.click().catch(() => {});
+        await p2.waitForTimeout(2000);
+        await ctx.close();
+      }
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-D-009 · La info del producto permanece sticky durante el scroll de los tabs; Similares esta activo por defecto y Van bien juntos aparece al final (Desktop)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C31-D-009';
+      test.setTimeout(180000);
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_CROSS_SELLING'));
+
+      // Paso 2 — tab activo por defecto.
+      await expect
+        .soft(page.getByRole('tab', { name: /productos similares/i }).first(), 'Productos similares activo por defecto')
+        .toHaveAttribute('aria-selected', 'true');
+
+      // Paso 1 — scroll por los tabs: la columna derecha queda fija.
+      await pdp.listaDeTabs.scrollIntoViewIfNeeded();
+      await page.evaluate(() => window.scrollBy(0, 400));
+      await page.waitForTimeout(800);
+      const col = await pdp.columnaDeInfoDesktop();
+      expect.soft(col.position, 'la columna de información es sticky').toBe('sticky');
+      expect.soft(col.top, 'la columna queda a la vista mientras se recorren los tabs').toBeGreaterThanOrEqual(0);
+      await pdp.capturarEvidencia(cp, 1, 'columna de informacion fija sobre los tabs');
+
+      // Paso 3 — al final de la página: carrusel "Van bien juntos" (punto donde se libera el sticky).
+      await pdp.recorrerHastaElFinal();
+      await pdp.capturarEvidencia(cp, 3, 'final de la PDP');
+      await expect(pdp.tituloVanBienJuntos, 'el carrusel "Van bien juntos" se muestra al final de la PDP').toBeVisible({ timeout: 15000 });
+      await pdp.capturarEvidencia(cp);
+    });
+
+    // ------------------------------------------------------------ corrida 2026-11-18 (plan de data de la Fase 2b)
+
+    test('TC-B2C31-D-008 · Agregar suma al carro solo con metodo de entrega; sin stock se oculta y con stock bajo o en el limite se muestran los indicadores correspondientes (Desktop)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C31-D-008';
+      test.setTimeout(300000);
+      const conLimite = tokenExigido(testData, 'SKU_CAR_LIMIT');
+
+      // Paso 1a — sin método de entrega: "Agregar" abre el Store Locator y no suma.
+      const sinMetodo = await new PDPPage(page).abrir(conLimite);
+      const antes = (await sinMetodo.header.conteoAnunciadoCarrito()) ?? 0;
+      await sinMetodo.agregar.click();
+      const locator = new MetodoEntregaModal(page);
+      await expect.soft(locator.encabezado, 'sin método de entrega se abre el Store Locator').toBeVisible({ timeout: 20000 });
+      await page.waitForTimeout(1500);
+      expect.soft((await sinMetodo.header.conteoAnunciadoCarrito()) ?? 0, 'sin método no se agrega al carro').toBe(antes);
+      await sinMetodo.capturarEvidencia(cp, 1, 'sin metodo de entrega: Store Locator abierto');
+      await page.keyboard.press('Escape');
+
+      // Paso 1b — con {DIRECCION_DESPACHO}: "Agregar" suma y aparece el stepper. Paso 2b — "+" hasta el tope.
+      const pdp = await pdpConDireccion(page, testData, conLimite, cp);
+      const enCarro = (await pdp.header.conteoAnunciadoCarrito()) ?? 0;
+      await pdp.agregar.click();
+      await expect(pdp.aumentarCantidad, 'con método de entrega aparece el stepper').toBeVisible({ timeout: 20000 });
+      await expect.poll(async () => (await pdp.header.conteoAnunciadoCarrito()) ?? 0, { timeout: 20000, message: 'se suma al carro' }).toBe(enCarro + 1);
+      await pdp.capturarEvidencia(cp, 1, 'con metodo de entrega: stepper con 1 unidad');
+      try {
+        for (let i = 0; i < 30; i++) {
+          if (await pdp.aumentarCantidad.isDisabled()) {
+            await page.waitForTimeout(2500);
+            if (await pdp.aumentarCantidad.isDisabled()) break;
+          }
+          const n = await pdp.unidadesEnCarro();
+          await pdp.aumentarCantidad.click();
+          await expect.poll(() => pdp.unidadesEnCarro(), { timeout: 20000 }).toBeGreaterThan(n);
+        }
+        const tope = await pdp.unidadesEnCarro();
+        await expect.soft(pdp.aumentarCantidad, `"+" deshabilitado en el límite (${tope} un.)`).toBeDisabled();
+        await expect.soft(pdp.mensajeCantidadMaxima, 'mensaje de cantidad máxima').toBeVisible({ timeout: 15000 });
+        await pdp.capturarEvidencia(cp, 2, `limite de compra en ${tope} unidades`);
+      } finally {
+        await pdp.fijarCantidad(0).catch(() => {});
+      }
+
+      // Paso 2a — sin stock: sin "Agregar" y con "Pronto disponible".
+      const sinStock = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_SIN_STOCK'));
+      await expect.soft(sinStock.prontoDisponible, 'sin stock muestra "Pronto disponible"').toBeVisible({ timeout: 20000 });
+      expect.soft((await sinStock.textosDeLaFicha()).filter((t) => /^agregar$/i.test(t)), 'sin stock no muestra "Agregar"').toEqual([]);
+      await sinStock.capturarEvidencia(cp, 2, 'sin stock: Pronto disponible y sin Agregar');
+
+      // Paso 3 — stock bajo el umbral FOMO: "Últimas unidades".
+      const fomo = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_STOCK_LIMITADO'));
+      await expect(fomo.ultimasUnidades, 'stock bajo el umbral muestra "Últimas unidades"').toBeVisible({ timeout: 20000 });
+      await fomo.capturarEvidencia(cp, 3, 'stock bajo el umbral: Ultimas unidades');
+      await fomo.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-D-010 · El tab Informacion muestra pills sticky solo para secciones con contenido, incluyendo Acerca de si tiene contenido inspiracional (Desktop)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C31-D-010';
+      test.setTimeout(180000);
+
+      // Paso 1 — producto con varias secciones, incluida "Acerca de": una pill por sección; cada clic ancla y activa.
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_INFO_COMPLETA'));
+      await pdp.irATabs();
+      await page.getByRole('tab', { name: /informaci[óo]n/i }).click();
+      await expect(pdp.panelActivo).toContainText(/descripci[óo]n/i);
+      const pills = await pdp.pillsDeInformacion();
+      const ids = await pdp.seccionesDeInformacion();
+      test.info().annotations.push({ type: 'pills', description: pills.map((p, i) => `${p.texto}→${ids[i]}`).join(' | ') });
+      expect(pills.length, 'una pill por sección con contenido').toBe(ids.length);
+      expect(pills.length, 'varias secciones').toBeGreaterThan(1);
+      expect(pills.some((p) => /acerca de/i.test(p.texto)), 'con contenido en "Acerca de" aparece su pill').toBe(true);
+      await pdp.capturarEvidencia(cp, 1, 'pills de las secciones con contenido');
+      for (let i = pills.length - 1; i >= 0; i--) {
+        await pdp.pill(new RegExp(`^${pills[i].texto}$`, 'i')).click();
+        await page.waitForTimeout(2500);
+        const pos = await pdp.posicionPillsYSeccion(ids[i]);
+        expect.soft(Math.abs(pos.secTop - pos.pillsBottom), `"${pills[i].texto}" ancla su sección bajo las pills`).toBeLessThanOrEqual(20);
+        expect.soft((await pdp.pillsDeInformacion()).find((p) => p.activa)?.texto, `"${pills[i].texto}" queda activa`).toBe(pills[i].texto);
+        // Las pills quedan fijas bajo los tabs mientras se recorre la sección.
+        expect.soft(pos.pillsTop, 'las pills quedan a la vista (sticky)').toBeGreaterThanOrEqual(0);
+      }
+      await pdp.capturarEvidencia(cp, 1, 'ultima pill tocada, activa y anclada');
+
+      // Paso 2 — producto sin "Acerca de" y con una sola sección: solo "Descripción".
+      const solo = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_SOLO_DESCRIPCION'));
+      await solo.irATabs();
+      await page.getByRole('tab', { name: /informaci[óo]n/i }).click();
+      await expect(solo.panelActivo).toContainText(/descripci[óo]n/i);
+      const unica = (await solo.pillsDeInformacion()).map((p) => p.texto);
+      test.info().annotations.push({ type: 'una-seccion', description: unica.join(' | ') });
+      expect(unica, 'con una sola sección se muestra solo "Descripción"').toEqual(['Descripción']);
+      await solo.capturarEvidencia(cp, 2, 'una sola seccion: solo Descripcion');
+      await solo.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-D-011 · Combina la promo aparece solo con promo combinable y stock; Completa la promo usa el stepper; Guardar en listas abre su modal segun plataforma (Desktop)', { tag: '@otp' }, async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C31-D-011';
+      test.setTimeout(300000);
+
+      // La sesión de {COMPRADOR_USER} en un contexto propio (Guardar en listas y el stepper la necesitan).
+      const ruta = await estadoCompartido(
+        page.context().browser()!,
+        'comprador',
+        async (p) => {
+          await p.goto('/');
+          await loginConOtp(p, tokenExigido(testData, 'COMPRADOR_USER'));
+        },
+        { contexto: { baseURL: baseUrl(testData), viewport: page.viewportSize() ?? undefined } },
+      );
+      const ctx = await page.context().browser()!.newContext({ storageState: ruta, baseURL: baseUrl(testData), viewport: page.viewportSize() ?? undefined });
+      const p = await ctx.newPage();
+      try {
+        // Paso 1 — con promo combinable se muestra "Combina la promo"; sin ella, no.
+        const combinable = await new PDPPage(p).abrir(tokenExigido(testData, 'SKU_CROSS_SELLING'));
+        exigir(
+          await p.getByText(/hola,/i).filter({ visible: true }).first().waitFor({ state: 'visible', timeout: 25000 }).then(() => true, () => false),
+          'la sesión de {COMPRADOR_USER} no quedó iniciada',
+        );
+        await expect.soft(combinable.combinaLaPromo, 'con promo combinable se muestra "Combina la promo"').toBeVisible({ timeout: 15000 });
+        await combinable.capturarEvidencia(cp, 1, 'con promo combinable: Combina la promo');
+        const sinCombinable = await new PDPPage(p).abrir(tokenExigido(testData, 'SKU_VALID_001'));
+        await expect.soft(sinCombinable.combinaLaPromo, 'sin promo combinable no se muestra').toHaveCount(0);
+        await sinCombinable.capturarEvidencia(cp, 1, 'sin promo combinable: sin el boton');
+
+        // Paso 2 — "Completa la promo" (mismo SKU): sin "Combina la promo" y todo ocurre en el stepper.
+        const completa = await new PDPPage(p).abrir(tokenExigido(testData, 'SKU_COMPLETAR_PROMO'));
+        exigir((await completa.prontoDisponible.count()) === 0, '{SKU_COMPLETAR_PROMO} sin stock para la dirección de {COMPRADOR_USER}');
+        await expect.soft(completa.combinaLaPromo, 'Completa la promo no muestra "Combina la promo"').toHaveCount(0);
+        try {
+          await completa.fijarCantidad(3);
+          await expect.soft(completa.cantidadEnCarro, 'el stepper lleva las unidades de la promo').toHaveText(/^3\s*un\.?$/i);
+          await completa.capturarEvidencia(cp, 2, 'Completa la promo: 3 unidades en el stepper de la PDP');
+        } finally {
+          await completa.fijarCantidad(0).catch(() => {});
+        }
+
+        // Paso 3 — "Guardar en mis listas" en Desktop abre "Agregar como lista".
+        await completa.guardarEnListasVisible.click();
+        await expect(completa.modalListas, 'se abre el modal "Agregar como lista"').toBeVisible({ timeout: 15000 });
+        const caja = (await completa.modalListas.boundingBox())!;
+        test.info().annotations.push({ type: 'modal-listas', description: `x ${Math.round(caja.x)} · ancho ${Math.round(caja.width)} · alto ${Math.round(caja.height)} (viewport ${p.viewportSize()!.width})` });
+        await completa.capturarEvidencia(cp, 3, 'Guardar en listas: modal Agregar como lista', { elemento: completa.modalListas });
+        await completa.capturarEvidencia(cp, undefined, undefined, { elemento: completa.modalListas });
+      } finally {
+        await ctx.close();
+      }
     });
   });
 
@@ -1231,6 +1555,225 @@ test.describe('B2C-31 — Pagina de detalle de producto', () => {
       }
       await pdp.pill(/acerca de/i).click({ timeout: 5000 });
       await pdp.capturarEvidencia(cp, 4, 'sección Acerca de');
+      await pdp.capturarEvidencia(cp);
+    });
+
+    // ------------------------------------------------------------ corrida 2026-11-17 (data liberada)
+
+    test('TC-B2C31-M-007 · Verificar que un producto con varias imágenes muestra la imagen principal con dots (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-007';
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_MULTI_IMAGEN'));
+      await expect(pdp.galeriaMobile, 'imagen principal visible').toBeVisible();
+      const m = await pdp.medidasGaleriaMobile();
+      expect(m.ancho, 'la imagen ocupa el ancho del contenido (viewport menos márgenes)').toBeGreaterThanOrEqual(m.viewport - 40);
+      expect(m.naturalWidth, 'alta resolución: la imagen de origen no es menor que su tamaño en pantalla').toBeGreaterThanOrEqual(m.ancho);
+      await expect(pdp.dotsGaleria, 'dots de posición').toBeVisible();
+      const dots = await pdp.dots.count();
+      expect(dots, 'un dot por imagen (2 o más)').toBeGreaterThanOrEqual(2);
+      test.info().annotations.push({ type: 'galeria', description: `${dots} dots · imagen ${m.ancho}px (origen ${m.naturalWidth}px)` });
+      await pdp.capturarEvidencia(cp, 2, 'imagen principal con dots de posicion');
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-008 · Verificar que un producto con una sola imagen no muestra controles de navegación (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-008';
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_UNA_IMAGEN'));
+      await expect(pdp.galeriaMobile, 'imagen del producto visible').toBeVisible();
+      await expect(pdp.dotsGaleria, 'sin dots').toHaveCount(0);
+      await expect(page.locator('[data-testid="product-gallery-dot"]').locator('visible=true'), 'sin controles de navegación').toHaveCount(0);
+      await pdp.capturarEvidencia(cp, 2, 'imagen unica sin dots ni controles');
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-009 · Verificar que tocar los dots de la galería abre el modal con miniaturas y sin zoom (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-009';
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_MULTI_IMAGEN'));
+      exigir((await pdp.dots.count()) >= 2, '{SKU_MULTI_IMAGEN} no muestra dots (necesita 2 o más imágenes)');
+      await pdp.capturarEvidencia(cp, 2, 'PDP con dots');
+
+      // Pasos 3 y 4 — tocar los dots abre el modal con la imagen centrada y las miniaturas debajo.
+      await pdp.dots.first().click();
+      await expect(pdp.modalGaleria, 'se abre el modal de la galería').toBeVisible({ timeout: 10000 });
+      await expect(pdp.imagenDelModal).toBeVisible();
+      const n = await pdp.miniaturasDelModal.count();
+      expect(n, 'miniaturas de todas las imágenes').toBeGreaterThanOrEqual(2);
+      const caja = (await pdp.imagenDelModal.boundingBox())!;
+      const cajaMini = (await pdp.miniaturasDelModal.first().boundingBox())!;
+      const vw = page.viewportSize()!.width;
+      expect(Math.abs(caja.x + caja.width / 2 - vw / 2), 'imagen principal centrada').toBeLessThanOrEqual(4);
+      expect(cajaMini.y, 'miniaturas debajo de la imagen').toBeGreaterThan(caja.y + caja.height - 1);
+      await pdp.capturarEvidencia(cp, 4, 'modal con imagen centrada y miniaturas', { elemento: pdp.modalGaleria });
+
+      // Pasos 5 y 6 — otra miniatura pasa a ser la principal; el modal no ofrece zoom.
+      const objetivo = pdp.miniaturasDelModal.nth(n - 1);
+      const foto = PDPPage.fotoDe(await objetivo.locator('img').getAttribute('src'));
+      await objetivo.click();
+      await expect
+        .poll(async () => PDPPage.fotoDe(await pdp.imagenDelModal.getAttribute('src')), { message: 'la miniatura tocada es la principal' })
+        .toBe(foto);
+      await expect
+        .poll(() => objetivo.evaluate((t) => t.getAttribute('aria-current') ?? t.getAttribute('aria-pressed') ?? t.getAttribute('aria-selected')), {
+          message: 'la miniatura tocada queda activa',
+        })
+        .toBe('true');
+      await expect(pdp.zoomEnModal.locator('visible=true'), 'el modal no ofrece zoom').toHaveCount(0);
+      await pdp.capturarEvidencia(cp, 6, 'otra miniatura como principal, sin zoom', { elemento: pdp.modalGaleria });
+      await pdp.capturarEvidencia(cp, undefined, undefined, { elemento: pdp.modalGaleria });
+    });
+
+    test('TC-B2C31-M-010 · Verificar que un producto sin imagen válida muestra la imagen por defecto de Unimarc (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-010';
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_SIN_IMAGEN'));
+      await expect(pdp.agregarVisible, 'el resto de la PDP carga normalmente').toBeVisible();
+      await pdp.capturarEvidencia(cp, 2, 'PDP del producto sin imagen');
+      const conImagen = await pdp.galeriaMobile.count();
+      const vacia = (await pdp.galeriaVacia.count()) > 0 ? (await pdp.galeriaVacia.innerText()).trim() : '';
+      expect(
+        { imagenPorDefecto: conImagen > 0, estadoMostrado: vacia || '(imagen)' },
+        'se muestra la imagen por defecto de Unimarc',
+      ).toEqual({ imagenPorDefecto: true, estadoMostrado: '(imagen)' });
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-012 · Verificar que un producto patrocinado muestra el label "Patrocinado" (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-012';
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_PATROCINADO'));
+      const label = pdp.core.getByText(/^patrocinado$/i).locator('visible=true').first();
+      await expect(label, 'label "Patrocinado" visible').toBeVisible({ timeout: 15000 });
+      await label.scrollIntoViewIfNeeded();
+      await pdp.capturarEvidencia(cp, 2, 'label Patrocinado en la PDP');
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-018 · Verificar que un producto en oferta muestra el precio oferta destacado y el normal tachado (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-018';
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_PRECIO_OFERTA'));
+      const { precios, colorTexto } = await pdp.estilosDePrecios();
+      const tachados = precios.filter((p) => p.tachado);
+      exigir(tachados.length > 0, '{SKU_PRECIO_OFERTA} no muestra precio normal tachado: no tiene oferta activa');
+      await pdp.capturarEvidencia(cp, 2, 'bloque de precios de la oferta');
+      test.info().annotations.push({
+        type: 'precios',
+        description: precios.map((p) => `${p.texto} ${p.color}${p.tachado ? ' tachado' : ''} ${p.fontSize}px`).join(' · ') + ` · texto estándar ${colorTexto}`,
+      });
+      const oferta = precios.filter((p) => !p.tachado).sort((a, b) => b.fontSize - a.fontSize)[0];
+      const colorNombre = await pdp.marca.first().evaluate((e) => getComputedStyle(e.parentElement ?? e).color);
+      test.info().annotations.push({ type: 'referencia', description: `color de la línea marca | nombre (texto estándar): ${colorNombre}` });
+      expect(oferta.color, `el precio oferta ${oferta.texto} va en color de acento, distinto del texto estándar`).not.toBe(colorNombre);
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-030 · Verificar que el bloque de datos y "Agregar" queda fijo al recorrer los tabs (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-030';
+      test.setTimeout(180000);
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_CROSS_SELLING'));
+      await pdp.recorrerHastaElFinal();
+      exigir((await pdp.tituloVanBienJuntos.count()) > 0, 'la PDP no muestra "Van bien juntos" en el ambiente');
+
+      // Paso 3 — recorriendo los tabs: barra fija con datos y "Agregar".
+      await pdp.listaDeTabs.evaluate((t) => window.scrollTo(0, t.getBoundingClientRect().top + window.scrollY - 150));
+      await page.waitForTimeout(1200);
+      const enTabs = await pdp.barraFijaDeCompra();
+      expect(enTabs, 'mientras se recorren los tabs hay una barra fija con "Agregar"').not.toBeNull();
+      expect(enTabs!.texto, 'la barra lleva el bloque de datos (precio)').toMatch(/\$[\d.]+/);
+      await pdp.capturarEvidencia(cp, 3, 'barra fija con datos y Agregar sobre los tabs');
+
+      // Al llegar a "Van bien juntos" deja de estar fija.
+      // "Llegar" = el carrusel sube hasta el tope de la pantalla. Medido el 2026-11-17: la barra
+      // sigue fija mientras el título está por debajo de ~95 px y se libera al acercarse al tope.
+      await pdp.tituloVanBienJuntos.evaluate((h) => window.scrollTo(0, h.getBoundingClientRect().top + window.scrollY));
+      await page.waitForTimeout(1200);
+      expect(await pdp.barraFijaDeCompra(), 'al llegar a "Van bien juntos" la barra deja de estar fija').toBeNull();
+      await pdp.capturarEvidencia(cp, 3, 'en Van bien juntos sin barra fija');
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-036 · Verificar que un producto con una sola sección muestra una sola pill (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-036';
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_SOLO_DESCRIPCION'));
+      exigir(await pdp.agregarVisible.isVisible(), '{SKU_SOLO_DESCRIPCION} abre una PDP sin ficha');
+      await pdp.capturarEvidencia(cp, 2, 'PDP del producto');
+      // Paso 3 — tab "Información": solo la pill "Descripción".
+      await page.getByRole('tab', { name: /informaci[óo]n/i }).first().click();
+      await expect(pdp.panelActivo).toBeVisible();
+      const pills = (await pdp.panelActivo.getByRole('button').allInnerTexts()).map((t) => t.trim()).filter((t) => t && t.length < 30);
+      test.info().annotations.push({ type: 'pills', description: pills.join(' · ') });
+      expect(pills, 'solo se muestra la pill "Descripción"').toEqual(['Descripción']);
+      await pdp.capturarEvidencia(cp, 3, 'tab Informacion con una sola pill', { elemento: pdp.panelActivo });
+      await pdp.capturarEvidencia(cp, undefined, undefined, { elemento: pdp.panelActivo });
+    });
+
+    test('TC-B2C31-M-037 · Verificar que la PDP muestra el carrusel "Van bien juntos" al final (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-037';
+      test.setTimeout(180000);
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_CROSS_SELLING'));
+      await pdp.recorrerHastaElFinal();
+      await expect(pdp.tituloVanBienJuntos, 'se muestra "Van bien juntos"').toBeVisible({ timeout: 15000 });
+      await pdp.tituloVanBienJuntos.scrollIntoViewIfNeeded();
+      const carrusel = await pdp.carruselVanBienJuntos();
+      expect(carrusel, 'el carrusel tiene un contenedor deslizable').not.toBeNull();
+      expect(carrusel!.productos, 'con productos complementarios').toBeGreaterThan(0);
+      expect(carrusel!.scrollWidth, 'deslizable horizontalmente').toBeGreaterThan(carrusel!.clientWidth);
+      test.info().annotations.push({ type: 'carrusel', description: `${carrusel!.productos} elementos · ${carrusel!.scrollWidth}/${carrusel!.clientWidth}px` });
+      await pdp.capturarEvidencia(cp, 3, 'carrusel Van bien juntos al final');
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-038 · Verificar que "Combina la promo" aparece con promo combinable y abre su modal (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-038';
+      const pdp = await new PDPPage(page).abrir(tokenExigido(testData, 'SKU_COMBINA_PROMO'));
+      await expect(pdp.combinaLaPromo, '"Combina la promo" visible').toBeVisible({ timeout: 15000 });
+      await expect(pdp.agregarVisible, 'junto a "Agregar"').toBeVisible();
+      await pdp.capturarEvidencia(cp, 2, 'Combina la promo junto a Agregar');
+      await pdp.combinaLaPromo.click();
+      await expect(pdp.drawerCombinaLaPromo, 'se abre el modal de Combina la promo').toBeVisible({ timeout: 15000 });
+      await expect(pdp.drawerCombinaLaPromo, 'con el contador de variantes combinables').toContainText(/\d+\s*\/\s*\d+/);
+      await pdp.capturarEvidencia(cp, 4, 'modal Combina la promo con variantes', { elemento: pdp.drawerCombinaLaPromo });
+      await pdp.capturarEvidencia(cp, undefined, undefined, { elemento: pdp.drawerCombinaLaPromo });
+    });
+
+    test('TC-B2C31-M-044 · Verificar que una URL de producto inexistente muestra la página 404 de producto (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-044';
+      const pdp = new PDPPage(page);
+      await page.goto(tokenExigido(testData, 'PDP_URL_INEXISTENTE'), { waitUntil: 'domcontentloaded' });
+      await expect(pdp.pantalla404, 'mensaje de producto inexistente').toBeVisible({ timeout: 20000 });
+      await expect(pdp.irAInicio, 'botón "Ir a la página de Inicio"').toBeVisible();
+      expect(await pdp.imagenDe404(), 'imagen de apoyo').toBe(true);
+      await pdp.capturarEvidencia(cp, 2, 'pagina 404 de producto');
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-045 · Verificar que el botón de la página 404 lleva al Home (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-045';
+      const pdp = new PDPPage(page);
+      await page.goto(tokenExigido(testData, 'PDP_URL_INEXISTENTE'), { waitUntil: 'domcontentloaded' });
+      await expect(pdp.irAInicio, 'la 404 muestra el botón').toBeVisible({ timeout: 20000 });
+      await pdp.capturarEvidencia(cp, 2, 'pagina 404 con el boton');
+      // Se toca de inmediato: la 404 también redirige sola al cabo de unos segundos (ver M-046).
+      await pdp.irAInicio.click();
+      await expect.poll(() => new URL(page.url()).pathname, { message: 'queda en el Home', timeout: 15000 }).toBe('/');
+      await pdp.capturarEvidencia(cp, 4, 'Home tras tocar Ir a la pagina de Inicio');
+      await pdp.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C31-M-046 · Verificar que la página 404 de producto no redirige al Home automáticamente (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C31-M-046';
+      const pdp = new PDPPage(page);
+      await page.goto(tokenExigido(testData, 'PDP_URL_INEXISTENTE'), { waitUntil: 'domcontentloaded' });
+      await expect(pdp.pantalla404, 'se muestra la 404').toBeVisible({ timeout: 20000 });
+      const montada = Date.now();
+      await pdp.capturarEvidencia(cp, 2, 'pagina 404 recien mostrada');
+      // Paso 3 — 10 segundos sin interactuar, registrando cuándo cambia la URL.
+      let cambio: number | null = null;
+      for (let i = 0; i < 20; i++) {
+        await page.waitForTimeout(500);
+        if (cambio === null && new URL(page.url()).pathname === '/') cambio = Date.now() - montada;
+      }
+      await pdp.capturarEvidencia(cp, 4, 'pantalla tras 10 segundos sin interactuar');
+      const cuando = cambio === null ? '-' : (cambio / 1000).toFixed(1);
+      test.info().annotations.push({ type: 'redireccion', description: cambio === null ? 'sin redirección en 10 s' : `redirigió al Home a los ${cuando} s de mostrarse la 404` });
+      expect(cambio, `la 404 se mantiene 10 s sin redirigir (redirigió al Home a los ${cuando} s)`).toBeNull();
+      await expect(pdp.pantalla404, 'sigue en la 404').toBeVisible();
       await pdp.capturarEvidencia(cp);
     });
   });

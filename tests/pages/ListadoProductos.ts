@@ -77,12 +77,21 @@ export class ListadoProductos extends BasePage {
    * Cada tarjeta de producto del listado.
    *
    * El shelf no tiene `data-testid` ni clase semántica: se ancla en el botón de favoritos, que
-   * es el único elemento propio e inequívoco de la tarjeta (ver el flujo `shelf-producto`).
+   * es el único elemento propio e inequívoco de la tarjeta (ver el flujo `shelf-producto`), y se
+   * sube al primer `div` que además tiene el nombre (`h3`) o la acción ("Agregar"/"Ver similares").
+   *
+   * No sirve `div:has(> div > favoritos)`: en Mobile 390 el favorito va más anidado y ese selector
+   * cae en el contenedor de la imagen, sin nombre ni precios (B2C-95 M-003, 2026-11-17: nombres
+   * vacíos y ningún producto "con promoción" en un listado que sí las mostraba todas).
    */
   get shelves(): Locator {
-    return this.page.locator(
-      "main div:has(> div > button[aria-label='Guardar en favoritos'])",
-    );
+    return this.page
+      // Con sesión, un producto ya guardado lleva "Quitar de favoritos": anclar solo en "Guardar"
+      // deja fuera esas tarjetas (B2C-95 D-007/M-007: 4 de 7 leídas con 3 favoritos guardados).
+      .locator("main button:is([aria-label='Guardar en favoritos'], [aria-label='Quitar de favoritos'])")
+      .locator(
+        "xpath=ancestor::div[.//h3 or .//button[normalize-space()='Agregar' or normalize-space()='Ver similares']][1]",
+      );
   }
 
   /** El número de productos que el listado declara en su cabecera. */
@@ -101,12 +110,16 @@ export class ListadoProductos extends BasePage {
   async secuencia(): Promise<string[]> {
     return this.shelves.evaluateAll((tarjetas) =>
       tarjetas.map((t) => {
-        const nombre = [...t.querySelectorAll('button')].find(
-          (b) =>
-            b.getAttribute('aria-label') !== 'Guardar en favoritos' &&
-            !/^agregar$/i.test((b.textContent ?? '').trim()) &&
-            (b.textContent ?? '').trim().length > 8,
-        );
+        // El nombre completo vive en el `h3` de la tarjeta (en Mobile ya no es un botón); el
+        // botón largo queda como respaldo para el shelf de Desktop anterior.
+        const nombre =
+          t.querySelector('h3') ??
+          [...t.querySelectorAll('button')].find(
+            (b) =>
+              !/favoritos$/i.test(b.getAttribute('aria-label') ?? '') &&
+              !/^(agregar|ver similares)$/i.test((b.textContent ?? '').trim()) &&
+              (b.textContent ?? '').trim().length > 8,
+          );
         return (nombre?.textContent ?? '').trim();
       }),
     );
@@ -127,12 +140,16 @@ export class ListadoProductos extends BasePage {
   async marcas(): Promise<string[]> {
     return this.shelves.evaluateAll((tarjetas) =>
       tarjetas.map((t) => {
-        const nombre = [...t.querySelectorAll('button')].find(
-          (b) =>
-            b.getAttribute('aria-label') !== 'Guardar en favoritos' &&
-            !/^agregar$/i.test((b.textContent ?? '').trim()) &&
-            (b.textContent ?? '').trim().length > 8,
-        );
+        // El nombre completo vive en el `h3` de la tarjeta (en Mobile ya no es un botón); el
+        // botón largo queda como respaldo para el shelf de Desktop anterior.
+        const nombre =
+          t.querySelector('h3') ??
+          [...t.querySelectorAll('button')].find(
+            (b) =>
+              !/favoritos$/i.test(b.getAttribute('aria-label') ?? '') &&
+              !/^(agregar|ver similares)$/i.test((b.textContent ?? '').trim()) &&
+              (b.textContent ?? '').trim().length > 8,
+          );
         return ((nombre?.textContent ?? '').split('|')[0] ?? '').trim();
       }),
     );

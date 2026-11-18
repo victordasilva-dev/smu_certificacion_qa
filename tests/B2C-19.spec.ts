@@ -1,7 +1,11 @@
 import { test, expect, token } from './support/fixtures';
 import { DESKTOP, MOBILE } from './support/viewports';
 import { HomePage } from './pages/HomePage';
-import { ICONO_MAS, ICONO_MENOS, SECCIONES, SeccionFooter } from './pages/FooterFull';
+import { Page } from '@playwright/test';
+import { ICONO_MAS, ICONO_MENOS, SECCIONES, SeccionFooter, FooterFull } from './pages/FooterFull';
+import { loginConOtp } from './support/loginOtp';
+import { conEstado } from './support/estadoCompartido';
+import { exigir } from './support/precondicion';
 
 /**
  * B2C-19 — Footer Full del storefront.
@@ -33,6 +37,84 @@ const TITULOS_SECCION: Record<SeccionFooter, RegExp> = {
   'Nuestros programas': /nuestros programas/i,
   'Nuestra empresa': /nuestra empresa/i,
 };
+
+/** Sesión con {COMPRADOR_USER} por correo + OTP, una vez por corrida (Desktop y Mobile la comparten). */
+const sesionComprador = conEstado('comprador', async (page, data) => {
+  const correo = token(data, 'COMPRADOR_USER');
+  if (!correo) throw new Error('Falta {COMPRADOR_USER} en el Excel de data: los TC lo declaran');
+  await page.goto('/');
+  await loginConOtp(page, correo);
+});
+
+/**
+ * D-012/M-012 (SP1): el Footer Full en Mi Cuenta con la sesión iniciada.
+ *
+ * Cada parte del esperado va en un `expect.soft`, para que el reporte nombre todo lo que falta y no
+ * solo lo primero. El enlace de «Contáctanos» es el primero que publica esa sección (el TC dice
+ * "un enlace", no declara cuál) y se compara contra su propio href.
+ */
+async function casoFooterEnMiCuenta(page: Page, cp: string): Promise<void> {
+  const home = new HomePage(page);
+  const f = new FooterFull(page);
+
+  // Pasos 1 a 3 — con la sesión ya iniciada, ir a Mi Cuenta.
+  await page.goto('/account', { waitUntil: 'domcontentloaded' });
+  // Mi cuenta mantiene peticiones abiertas y nunca llega a 'networkidle': se espera su propio contenido.
+  await page.getByText(/mis datos personales/i).filter({ visible: true }).first().waitFor({ timeout: 30000 }).catch(() => {});
+  exigir(new URL(page.url()).pathname.startsWith('/account'), 'la sesión de {COMPRADOR_USER} no está iniciada (Mi Cuenta redirige)');
+  // El header tiene un "Hola," oculto (variante del otro form-factor): se busca uno visible.
+  const saludo = page.getByText(/hola,/i).filter({ visible: true }).first();
+  await expect(saludo, 'sesión iniciada: la página saluda al usuario').toBeVisible({ timeout: 15000 });
+  const aceptar = page.getByRole('button', { name: /^aceptar$/i });
+  if (await aceptar.isVisible().catch(() => false)) await aceptar.click();
+  await home.capturarEvidencia(cp, 3, 'Mi cuenta con la sesion iniciada');
+
+  // Pasos 4 y 5 — scroll hasta el final y visualizar el footer.
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  // En Mobile el footer de Mi cuenta puede estar en el DOM con 0 px de alto: el scroll no espera
+  // por él para que el caso termine con sus aserciones y no con un timeout.
+  await f.root.scrollIntoViewIfNeeded({ timeout: 10000 }).catch(() => {});
+  await page.waitForTimeout(800);
+  const alto = await f.root.evaluate((e) => Math.round(e.getBoundingClientRect().height)).catch(() => 0);
+  test.info().annotations.push({ type: 'alto del footer', description: `${alto}px` });
+  await expect.soft(f.root, 'el footer se muestra en Mi cuenta').toBeVisible({ timeout: 3000 });
+  if (alto > 0) await home.capturarEvidencia(cp, 5, 'footer de Mi cuenta', { elemento: f.root });
+  else await home.capturarEvidencia(cp, 5, 'final de Mi cuenta sin footer visible');
+
+  await expect.soft(f.centroDeAyuda, 'bloque estático: Centro de ayuda').toBeVisible();
+  await expect.soft(f.seguimientoDeCompra, 'bloque estático: Seguimiento de compra').toBeVisible();
+  await expect.soft(f.whatsappClientes, 'bloque estático: WhatsApp clientes').toBeVisible();
+  for (const seccion of SECCIONES) {
+    await expect.soft(f.botonSeccion(seccion), `sección dropdown "${seccion}"`).toBeVisible({ timeout: 3000 });
+  }
+  await expect.soft(f.panelSeccion('Contactanos'), 'Contáctanos expandida').toHaveCount(1, { timeout: 3000 });
+  for (const seccion of ['Servicio al cliente', 'Nuestros programas', 'Nuestra empresa'] as SeccionFooter[]) {
+    if (await f.botonSeccion(seccion).count()) {
+      await expect.soft(f.iconoSeccion(seccion), `"${seccion}" colapsada`).toHaveAttribute('d', ICONO_MAS);
+    }
+  }
+  await expect.soft(f.root.getByRole('link', { name: /pol[íi]ticas de cookies/i }), 'link de Políticas de Cookies').toBeVisible({ timeout: 3000 });
+  await expect.soft(f.tituloRedesSociales, 'redes sociales').toBeVisible({ timeout: 3000 });
+
+  const resumen = {
+    botonesDeSeccion: await f.root.locator('button').evaluateAll((bs) => bs.map((b) => (b.textContent ?? '').trim()).filter(Boolean)),
+    enlaces: await f.root.locator('a').evaluateAll((as) => as.map((a) => a.getAttribute('href'))),
+  };
+  test.info().annotations.push({ type: 'footer en Mi cuenta', description: JSON.stringify(resumen) });
+
+  // Paso 6 — clic en un enlace de «Contáctanos», si la sección está.
+  const enlace = f.panelSeccion('Contactanos').locator('a[href^="/"]').first();
+  if (await enlace.count()) {
+    const href = (await enlace.getAttribute('href'))!;
+    await enlace.click();
+    await page.waitForURL(`**${href}`, { timeout: 30000 });
+    await home.capturarEvidencia(cp, 6, `destino del enlace de Contactanos ${href}`);
+    await expect.soft(page.getByRole('button', { name: /ingresa aqu[íi]/i }), 'la sesión sigue iniciada tras el clic (no aparece "Ingresa aquí")').toHaveCount(0, { timeout: 15000 });
+  } else {
+    expect.soft(false, 'no hay enlace de «Contáctanos» al que hacer clic: la sección no está en el footer').toBe(true);
+  }
+  await home.capturarEvidencia(cp);
+}
 
 test.describe('B2C-19 — Footer Full', () => {
   // ==================================================================== DESKTOP 1440x900
@@ -538,6 +620,26 @@ test.describe('B2C-19 — Footer Full', () => {
       expect(page.url()).toBe(enlace.href);
       await page.waitForLoadState('domcontentloaded');
       await home.capturarEvidencia(cp, 3, `navegacion al destino configurado ${enlace.pathname}`);
+    });
+  });
+  // =========================================================== SP1: logueado en Mi Cuenta
+  test.describe('Logueado en Mi Cuenta', { tag: '@otp' }, () => {
+    test.use({ storageState: sesionComprador });
+
+    test.describe('Desktop 1440x900', () => {
+      test.use(DESKTOP);
+      test('TC-B2C19-D-012 · Footer Full Desktop se muestra completo para un usuario logueado en Mi Cuenta (Desktop)', async ({ page }) => {
+        test.setTimeout(300000);
+        await casoFooterEnMiCuenta(page, 'TC-B2C19-D-012');
+      });
+    });
+
+    test.describe('Mobile 390x844', () => {
+      test.use(MOBILE);
+      test('TC-B2C19-M-012 · Footer Full Mobile se muestra completo para un usuario logueado en Mi Cuenta (Mobile)', async ({ page }) => {
+        test.setTimeout(300000);
+        await casoFooterEnMiCuenta(page, 'TC-B2C19-M-012');
+      });
     });
   });
 });

@@ -70,8 +70,11 @@ export class StoreLocator {
     await sugerencia.waitFor({ state: 'visible', timeout: 30000 });
     await sugerencia.click();
 
-    await this.botonContinuar.waitFor({ state: 'visible', timeout: 30000 });
-    await this.botonContinuar.click();
+    // La pantalla del mapa con "Continuar con detalles…" no siempre está: desde el 2026-11-17
+    // (Mobile, WebKit) la sugerencia lleva directo a "Detalles de la dirección". Se espera la que
+    // aparezca y solo se pasa por el mapa si se mostró.
+    await this.botonContinuar.or(this.botonAgregarDireccion).first().waitFor({ state: 'visible', timeout: 30000 });
+    if (await this.botonContinuar.isVisible()) await this.botonContinuar.click();
 
     await this.botonAgregarDireccion.waitFor({ state: 'visible', timeout: 30000 });
     await this.botonAgregarDireccion.click();

@@ -48,6 +48,10 @@ export default defineConfig({
     // falló, y hay que abrir los logs para averiguar cuál cayó. No estorba en local: es un
     // archivo más junto al JSON que ya se genera.
     ['junit', { outputFile: 'test-results/junit.xml' }],
+    // results.json lo reescribe cada corrida; este acumula el último intento de cada caso entre
+    // corridas (las tandas de una misma certificación) en .qa/run/resultados.json, que es lo que
+    // lee la Fase 9. Ver tests/support/resultadosAcumulados.ts.
+    ['./tests/support/resultadosAcumulados.ts'],
   ],
   use: {
     trace: 'on',

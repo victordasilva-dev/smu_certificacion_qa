@@ -334,6 +334,187 @@ export class PDPPage extends BasePage {
     return this.core.getByRole('button', { name: 'Agregar', exact: true }).locator('visible=true').first();
   }
 
+  // ---------------------------------------------------------------- galería (B2C-31 D-003, M-007 a M-010)
+
+  /** Contenedor de los dots de la galería en Mobile (vertical, a la izquierda de la imagen). */
+  get dotsGaleria(): Locator {
+    return this.page.locator('[data-testid="product-gallery-dots"]').locator('visible=true').first();
+  }
+
+  /** Cada dot: un botón "Ampliar imagen N". */
+  get dots(): Locator {
+    return this.dotsGaleria.locator('button');
+  }
+
+  /** Estado de la galería cuando el producto no tiene imagen ("Imagen no disponible"). */
+  get galeriaVacia(): Locator {
+    return this.page.locator('[data-testid="product-gallery-empty"]').locator('visible=true').first();
+  }
+
+  /** Modal de la galería de Mobile: imagen principal centrada + miniaturas debajo. */
+  get modalGaleria(): Locator {
+    return this.page.locator('[role="dialog"]').filter({ has: this.page.locator('[data-testid="product-gallery-modal-main"]') }).locator('visible=true').first();
+  }
+
+  get imagenDelModal(): Locator {
+    return this.modalGaleria.locator('[data-testid="product-gallery-modal-main"]');
+  }
+
+  get miniaturasDelModal(): Locator {
+    return this.modalGaleria.locator('[data-testid="product-gallery-thumb"]');
+  }
+
+  /** Controles de zoom dentro del modal de la galería (Mobile no debe tener ninguno). */
+  get zoomEnModal(): Locator {
+    return this.modalGaleria.locator('[data-testid*="zoom"], [aria-label*="zoom" i], [aria-label*="acercar" i]');
+  }
+
+  get zoomAlejar(): Locator {
+    return this.page.locator('[data-testid="product-gallery-zoom-out"]');
+  }
+
+  /** "-02.jpg" de la URL de una imagen de la galería: identifica cuál de las fotos del producto es. */
+  static fotoDe(src: string | null): string {
+    return (src ?? '').match(/-0\d+\.(jpg|png|webp)/i)?.[0] ?? (src ?? '');
+  }
+
+  /** Escala aplicada a la imagen principal de Desktop (1 sin zoom, 1.5 con zoom +). */
+  async escalaImagenPrincipal(): Promise<number> {
+    return this.imagenPrincipal.evaluate((img) => {
+      const t = getComputedStyle(img).transform;
+      const m = t.match(/matrix\(([^,]+)/);
+      return m ? Number(m[1]) : 1;
+    });
+  }
+
+  /** Imagen principal de Mobile: ancho renderizado, ancho del viewport y resolución de origen. */
+  async medidasGaleriaMobile(): Promise<{ ancho: number; viewport: number; naturalWidth: number; src: string }> {
+    return this.galeriaMobile.evaluate((img) => ({
+      ancho: Math.round(img.getBoundingClientRect().width),
+      viewport: window.innerWidth,
+      naturalWidth: (img as HTMLImageElement).naturalWidth,
+      src: img.getAttribute('src') ?? '',
+    }));
+  }
+
+  // ---------------------------------------------------------------- compartir en Desktop (D-006)
+
+  /** Modal "Compartir productos" que el CA7 pide para Desktop. */
+  get modalCompartir(): Locator {
+    return this.page.locator('[role="dialog"]').filter({ hasText: /compartir productos/i }).locator('visible=true').first();
+  }
+
+  // ---------------------------------------------------------------- 404 (M-044 a M-046)
+
+  /** `true` si la pantalla 404 de producto muestra una imagen de apoyo visible. */
+  async imagenDe404(): Promise<boolean> {
+    return this.pantalla404.first().evaluate((el) => {
+      let c: Element | null = el;
+      for (let i = 0; i < 6 && c; i++, c = c.parentElement) {
+        const img = [...c.querySelectorAll('img, svg')].find((i2) => {
+          const r = i2.getBoundingClientRect();
+          return r.width >= 40 && r.height >= 40;
+        });
+        if (img) return true;
+      }
+      return false;
+    });
+  }
+
+  // ---------------------------------------------------------------- precios de oferta (M-018)
+
+  /**
+   * Los precios de la ficha con su color y decoración, y el color del nombre del producto como
+   * referencia del texto estándar. "Color de acento" se verifica contra esa referencia.
+   */
+  async estilosDePrecios(): Promise<{ precios: { texto: string; color: string; tachado: boolean; fontSize: number }[]; colorTexto: string }> {
+    return this.core.evaluate((core) => {
+      const fuera = new Set<Element>();
+      core.querySelectorAll('[role="tablist"], [role="tabpanel"]').forEach((el) => {
+        fuera.add(el);
+        el.querySelectorAll('*').forEach((h) => fuera.add(h));
+      });
+      const hojas = [...core.querySelectorAll('*')].filter(
+        (el) => !fuera.has(el) && el.children.length === 0 && (el as HTMLElement).offsetParent !== null,
+      ) as HTMLElement[];
+      const precios = hojas
+        .filter((el) => /^(antes:\s*)?\$[\d.]+$/i.test((el.textContent ?? '').trim()))
+        .map((el) => {
+          const cs = getComputedStyle(el);
+          const pd = getComputedStyle(el.parentElement!).textDecorationLine;
+          return {
+            texto: (el.textContent ?? '').trim(),
+            color: cs.color,
+            tachado: cs.textDecorationLine.includes('line-through') || pd.includes('line-through'),
+            fontSize: parseFloat(cs.fontSize),
+          };
+        });
+      const h1 = document.querySelector('h1') as HTMLElement | null;
+      return { precios, colorTexto: h1 ? getComputedStyle(h1).color : '' };
+    });
+  }
+
+  // ---------------------------------------------------------------- sticky y Van bien juntos (D-009, M-030, M-037)
+
+  /** Título h2 "Van bien juntos". */
+  get tituloVanBienJuntos(): Locator {
+    return this.page.getByRole('heading', { level: 2, name: /van bien juntos/i });
+  }
+
+  /** Recorre la página hasta el final para que los carruseles diferidos se monten. */
+  async recorrerHastaElFinal(): Promise<void> {
+    for (let i = 0; i < 3; i++) {
+      await this.page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+      await this.page.waitForTimeout(2500);
+    }
+  }
+
+  /**
+   * Barra fija (position: fixed) con el bloque de datos y "Agregar" de Mobile, si está a la vista.
+   * Devuelve su texto y caja, o `null` si no hay ninguna barra fija con "Agregar".
+   */
+  async barraFijaDeCompra(): Promise<{ top: number; alto: number; texto: string } | null> {
+    return this.page.evaluate(() => {
+      const fijos = [...document.querySelectorAll('body *')].filter((e) => {
+        if (getComputedStyle(e).position !== 'fixed') return false;
+        const r = e.getBoundingClientRect();
+        return r.height > 40 && r.top < window.innerHeight && r.bottom > 0;
+      });
+      const barra = fijos.find((e) => [...e.querySelectorAll('button')].some((b) => /^agregar$/i.test((b as HTMLElement).innerText.trim())));
+      if (!barra) return null;
+      const r = barra.getBoundingClientRect();
+      return { top: Math.round(r.top), alto: Math.round(r.height), texto: (barra as HTMLElement).innerText.replace(/\s+/g, ' ').trim() };
+    });
+  }
+
+  /** Columna derecha de Desktop (info, precios, Agregar): su `position` y su top en pantalla. */
+  async columnaDeInfoDesktop(): Promise<{ position: string; top: number }> {
+    return this.agregar.evaluate((b) => {
+      let p: HTMLElement | null = b as HTMLElement;
+      while (p && p !== document.body && getComputedStyle(p).position !== 'sticky') p = p.parentElement;
+      const el = p && p !== document.body ? p : (b as HTMLElement);
+      return { position: getComputedStyle(el).position, top: Math.round(el.getBoundingClientRect().top) };
+    });
+  }
+
+  /** Productos y desplazamiento horizontal del carrusel "Van bien juntos". */
+  async carruselVanBienJuntos(): Promise<{ productos: number; scrollWidth: number; clientWidth: number } | null> {
+    return this.tituloVanBienJuntos.evaluate((h) => {
+      let c: Element | null = h.parentElement;
+      for (let i = 0; i < 5 && c; i++, c = c.parentElement) {
+        const desplazable = [...c.querySelectorAll('*')].find((e) => {
+          const s = getComputedStyle(e);
+          return (s.overflowX === 'auto' || s.overflowX === 'scroll') && e.scrollWidth > e.clientWidth + 10;
+        }) as HTMLElement | undefined;
+        if (desplazable) {
+          const productos = desplazable.querySelectorAll('a[href*=".html"], img').length;
+          return { productos, scrollWidth: desplazable.scrollWidth, clientWidth: desplazable.clientWidth };
+        }
+      }
+      return null;
+    });
+  }
+
   // ---------------------------------------------------------------- Combina la promo (B2C-51)
 
   /** El botón "😎 Combina la promo" de la ficha (no los de las tarjetas del carrusel). */
@@ -686,6 +867,13 @@ export class PDPPage extends BasePage {
       const barra = sec.parentElement!.previousElementSibling!.querySelectorAll('button');
       return [...barra].map((b) => ({ texto: (b.textContent ?? '').trim(), activa: b.getAttribute('aria-current') === 'true' }));
     });
+  }
+
+  /** Los `data-spy-id` de las secciones del tab Información, en el mismo orden que sus pills. */
+  async seccionesDeInformacion(): Promise<string[]> {
+    return this.page.evaluate(() =>
+      [...document.querySelectorAll('[role="tabpanel"]:not([hidden]) [data-spy-id]')].map((s) => s.getAttribute('data-spy-id') ?? ''),
+    );
   }
 
   /** Posición vertical, en el viewport, del borde inferior de la barra de pills y del inicio de una sección. */

@@ -1,6 +1,6 @@
 {
  "flow": "pdp-detalle-producto",
- "last_updated": "2026-11-16T22:30:00Z",
+ "last_updated": "2026-11-18T09:00:00Z",
  "version": 4,
  "description": "Pagina de detalle de producto (PDP) del storefront: breadcrumb, galeria, bloque de info/precios/botones, tabs y estados de carga/error/404. Es el objeto de la HU B2C-31.",
  "source": {
@@ -135,6 +135,13 @@
   ]
  },
  "observations": [
+  "MEMBRESIA (2026-11-18): es una suscripción, no el grupo de clientes. Asignar {COMPRADOR_MEMBRESIA_USER} (cliente 00002001) a membresia_diamante en BM no la activa: smu-membership/status sigue en hasMembership=false, state=NEW, sin plan ni medio de pago, y 'Mi membresía' ofrece 'Contratar'. La asignación se dejó por decisión del usuario. Activarla requiere contratarla con un medio de pago de prueba (lo provee el equipo).",
+  "CORRIDA 2026-11-17/18 (21 pendientes): 13 Aprobado, 6 Rechazado (B2C-1530 D-003 y B2C-1531 M-010 'Imagen no disponible' en vez de imagen por defecto; B2C-1532 M-018 precio oferta sin color de acento; B2C-1533 D-006 Compartir en Desktop llama navigator.share en vez del modal; B2C-1534 D-009 'Van bien juntos' no se renderiza en 1440 px; B2C-1535 M-046 la 404 redirige sola a ~5 s), 2 Bloqueado Data (D-007, M-048: sin cuenta con membresia activa y la web no muestra Unipay/BE).",
+  "GALERIA: Desktop miniaturas [data-testid=product-gallery-thumb] (activa aria-pressed=true), zoom +/- escala la img principal a matrix(1.5) y vuelve a 1. Mobile: img [data-testid=product-gallery-main-mobile] 358 px (origen sw=700) + dots verticales [data-testid=product-gallery-dots] con botones 'Ampliar imagen N'; tocar un dot abre dialog con [data-testid=product-gallery-modal-main] centrada y miniaturas debajo, sin zoom. Sin imagen: [data-testid=product-gallery-empty] con texto 'Imagen no disponible'.",
+  "'VAN BIEN JUNTOS' depende del viewport: con 401693004 aparece en 390 px (12 productos) y no en 1440 px (ni Chromium ni WebKit). Mobile: barra fija abajo (222 px) con precios y 'Agregar' mientras se recorren los tabs; se libera cuando el titulo de VBJ llega al tope.",
+  "STOCK CON DIRECCION: la PDP consulta products/<id>?inventoryIds=<lista de la tienda> (smu-inv-uni-581 para Calle Uno 23 La Florida, smu-inv-uni-917 para la cuenta Diamante). Un producto con stock solo en smu-inventory-cl sale 'Pronto disponible' con direccion.",
+  "PRECIOS ESPECIALES: los atributos c_diamantePrice/c_unipayPrice/c_bancoEstadoPrice existen (enteros, Product, no site-specific). Como invitado la PDP muestra el diamante como teaser; con sesion el diamante sale de promociones del grupo Diamante (666200 lo muestra), no del atributo. Unipay/BE no se renderizan en la web. Ninguna cuenta del Excel de data tiene membresia activa ('Mi membresia' ofrece 'Contratar').",
+  "DATA QA (Fase 2b, 2026-11-17/18): QA-B2C31-COMPLETA (promo 3x2 QA-PROMO-B2C31-3X2 identical-products, stock en smu-inventory-cl y smu-inv-uni-581) -> 'Completa la promo' real: sin boton Combina y toast '¡Completaste la promo!' al llegar a 3 en el stepper. QA-B2C31-3PRECIOS (diamante 2400, unipay 2500, BE 2600). Import por Merchant Tools (la cuenta no tiene Site Import): src/catalog para catalogo/precios/inventario y src/marketing para promociones.",
   "CORRIDA 2026-11-16 (4 pendientes, Mobile webkit): M-040 Aprobado; M-013 Rechazado (B2C-1501: 'Vendido por true', c_isMarketPlace es booleano y no hay atributo con el vendedor); M-049 Rechazado (B2C-1502: 'Combina la promo' visible con c_isCombinable = false en 641229002); M-012 Bloqueado Data (642688 sigue sin ficha).",
   "Los atributos c_ del producto se leen de window.__PRELOADED_STATE__ (JSON.stringify y regex): c_isMarketPlace, c_isCombinable, c_acercaDe, etc. Más rápido que buscar el request del API.",
   "675191-UN ya tiene c_acercaDe: pills Descripción, Ingredientes, Acerca de.",

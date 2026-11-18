@@ -1,7 +1,7 @@
 {
  "flow": "modal-categorias",
  "description": "Modal de categorias de Mobile web (HU B2C-21): se abre con el icono sandwich del header y muestra un carrusel horizontal de top categorias N1 (pildoras) mas un listado vertical de secciones N1, cada una con su carrusel de subcategorias N2.",
- "last_explored": "2026-09-11",
+ "last_explored": "2026-11-17",
  "entry_url": "/",
  "auth_required": false,
  "form_factors": {
@@ -47,7 +47,10 @@
   "TRAMPA DE LOCATOR: getByRole('button', { name: /categor[ii]as/i }) resuelve a DOS elementos —el icono sandwich (aria-label='Categorías') y otro boton del contenido cuyo texto visible tambien es 'Categorías'— y rompe por strict mode. El fallo es INTERMITENTE porque ese segundo boton se renderiza con contenido diferido: la misma suite paso una corrida y fallo la siguiente sin que cambiara nada. Usar header button[aria-label=\"Categorías\"].",
   "El armazon documentado aqui (.chakra-modal__header / .chakra-modal__body) es el de la variante MOBILE. El modal de categorias de Desktop, que abre el boton con texto 'Categorias' del header, tiene otra estructura y no expone ninguna de esas dos clases: ver [[header-storefront]].",
   "EN DESKTOP, el clic sobre la entrada N1 de la columna izquierda NAVEGA a la PLP N1 (verificado con Carnes y con Congelados); el panel derecho muestra sus N2 con un enlace 'Mostrar todo' propio. Es el punto de entrada 'menu de navegacion por categorias' de B2C-36 (CA2).",
-  "EL MODAL DE DESKTOP ES OTRO COMPONENTE QUE EL DE MOBILE: el de Mobile es un chakra-modal con secciones verticales y carruseles N2; el de Desktop es un panel de dos columnas sin .chakra-modal__body. Sus locators no son intercambiables."
+  "EL MODAL DE DESKTOP ES OTRO COMPONENTE QUE EL DE MOBILE: el de Mobile es un chakra-modal con secciones verticales y carruseles N2; el de Desktop es un panel de dos columnas sin .chakra-modal__body. Sus locators no son intercambiables.",
+  "THUMBNAIL N2 (TC-B2C21-M-018, 2026-11-17): la img renderiza 70x70 y es CUADRADA (border-radius 0); lo circular es su contenedor directo (70x70, border-radius 9999px, overflow hidden). Medir solo la img da un falso 'no circular'. Medicion en ModalCategorias.medidasThumbnailsN2().",
+  "CATEGORIAS OFFLINE (TC-B2C21-M-017, 2026-11-17): {CATEGORY_N1_OFF}='Colecciones' y {CATEGORY_OFF}='Accesorios aseo' no aparecen en pildoras, listado N1 ni tarjetas N2. Las pildoras vienen truncadas a 20+'…': comparar por prefijo, sin tildes.",
+  "MENU AL 2026-11-17: 14 N1 y 37 N2. Limpieza ahora SI tiene N2 (Baño y Cocina, Detergente, Papeles, Pisos y muebles, Suavizante); la lista de 'N1 sin subcategorias' de arriba quedo vieja para Limpieza."
  ],
  "datos_del_ambiente": {
   "top_categorias": [
@@ -91,8 +94,8 @@
  "history": [],
  "last_run": {
   "suite": "B2C-21",
-  "fecha": "2026-09-09",
-  "resultado": "15 Aprobado, 1 Rechazado (M-015, bug B2C-756), 5 Fuera de alcance (APP)"
+  "fecha": "2026-11-17",
+  "resultado": "M-017 y M-018 Aprobado; planilla WEB 18/18 Aprobado"
  },
  "business_manager": {
   "catalogo": "BM Merchant Tools (sitio Unimarc) > Products and Catalogs > Catalogs > unimarc-storefront-catalog: lista las N1 (17, paginadas de a 10; 'All' las muestra todas). El orden del menu Categorias sale de este orden: seleccionar el checkbox de una fila y usar las flechas de la columna Sorting (button 'Submit' x4: arriba del todo, subir, bajar, abajo del todo). Se guarda al instante.",

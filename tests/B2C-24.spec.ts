@@ -1,5 +1,5 @@
 import { test, expect } from './support/fixtures';
-import { DESKTOP } from './support/viewports';
+import { DESKTOP, MOBILE } from './support/viewports';
 import { PaginaHabilitada } from './pages/PaginaHabilitada';
 
 /**
@@ -143,6 +143,57 @@ test.describe('B2C-24 — Header sticky', () => {
         elemento: h.root,
       });
 
+      await home.capturarEvidencia(cp, undefined, undefined, { elemento: h.root });
+    });
+  });
+
+  test.describe('Mobile 390x844', () => {
+    test.use(MOBILE);
+
+    test('TC-B2C24-M-003 · Hacer scroll hacia arriba desde el modo sticky despliega el Header completo, sin re-render del Store Locator (Mobile)', async ({
+      page,
+    }) => {
+      const cp = 'TC-B2C24-M-003';
+      test.setTimeout(180000);
+
+      const home = new PaginaHabilitada(page, '', 'Home');
+      await home.goto();
+      const h = home.header;
+
+      // Paso 1 — dejar una dirección elegida en el Store Locator (misma dirección que D-003: la
+      // planilla no declara ningún token de dirección ni de tienda).
+      await home.capturarEvidencia(cp, 1, 'Store Locator sin forma de entrega elegida', { elemento: h.root });
+      const drawer = await h.abrirStoreLocator();
+      await drawer.elegirDespachoADomicilio(DIRECCION_DE_PRUEBA);
+
+      const altoFull = await h.alto();
+      const estadoInicial = await h.textoStoreLocator();
+      expect(estadoInicial, 'el Store Locator refleja la elección').not.toMatch(/elige una forma de entrega/i);
+      await home.capturarEvidencia(cp, 1, 'Store Locator con la direccion elegida', { elemento: h.root });
+      await h.marcarStoreLocator(cp);
+
+      // Paso 2 — scroll hacia abajo para activar el modo sticky.
+      await h.scrollA(1500);
+      const altoSticky = await h.alto();
+      expect(altoSticky, 'el header se contrae al hacer scroll hacia abajo').toBeLessThan(altoFull);
+      expect(await h.quedaFueraDelHeader(h.storeLocator), 'el Store Locator queda oculto en modo sticky').toBe(true);
+      await home.capturarEvidencia(cp, 2, 'header contraido a sticky', { elemento: h.root });
+
+      // Paso 3 — scroll-up corto, sin llegar al tope: header completo y Store Locator intacto.
+      await h.scrollA(1300);
+      expect(await h.alto(), 'el header se despliega al hacer scroll hacia arriba').toBe(altoFull);
+      expect(await page.evaluate(() => window.scrollY), 'se desplegó sin llegar al tope').toBeGreaterThan(0);
+      expect(await h.quedaFueraDelHeader(h.storeLocator), 'el Store Locator vuelve a verse dentro del header').toBe(false);
+      expect(await h.textoStoreLocator(), 'el Store Locator conserva la dirección').toBe(estadoInicial);
+      expect(await h.storeLocatorConservaMarca(cp), 'el Store Locator es el mismo nodo: no hubo re-render').toBe(true);
+      await home.capturarEvidencia(cp, 3, 'header completo con el Store Locator intacto', { elemento: h.root });
+
+      // Paso 4 — volver a bajar y comprobar que se contrae de nuevo.
+      await h.scrollA(1600);
+      expect(await h.alto(), 'el header vuelve a contraerse').toBe(altoSticky);
+      await home.capturarEvidencia(cp, 4, 'header contraido nuevamente', { elemento: h.root });
+
+      test.info().annotations.push({ type: 'alturas', description: `full ${altoFull}px · sticky ${altoSticky}px` });
       await home.capturarEvidencia(cp, undefined, undefined, { elemento: h.root });
     });
   });
