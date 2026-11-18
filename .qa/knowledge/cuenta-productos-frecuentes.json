@@ -1,7 +1,7 @@
 {
   "flow": "cuenta-productos-frecuentes",
-  "last_updated": "2026-11-11T19:30:00Z",
-  "version": 3,
+  "last_updated": "2026-11-18T15:00:00Z",
+  "version": 4,
   "description": "Página 'Mis productos frecuentes' (My Usuals) de Mi Cuenta: grilla de los productos que el cliente compra habitualmente, con el shelf estándar del sitio. Es el objeto de la HU B2C-85. Existe en DEV, pero casi toda la suite está bloqueada por data.",
   "source": {
     "suite": "B2C-85",
@@ -15,7 +15,11 @@
       "TC-B2C85-D-007",
       "TC-B2C85-D-008",
       "TC-B2C85-D-009",
-      "TC-B2C85-M-002"
+      "TC-B2C85-M-002",
+      "TC-B2C85-D-006",
+      "TC-B2C85-M-001",
+      "TC-B2C85-D-010",
+      "TC-B2C85-M-003"
     ],
     "last_sync": "2026-10-07T22:00:00Z"
   },
@@ -43,6 +47,21 @@
         "description": "El drawer de login que se abre al entrar sin sesión. Se filtra por su propio contenido y no por el rol: el storefront usa role=dialog también para el mini carro y el modal de categorías, así que un getByRole('dialog') pelado da por bueno el panel equivocado.",
         "selector": "[role=\"dialog\"] filtrado por tener el textbox de RUT",
         "type": "css+contenido"
+      },
+      {
+        "description": "Paginación de Desktop (>50 frecuentes): contenedor y botones por aria-label",
+        "selector": "main [aria-label=\"Paginación\"], [aria-label=\"Página siguiente\"], [aria-label=\"Página N\"]",
+        "type": "aria-label"
+      },
+      {
+        "description": "Indicador del scroll infinito en Mobile: <p aria-label=\"Cargando más productos\">…</p> al pie de la grilla; vive solo mientras carga el bloque (se lee su texto en la misma espera y NUNCA scrollIntoViewIfNeeded sobre él: si ya se fue, espera hasta el timeout del test)",
+        "selector": "main [aria-label=\"Cargando más productos\"]",
+        "type": "aria-label"
+      },
+      {
+        "description": "Tarjeta completa de un SKU (incluye cucarda, precios y acción): MyUsualsPage.tarjetaCompleta(sku). tarjeta()/tarjetas se quedan con el envoltorio de la cucarda en tarjetas con badge",
+        "selector": "main div filtrado por enlace/imagen del SKU y botón Agregar|Ver similares, .last()",
+        "type": "css+contenido"
       }
     ],
     "fallback": [],
@@ -69,7 +88,13 @@
     "EL CARRUSEL SOLO PIDE 5 SKU: shopper-products ...products?ids= lleva los 5 primeros de c_myUsuals aunque el cliente tenga 29 (vhchirinos+comprador@: 29 en c_myUsuals, 27 en la página). En Desktop no hay nada que desplazar; en Mobile (2 visibles) se desliza hasta el 5º. Bug B2C-1482 (TC-B2C55-D-006).",
     "CARGA: 5 chakra-skeleton con el título y 'Ver todos' ya visibles (no ícono) -> Aprobado con nota, mismo criterio que B2C-85. ERROR: con shopper-customers/customers/{id}?siteId en 500 el div.component queda con alto 0 y no hay mensaje.",
     "WEBKIT + page.route: las lecturas de cliente y catálogo pasan por el service worker y page.route no las intercepta (el 500 simulado nunca llegó). En los casos de red simulada en Mobile: test.use({ serviceWorkers: 'block' }). En WebKit además, la captura de elemento no termina mientras una petición sigue retenida por el route: acotarla.",
-    "CUENTAS (2026-11-11): {COMPRADOR_USUALS_MAS_24_USER}=vhchirinos+comprador@ (29 frecuentes, sin método de entrega activo: header 'Elige una forma de entrega'); {COMPRADOR_5_FRECUENTES_USER}=vhchirinos+5frecuentes@ (exactamente 5, el Home no muestra el carrusel). Login por correo + OTP; en Mobile el primer intento a veces no completa la sesión y pasa en el reintento."
+    "CUENTAS (2026-11-11): {COMPRADOR_USUALS_MAS_24_USER}=vhchirinos+comprador@ (29 frecuentes, sin método de entrega activo: header 'Elige una forma de entrega'); {COMPRADOR_5_FRECUENTES_USER}=vhchirinos+5frecuentes@ (exactamente 5, el Home no muestra el carrusel). Login por correo + OTP; en Mobile el primer intento a veces no completa la sesión y pasa en el reintento.",
+    "CORRIDA 2026-11-18 (D-006, M-001, D-010, M-003): 4 Aprobado; la planilla queda 13/13 Aprobado. {COMPRADOR_USUALS_MAS_50_USER}=vhchirinos+50usuals@ (cliente BM 00005505).",
+    "DATA +50usuals: c_myUsuals tenía 53 SKU pero 3 no existen en catálogo (650932-UN, 035678-UN, 503538-UN) → la página mostraba 50 y no paginaba. 2026-11-18 se agregaron en BM (Customers › Advanced search por Email › atributo 'Mis Usuales (product IDs)', 'Add Another Value') 662457-UN, 652051-UN, 666200-UN, 666285-UN, 690123-UN → 55 válidos. Por decisión del usuario NO se restauró. Original en .qa/run/data-prueba/2026-11-18/c_myUsuals-original-50usuals.json.",
+    "PAGINACIÓN/SCROLL: la página pide todos los SKU de c_myUsuals al cargar (lotes de 24 en shopper-products) y muestra 50; el resto se pagina en Desktop y se agrega por scroll infinito en Mobile (sin request nueva).",
+    "PRECIO PROMOCIONAL: el precio anterior es texto 'Antes: $X', no tiene text-decoration line-through: contenidoDeTarjeta().tachado da false. Detectar promo por /Antes:\\s*\\$/.",
+    "D-010: el tapapecho 000000000000029403-KG (frecuente de +50usuals y presente en {PLP_URL}=carnes_vacuno) trae cucarda 'Promoción en Carnes', 5% + 'Antes: $9.990', 'Pronto disponible': sirve para la paridad shelf.",
+    "SIN SESIÓN (2026-11-18): el drawer de login ya pide correo (no RUT); LoginModal.root (filtra por rut|contraseña) no lo encuentra: usar LoginModal.dialogo/campoCorreo. D-003 todavía usa root/campoRut."
   ],
   "page_objects": {
     "exists": true,
@@ -84,7 +109,7 @@
   "history": [],
   "last_run": {
     "suite": "B2C-85",
-    "fecha": "2026-10-09",
-    "resultado": "3 pendientes: 3 Bloqueado Data"
+    "fecha": "2026-11-18",
+    "resultado": "4 pendientes: 4 Aprobado (planilla 13/13 Aprobado)"
   }
 }

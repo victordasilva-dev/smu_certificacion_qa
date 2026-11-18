@@ -361,6 +361,33 @@ export class MyUsualsPage extends BasePage {
     return this;
   }
 
+  /** Como `navegarSinEsperarContenido()`, pero a la URL absoluta que declara el TC. */
+  async navegarAUrlSinEsperarContenido(url: string): Promise<this> {
+    await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+    await this.cookies.aceptarSiAparece();
+    await this.page.waitForTimeout(4000);
+    return this;
+  }
+
+  /** La paginación de Desktop ("Paginación"), que aparece cuando hay más de 50 frecuentes. */
+  get paginacion(): Locator {
+    return this.page.locator('main [aria-label="Paginación"]').locator('visible=true').first();
+  }
+
+  get paginaSiguiente(): Locator {
+    return this.page.locator('main [aria-label="Página siguiente"]').locator('visible=true').first();
+  }
+
+  /** "Página N" de la paginación. */
+  pagina(n: number): Locator {
+    return this.page.locator(`main [aria-label="Página ${n}"]`).locator('visible=true').first();
+  }
+
+  /** El indicador "…" del scroll infinito de Mobile, al pie de la grilla. */
+  get indicadorCargaMas(): Locator {
+    return this.page.locator('main [aria-label="Cargando más productos"]').first();
+  }
+
   /** Dónde terminó el navegador, para comprobar una redirección. */
   destino(): { path: string; esHome: boolean } {
     const url = new URL(this.page.url());
@@ -387,6 +414,26 @@ export class MyUsualsPage extends BasePage {
   /** La tarjeta de un SKU, por el enlace a su PDP o el `src` de su imagen. */
   tarjeta(sku: string): Locator {
     return this.tarjetas.filter({ has: this.page.locator(`a[href*="${sku}"], img[src*="${sku}"]`) }).first();
+  }
+
+  /**
+   * La tarjeta completa de un SKU: el contenedor más interno que tiene su enlace o imagen y su
+   * botón de acción ("Agregar" o "Ver similares"). `tarjeta()` se queda corto en las tarjetas con
+   * cucarda: ahí el ancla de favoritos casa con el envoltorio de la cucarda y deja fuera precios y
+   * botones (B2C-85 D-010).
+   */
+  tarjetaCompleta(sku: string): Locator {
+    return this.page
+      .locator('main div')
+      .filter({ has: this.page.locator(`a[href*="${sku}"], img[src*="${sku}"]`) })
+      .filter({ has: this.page.getByRole('button', { name: /^(agregar|ver similares)$/i }) })
+      .last();
+  }
+
+  /** Los SKU enlazados en la grilla (sin repetir), en orden: no dependen del ancla de la tarjeta. */
+  async skusEnlazados(): Promise<string[]> {
+    const hrefs = await this.page.locator('main a[href*=".html"]').evaluateAll((as) => as.map((a) => a.getAttribute('href') ?? ''));
+    return [...new Set(hrefs.map((h) => h.match(/(\d{18}-[A-Z]+)/)?.[1] ?? '').filter(Boolean))];
   }
 
   /** El total que anuncia el encabezado ("N productos"). */

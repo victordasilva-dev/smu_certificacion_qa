@@ -1,9 +1,14 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { Page } from '@playwright/test';
 import { test, expect, token } from './support/fixtures';
 import { DESKTOP, MOBILE } from './support/viewports';
 import { HomePage, MyUsualsPage } from './pages/HomePage';
 import { LoginModal } from './pages/LoginModal';
 import { ShelfProducto } from './pages/ShelfProducto';
+import { loginConOtp } from './support/loginOtp';
+import { conCandado } from './support/candadoOtp';
+import { exigir } from './support/precondicion';
 
 /**
  * B2C-85 — Página "Mis productos frecuentes" (My Usuals).
@@ -51,6 +56,52 @@ function capturarMyUsuals(page: Page): () => string[] | null {
     if (Array.isArray(cuerpo?.c_myUsuals)) lista = cuerpo.c_myUsuals;
   });
   return () => lista;
+}
+
+/**
+ * Sesión con {COMPRADOR_USUALS_MAS_50_USER} (correo + OTP). Reutiliza el storageState guardado por
+ * form-factor en `.qa/auth/`, así la corrida pide un solo código por cuenta y viewport.
+ * El caso NO valida el login: es solo la precondición "usuario registrado".
+ */
+async function sesionMas50(page: Page, testData: Parameters<typeof token>[0], mobile: boolean): Promise<void> {
+  const ficha = path.resolve(`.qa/auth/b85-usuals-mas-50-${mobile ? 'm' : 'd'}.json`);
+  if (fs.existsSync(ficha)) {
+    const estado = JSON.parse(fs.readFileSync(ficha, 'utf-8'));
+    await page.context().addCookies(estado.cookies ?? []);
+    const origen = (estado.origins ?? [])[0];
+    if (origen?.localStorage?.length) {
+      await page.addInitScript((items: { name: string; value: string }[]) => {
+        if (sessionStorage.getItem('__b85_ls')) return;
+        for (const { name, value } of items) localStorage.setItem(name, value);
+        sessionStorage.setItem('__b85_ls', '1');
+      }, origen.localStorage);
+    }
+  }
+  const home = new HomePage(page);
+  await home.goto();
+  const conSesion = await home.header.saludo.waitFor({ state: 'visible', timeout: 20000 }).then(
+    () => true,
+    () => false,
+  );
+  if (!conSesion) {
+    const correo = tokenExigido(testData, 'COMPRADOR_USUALS_MAS_50_USER');
+    await conCandado(correo, () => loginConOtp(page, correo));
+    await home.header.saludo.waitFor({ state: 'visible', timeout: 30000 });
+    fs.mkdirSync(path.dirname(ficha), { recursive: true });
+    await page.context().storageState({ path: ficha });
+  }
+  await new LoginModal(page).descartarPasskey();
+}
+
+/** Pasos con sesión: abre My Usuals de la cuenta con más de 50 frecuentes y exige que los tenga. */
+async function myUsualsMas50(page: Page, testData: Parameters<typeof token>[0], mobile: boolean) {
+  await sesionMas50(page, testData, mobile);
+  const myUsuals = new MyUsualsPage(page);
+  await myUsuals.goto();
+  await expect(myUsuals.tarjetas.first(), 'la grilla carga sus tarjetas').toBeVisible({ timeout: 30000 });
+  const total = await myUsuals.totalAnunciado();
+  exigir(total !== null && total > 50, `la cuenta {COMPRADOR_USUALS_MAS_50_USER} tiene más de 50 frecuentes (anuncia ${total})`);
+  return { myUsuals, total: total! };
 }
 
 test.describe('B2C-85 — Mis productos frecuentes', () => {
@@ -371,6 +422,151 @@ test.describe('B2C-85 — Mis productos frecuentes', () => {
       await myUsuals.footer.root.first().scrollIntoViewIfNeeded();
       await expect(myUsuals.footer.root.first(), 'se muestra el footer estándar').toBeVisible();
       await myUsuals.capturarEvidencia(cp, 3, 'footer estandar', { elemento: myUsuals.footer.root.first() });
+
+      await myUsuals.capturarEvidencia(cp);
+    });
+  });
+
+  test.describe('Desktop 1440x900 (mas de 50 frecuentes)', { tag: '@otp' }, () => {
+    test.use(DESKTOP);
+
+    test('TC-B2C85-D-006 · Paginacion en Web Desktop para mas de 50 productos (Desktop)', async ({ page, testData }) => {
+      const cp = 'TC-B2C85-D-006';
+      test.setTimeout(300000);
+
+      // Paso 1 — My Usuals con más de 50 frecuentes.
+      const { myUsuals, total } = await myUsualsMas50(page, testData, false);
+      await myUsuals.capturarEvidencia(cp, 1, `my usuals con ${total} productos`);
+      const primeraPagina = await myUsuals.skusEnOrden();
+      expect(primeraPagina.length, 'la primera página muestra 50 productos').toBe(50);
+
+      // Paso 2 — la paginación está presente.
+      await myUsuals.paginacion.scrollIntoViewIfNeeded();
+      await expect(myUsuals.paginacion, 'se muestra la paginación').toBeVisible();
+      await expect(myUsuals.pagina(2), 'la paginación ofrece la página 2').toBeVisible();
+      await myUsuals.capturarEvidencia(cp, 2, 'paginacion al pie de la grilla', { elemento: myUsuals.paginacion });
+
+      // Paso 3 — navegar a la página siguiente.
+      await myUsuals.paginaSiguiente.click();
+      await expect
+        .poll(async () => (await myUsuals.skusEnOrden()).join(','), {
+          message: 'la grilla cambia a los productos de la página 2',
+          timeout: 30000,
+        })
+        .not.toBe(primeraPagina.join(','));
+      const segunda = await myUsuals.skusEnOrden();
+      expect(segunda.length, `la página 2 muestra los ${total - 50} restantes`).toBe(total - 50);
+      expect(segunda.filter((s) => primeraPagina.includes(s)), 'la página 2 no repite productos de la 1').toEqual([]);
+      await myUsuals.capturarEvidencia(cp, 3, 'pagina 2 con los productos restantes');
+
+      await myUsuals.capturarEvidencia(cp);
+    });
+
+    test('TC-B2C85-D-010 · Paridad del componente shelf con el resto de la navegacion del sitio (Desktop)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C85-D-010';
+      test.setTimeout(300000);
+
+      // Paso 1 — My Usuals: los frecuentes con precio promocional (tachado).
+      const { myUsuals } = await myUsualsMas50(page, testData, false);
+      const skus = await myUsuals.skusEnlazados();
+      const enUsuals = new Map<string, Awaited<ReturnType<typeof MyUsualsPage.contenidoDeTarjeta>>>();
+      for (const sku of skus) {
+        if (!sku) continue;
+        const c = await MyUsualsPage.contenidoDeTarjeta(myUsuals.tarjetaCompleta(sku));
+        // El precio anterior se muestra como "Antes: $…" (no con line-through).
+        if (/antes:\s*\$/i.test(c.texto)) enUsuals.set(sku, c);
+      }
+      exigir(enUsuals.size > 0, 'la cuenta tiene frecuentes con precio promocional ("Antes: $…")');
+      await myUsuals.capturarEvidencia(cp, 1, 'my usuals con productos en promocion');
+
+      // Paso 2 — la misma tarjeta en la PLP declarada.
+      await page.goto(tokenExigido(testData, 'PLP_URL'), { waitUntil: 'domcontentloaded', timeout: 60000 });
+      const plp = new MyUsualsPage(page); // las tarjetas de la PLP usan el mismo shelf y el mismo ancla
+      await expect(plp.tarjetas.first(), 'la PLP carga sus tarjetas').toBeVisible({ timeout: 30000 });
+      await page.waitForTimeout(3000);
+      const enPlp = await plp.skusEnlazados();
+      const sku = [...enUsuals.keys()].find((s) => enPlp.includes(s));
+      exigir(sku, `algún frecuente con precio promocional aparece en {PLP_URL} (${[...enUsuals.keys()].join(', ')})`);
+      const tarjetaPlp = plp.tarjetaCompleta(sku);
+      await tarjetaPlp.scrollIntoViewIfNeeded();
+      const deLaPlp = await MyUsualsPage.contenidoDeTarjeta(tarjetaPlp);
+      await plp.capturarEvidencia(cp, 2, `tarjeta ${sku} en la PLP`, { elemento: tarjetaPlp });
+
+      // Paso 3 — todos los elementos visuales y promocionales coinciden.
+      await myUsuals.goto();
+      const tarjetaUsuals = myUsuals.tarjetaCompleta(sku);
+      await tarjetaUsuals.scrollIntoViewIfNeeded();
+      await myUsuals.capturarEvidencia(cp, 3, `tarjeta ${sku} en my usuals`, { elemento: tarjetaUsuals });
+      const deUsuals = await MyUsualsPage.contenidoDeTarjeta(tarjetaUsuals);
+      test.info().annotations.push({ type: 'tarjeta', description: `${sku} | PLP: ${deLaPlp.texto} | MyUsuals: ${deUsuals.texto}` });
+      expect(deUsuals.texto, 'My Usuals muestra el precio anterior ("Antes: $…")').toMatch(/antes:\s*\$/i);
+      expect(deUsuals.imagen, 'la imagen oficial es la misma').toBe(deLaPlp.imagen);
+      expect(deUsuals.botones, 'las acciones de la tarjeta son las mismas').toEqual(deLaPlp.botones);
+      expect(deUsuals.texto, 'precio promocional, badges y tags coinciden con la PLP').toBe(deLaPlp.texto);
+
+      await myUsuals.capturarEvidencia(cp);
+    });
+  });
+
+  test.describe('Mobile 390x844 (mas de 50 frecuentes)', { tag: '@otp' }, () => {
+    test.use(MOBILE);
+
+    test('TC-B2C85-M-001 · Scroll infinito en Mobile para mas de 50 productos (Mobile)', async ({ page, testData }) => {
+      const cp = 'TC-B2C85-M-001';
+      test.setTimeout(300000);
+
+      // Paso 1 — My Usuals con más de 50 frecuentes, en Mobile.
+      const { myUsuals, total } = await myUsualsMas50(page, testData, true);
+      expect(await myUsuals.tarjetas.count(), 'el primer bloque trae 50 productos').toBe(50);
+      await myUsuals.capturarEvidencia(cp, 1, `my usuals con ${total} productos en Mobile`);
+
+      // Paso 2 — scroll hasta el final del listado visible: aparece el indicador "…".
+      await myUsuals.tarjetas.last().scrollIntoViewIfNeeded();
+      // El indicador vive solo mientras carga el bloque: se lee su texto en la misma espera y se
+      // captura la vista en el acto (no el elemento, que puede haberse ido).
+      await expect(myUsuals.indicadorCargaMas, 'se muestra el indicador de carga "…"').toHaveText(/^\s*(…|\.{3})\s*$/, {
+        timeout: 10000,
+      });
+      await myUsuals.capturarEvidencia(cp, 2, 'indicador de carga al final del listado');
+
+      // Paso 3 — se carga automáticamente el siguiente bloque.
+      await expect
+        .poll(() => myUsuals.tarjetas.count(), { message: 'se carga el siguiente bloque de productos', timeout: 30000 })
+        .toBe(total);
+      await myUsuals.tarjetas.last().scrollIntoViewIfNeeded();
+      await myUsuals.capturarEvidencia(cp, 3, `siguiente bloque cargado (${total} productos)`);
+
+      await myUsuals.capturarEvidencia(cp);
+    });
+  });
+
+  test.describe('Mobile 390x844 (sin sesion)', () => {
+    test.use(MOBILE);
+
+    test('TC-B2C85-M-003 · Acceso directo a My Usuals sin sesion redirige a la Home con el drawer de login abierto (Mobile)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C85-M-003';
+      test.setTimeout(240000);
+      const myUsuals = new MyUsualsPage(page);
+      const login = new LoginModal(page);
+
+      // Pasos 1 y 2 — contexto nuevo (sin sesión) e ingreso directo a la URL.
+      await myUsuals.navegarAUrlSinEsperarContenido(tokenExigido(testData, 'MY_USUALS_URL'));
+
+      // Paso 3 — redirige a la Home con el drawer de login abierto.
+      const destino = myUsuals.destino();
+      expect(destino.esHome, `redirige a la Home (terminó en "${destino.path}")`).toBe(true);
+      await expect(login.dialogo.locator('visible=true').first(), 'el drawer de login queda abierto').toBeVisible({
+        timeout: 20000,
+      });
+      await expect(login.campoCorreo.locator('visible=true').first(), 'el drawer pide el correo').toBeVisible();
+      await expect(myUsuals.titulo, 'no se muestra "Mis productos frecuentes"').toHaveCount(0);
+      await myUsuals.capturarEvidencia(cp, 3, 'home con el drawer de login abierto');
 
       await myUsuals.capturarEvidencia(cp);
     });
