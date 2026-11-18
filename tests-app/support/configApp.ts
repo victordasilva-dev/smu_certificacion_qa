@@ -65,6 +65,8 @@ export function configApp(plataforma: Plataforma): MobilewrightConfig {
       ['json', { outputFile: path.resolve(process.cwd(), `test-results/results-${plataforma}.json`) }],
       ['junit', { outputFile: `test-results/junit-${plataforma}.xml` }],
       ['html', { outputFolder: `mobilewright-report/${plataforma}`, open: 'never' }],
+      // El mismo acumulado que la web (.qa/run/resultados.json), con llave <CP-ID>|<plataforma>.
+      [path.resolve(process.cwd(), 'tests/support/resultadosAcumulados.ts')],
     ],
     use: {
       // Animaciones del sistema en el dispositivo. Sin definir no se tocan: apagarlas cambia la

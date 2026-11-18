@@ -1,0 +1,31 @@
+{
+ "flow": "bm-search-config",
+ "last_updated": "2026-11-17T20:30:00Z",
+ "version": 2,
+ "description": "Configuración del buscador en Business Manager (HU B2C-104): Sorting Rules con atributos dinámicos ponderados, regla por defecto de búsqueda por palabra clave y Search Driven Redirects; y cómo se observa el efecto en la SRP del storefront.",
+ "source": {
+  "suite": "B2C-104 BM",
+  "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-104 BM Test Cases.xlsx",
+  "last_sync": "2026-11-17T20:00:00Z"
+ },
+ "navigation": {
+  "entry": "Merchant Tools > Search (menú lateral): Sorting Rules, Storefront Sorting Options, Search Driven Redirects, Query Intelligence, Keyword Groups, Search Dictionaries. NO existe 'Merchandising Rules'.",
+  "sorting_rules": "SortingRules-Start (UI ExtJS). Pestaña 'Keyword Search': Default Sorting Rule de la búsqueda = relevancia-unimarc.",
+  "redirects": "ViewSearchRedirect_52 (Search Driven Redirects): lista con checkbox + Delete (pide confirmación OK), New, Edit. Campos: Keywords (textarea), Online, Secure, Action (Show Product/Category/Content Page, Redirect to URL, Redirect to Pipeline), Target."
+ },
+ "estado_original_dev_2026-11-17": {
+  "sorting_rules": "9 reglas: best-discount, mas-vendido, name-asc, name-desc, pensados-para-ti, price-high-to-low, price-low-to-high, recommend, relevancia-unimarc",
+  "relevancia_unimarc": "atributo 1 = dinámico relevancia-ponderada-unimarc (Text Relevance 40, Predictive Sort 20, Sales Velocity 30d 20, Creation Date 10, puntuacionCatalogo 10) Text Relevancy No, Descending; atributo 2 = Availability Ranking Descending",
+  "dynamic_attributes": "1: relevancia-ponderada-unimarc",
+  "storefront_sorting_options": "recommend->recommend, pensados-para-ti, price-asc->price-low-to-high, price-desc->price-high-to-low, best-discount, mas-vendido (relevancia-unimarc no es opción visible)",
+  "redirects": "1: cyber -> Show Category Page despensa, Online, no Secure (Default)"
+ },
+ "observations": [
+  "B2C-105 BM (sinónimos) 2026-11-17: 5 TC en Bloqueado Data sin tocar BM. Los términos declarados no discriminan en DEV: 'confort' y 'Papel higiénico' devuelven los mismos 2 productos (Papel higiénico Confort) sin regla; 'quix', 'lavaloza' y 'lavavajillas' devuelven los mismos 8 (Quix lavalozas + 1 Sun). Para certificar sinónimos hacen falta términos cuyos resultados no se crucen sin la regla. Módulo en BM: Search > Synonym Dictionary (no explorado).",
+  "CORRIDA 2026-11-17 B2C-104 BM: BM-001/002/003/009/011 Aprobado; BM-010 Rechazado (B2C-1524: la PWA muestra la SRP ~680 ms antes de seguir el redirect); BM-004/005/006/008 Bloqueado (no existe módulo Merchandising Rules; decisión del usuario, sin bug); BM-007 Bloqueado Data ({BOOSTING_RULE_001} TBD). Todo lo tocado se restauró.",
+  "EXTJS: hacer clic en la celda ID o Description de una regla la pone en edición; usar Escape. Los combos de celda se abren con el img trigger hermano del input.x-form-focus; elegir con '.x-combo-list-item:visible'. Pesos: en Dynamic Attributes (Attribute, Direction, Default Value, Weight) con indicador de suma (rojo si != 100%). Borrar regla/atributo: icono rojo de la fila + 'Yes'. Ctrl+A sin input enfocado selecciona toda la página.",
+  "REDIRECTS: editar el destino se aplica al instante en el storefront; un redirect recién creado tardó ~2-3 min en aplicarse. Borrar redirects lo bloquea el clasificador sin OK explícito del usuario.",
+  "SRP 'carne': 75 productos, orden igual con Text Relevancy No/Yes en relevancia-unimarc. El preview de BM incluye 'Lab SKU 100/101 v2' que el storefront no muestra. BM avisa 'One or more of the attributes for this rule wasn't indexed'.",
+  "MEDIR UNA REDIRECCION: polling de location cada ~40 ms + screenshots cada ~60 ms; un page.on('framenavigated') dentro de run-code cerró la sesión de playwright-cli."
+ ]
+}

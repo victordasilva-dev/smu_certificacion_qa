@@ -181,6 +181,36 @@ export class ModalCategorias {
     );
   }
 
+  /**
+   * Medidas renderizadas del thumbnail de cada tarjeta N2: la imagen y su contenedor.
+   *
+   * La forma circular la da el contenedor (border-radius 9999px + overflow hidden) y no la `img`,
+   * que llega cuadrada: medir solo la imagen diría "no es circular" sobre un thumbnail que sí lo es.
+   */
+  async medidasThumbnailsN2(): Promise<
+    { nombre: string; ancho: number; alto: number; anchoMarco: number; altoMarco: number; radioMarco: string; overflowMarco: string; radioImagen: string }[]
+  > {
+    return this.cuerpo.evaluate((body) =>
+      Array.from(body.querySelectorAll('button:has(img)')).map((b) => {
+        const img = b.querySelector('img') as HTMLImageElement;
+        const marco = img.parentElement as HTMLElement;
+        const ri = img.getBoundingClientRect();
+        const rm = marco.getBoundingClientRect();
+        const cm = getComputedStyle(marco);
+        return {
+          nombre: (b as HTMLElement).innerText.trim().replace(/\n/g, ' '),
+          ancho: Math.round(ri.width * 10) / 10,
+          alto: Math.round(ri.height * 10) / 10,
+          anchoMarco: Math.round(rm.width * 10) / 10,
+          altoMarco: Math.round(rm.height * 10) / 10,
+          radioMarco: cm.borderRadius,
+          overflowMarco: cm.overflow,
+          radioImagen: getComputedStyle(img).borderRadius,
+        };
+      }),
+    );
+  }
+
   // ------------------------------------------------ acciones
 
   async clicPildora(nombre: string | RegExp): Promise<void> {

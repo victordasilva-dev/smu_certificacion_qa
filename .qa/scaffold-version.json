@@ -1,15 +1,15 @@
 {
-  "plugin_version": "1.21.0",
+  "plugin_version": "1.23.0",
   "files": {
-    ".env.example": "8db980dd3408dfa306d5c28fbc4245a0f3d04c58916f7a8904b22e2a73af6b23",
+    ".env.example": "f8611e5fb413f353bfbcb7a396443137edde85f6366218843b8f9bc43d8e97af",
     ".gitignore": "7a421e7fc545dd8dc49f791664e3c295841f1e84dd7bec9cb660c9c61e434a05",
-    "package.json": "98bd088e4de453c46063ca993fa6d3d36c8f518352b246179129cffeba03f3ca",
+    "package.json": "fe19a45027c78eb436ee1d1e21319ad69b1b7b77b9d54ca5daea5e25c5e68b7f",
     "playwright.config.ci.ts": "35c4869c6cafe994396df87e96d0e27705ba79021c0f7499b80348411289593f",
-    "playwright.config.ts": "2435aea7a1d5deaa24384e7d39f5e2ba22a6ce0e2f4626d546459c63bcf24281",
+    "playwright.config.ts": "ce2ebd52d5d8b094300c194908e55489b4a8cd15504bd3ebb45e0328f547c9fe",
     "README.md": "6668a9dab9853a39f1309fe23064871099f0b43e86f41e1c09ec3b9da24ccb55",
     "tests/pages/BasePage.ts": "333835992a738865d022f6700cd52be61a7d32bedaab74715c28ad208982d11b",
     "tests/support/evidencia.ts": "84e70c636952b57417386d87e410ddf5f496b7e0406f695e75e22ee73406ccfc",
-    "tests/support/fixtures.ts": "968fc0ace505fb7a9d871160b783e07d6346f0b8c1c4f87d2a3ba04030c7e898",
+    "tests/support/fixtures.ts": "9d8dbc56b4b91e326e870fb67a8a129957a8fe826a29a56a945b9182067b601f",
     "tests/support/testData.ts": "bacad07226784754c76a7d3f509c28593727b37da7bbfa7e473b078fe76f996d",
     "tests/support/viewports.ts": "8e8e9d72ea5c6b7dc93833e3fbbbbbca9854c3c15bc34b6dc53dcb0fd9757d53",
     "tsconfig.json": "ba7ed49cb4db44eac137b7da51d05ea72fd49dfae4f4040782d614434aee2ae4",
@@ -19,7 +19,7 @@
     "tests/support/limpiarEvidencia.ts": "6b7b2bae9a289307ae20c66017d7f396b55cb8a7eb03332872b01fed5bdaa6e3",
     "tests/support/rutasEvidencia.ts": "2e3e344e7ec0d5c56198210548a6d72510a326df652fcfafcdc714b053b3c2fa",
     "tests-app/pages/BaseScreen.ts": "e56732b3a36a047f631db188b7afd955d9d6209a1c3c15a8f144c0cdc27e4c8e",
-    "tests-app/support/configApp.ts": "9d3b2f9d42a6185244200142445dffe5c6daad846932fa8a7ea0b522be92765d",
+    "tests-app/support/configApp.ts": "34a08c28468fc875afefebb8e0edf44f7a2257f6014de22ba6919171c25335ed",
     "tests-app/support/evidencia.ts": "b4bc5c5ee6ecb2ad62ba0945a9b23721cf67d72e023f88e3d78fe3678c000d2e",
     "tests-app/support/explorar.ts": "bdbcc0a0725ac62986569ae01efe0602d7f59933282a4650ec5ebbf2382d3e47",
     "tests-app/support/fixtures.ts": "1a92ec5737478a18eb5dd9a4a174ba9a86d6edbec9bcf24a0537f10c579b9547",
@@ -33,6 +33,7 @@
     "tests-preflight/consolidar.ts": "d093fee5a985b29d01d46d9336d6e47b730420f138cfe16f17b1ca6579231952",
     "tests-preflight/limpiar.ts": "528128717e601d0beac256272ac2e3b4614650a820fc3b4a3c6c0210266355ad",
     "tests-preflight/preflight.spec.ts": "9fdcceaaf2e81bdf905e722c574704e853360f388018c86758424884489626e6",
-    "tests-preflight/verificadores.ts": "8d70b1d9cf09ecec11fcd35a59186c8969b44ae728252d8f93f02e26de3b3e76"
+    "tests-preflight/verificadores.ts": "8d70b1d9cf09ecec11fcd35a59186c8969b44ae728252d8f93f02e26de3b3e76",
+    "tests/support/resultadosAcumulados.ts": "088b536b28e7834ce67edda3bde169d95879b36c2259747ac5a31bfbd62372f2"
   }
 }

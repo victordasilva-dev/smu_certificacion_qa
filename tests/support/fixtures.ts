@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { test as base, expect } from '@playwright/test';
-import { EVIDENCE_DIR, esEvidenciaDe } from './rutasEvidencia';
+import { EVIDENCE_DIR, esEvidenciaDe, rutaEvidencia } from './rutasEvidencia';
 import { LoadedTestData, baseUrl, loadTestData, token } from './testData';
 
 /**
@@ -34,9 +34,16 @@ export const test = base.extend<{ testData: LoadedTestData; evidenciaDelCaso: vo
    *
    * Corre también en cada reintento, que es justo lo que se quiere: la evidencia que queda es la
    * del último intento, que es el que decide el veredicto.
+   *
+   * Y si el caso falla, deja **la captura del fallo** en `test-results/evidence/<CP-ID>.png`, con
+   * la página todavía abierta. Antes la copiaba a mano la Fase 8 desde `test-results/pw/`, pero
+   * Playwright vacía ese directorio al arrancar cada corrida: una tanda posterior (otro `-g`)
+   * borraba las capturas de los fallos anteriores y había que volver a correrlos solo para
+   * recuperarlas. Si el `test()` ya dejó su propia captura final (un fallo `expect.soft` llega
+   * hasta el final del caso), se respeta la suya.
    */
   evidenciaDelCaso: [
-    async ({}, use, testInfo) => {
+    async ({ page }, use, testInfo) => {
       // El CP-ID abre el título del test(); es la misma llave que une el caso con su fila del
       // Excel y con el nombre de sus capturas.
       const cpId = testInfo.title.split(' ')[0];
@@ -61,6 +68,19 @@ export const test = base.extend<{ testData: LoadedTestData; evidenciaDelCaso: vo
       }
 
       await use();
+
+      if (/^TC-[A-Z0-9-]+$/i.test(cpId) && testInfo.status !== testInfo.expectedStatus) {
+        const ruta = path.resolve(process.cwd(), rutaEvidencia(cpId));
+        if (!fs.existsSync(ruta)) {
+          try {
+            await fs.promises.mkdir(path.dirname(ruta), { recursive: true });
+            await page.screenshot({ path: ruta, animations: 'disabled', timeout: 10000 });
+          } catch {
+            // La página pudo cerrarse con el fallo (un timeout del caso). El veredicto no depende
+            // de esta imagen: queda la captura de Playwright en el outputDir de esta corrida.
+          }
+        }
+      }
 
       const motivo = testInfo.errors.map((e) => e.message ?? '').find((m) => m.includes('PRECONDICION_NO_DISPONIBLE'));
       if (motivo) {

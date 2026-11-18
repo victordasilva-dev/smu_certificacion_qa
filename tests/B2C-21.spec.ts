@@ -471,5 +471,91 @@ test.describe('B2C-21 — Modal de categorias Mobile web', () => {
 
       await home.capturarEvidencia(cp, undefined, undefined, { elemento: tarjeta });
     });
+
+    test('TC-B2C21-M-017 · Visualizacion exclusiva de categorias activas (Online) (Mobile)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C21-M-017';
+      const home = new StorefrontPage(page);
+      const n1Off = token(testData, 'CATEGORY_N1_OFF')!;
+      const n2Off = token(testData, 'CATEGORY_OFF')!;
+
+      // Las píldoras N1 llegan truncadas a 20 caracteres + '…': se compara sin tildes, sin
+      // mayúsculas y por prefijo, para que una categoría Offline no se escape por el recorte.
+      const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+      const coincide = (mostrado: string, buscado: string) => {
+        const m = norm(mostrado).replace(/(…|\.\.\.)$/, '').trimEnd();
+        return m === norm(buscado) || (m.length > 0 && norm(buscado).startsWith(m) && /(…|\.\.\.)$/.test(mostrado));
+      };
+
+      // Paso 1 — navegar al Home y tocar el icono sandwich.
+      await home.goto();
+      const modal = await home.abrirModalCategorias();
+      await home.capturarEvidencia(cp, 1, 'modal de categorias abierto', { elemento: modal.root });
+
+      // Paso 2 — la N1 Offline no está en el carrusel de top categorías ni en el listado N1.
+      const pildoras = await modal.pildoras.allInnerTexts();
+      const cabeceras = await modal.cabecerasN1.allInnerTexts();
+      expect(cabeceras.length, 'el menu muestra categorias N1').toBeGreaterThan(0);
+      expect(pildoras.filter((p) => coincide(p, n1Off)), `«${n1Off}» (Offline) en el carrusel de top categorias`).toEqual([]);
+      expect(cabeceras.filter((c) => coincide(c, n1Off)), `«${n1Off}» (Offline) en el listado N1`).toEqual([]);
+      await modal.carrusel.evaluate((c) => c.scrollTo({ left: c.scrollWidth }));
+      await home.capturarEvidencia(cp, 2, `carrusel de top categorias sin «${n1Off}»`, { elemento: modal.carrusel });
+
+      // Paso 3 — la N2 Offline no está en ningún carrusel de subcategorías.
+      const tarjetas = await modal.tarjetasN2.allInnerTexts();
+      expect(tarjetas.length, 'el menu muestra subcategorias N2').toBeGreaterThan(0);
+      expect(tarjetas.filter((t) => coincide(t, n2Off)), `«${n2Off}» (Offline) en los carruseles N2`).toEqual([]);
+      await modal.cabeceraN1('Limpieza').first().scrollIntoViewIfNeeded();
+      await home.capturarEvidencia(cp, 3, `carruseles N2 sin «${n2Off}»`, { elemento: modal.root });
+
+      test.info().annotations.push({
+        type: 'categorias',
+        description: `N1: ${cabeceras.length} · N2: ${tarjetas.length} · ausentes: «${n1Off}», «${n2Off}»`,
+      });
+      await home.capturarEvidencia(cp, undefined, undefined, { elemento: modal.root });
+    });
+
+    test('TC-B2C21-M-018 · Visualizacion de thumbnail de categorias N2 en formato circular de 70 x 70 px (Mobile)', async ({
+      page,
+    }) => {
+      const cp = 'TC-B2C21-M-018';
+      const home = new StorefrontPage(page);
+
+      // Paso 1 — navegar al Home y tocar el icono sandwich.
+      await home.goto();
+      const modal = await home.abrirModalCategorias();
+      await home.capturarEvidencia(cp, 1, 'modal de categorias abierto', { elemento: modal.root });
+
+      // Paso 2 — el carrusel de subcategorías N2 de una categoría N1.
+      const tarjeta = modal.tarjetaN2('Cerdo').first();
+      await tarjeta.scrollIntoViewIfNeeded();
+      await home.capturarEvidencia(cp, 2, 'carrusel N2 de Carnes', { elemento: modal.cuerpo });
+
+      // Paso 3 — dimensiones renderizadas y forma del thumbnail, en todas las tarjetas N2.
+      const medidas = await modal.medidasThumbnailsN2();
+      expect(medidas.length, 'el menu muestra subcategorias N2').toBeGreaterThan(0);
+      for (const m of medidas) {
+        expect.soft({ nombre: m.nombre, ancho: m.ancho, alto: m.alto }, `${m.nombre}: 70 x 70 px`).toEqual({
+          nombre: m.nombre,
+          ancho: 70,
+          alto: 70,
+        });
+        // Circular: el contenedor recorta con un radio de al menos la mitad del lado.
+        const radio = parseFloat(m.radioMarco) || 0;
+        const recorta = m.overflowMarco === 'hidden' || m.overflowMarco === 'clip';
+        const circularPorMarco = recorta && radio >= m.anchoMarco / 2 && m.anchoMarco === m.altoMarco;
+        const circularPorImagen = (m.radioImagen.endsWith('%') && parseFloat(m.radioImagen) >= 50) || parseFloat(m.radioImagen) >= m.ancho / 2;
+        expect.soft(circularPorMarco || circularPorImagen, `${m.nombre}: thumbnail circular (marco ${m.radioMarco}/${m.overflowMarco}, img ${m.radioImagen})`).toBe(true);
+      }
+      test.info().annotations.push({
+        type: 'thumbnails',
+        description: `${medidas.length} tarjetas N2; p. ej. ${medidas[0].nombre}: ${medidas[0].ancho}x${medidas[0].alto}, marco ${medidas[0].radioMarco}`,
+      });
+      await home.capturarEvidencia(cp, 3, 'thumbnail N2 circular de 70 x 70 px', { elemento: tarjeta });
+
+      await home.capturarEvidencia(cp, undefined, undefined, { elemento: tarjeta });
+    });
   });
 });

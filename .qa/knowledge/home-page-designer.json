@@ -1,7 +1,7 @@
 {
  "flow": "home-page-designer",
- "last_updated": "2026-11-16T22:05:00Z",
- "version": 7,
+ "last_updated": "2026-11-17T14:30:00Z",
+ "version": 8,
  "source": {
   "suite": "B2C-29",
   "tc_file": "Casos de Prueba/Ejecutados/SP1/B2C-29 WEB Test Cases.xlsx",
@@ -101,6 +101,11 @@
   "nota": "Modela el Home como pagina de componentes: los cuenta por encabezado visible y expone el carrusel My Usuals y su CTA."
  },
  "observations": [
+  "CORRIDA 2026-11-17 B2C-72 BM: BM-001..004 Aprobado. Popular Categories Layout de prueba (id 2dfd8685e65ae74d634883050a) agregado al final de Main Content con un Round Category Tile, y eliminado al terminar.",
+  "POPULAR CATEGORIES LAYOUT (commerce_layouts, 'carrusel + imagen circular con titulo slider', B2C-72/B2C-191): Properties = Heading, Subtitulo, Heading Alignment, Tamano de imagen (px), por dispositivo Mobile (Modo carousel/grid, slides 1-3) / Tablet / Desktop (slides 1,2,3,4,6) con checkbox Mostrar controles/indicadores, y grupo Tracking (GA4): promotion_id, promotion_name, creative_name, creative_slot, location_id. El HTML renderizado (div.popular-categories-swiper) publica todo como data-xs/sm/md-slides|controls|indicators y data-promotion-id/... : se lee desde el iframe del canvas con playwright-cli run-code (page.frames(), es cross-origin: bmkg-dev.my.commercecloud...).",
+  "ROUND CATEGORY TILE: Category por selector 'Select Categories' (buscar, clicar el label 'Select Item', Save); Custom Display Name; Image por media picker: la libreria es-CL esta vacia, cambiar el combo Locale del picker a 'default' (no sale en el snapshot: clic por coordenadas) > images > unimarc-home; image size; offset.",
+  "TARGETING (Settings > Schedule and Targeting): radios excluyentes Add to Campaign / Add to Promotion / Custom Targeting / None. Custom Targeting: Customer Group y Locales (multiselect), Display From/To con datepicker que exige clic en el dia + 'Done' (Escape lo descarta). El encabezado del panel resume 'Visible only to / in / Schedule'. No guardar en una campana real.",
+  "INVALIDAR CACHE 2026-11-17: aunque .env tenga QA_BM_INVALIDAR_CACHE=true, el clasificador de permisos bloqueo el clic en Invalidate; hace falta el OK explicito del usuario en la sesion.",
   "CORRIDA 2026-11-16 B2C-29 BM: BM-001/002 Aprobado; BM-003 Rechazado (B2C-1500: la app no refleja cambios de PD sin reiniciarse); BM-004 Bloqueado Data ({FECHA_FIN_VIGENCIA} 2026-12-12 inalcanzable). Componente de prueba 'Carrusel de productos' (id 2b923b813f5063efa6413f6d2d) agregado al final de Main Content y eliminado al terminar.",
   "AGREGAR COMPONENTE SIN DRAG: en Page Structure, boton '+' 'Add component to Main Content' abre el dialogo Insert (no aparece en el snapshot: clicar por coordenadas con mousemove/mousedown/mouseup): pestaña Components, buscar, elegir, Apply. Reordenar: playwright-cli drag entre treeitems del arbol (mismo frame) funciona y se guarda solo. Borrar: hover sobre el item muestra 'Remove <tipo>' + dialogo OK.",
   "'Carrusel de productos' (ux_assets) tiene todos los atributos de un componente del Home: variante, titulo/subtitulo, modo collection + categoria, maximo, URL y texto de 'Mostrar todo' (CTA), desplazamiento automatico + velocidad, indicadores, banner T1 (imagen desktop/mobile por media picker, enlace por link builder 'Create' > External, etiqueta, titulo, URL de video). Los checkbox se marcan clicando su label. La libreria de medios es-CL esta vacia.",
@@ -146,9 +151,9 @@
   }
  ],
  "last_run": {
-  "suite": "B2C-29 BM",
-  "fecha": "2026-11-16",
-  "resultado": "2 Aprobado, 1 Rechazado (B2C-1500), 1 Bloqueado Data"
+  "suite": "B2C-72 BM",
+  "fecha": "2026-11-17",
+  "resultado": "4 Aprobado"
  },
  "business_manager": {
   "login": "{BM_URL}/default/ViewApplication-DisplayWelcomePage -> account.demandware.com: usuario, 'Log in', contraseña, 'Log in' -> verify.salesforce.com pide aprobar Salesforce Authenticator (paso del usuario). La sesion de BM expira en ~30 min de inactividad y vuelve a pedir Authenticator; una URL de BM sin el contexto app=__bm_* tambien manda al login.",
