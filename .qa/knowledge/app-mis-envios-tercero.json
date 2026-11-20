@@ -16,7 +16,7 @@
   "platforms_explored": {
     "android": {
       "device": "emulador Pixel_4_API_33 (Android 13, 1080x2280); antes Samsung SM-A075M (720x1600)",
-      "driver": "mobilecli local"
+      "driver": "local"
     }
   },
   "selectors": {

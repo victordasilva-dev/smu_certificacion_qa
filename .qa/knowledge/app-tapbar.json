@@ -29,7 +29,7 @@
   "platforms_explored": {
     "android": {
       "device": "Medium_Phone_API_36.1 (emulador, Android 16)",
-      "driver": "mobilecli local"
+      "driver": "local"
     }
   },
   "selectors": {

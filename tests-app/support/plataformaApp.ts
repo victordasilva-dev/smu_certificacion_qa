@@ -31,7 +31,7 @@ export type PlataformaTitulo = (typeof AMBAS)[number];
 export const SUFIJO = { ios: /\(iOS\)/, android: /\(Android\)/ } as const;
 
 /**
- * Dónde corre cada plataforma: siempre en local, vía mobilecli.
+ * Dónde corre cada plataforma: siempre en local.
  *
  * - **Android**: emulador o equipo conectado por ADB, en cualquier sistema operativo.
  * - **iOS**: el simulador de iOS de una Mac con Xcode (por ejemplo, una Mac de MacinCloud). La

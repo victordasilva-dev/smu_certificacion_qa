@@ -26,7 +26,7 @@
   "platforms_explored": {
     "android": {
       "device": "Medium_Phone_API_36.1 (emulador, Android 16)",
-      "driver": "mobilecli local",
+      "driver": "local",
       "gps": "37.421998,-122.084 (predeterminado del emulador)"
     }
   },
@@ -99,7 +99,7 @@
     "Tras 'No, gracias' o la X se queda en 'Detalles de la dirección'. Tras 'Sí, continuar' el invitado ve 'Iniciar sesión o registrarse' (PromptLogin); al cerrarlo la dirección queda aplicada.",
     "Sugerencias de Google: cada fila es un ViewGroup con label '<calle>, <comuna>, Chile'; getByRole('text') no la encuentra. MetodoEntregaModal.elegirSugerencia busca por getByText(/<patrón>.*, Chile$/) para no casar con el texto del buscador.",
     "Login de la app v1.0.7: 'Clave de acceso por correo' viene deshabilitado (enabled=false); solo RUT + contraseña.",
-    "Emulador inestable con el teclado abierto: 'no XML content', 'failed to send text', daemon i/o timeout. tests-app/support/tolerante.ts reintenta esos errores; si persisten, reiniciar el emulador en frío (-no-snapshot-load) y 'mobilecli daemon stop'.",
+    "Emulador inestable con el teclado abierto: 'no XML content', 'failed to send text', daemon i/o timeout. tests-app/support/tolerante.ts reintenta esos errores; si persisten, reiniciar el emulador en frío (-no-snapshot-load) y detener el daemon del driver del dispositivo.",
     "Fijar la dirección de invitado a veces devuelve el toast 'Lo sentimos, no pudimos procesar tu solicitud' (intermitente en DEV). En un caso, tras 'Sí, continuar', el botón quedó 'busy' más de 70 s sin aplicar el cambio; al reintentar funcionó.",
     "B2C-123 (2026-10-14, Android v1.0.7): dirección sin cobertura → hoja 'Aún no llegamos a esta dirección' (mensaje con 'tiendas' y punto final; 'Continuar con esta dirección' / 'Cambiar método de entrega'); POM tests-app/pages/SinCoberturaModal.ts. Al continuar, el navbar muestra '<calle>' + 'Despacho sin cobertura'.",
     "Con sin cobertura, 'Agregar' muestra el toast 'Cambia tu dirección de despacho para poder agregar productos.' con 'Cerrar aviso' (bug B2C-1205). Ojo: un getByText(/cobertura/) casa también con el navbar.",

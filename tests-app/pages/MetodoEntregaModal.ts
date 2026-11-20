@@ -102,7 +102,7 @@ export class MetodoEntregaModal extends BaseScreen {
   }
 
   /**
-   * Escribe en el buscador. En el emulador el agente de mobilecli a veces no responde al enviar el
+   * Escribe en el buscador. En el emulador el agente del dispositivo a veces no responde al enviar el
    * texto ("failed to send text … agent timed out", B2C-122 2026-10-14): es ambiente, así que se
    * reintenta antes de dar el caso por caído.
    */

@@ -3,6 +3,7 @@ test-results/
 playwright-report/
 mobilewright-report/
 .playwright-cli/
+.mobilewright-cli/
 .env
 .qa/auth/
 .qa/evidence/

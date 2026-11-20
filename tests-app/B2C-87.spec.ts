@@ -294,7 +294,7 @@ const pausa87 = (ms: number) => new Promise((r) => setTimeout(r, ms));
 /**
  * Invitado = sin sesión. Se cierra la sesión desde Mi cuenta si hay una abierta, en vez de borrar los
  * datos de la app: el arranque en frío tras `pm clear` dejaba a uiautomator sin XML y al agente de
- * mobilecli caído (WebSocket closed) en el Pixel 4 API 33 (2026-11-16).
+ * agente del dispositivo caído (WebSocket closed) en el Pixel 4 API 33 (2026-11-16).
  */
 async function comoInvitado(screen: Screen, _device: any, _bundleId: string, p: Plataforma): Promise<void> {
   const tabs = new TabBar(screen, p);

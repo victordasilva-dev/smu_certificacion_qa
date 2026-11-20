@@ -33,7 +33,7 @@
  "platforms_explored": {
   "android": {
    "device": "Medium_Phone_API_36.1 (emulador, Android 16)",
-   "driver": "mobilecli local"
+   "driver": "local"
   }
  },
  "selectors": {
@@ -85,7 +85,7 @@
  },
  "observations": [
   "Orden de opciones en v1.0.7: Recomendado, Pensados para ti, Precio más bajo, Precio más alto, Mejor descuento, Más vendido (carrusel horizontal; las 2 últimas al deslizar). B2C-87 pide Recomendado, Más vendido, Precio más bajo, Precio más alto, Pensados para ti, Mejor descuento.",
-  "La opción marcada no se ve en el árbol (isChecked false con mobilecli): se lee el borde negro en la franja superior de la captura de la opción (~0,22 oscuro vs 0).",
+  "La opción marcada no se ve en el árbol (isChecked false en el árbol del driver): se lee el borde negro en la franja superior de la captura de la opción (~0,22 oscuro vs 0).",
   "Swipe sobre la primera opción da 'negative coordinates': deslizar desde la opción más alejada del borde.",
   "PLP N2 desde Categorías: tocar el tile de la N2 (p. ej. 'Cerdo') dentro de su sección N1. {CATEGORY_N2_URL}=carnes_cerdo → 'Cerdo'.",
   "pm clear deja la app en el Home sin onboarding (sirve para 'app recién instalada').",
@@ -97,7 +97,7 @@
   "PLP Papas fritas: Categorias › Despensa (fila de N2 horizontal: Aceite y alinos, Arroz…, Coctel y snacks queda fuera de vista: deslizar la fila bajo el encabezado 'Despensa') › Coctel y snacks › chip 'Papas fritas'. 12 productos, todos Lays.",
   "N1 (p. ej. Panaderia y Pasteleria) en la app es una landing con un carrusel por N2, SIN boton de filtros ni ordenamiento.",
   "/test-pcv2-collection responde 404 en DEV y la app no tiene colecciones navegables.",
-  "COMO INVITADO: cerrar sesion desde Mi cuenta en vez de 'pm clear': el arranque en frio tras borrar datos deja a uiautomator sin XML y al agente de mobilecli caido (WebSocket closed)."
+  "COMO INVITADO: cerrar sesion desde Mi cuenta en vez de 'pm clear': el arranque en frio tras borrar datos deja a uiautomator sin XML y al agente del dispositivo caido (WebSocket closed)."
  ],
  "history": []
 }
