@@ -74,8 +74,8 @@ App nativa, una plataforma por comando (nunca encadenadas con `&&`: un TC rechaz
 npx mobilewright test                                         # Android
 npx mobilewright test -c mobilewright.ios.config.ts           # iOS, en la Mac (simulador)
 npx mobilewright test --grep TC-XXX-APP-001                   # un TC (no hay -g)
-npx mobilecli dump ui --device <id>                           # explorar: árbol con refs @eN
-npx mobilecli io tap --device <id> @e12                       #   tocar por ref (solo para explorar)
+npx mobilewright-cli snapshot                                 # explorar: árbol con refs eN
+npx mobilewright-cli tap e12                                  #   tocar por ref (solo para explorar)
 npm run app:explorar -- ios login <guion.ts>                  # recorrer un flujo largo con un guion
 npm run app:doctor                                            # diagnóstico del SDK / emulador
 ```
@@ -122,7 +122,7 @@ En `playwright-cli`, `--browser=chrome` significa el Chrome de Google instalado,
 El config de iOS se niega a arrancar fuera de una Mac a propósito. Clona la suite en la Mac (p. ej. MacinCloud), arranca un simulador (`xcrun simctl boot "<nombre>"`) y corre ahí.
 
 **`device allocation timed out after …ms (use.allocationTimeout)`**
-No hay un dispositivo disponible que cumpla el filtro: emulador o simulador apagado, o un `*_DEVICE_NAME`/`*_OS_VERSION` que nada cumple. `npx mobilecli devices` lista lo que se ve. Es un impedimento de ambiente, no un defecto de la app.
+No hay un dispositivo disponible que cumpla el filtro: emulador o simulador apagado, o un `*_DEVICE_NAME`/`*_OS_VERSION` que nada cumple. `npx mobilewright devices` lista lo que se ve. Es un impedimento de ambiente, no un defecto de la app.
 
 **`failed to dump UI … no XML content found in uiautomator dump`**
 Android no pudo leer el árbol de la pantalla porque algo animaba (un splash, un carrusel). Es de ambiente y suele resolverlo el reintento; si se repite, `APP_ANIMACIONES=off` en `.env`.

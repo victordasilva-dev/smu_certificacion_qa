@@ -196,7 +196,7 @@ export async function atras(): Promise<void> {
 
 /**
  * Reemplazo de `screen.goBack()`, que en iOS **no hace nada** (y el caso seguiría en la pantalla
- * equivocada sin avisar). Android: el mismo `screen.goBack()` de mobilecli; iOS: `atras()`.
+ * equivocada sin avisar). Android: el mismo `screen.goBack()` del driver; iOS: `atras()`.
  */
 export async function volver(): Promise<void> {
   if (esIos()) return atras();
@@ -207,7 +207,7 @@ export async function volver(): Promise<void> {
 
 /**
  * Escribe en el campo con foco. Android: `adb shell input text`, porque en el emulador el agente
- * de mobilecli agota sus 10 s al enviar texto; los espacios van como `%s`, las comillas se
+ * del dispositivo agota sus 10 s al enviar texto; los espacios van como `%s`, las comillas se
  * quitan, y la «@» —donde `input text` se corta— va con su propia tecla. iOS: `typeText` del
  * driver.
  */

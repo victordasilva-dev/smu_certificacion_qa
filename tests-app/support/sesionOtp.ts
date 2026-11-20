@@ -54,7 +54,7 @@ async function borrarCasillas(): Promise<void> {
 
 /**
  * Escribe un texto con `escribir()` de `./dispositivo` —en Android, `adb input text` en vez del
- * agente de mobilecli, que en el emulador agota sus 10 s al enviar texto ("failed to send text …
+ * agente del dispositivo, que en el emulador agota sus 10 s al enviar texto ("failed to send text …
  * agent timed out")—. Si falla, se vuelve a `fill`. Solo para textos sin espacios (correos).
  */
 export async function escribirTexto(campo: any, texto: string): Promise<void> {

@@ -1,6 +1,6 @@
 {
  "flow": "header-storefront",
- "last_updated": "2026-11-16T16:40:00Z",
+ "last_updated": "2026-11-18T18:00:00Z",
  "version": 3,
  "source": {
   "suite": "B2C-17",
@@ -214,7 +214,9 @@
   "CORRIDA 2026-11-16 B2C-17 BM: BM-001/002/003 Aprobado (ejecutados en BM a pedido del usuario aunque la planilla es mixta).",
   "CONTENT ASSET header-shortcut-bar: Merchant Tools > Content > Content Assets (ContentUUID=7703adf58b7edc64dba68db2f9). Body (locale Default; Spanish (Chile) vacio, hereda) = <ul class=\"header-shortcuts\"> con Ofertas (/ofertas), Marketplace (/marketplace), Locales y horarios (/locales). Para editar: 'Lock' arriba, Apply, 'Unlock'. playwright-cli fill corta en el salto de linea: setear el textarea (name=Meta55caafd4782770a21c4f4cc6de) por eval.",
   "PROPAGACION: un cambio del asset no llega solo al storefront (>4 min): hace falta invalidar 'Entire Page Cache for Site' (pedir visto bueno). Despues las paginas interiores lo muestran en segundos, pero la ruta '/' exacta del Home sigue servida por el CDN de MRT con la version anterior >25 min (con query string ya sale la nueva). Verificar en /category/carnes.",
-  "SIN ACCESOS (asset vacio): Desktop membresia identica (x1129,y76, header 132px). Mobile membresia (16,129)->(20,120), header 176->158px."
+  "SIN ACCESOS (asset vacio): Desktop membresia identica (x1129,y76, header 132px). Mobile membresia (16,129)->(20,120), header 176->158px.",
+  "2026-11-18 (B2C-17 M-005): la Landing /pages/test-pcv2-collection ({LP_COLECCION_URL}) ya responde en DEV y trae el header full; las corridas anteriores la dejaban fuera por 'Not found'.",
+  "2026-11-18: en Mobile 390x844 (WebKit) el buscador mide 186 px y la lupa del right-element se superpone al final del placeholder: se lee '¿Qué estás buscand…'. El atributo placeholder sí es el texto completo."
  ],
  "history": [
   {

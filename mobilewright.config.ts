@@ -6,7 +6,7 @@ import { configApp } from './tests-app/support/configApp';
  *   npx mobilewright test                              # todos los (Android) de tests-app/
  *   npx mobilewright test --grep TC-B2C69-APP-004      # un TC, por CP-ID
  *
- * Corre en local: el emulador o el equipo conectado por ADB, vía mobilecli. iOS tiene su propio
+ * Corre en local: el emulador o el equipo conectado por ADB. iOS tiene su propio
  * config, `mobilewright.ios.config.ts`, porque corre en otra máquina —el simulador de una Mac— (el
  * porqué completo está en tests-app/support/configApp.ts).
  *

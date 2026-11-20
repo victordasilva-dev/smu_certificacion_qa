@@ -19,6 +19,7 @@
     "data:b2c": "b2c"
   },
   "devDependencies": {
+    "@mobilewright/cli": "0.0.60",
     "@mobilewright/test": "0.0.60",
     "@playwright/test": "1.63.0",
     "@salesforce/b2c-cli": "2.10.2",

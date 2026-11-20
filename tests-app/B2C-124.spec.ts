@@ -121,7 +121,7 @@ async function restaurarDireccion(screen: Screen, p: any, td: any, cp: string): 
   }
   // La cuenta no la tiene guardada: se agrega buscándola como una dirección nueva.
   const desde = new Date(Date.now() - 30000);
-  // El agente de mobilecli no escribe en el teclado Samsung: se teclea por adb (los espacios van como %s).
+  // El agente del dispositivo no escribe en el teclado Samsung: se teclea por adb (los espacios van como %s).
   await tol(() => modal.buscador.tap());
   await dormir(1000);
   await disp.escribir(calle);

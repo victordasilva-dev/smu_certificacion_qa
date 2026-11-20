@@ -1,7 +1,7 @@
 /**
  * Reintenta una operación sobre la UI cuando falla por ambiente del emulador: uiautomator sin XML
  * ("no XML content found in uiautomator dump", típico con el cursor de un EditText o el mapa de
- * Google en pantalla) o el agente de mobilecli que no responde al enviar texto. Cualquier otro
+ * Google en pantalla) o el agente del dispositivo que no responde al enviar texto. Cualquier otro
  * error —una aserción que no se cumple— se propaga tal cual.
  */
 const AMBIENTE = /no XML content|dump UI|send text|agent timed out|deadline exceeded/i;

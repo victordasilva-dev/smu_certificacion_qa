@@ -22,7 +22,7 @@
   "platforms_explored": {
     "android": {
       "device": "Pixel_4_API_33 (emulador, Android 13)",
-      "driver": "mobilecli local",
+      "driver": "local",
       "app": "cl.smu.unimarcapp.sfcc.qa 1.0 (actualizada 16-11-2026)"
     }
   },

@@ -389,5 +389,44 @@ test.describe('B2C-17 — Header del storefront', () => {
 
       await home.capturarEvidencia(cp, undefined, undefined, { elemento: h.root });
     });
+
+    test('TC-B2C17-M-005 · Buscador visible en el Header con placeholder e icono de lupa en Mobile (Mobile)', async ({
+      page,
+      testData,
+    }) => {
+      const cp = 'TC-B2C17-M-005';
+      // Recorre seis superficies con una navegación completa en cada una.
+      test.setTimeout(240000);
+
+      // A diferencia de D-001/M-001, esta fila declara la Landing ({LP_COLECCION_URL}): en DEV
+      // ya responde, así que entra al recorrido.
+      const paginas = [
+        ...paginasHabilitadas(testData),
+        { nombre: 'Landing', path: rutaDesdeUrl(tokenObligatorio(testData, 'LP_COLECCION_URL')) },
+      ];
+
+      let ultima: PaginaHabilitada | undefined;
+      for (const [i, p] of paginas.entries()) {
+        // Paso 1 (y 4 al repetir) — la página habilitada en Mobile.
+        const pagina = new PaginaHabilitada(page, p.path, p.nombre);
+        ultima = pagina;
+        await pagina.goto();
+        const h = pagina.header;
+
+        // Pasos 2 y 3 — el buscador en el header, su placeholder y la lupa. El literal del TC va
+        // sin tildes y la UI las lleva: el locator es tolerante.
+        await expect(h.buscador, `buscador en el header de ${p.nombre}`).toBeVisible();
+        await expect(h.buscador, `placeholder en ${p.nombre}`).toHaveAttribute(
+          'placeholder',
+          /¿qu[ée] est[áa]s buscando\?/i,
+        );
+        await expect(h.iconoLupa, `icono de lupa en ${p.nombre}`).toBeVisible();
+        await pagina.capturarEvidencia(cp, i + 1, `buscador en el header de ${p.nombre}`, {
+          elemento: h.root,
+        });
+      }
+
+      await ultima!.capturarEvidencia(cp, undefined, undefined, { elemento: ultima!.header.root });
+    });
   });
 });

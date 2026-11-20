@@ -12,8 +12,8 @@ import { bordeSuperiorOscuro } from '../support/pixeles';
  * - "Ordena tus productos": carrusel horizontal de RadioButton, uno por criterio. En v1.0.7 el
  *   orden es Recomendado, Pensados para ti, Precio más bajo, Precio más alto, Mejor descuento,
  *   Más vendido; los dos últimos solo aparecen deslizando el carrusel. La opción marcada se ve
- *   con un borde negro grueso; el árbol no lo refleja (isChecked/isSelected siempre false con
- *   mobilecli), así que se lee de la captura de cada opción.
+ *   con un borde negro grueso; el árbol no lo refleja (isChecked/isSelected siempre false en el
+ *   árbol del driver), así que se lee de la captura de cada opción.
  * - Abajo: "Aplica tus filtros" (Ofertas, Estilos de alimentación, Sellos, Marcas, Precio) y el
  *   botón "Mostrar N productos".
  */

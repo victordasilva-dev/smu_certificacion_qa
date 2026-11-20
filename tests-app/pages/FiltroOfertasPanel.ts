@@ -84,7 +84,7 @@ export class FiltroOfertasPanel extends BaseScreen {
     return v;
   }
 
-  /** Toca el centro de un nodo (el Switch y las CheckBox no siempre resuelven por rol con mobilecli). */
+  /** Toca el centro de un nodo (el Switch y las CheckBox no siempre resuelven por rol en el árbol del driver). */
   private async tocar(n: NodoPanel): Promise<void> {
     await disp.tocar(n.x + n.w / 2, n.y + n.h / 2);
   }
