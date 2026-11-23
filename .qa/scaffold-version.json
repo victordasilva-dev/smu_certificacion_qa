@@ -1,7 +1,7 @@
 {
-  "plugin_version": "1.23.0",
+  "plugin_version": "1.26.0",
   "files": {
-    ".env.example": "f8611e5fb413f353bfbcb7a396443137edde85f6366218843b8f9bc43d8e97af",
+    ".env.example": "4bd499947eefd96c1c6fd0e0c4752ad3b71c4e8820a9e74269192e3adf161304",
     ".gitignore": "7a421e7fc545dd8dc49f791664e3c295841f1e84dd7bec9cb660c9c61e434a05",
     "package.json": "fe19a45027c78eb436ee1d1e21319ad69b1b7b77b9d54ca5daea5e25c5e68b7f",
     "playwright.config.ci.ts": "35c4869c6cafe994396df87e96d0e27705ba79021c0f7499b80348411289593f",
